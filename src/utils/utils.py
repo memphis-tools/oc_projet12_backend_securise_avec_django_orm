@@ -1,11 +1,28 @@
 import subprocess
 import psycopg
 from rich import print
+from werkzeug.security import generate_password_hash, check_password_hash
 
 try:
     from src.settings import settings
 except ModuleNotFoundError:
     from settings import settings
+
+
+def generate_password_hash_from_input(password):
+    """
+    Description: Permettre un hachage et salage du mot de passe utilisateur en base.
+    """
+    hashed_and_salted = generate_password_hash(password, "pbkdf2:sha256", salt_length=8)
+    return hashed_and_salted
+
+
+def check_password_hash_from_input(db_user_password, password):
+    """
+    Description:
+    Comparer le mot de passe saisi lors d'une authentification avec celui en base de données.
+    """
+    return check_password_hash(db_user_password, password)
 
 
 def get_a_database_connection():
@@ -158,53 +175,61 @@ def dummy_database_creation():
     conn.commit()
 
     # 2 membres de l'équipe COMMERCIAL, dont 1 nommé dans les exemples du cahier des charges
-    sql = """
+    dummy_pwd_hashed_and_salted = generate_password_hash_from_input("applepie94")
+    sql = f"""
         INSERT INTO collaborator(registration_number, password, username, departement, role)
-        VALUES('123456789', 'applepie94', 'donald duck', '1', '1')
+        VALUES('123456789A', '{dummy_pwd_hashed_and_salted}', 'donald duck', '1', '1')
     """
     cursor.execute(sql)
     conn.commit()
-    sql = """
+    dummy_pwd_hashed_and_salted = generate_password_hash_from_input("applepie94")
+    sql = f"""
         INSERT INTO collaborator(registration_number, password, username, departement, role)
-        VALUES('234567891', 'applepie94', 'Bill Boquet', '1', '2')
+        VALUES('234567891B', '{dummy_pwd_hashed_and_salted}', 'Bill Boquet', '1', '2')
     """
     cursor.execute(sql)
     conn.commit()
 
     # 2 membres de l'équipe GESTION, pas d'exemples dans cahier des charges
-    sql = """
+    dummy_pwd_hashed_and_salted = generate_password_hash_from_input("applepie94")
+    sql = f"""
         INSERT INTO collaborator(registration_number, password, username, departement, role)
-        VALUES('345678912', 'applepie94', 'daisy duck', '2', '1')
+        VALUES('345678912C', '{dummy_pwd_hashed_and_salted}', 'daisy duck', '2', '1')
     """
     cursor.execute(sql)
     conn.commit()
-    sql = """
+    dummy_pwd_hashed_and_salted = generate_password_hash_from_input("applepie94")
+    sql = f"""
         INSERT INTO collaborator(registration_number, password, username, departement, role)
-        VALUES('456789123', 'applepie94', 'loulou duck', '2', '2')
+        VALUES('456789123D', '{dummy_pwd_hashed_and_salted}', 'loulou duck', '2', '2')
     """
     cursor.execute(sql)
     conn.commit()
 
     # 3 membres de l'équipe SUPPORT, dont 2 nommés dans les exemples du cahier des charges
-    sql = """
+    dummy_pwd_hashed_and_salted = generate_password_hash_from_input("applepie94")
+    sql = f"""
         INSERT INTO collaborator(registration_number, password, username, departement, role)
-        VALUES('567891234', 'applepie94', 'loulou duck', '2', '2')
+        VALUES('567891234E', '{dummy_pwd_hashed_and_salted}', 'loulou duck', '2', '2')
     """
     cursor.execute(sql)
     conn.commit()
-    sql = """
+    dummy_pwd_hashed_and_salted = generate_password_hash_from_input("applepie94")
+    sql = f"""
         INSERT INTO collaborator(registration_number, password, username, departement, role)
-        VALUES('678912345', 'applepie94', 'Aliénor Vichum', '3', '2')
+        VALUES('678912345F', '{dummy_pwd_hashed_and_salted}', 'Aliénor Vichum', '3', '2')
     """
     cursor.execute(sql)
     conn.commit()
-    sql = """
+    dummy_pwd_hashed_and_salted = generate_password_hash_from_input("applepie94")
+    sql = f"""
         INSERT INTO collaborator(registration_number, password, username, departement, role)
-        VALUES('789123456', 'applepie94', 'Kate Hastroff', '3', '2')
+        VALUES('789123456G', '{dummy_pwd_hashed_and_salted}', 'Kate Hastroff', '3', '2')
     """
     cursor.execute(sql)
     conn.commit()
 
+    # 1 client en exemple
     sql = """
     INSERT INTO client(information, fullname, email, telephone, company_name, commercial_contact)
     VALUES('Exemple bla bla bla', 'Kevin Casey', 'kevin@startup.io', '+678 123 456 78', 'Cool Startup LLC', '2')
@@ -212,6 +237,7 @@ def dummy_database_creation():
     cursor.execute(sql)
     conn.commit()
 
+    # 1 contrat en exemple
     sql = """
     INSERT INTO contract(information, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
     VALUES('Memes infos que le client ?', '999.99', '999.99', 'False', '1', '2')
@@ -219,6 +245,7 @@ def dummy_database_creation():
     cursor.execute(sql)
     conn.commit()
 
+    # 1 localisation en exemple
     sql = """
     INSERT INTO location(adresse, complement_adresse, code_postal, ville, pays)
     VALUES('53 Rue du Château', '', '41120', 'Candé-sur-Beuvron', 'France')
@@ -226,6 +253,7 @@ def dummy_database_creation():
     cursor.execute(sql)
     conn.commit()
 
+    # 1 évènement en exemple
     sql = """
     INSERT INTO event(
         title,

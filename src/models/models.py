@@ -1,3 +1,6 @@
+"""
+Les modèles métier
+"""
 from sqlalchemy import (
     Column,
     ForeignKey,
@@ -94,8 +97,8 @@ class User(Base):
 
     __tablename__ = "collaborator"
     id = Column(Integer, primary_key=True)
-    registration_number = Column(Integer, nullable=False)
-    password = Column(String(65), nullable=False)
+    registration_number = Column(String(12), nullable=False)
+    password = Column(String(200), nullable=False)
     username = Column(String(65), nullable=False)
     departement = Column(Integer, ForeignKey("collaborator_department.id"))
     role = Column(Integer, ForeignKey("collaborator_role.id"), default=2)

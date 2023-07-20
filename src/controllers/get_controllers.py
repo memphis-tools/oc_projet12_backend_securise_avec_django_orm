@@ -1,3 +1,6 @@
+"""
+Un controleur avec toutes méthodes GET.
+"""
 try:
     from src.models import models
 except ModuleNotFoundError:
@@ -17,6 +20,19 @@ class DatabaseGETController:
         db_collaborators_clients = session.query(models.Client).all()
         session.close()
         return db_collaborators_clients
+
+    def get_collaborator(self, session, registration_number):
+        """
+        Description: Fonction dédiée à servir la vue lors d'une requête d'un utilisateur de l'entreprise.
+        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle User.
+        """
+        db_collaborator = (
+            session.query(models.User)
+            .filter_by(registration_number=registration_number)
+            .first()
+        )
+        session.close()
+        return db_collaborator
 
     def get_collaborators(self, session):
         """

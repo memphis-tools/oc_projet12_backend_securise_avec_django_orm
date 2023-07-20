@@ -1,6 +1,28 @@
 """
-Une vue qui sera l'interface des fonctionnalités de l'application pour le "client" (par défaut en mode console).
+On fournit une vue dédiée à controler l'authentification et une autre qui permet d'atteindre les modèles.
 """
+try:
+    from src.controllers.initializer_controller import DatabaseInitializerController
+    from src.controllers.get_controllers import DatabaseGETController
+    from src.views.authentication_view import AuthenticationView
+    from src.views.clients_view import ClientsView
+    from src.views.collaborators_view import CollaboratorsView
+    from src.views.contracts_view import ContractsView
+    from src.views.departments_view import DepartmentsView
+    from src.views.events_view import EventsView
+    from src.views.locations_view import LocationsView
+    from src.views.roles_view import RolesView
+except ModuleNotFoundError:
+    from controllers.initializer_controller import DatabaseInitializerController
+    from controllers.get_controllers import DatabaseGETController
+    from views.authentication_view import AuthenticationView
+    from views.clients_view import ClientsView
+    from views.collaborators_view import CollaboratorsView
+    from views.contracts_view import ContractsView
+    from views.departments_view import DepartmentsView
+    from views.events_view import EventsView
+    from views.locations_view import LocationsView
+    from views.roles_view import RolesView
 
 
 class AppViews:
@@ -8,13 +30,13 @@ class AppViews:
     Description: une classe dédiée à servir les vues de l'application.
     """
 
-    def __init__(self, db_controller, db_initializer):
+    def __init__(self):
         """
         Description: vue dédiée à instancier la base de données et retourner un controleur.
         """
-        self.db_controller = db_controller
-        self.db_initializer = db_initializer
-        self.engine, self.session = db_initializer.return_engine_and_session()
+        self.db_controller = DatabaseGETController()
+        self.db_initializer = DatabaseInitializerController()
+        self.engine, self.session = self.db_initializer.return_engine_and_session()
 
     def init_db(self):
         """
@@ -23,44 +45,58 @@ class AppViews:
         """
         self.db_initializer.init_db(self.engine)
 
-    def get_clients(self):
+    def get_clients_view(self):
         """
-        Description: vue dédiée à obtenir les clients de l'entreprise.
+        Description: obtention de la vue dédiée à gestion clients de l'entreprise.
         """
-        return self.db_controller.get_clients(self.session)
+        clients_view = ClientsView(self.db_controller, self.session)
+        return clients_view
 
-    def get_collaborators(self):
+    def get_collaborators_view(self):
         """
-        Description: vue dédiée à obtenir les utilisateurs /collaborateurs de l'entreprise.
+        Description: vue dédiée à obtenir la vue sur les utilisateurs /collaborateurs de l'entreprise.
         """
-        return self.db_controller.get_collaborators(self.session)
+        collaborators_view = CollaboratorsView(self.db_controller, self.session)
+        return collaborators_view
 
-    def get_contracts(self):
+    def get_contracts_view(self):
         """
-        Description: vue dédiée à obtenir les contrats de l'entreprise.
+        Description: vue dédiée à obtenir la vue sur les contrats de l'entreprise.
         """
-        return self.db_controller.get_contracts(self.session)
+        contracts_view = ContractsView(self.db_controller, self.session)
+        return contracts_view
 
-    def get_departments(self):
+    def get_departments_view(self):
         """
-        Description: vue dédiée à obtenir les départements (directions) de l'entreprise.
+        Description: vue dédiée à obtenir la vue sur les départements (directions) de l'entreprise.
         """
-        return self.db_controller.get_departments(self.session)
+        departments_view = DepartmentsView(self.db_controller, self.session)
+        return departments_view
 
-    def get_locations(self):
+    def get_locations_view(self):
         """
-        Description: vue dédiée à obtenir les localisations des évènements.
+        Description: vue dédiée à obtenir la vue sur les localisations des évènements.
         """
-        return self.db_controller.get_locations(self.session)
+        locations_view = LocationsView(self.db_controller, self.session)
+        return locations_view
 
-    def get_events(self):
+    def get_events_view(self):
         """
-        Description: vue dédiée à obtenir les évènements de l'entreprise.
+        Description: vue dédiée à obtenir la vue sur les évènements de l'entreprise.
         """
-        return self.db_controller.get_events(self.session)
+        events_view = EventsView(self.db_controller, self.session)
+        return events_view
 
-    def get_roles(self):
+    def get_roles_view(self):
         """
-        Description: vue dédiée à obtenir les rôles prévus pour les collaborateurs de l'entreprise.
+        Description: vue dédiée à obtenir la vue sur les rôles prévus pour les collaborateurs de l'entreprise.
         """
-        return self.db_controller.get_roles(self.session)
+        roles_view = RolesView(self.db_controller, self.session)
+        return roles_view
+
+    def get_authentication_view(self):
+        """
+        Description: vue dédiée à obtenir la vue sur pour les commandes d'authentification.
+        """
+        roles_view = AuthenticationView(self.db_controller, self.session)
+        return roles_view
