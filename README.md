@@ -1,7 +1,7 @@
 ![Screenshot](python-sqlalchemy.svg)
 # [OpenClassRoom](https://openclassrooms.com/) - Parcours développeur Python
 ![Screenshot](oc_parcours_dev_python.png)
-## Projet 12 - Créer un backend sécurisé en utilisant Django ORM
+## AT WORK - Projet 12 - Créer un backend sécurisé en utilisant Django ORM
 
 ### Project description
     Create a console "Customer Relationship Management" application with Python.
@@ -26,13 +26,15 @@
 ---
 
 ## How works this project ?
-    Any commands you could /should consult in with "--help".
+    Any commands you could /should consult with command "oc12_help".
 
-    |COMMAND|INFO|
-    |-------|----|
-    |get_clients| GET all clients|
-    |get_contracts| GET all contracts|
-    |||
+|COMMAND|INFO|
+|-------|----|
+|oc12_launch_application| initialiser un POC|
+|oc12_token| obtenir un jeton d'accès|
+|oc12_logout| se déconnecter de l'application|
+|oc12_clients| obtenir les clients de l'entreprise|
+|(...)||
 
     Notice: all commands can be prefixed too by "poetry run". Example: "poetry run get_clients" etc.
 
@@ -72,6 +74,10 @@
 
       `poetry config virtualenvs.prompt oc_projet12`
 
+      We set the poetry cache dir inside the application repository.
+
+      `poetry config cache-dir ./.cache/pypoetry --local`
+
       Then source the .venv either way like following:
 
       `source $(poetry env info --path)/bin/activate`
@@ -88,9 +94,21 @@
 
      `launch_application`
 
+  5. Start using the application
+
+      First you will need a token access. Valid duration period is set through the settings.py file.
+
+      `oc12_token`
+
+      If your authentication succeeded you will have a JWT token print into terminal. You have to source it in your PATH (be sure to copy/paste a full single line)
+
+      example: `export OC_12_JWT='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCZzzzZZZzzz'`
+
+      Then you should be able to use the application. Use `oc12_help` to learn about possible commands.
+
   6. Optional
 
-      Run tests and check cover stats.
+      Run tests and check cover stats. First, be sure to have unset "OC_12_JWT" from your path.
 
       `python -m coverage run -m pytest -v`
 

@@ -5,7 +5,9 @@ description = "Projet 12 du parcours Développeur Python de OpenClassRoom."
 authors = ["memphis-tools <rn@github.com>"]
 readme = "README.md"
 packages = [
+  {include = "authenticators", from = "src"},
   {include = "clients", from = "src"},
+  {include = "commands", from = "src"},
   {include = "controllers", from = "src"},
   {include = "models", from = "src"},
   {include = "settings", from = "src"},
@@ -28,16 +30,23 @@ flake8-html = "^0.4.3"
 pyjwt = {extras = ["crypto"], version = "^2.7.0"}
 pytest-cov = "^4.1.0"
 python-dotenv = "^1.0.0"
+pytest-mock = "^3.11.1"
+maskpass = "^0.3.7"
+werkzeug = "^2.3.6"
+pyfiglet = "^0.8.post1"
 
 [tool.poetry.scripts]
-launch_application = "clients.console:launch_application"
-get_clients = "clients.console:get_clients"
-get_collaborators = "clients.console:get_collaborators"
-get_contracts = "clients.console:get_contracts"
-get_departments = "clients.console:get_departments"
-get_events = "clients.console:get_events"
-get_locations = "clients.console:get_locations"
-get_roles = "clients.console:get_roles"
+oc12_launch_application = "commands.init_commands:launch_application"
+oc12_token = "commands.authentication_commands:get_token"
+oc12_logout = "commands.authentication_commands:logout"
+oc12_clients = "commands.get_commands:get_clients"
+oc12_collaborators = "commands.get_commands:get_collaborators"
+oc12_contracts = "commands.get_commands:get_contracts"
+oc12_departments = "commands.get_commands:get_departments"
+oc12_events = "commands.get_commands:get_events"
+oc12_locations = "commands.get_commands:get_locations"
+oc12_roles = "commands.get_commands:get_roles"
+oc12_help = "commands.helps:help"
 
 [build-system]
 requires = ["poetry-core"]
