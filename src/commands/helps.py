@@ -5,17 +5,21 @@ On insistera avant tout sur une application fonctionnelle et sécurisée, quitte
 """
 import click
 from rich import print
-
+try:
+    from src.utils.utils import display_banner
+except ModuleNotFoundError:
+    from utils.utils import display_banner
 
 @click.command
 def help():
     """
     Description: bla bla bla
     """
-    print("[bold green][HELP MENU][/bold green]", end="")
+    display_banner()
+    print("[bold cyan][HELP MENU][/bold cyan]", end="")
 
     basic_pos_commands = """
-oc12_launch_application: [green]initialiser un POC[/green]
+oc12_init_application: [green](ré)initialiser l'application (admin only)[/green]
 oc12_token: [green]obtenir un jeton d'accès[/green]
 oc12_logout: [green]se déconnecter de l'application[/green]
 oc12_clients: [green]obtenir les clients de l'entreprise[/green]

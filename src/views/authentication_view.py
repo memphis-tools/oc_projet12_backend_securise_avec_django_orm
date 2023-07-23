@@ -1,57 +1,34 @@
 """
-On fournit une vue dédiée à controler l'authentification et une autre qui permet d'atteindre les modèles.
+On fournit uniquement dédiée à une connexion initiale et direct de/par l'utilisateur.
 """
-from rich import print
-
 try:
-    from src.controllers.authentication_controller import JwtController
-    from src.utils.utils import check_password_hash_from_input
+    from src.controllers.database_initializer_controller import DatabaseInitializerController
+    from src.controllers.database_read_controller import DatabaseReadController
 except ModuleNotFoundError:
-    from controllers.authentication_controller import JwtController
-    from utils.utils import check_password_hash_from_input
+    from controllers.database_initializer_controller import DatabaseInitializerController
+    from controllers.database_read_controller import DatabaseReadController
 
 
 class AuthenticationView:
     """
-    Description: une classe dédiée à servir la vue sur l'authentification.
+    Description: une classe dédiée à servir les vues de l'application.
     """
 
-    def __init__(self, AppView):
-        """
-        Description: vue dédiée à instancier la base de données et retourner un controleur.
-        """
-        self.jwt_controller = JwtController()
-        self.app_view = AppView
-
-    def get_token(self, registration_number, password):
-        """
-        Description: vue dédiée à obtenir un token, nécessaire pour s'authentifier sur l'application.
-        """
-        collaborator = self.app_view.db_controller.get_collaborator(
-            self.app_view.session, registration_number
-        )
-        if collaborator:
-            db_user_password = collaborator.password
-            if check_password_hash_from_input(db_user_password, password):
-                r_number = registration_number
-                u_name = collaborator.username
-                role = collaborator.role
-                information = "[bold green]Please add the following in your path and execute 'run_app'[/bold green]:"
-                to_do = f"OC_12_JWT='{self.jwt_controller.get_token(self.app_view.session, r_number, u_name, role)}'"
-                print(information)
-                print(to_do)
-                return
-        raise Exception("Wrong credentials sir")
-
-    def does_a_valid_token_exist(self):
+    def __init__(self, user_login, user_pwd):
         """
         Description:
-        Fonction dédiée à controler le jeton utilisateur dans son environnement.
+        Dédiée à la première connexion de l'utilisateur pour obtenir un token.
+        Une fois qu'il aura obtenu le token, la session ouverte avec le SGBD sera basée sur le "ROLE".
+        Le "ROLE" aura un mot de passe prévu par défaut.
+        Toutes les opérations autres que "lecture, GET, etc" imposeront à l'utilisateur de saisir son mot de passe.
         """
-        return self.jwt_controller.does_a_valid_token_exist()
+        self.db_controller = DatabaseReadController()
+        self.db_initializer = DatabaseInitializerController()
+        self.engine, self.session = self.db_initializer.return_engine_and_session(user_login, user_pwd)
 
-    def logout(self):
-        return self.jwt_controller.logout()
-
-    def check_user_token(self):
-        return self.jwt_controller.check_user_token()
+    def init_db(self):
+        """
+        Description: on va purger la base de données de tout enregistrement, puis la repeupler.
+        Une fois la phase POC terminée on arretera le drop_all, et le create_all ne sera effectif qu'une fois.
+        """
+        self.db_initializer.init_db(self.engine)

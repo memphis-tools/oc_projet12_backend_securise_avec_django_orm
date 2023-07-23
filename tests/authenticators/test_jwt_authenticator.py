@@ -9,12 +9,12 @@ from datetime import datetime, timedelta
 import jwt
 
 try:
-    from src.controllers.authentication_controller import JwtController
-    from src.commands import get_commands
+    from src.controllers.jwt_controller import JwtController
+    from src.commands import authentication_commands
     from src.settings import settings
 except ModuleNotFoundError:
-    from controllers.authentication_controller import JwtController
-    from commands import get_commands
+    from controllers.jwt_controller import JwtController
+    from commands import authentication_commands
     from settings import settings
 
 
@@ -24,7 +24,7 @@ def test_get_token_with_unvalid_credentials(get_runner):
     Pour obtenir un token l'utilisateur doit fournir un "registration_number" valide.
     On tente de récupérer le jeton avec un un registration_number inexistant.
     """
-    result = get_runner.invoke(get_commands.get_token, ["123456789AZ", "Gr@TStuff"])
+    result = get_runner.invoke(authentication_commands.get_token, ["123456789AZ", "Gr@TStuff"])
     assert result.exit_code == 1
     assert f"{settings.PATH_APPLICATION_JWT_NAME}" not in os.environ
 
@@ -35,7 +35,7 @@ def test_get_token_with_valid_credentials(get_runner):
     Pour obtenir un token l'utilisateur doit fournir un "registration_number" valide.
     On tente de récupérer le jeton avec un un registration_number existant.
     """
-    result = get_runner.invoke(get_commands.get_token, ["123456789A", "applepie94"])
+    result = get_runner.invoke(authentication_commands.get_token, ["123456789A", "applepie94"])
     assert result.exit_code == 0
     assert os.environ[f"{settings.PATH_APPLICATION_JWT_NAME}"] != "None"
 
@@ -81,7 +81,7 @@ def test_check_token_expiration_when_time_elapsed_valid(get_runner):
     Un token doit être révoqué après un délai spécifié dans le fichier settings.py.
     En deça du délai il doit être non révoqué.
     """
-    result = get_runner.invoke(get_commands.get_token, ["123456789A", "applepie94"])
+    result = get_runner.invoke(authentication_commands.get_token, ["123456789A", "applepie94"])
     jwt_controller = JwtController()
     revocation = jwt_controller.does_a_valid_token_exist()
     assert result.exit_code == 0
@@ -98,7 +98,7 @@ def test_check_token_expiration_when_time_elapsed_not_valid(get_runner):
     settings.JWT_DURATION = 1
     settings.JWT_UNIT_DURATION = "seconds"
 
-    result = get_runner.invoke(get_commands.get_token, ["123456789A", "applepie94"])
+    result = get_runner.invoke(authentication_commands.get_token, ["123456789A", "applepie94"])
     sleep(2)
     jwt_controller = JwtController()
     revocation = jwt_controller.does_a_valid_token_exist()

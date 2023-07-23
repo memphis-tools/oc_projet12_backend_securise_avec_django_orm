@@ -56,9 +56,9 @@ class UserDepartment(Base):
 
     __tablename__ = "collaborator_department"
     DEPARTEMENTS = [
-        ("COMMERCIAL", "commercial"),
-        ("GESTION", "gestion"),
-        ("SUPPORT", "support"),
+        ("OC12_COMMERCIAL", "oc12_commercial"),
+        ("OC12_GESTION", "oc12_gestion"),
+        ("OC12_SUPPORT", "oc12_support"),
     ]
     id = Column(Integer, primary_key=True)
     name = Column(ChoiceType(DEPARTEMENTS), nullable=False)
@@ -98,9 +98,8 @@ class User(Base):
     __tablename__ = "collaborator"
     id = Column(Integer, primary_key=True)
     registration_number = Column(String(12), nullable=False)
-    password = Column(String(200), nullable=False)
     username = Column(String(65), nullable=False)
-    departement = Column(Integer, ForeignKey("collaborator_department.id"))
+    department = Column(Integer, ForeignKey("collaborator_department.id"))
     role = Column(Integer, ForeignKey("collaborator_role.id"), default=2)
     client = relationship("Client", back_populates="collaborator")
     contract = relationship("Contract", back_populates="collaborator")
