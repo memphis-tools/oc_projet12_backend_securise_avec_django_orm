@@ -6,6 +6,7 @@ Permettre login, logout. Controler le jeton /token utilisé par l'utilisateur co
 import os
 from datetime import datetime, timedelta
 import jwt
+from rich import print
 
 try:
     from src.settings import settings
@@ -19,12 +20,12 @@ class JwtAuthenticator:
     Classe dédiée au controle de l'authentification via JWT
     """
 
-    def __init__(self, registration_number="", username="", role=""):
+    def __init__(self, registration_number="", username="", department=""):
         self.registration_number = registration_number
         self.username = username
-        self.role = role
+        self.department = department
 
-    def get_decoded_token():
+    def get_decoded_token(self):
         """
         Description: Dédiée à servir le token en clair (s'il a pu être décodé avec la clef secrète).
         """
@@ -49,21 +50,22 @@ class JwtAuthenticator:
         """
         Description: Dédiée à confectionner un jeton d'accès pour l'utilisateur.
         """
+
         now = datetime.now()
         timedelta_setting = {f"{settings.JWT_UNIT_DURATION}": settings.JWT_DURATION}
         expiration = now + timedelta(**timedelta_setting)
         payload_data = {
             "registration_number": self.registration_number,
             "username": self.username,
-            "role": self.role,
+            "department": f"{self.department}",
             "expiration": f"{expiration}",
         }
+
         token = jwt.encode(
             payload=payload_data,
             key=f"{settings.SECRET_KEY}",
             algorithm=f"{settings.HASH_ALGORITHM}",
         )
-        os.environ[f"{settings.PATH_APPLICATION_JWT_NAME}"] = token
         return token
 
     def login(self):

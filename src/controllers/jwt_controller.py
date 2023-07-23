@@ -18,16 +18,21 @@ class JwtController:
     def __init__(self):
         self.jwt_authenticator = JwtAuthenticator()
 
-    def get_token(self, session, registration_number, username, role):
+    def get_token(self, session, registration_number, username, department):
         """
         Description:
         Fonction dédiée à obtenir un token, nécessaire pour s'authentifier sur l'application.
         """
-        self.jwt_authenticator = JwtAuthenticator(registration_number, username, role)
+
+        self.jwt_authenticator = JwtAuthenticator(registration_number, username, department)
         token = self.jwt_authenticator.get_token()
         return token
 
     def is_token_revoked(self, decoded_token):
+        """
+        Description:
+        Fonction pour vérifier si le token est toujours valide (durée)
+        """
         now = datetime.now()
         token_duration = datetime.strptime(
             decoded_token["expiration"], "%Y-%m-%d %H:%M:%S.%f"
@@ -49,10 +54,17 @@ class JwtController:
         Fonction dédiée à controler le jeton utilisateur dans son environnement.
         """
         try:
-            decoded_token = JwtAuthenticator.get_decoded_token()
+            decoded_token = self.jwt_authenticator.get_decoded_token()
             if self.is_token_revoked(decoded_token):
                 return False
             else:
                 return True
         except Exception:
             raise jwt.exceptions.InvalidSignatureError
+
+    def get_decoded_token(self):
+        """
+        Description:
+        Fonction dédiée à retourner le token décrypté.
+        """
+        return self.jwt_authenticator.get_decoded_token()

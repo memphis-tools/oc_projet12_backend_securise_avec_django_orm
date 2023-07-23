@@ -24,7 +24,7 @@ mccabe==0.7.0
 mdurl==0.1.2
 mypy-extensions==1.0.0
 oauthlib==3.2.2
--e git+ssh://git@github.com/memphis-tools/oc_projet12_backend_securise_avec_django_orm.git@f906a3fffb0d32ba7b3ac815723aaa09ce95f5fa#egg=oc_projet12_backend_securise_avec_django_orm
+-e git+ssh://git@github.com/memphis-tools/oc_projet12_backend_securise_avec_django_orm.git@e0d2bdf055eb995de1150ff9c87542f8d43b2e84#egg=oc_projet12_backend_securise_avec_django_orm
 packaging==23.1
 pathspec==0.11.1
 platformdirs==3.9.1
@@ -32,6 +32,7 @@ pluggy==1.2.0
 psycopg==3.1.9
 pycodestyle==2.10.0
 pycparser==2.21
+pyfiglet==0.8.post1
 pyflakes==3.0.1
 Pygments==2.15.1
 PyJWT==2.8.0
@@ -48,6 +49,7 @@ rich==13.4.2
 six==1.16.0
 SQLAlchemy==2.0.19
 SQLAlchemy-Utils==0.41.1
+termcolor==2.3.0
 tomli==2.0.1
 tomlkit==0.11.8
 typing_extensions==4.7.1

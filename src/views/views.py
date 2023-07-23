@@ -1,10 +1,11 @@
 """
-On fournit une vue dédiée à controler l'authentification et une autre qui permet d'atteindre les modèles.
+On fournit une vue dédiée d'atteindre les modèles métier.
 """
+from termcolor import cprint
 try:
-    from src.controllers.initializer_controller import DatabaseInitializerController
-    from src.controllers.get_controllers import DatabaseGETController
-    from src.views.authentication_view import AuthenticationView
+    from src.controllers.database_initializer_controller import DatabaseInitializerController
+    from src.controllers.database_read_controller import DatabaseReadController
+    from src.views.jwt_view import JwtView
     from src.views.clients_view import ClientsView
     from src.views.collaborators_view import CollaboratorsView
     from src.views.contracts_view import ContractsView
@@ -13,9 +14,9 @@ try:
     from src.views.locations_view import LocationsView
     from src.views.roles_view import RolesView
 except ModuleNotFoundError:
-    from controllers.initializer_controller import DatabaseInitializerController
-    from controllers.get_controllers import DatabaseGETController
-    from views.authentication_view import AuthenticationView
+    from controllers.database_initializer_controller import DatabaseInitializerController
+    from controllers.database_read_controller import DatabaseReadController
+    from views.jwt_view import JwtView
     from views.clients_view import ClientsView
     from views.collaborators_view import CollaboratorsView
     from views.contracts_view import ContractsView
@@ -34,16 +35,14 @@ class AppViews:
         """
         Description: vue dédiée à instancier la base de données et retourner un controleur.
         """
-        self.db_controller = DatabaseGETController()
+        self.db_controller = DatabaseReadController()
         self.db_initializer = DatabaseInitializerController()
-        self.engine, self.session = self.db_initializer.return_engine_and_session()
-
-    def init_db(self):
-        """
-        Description: on va purger la base de données de tout enregistrement, puis la repeupler.
-        Une fois la phase POC terminée on arretera le drop_all, et le create_all ne sera effectif qu'une fois.
-        """
-        self.db_initializer.init_db(self.engine)
+        self.jwt_view = JwtView(self)
+        decoded_token = self.jwt_view.get_decoded_token()
+        # il faut charger le token de l'utilisateur, le décoder et le transmettre en clair
+        # le "role" (exemple oc12_commercial) dans le token servira à créer la connexion à la bdd
+        # il porte les permissions et chaque "department" (services, équipes) aura ses permissions.
+        self.engine, self.session = self.db_initializer.return_engine_and_session(decoded_token=decoded_token)
 
     def get_clients_view(self):
         """
@@ -94,9 +93,8 @@ class AppViews:
         roles_view = RolesView(self.db_controller, self.session)
         return roles_view
 
-    def get_authentication_view(self):
+    def get_jwt_view(self):
         """
-        Description: vue dédiée à obtenir la vue sur pour les commandes d'authentification.
+        Description: vue dédiée à obtenir la vue sur pour les commandes liée au JWT token.
         """
-        roles_view = AuthenticationView(self.db_controller, self.session)
-        return roles_view
+        return self.jwt_view

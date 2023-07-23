@@ -1,13 +1,15 @@
 """
 Un controleur avec toutes méthodes GET.
 """
+from sqlalchemy.sql import text
 try:
     from src.models import models
+    from src.controllers.database_initializer_controller import DatabaseInitializerController
 except ModuleNotFoundError:
     from models import models
+    from controllers.database_initializer_controller import DatabaseInitializerController
 
-
-class DatabaseGETController:
+class DatabaseReadController:
     """
     Description: Toutes les méthodes GET.
     """
@@ -26,13 +28,18 @@ class DatabaseGETController:
         Description: Fonction dédiée à servir la vue lors d'une requête d'un utilisateur de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle User.
         """
-        db_collaborator = (
-            session.query(models.User)
-            .filter_by(registration_number=registration_number)
-            .first()
-        )
-        session.close()
-        return db_collaborator
+        # si cette requete passe alors les identifiants de connexion a bdd sont ok et en plus colaborateur bien trouvé
+        try:
+            db_collaborator_queryset = (
+                session.query(models.User, models.UserDepartment)
+                .filter(models.User.department == models.UserDepartment.id)
+                .filter_by(registration_number=registration_number)
+                .first()
+            )
+            session.close()
+            return db_collaborator_queryset
+        except Exception as error:
+            print(f"User or Department not found: {error}")
 
     def get_collaborators(self, session):
         """
