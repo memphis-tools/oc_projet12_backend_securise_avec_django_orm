@@ -1,7 +1,7 @@
 ![Screenshot](python-sqlalchemy.svg)
 # [OpenClassRoom](https://openclassrooms.com/) - Parcours développeur Python
 ![Screenshot](oc_parcours_dev_python.png)
-## AT WORK - Projet 12 - Créer un backend sécurisé en utilisant Django ORM
+## Projet 12 - Créer un backend sécurisé en utilisant Django ORM
 
 ### Project description
     Create a console "Customer Relationship Management" application with Python.
@@ -25,6 +25,7 @@
 
 ---
 
+## How works this project ?
 ## How works this project ?
     Any commands you could /should consult with command "oc12_help".
 
@@ -50,11 +51,15 @@
 
   2. Set a .envrc file
 
-      You must create a .envrc file with this content.
+      You must create a .envrc file with this **example** content.
 
             SECRET_KEY='MakeYourOwnSecretKey'
             ADMIN_LOGIN='admin'
             ADMIN_PASSWORD='admin'
+            OC_12_ENV='DEV'
+            OC12_COMMERCIAL_PWD='MakeItStrong'
+            OC12_GESTION_PWD='MakeItSecured'
+            OC12_SUPPORT_PWD='MakeItGreat'
 
       To make your own secret_key use module secrets.
 
@@ -88,11 +93,11 @@
 
   4. Instantiate database and inject dummy data for the POC purposes
 
-      `poetry run launch_application`
+      `poetry run oc12_init_application`
 
      or
 
-     `launch_application`
+     `oc12_init_application`
 
   5. Start using the application
 
@@ -108,7 +113,7 @@
 
   6. Optional
 
-      Run tests and check cover stats. First, be sure to have unset "OC_12_JWT" from your path.
+      Run tests and check cover stats. Run tests and check cover stats. First, **be sure to have unset "OC_12_JWT" from your path**.
 
       `python -m coverage run -m pytest -v`
 
