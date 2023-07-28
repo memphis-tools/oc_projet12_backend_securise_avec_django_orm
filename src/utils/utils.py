@@ -309,10 +309,23 @@ def dummy_database_creation():
         cursor.execute(sql)
         conn.commit()
 
+    # 1 localisation en exemple pour une entreprise
+    sql = """
+    INSERT INTO location(adresse, complement_adresse, code_postal, ville, pays)
+    VALUES('9 avenue de la bonbonière', '', '22240', 'Plurien', 'France')
+    """
+    cursor.execute(sql)
+
+    # 1 entreprise en exemple
+    sql = """
+    INSERT INTO company(company_name, company_registration_number, company_subregistration_number, location_id)
+    VALUES ('Cool Startup LLC', '777222888', '12345', '1')
+    """
+
     # 1 client en exemple
     sql = """
-    INSERT INTO client(information, fullname, email, telephone, company_name, commercial_contact)
-    VALUES('Exemple bla bla bla', 'Kevin Casey', 'kevin@startup.io', '+678 123 456 78', 'Cool Startup LLC', '2')
+    INSERT INTO client(civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
+    VALUES('MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '+678 123 456 78', '1', '2')
     """
     cursor.execute(sql)
 
@@ -323,7 +336,7 @@ def dummy_database_creation():
     """
     cursor.execute(sql)
 
-    # 1 localisation en exemple
+    # 1 localisation en exemple pour un évènement
     sql = """
     INSERT INTO location(adresse, complement_adresse, code_postal, ville, pays)
     VALUES('53 Rue du Château', '', '41120', 'Candé-sur-Beuvron', 'France')
@@ -350,7 +363,7 @@ def dummy_database_creation():
         '5',
         '2023-07-25 16:00:00.000000',
         '2023-07-25 22:00:00.000000',
-        '1',
+        '2',
         '500',
         'bla bla bla penser au catering'
     )
