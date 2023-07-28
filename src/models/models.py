@@ -111,27 +111,56 @@ class User(Base):
         return self.__str__()
 
 
+class Company(Base):
+    """
+    Description: table dédiée à désigner /caractériser l'entreprise d'un client, obtenu par un commercial.
+    """
+
+    __tablename__ = "company"
+    id = Column(Integer, primary_key=True)
+    company_name = Column(String(130), nullable=False)
+    company_registration_number = Column(String(100), nullable=False)
+    company_subregistration_number = Column(String(50), nullable=False)
+    location_id = Column(Integer, ForeignKey("location.id"))
+    client = relationship("Client", back_populates="company")
+
+    def __str__(self):
+        return f"{self.company_name}"
+
+    def __repr__(self):
+        return self.__str__()
+
+
 class Client(Base):
     """
     Description: table dédiée à désigner /caractériser un client, obtenu par un commercial.
     """
 
     __tablename__ = "client"
+    CIVILITIES = [
+        ("MR", "monsieur"),
+        ("MRS", "madame"),
+        ("MISS", "madamoiselle"),
+        ("OTHER", "autre")
+    ]
     id = Column(Integer, primary_key=True)
-    information = Column(String(2500), nullable=True)
-    fullname = Column(String(130), nullable=False)
+    civility = Column(ChoiceType(CIVILITIES), nullable=False)
+    first_name = Column(String(150), nullable=False)
+    last_name = Column(String(75), nullable=False)
+    employee_role = Column(String(100), nullable=False)
     email = Column(String(130), nullable=False)
     telephone = Column(String(60), nullable=True)
-    company_name = Column(String(130), nullable=False)
+    company_id = Column(Integer, ForeignKey("collaborator.id"))
     creation_date = Column(Date(), nullable=False, default=get_today_date())
     last_update_date = Column(Date(), nullable=False, default=get_today_date())
     commercial_contact = Column(Integer, ForeignKey("collaborator.id"))
     collaborator = relationship("User", back_populates="client")
+    company = relationship("Company", back_populates="client")
     contract = relationship("Contract", back_populates="client")
     event = relationship("Event", back_populates="client")
 
     def __str__(self):
-        return f"{self.fullname}"
+        return f"{self.company_id} {self.civility} {self.first_name} {self.last_name}"
 
     def __repr__(self):
         return self.__str__()
