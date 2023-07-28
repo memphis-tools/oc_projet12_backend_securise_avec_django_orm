@@ -5,7 +5,7 @@ import jwt
 
 try:
     from src.views.authentication_view import AuthenticationView
-    from srv.views.jwt_view import JwtView
+    from src.views.jwt_view import JwtView
     from src.settings import settings
 except ModuleNotFoundError:
     from views.authentication_view import AuthenticationView

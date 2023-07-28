@@ -27,18 +27,21 @@ class JwtView:
         """
         Description: vue dédiée à obtenir un token, nécessaire pour s'authentifier sur l'application.
         """
-        collaborator, collaborator_department_name = self.app_view.db_controller.get_collaborator(
-            self.app_view.session, registration_number
-        )
+        try:
+            collaborator, collaborator_department_name = self.app_view.db_controller.get_collaborator(
+                self.app_view.session, registration_number
+            )
 
-        r_number = registration_number
-        u_name = collaborator.username
-        department = collaborator_department_name
-        information = '[bold cyan]Add the following in your path and run any commands (try oc12_help)[/bold cyan]:'
-        to_do = f"OC_12_JWT='{self.jwt_controller.get_token(self.app_view.session, r_number, u_name, department)}'"
-        print(information)
-        print(to_do)
-        return
+            r_number = registration_number
+            u_name = collaborator.username
+            department = collaborator_department_name
+            information = '[bold cyan]Add the following in your path and run any commands (try oc12_help)[/bold cyan]:'
+            to_do = f"OC_12_JWT='{self.jwt_controller.get_token(self.app_view.session, r_number, u_name, department)}'"
+            print(information)
+            print(to_do)
+            return
+        except Exception:
+            raise Exception()
 
     def does_a_valid_token_exist(self):
         """

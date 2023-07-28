@@ -55,10 +55,10 @@ class JwtController:
         """
         try:
             decoded_token = self.jwt_authenticator.get_decoded_token()
-            if self.is_token_revoked(decoded_token):
-                return False
-            else:
+            if not self.is_token_revoked(decoded_token):
                 return True
+            else:
+                return False
         except Exception:
             raise jwt.exceptions.InvalidSignatureError
 
