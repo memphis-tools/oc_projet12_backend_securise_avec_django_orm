@@ -25,6 +25,9 @@ def authentication_permission_decorator(func):
         except jwt.exceptions.InvalidSignatureError:
             print("[bold red]Access forbidden without valid token[/bold red]")
             sys.exit(0)
+        except KeyError:
+            print("[bold red]Access forbidden without valid token[/bold red]")
+            sys.exit(0)
 
     return check_user_token
 
@@ -212,7 +215,7 @@ def database_postinstall_tasks():
         cursor.execute(sql)
         # voir si on peut exclure la table collaborator et collaborator_department
         # attention ils sont utilisés pour la mécanique de controle des autorisations
-        for model in ["client", "collaborator", "collaborator_department", "contract", "event", "location"]:
+        for model in ["client", "collaborator", "collaborator_department", "contract", "event", "location", "collaborator_role"]:
             sql = f"""GRANT SELECT ON {model} TO {role[0]}"""
             cursor.execute(sql)
 

@@ -11,7 +11,7 @@ import pkg_resources
 
 try:
     from src.views.views import AppViews
-    from srv.views.jwt_view import JwtView
+    from src.views.jwt_view import JwtView
     from src.settings import settings
     from src.utils.utils import authentication_permission_decorator, display_banner
 except ModuleNotFoundError:
@@ -39,7 +39,6 @@ class ConsoleClient:
         """
         Description: vue dédiée à obtenir les clients de l'entreprise.
         """
-        utils.display_banner()
         return self.app_view.get_clients_view().get_clients()
 
     @authentication_permission_decorator

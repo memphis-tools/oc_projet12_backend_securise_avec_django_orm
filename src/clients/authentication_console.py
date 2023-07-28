@@ -11,7 +11,7 @@ import pkg_resources
 
 try:
     from src.views.authentication_view import AuthenticationView
-    from srv.views.jwt_view import JwtView
+    from src.views.jwt_view import JwtView
     from src.settings import settings
     from src.utils.utils import authentication_permission_decorator
 except ModuleNotFoundError:
