@@ -5,10 +5,8 @@ Test de fonctions utiles.
 
 try:
     from srv.utils import utils
-    from src.settings import settings
 except ModuleNotFoundError:
     from utils import utils
-    from settings import settings
 
 
 def test_generate_password_hash_from_input():

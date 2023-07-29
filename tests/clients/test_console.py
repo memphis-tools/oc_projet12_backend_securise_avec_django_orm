@@ -2,23 +2,11 @@
 Description:
 Test du client en mode console de l'application.
 """
-import pytest
-import jwt
 
 try:
-    from src.views.views import AppViews
     from src.commands import database_read_commands
-    from src.commands import authentication_commands
-    from src.utils.utils import authentication_permission_decorator, display_banner
-    from src.clients.console import ConsoleClient
-    from src.views.jwt_view import JwtView
 except ModuleNotFoundError:
-    from views.views import AppViews
     from commands import database_read_commands
-    from commands import authentication_commands
-    from utils.utils import authentication_permission_decorator, display_banner
-    from clients.console import ConsoleClient
-    from views.jwt_view import JwtView
 
 
 def test_get_clients(get_runner):
