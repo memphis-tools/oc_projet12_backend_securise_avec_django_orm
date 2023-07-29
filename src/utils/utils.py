@@ -114,7 +114,9 @@ def database_postinstall_alter_tables():
     Description:
     Dédiée à forcer la mise à jour de valeurs par défaut.
     """
-    conn = get_a_database_connection(f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}")
+    conn = get_a_database_connection(
+        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}"
+    )
     cursor = conn.cursor()
 
     sql = """ALTER TABLE client ALTER COLUMN creation_date SET NOT NULL"""
@@ -142,7 +144,9 @@ def database_postinstall_tasks():
     Description:
     Dédiée à mettre à jour la base de données après une création initiale.
     """
-    conn = get_a_database_connection(f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}")
+    conn = get_a_database_connection(
+        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}"
+    )
     cursor = conn.cursor()
 
     sql = f"""ALTER DATABASE {settings.DATABASE_NAME} OWNER TO {settings.ADMIN_LOGIN}"""
@@ -188,7 +192,7 @@ def database_postinstall_tasks():
             "ad123456789",
             "ae123456789",
             "af123456789",
-            "ag123456789"
+            "ag123456789",
         ]:
             sql = f"""REVOKE ALL ON ALL TABLES IN SCHEMA public FROM {role}"""
             cursor.execute(sql)
@@ -196,7 +200,7 @@ def database_postinstall_tasks():
             sql = f"""DROP ROLE IF EXISTS {role}"""
             cursor.execute(sql)
         conn.commit()
-    except:
+    except Exception:
         pass
 
     for role in ["oc12_commercial", "oc12_gestion", "oc12_support"]:
@@ -207,7 +211,7 @@ def database_postinstall_tasks():
     for role in [
         ("oc12_commercial", f"{settings.OC12_COMMERCIAL_PWD}"),
         ("oc12_gestion", f"{settings.OC12_GESTION_PWD}"),
-        ("oc12_support", f"{settings.OC12_SUPPORT_PWD}")
+        ("oc12_support", f"{settings.OC12_SUPPORT_PWD}"),
     ]:
         sql = f"""CREATE ROLE {role[0]} LOGIN PASSWORD '{role[1]}'"""
         cursor.execute(sql)
@@ -233,7 +237,13 @@ def database_postinstall_tasks():
         sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_commercial"""
         cursor.execute(sql)
 
-    oc12_gestion_allowed_tables = ["collaborator", "collaborator_department", "collaborator_role", "contract", "location"]
+    oc12_gestion_allowed_tables = [
+        "collaborator",
+        "collaborator_department",
+        "collaborator_role",
+        "contract",
+        "location",
+    ]
     for table in oc12_gestion_allowed_tables:
         sql = f"""GRANT INSERT ON {table} TO oc12_gestion"""
         cursor.execute(sql)
@@ -250,64 +260,66 @@ def dummy_database_creation():
     Description:
     Dédiée à peupler la base de données avec des données fictives
     """
-    conn = get_a_database_connection(f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}")
+    conn = get_a_database_connection(
+        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}"
+    )
     cursor = conn.cursor()
 
-    sql = """INSERT INTO collaborator_department(name) VALUES('OC12_COMMERCIAL')"""
+    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('ccial', 'OC12_COMMERCIAL')"""
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_department(name) VALUES('OC12_GESTION')"""
+    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('gest', 'OC12_GESTION')"""
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_department(name) VALUES('OC12_SUPPORT')"""
+    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('supp', 'OC12_SUPPORT')"""
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_role(name) VALUES('MANAGER')"""
+    sql = """INSERT INTO collaborator_role(role_id, name) VALUES('man', 'MANAGER')"""
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_role(name) VALUES('EMPLOYEE')"""
+    sql = """INSERT INTO collaborator_role(role_id, name) VALUES('emp', 'EMPLOYEE')"""
     cursor.execute(sql)
 
     # 2 membres de l'équipe COMMERCIAL, dont 1 nommé dans les exemples du cahier des charges
-    sql = f"""
+    sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
         VALUES('aa123456789', 'donald duck', '1', '1')
     """
     cursor.execute(sql)
 
-    sql = f"""
+    sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
         VALUES('ab123456789', 'Bill Boquet', '1', '2')
     """
     cursor.execute(sql)
 
     # 2 membres de l'équipe GESTION, pas d'exemples dans cahier des charges
-    sql = f"""
+    sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
         VALUES('ac123456789', 'daisy duck', '2', '1')
     """
     cursor.execute(sql)
 
-    sql = f"""
+    sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
         VALUES('ad123456789', 'loulou duck', '2', '2')
     """
     cursor.execute(sql)
 
     # 3 membres de l'équipe SUPPORT, dont 2 nommés dans les exemples du cahier des charges
-    sql = f"""
+    sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
         VALUES('ae123456789', 'louloute duck', '2', '2')
     """
     cursor.execute(sql)
 
-    sql = f"""
+    sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
         VALUES('af123456789', 'Aliénor Vichum', '3', '2')
     """
     cursor.execute(sql)
 
-    sql = f"""
+    sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
         VALUES('ag123456789', 'Kate Hastroff', '3', '2')
     """
@@ -323,7 +335,7 @@ def dummy_database_creation():
         ("ad123456789", "oc12_gestion"),
         ("ae123456789", "oc12_support"),
         ("af123456789", "oc12_support"),
-        ("ag123456789", "oc12_support")
+        ("ag123456789", "oc12_support"),
     ]:
         sql = f"""CREATE ROLE {user[0]} LOGIN PASSWORD 'applepie94'"""
         cursor.execute(sql)
@@ -333,42 +345,45 @@ def dummy_database_creation():
 
     # 1 localisation en exemple pour une entreprise
     sql = """
-    INSERT INTO location(adresse, complement_adresse, code_postal, ville, pays)
-    VALUES('9 avenue de la bonbonière', '', '22240', 'Plurien', 'France')
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
+    VALUES('p22240', '9 avenue de la bonbonière', '', '22240', 'Plurien', 'France')
     """
     cursor.execute(sql)
 
     # 1 entreprise en exemple
     sql = """
-    INSERT INTO company(company_id, company_name, company_registration_number, company_subregistration_number, location_id)
+    INSERT INTO company
+    (company_id, company_name, company_registration_number, company_subregistration_number, location_id)
     VALUES ('CSLLC12345', 'Cool Startup LLC', '777222888', '12345', '1')
     """
     cursor.execute(sql)
 
     # 1 client en exemple
     sql = """
-    INSERT INTO client(civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
-    VALUES('MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '+678 123 456 78', '1', '2')
+    INSERT INTO client
+    (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
+    VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '+678 123 456 78', '1', '2')
     """
     cursor.execute(sql)
 
     # 1 contrat en exemple
     sql = """
-    INSERT INTO contract(full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('999.99', '999.99', 'False', '1', '2')
+    INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
+    VALUES('kc555', '999.99', '999.99', 'False', '1', '2')
     """
     cursor.execute(sql)
 
     # 1 localisation en exemple pour un évènement
     sql = """
-    INSERT INTO location(adresse, complement_adresse, code_postal, ville, pays)
-    VALUES('53 Rue du Château', '', '41120', 'Candé-sur-Beuvron', 'France')
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
+    VALUES('csb41120', '53 Rue du Château', '', '41120', 'Candé-sur-Beuvron', 'France')
     """
     cursor.execute(sql)
 
     # 1 évènement en exemple
     sql = """
     INSERT INTO event(
+        event_id,
         title,
         contract_id,
         client_id,
@@ -380,6 +395,7 @@ def dummy_database_creation():
         notes
     )
     VALUES(
+        'hob2023',
         'Holiday on beach',
         '1',
         '1',

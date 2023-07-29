@@ -1,7 +1,6 @@
 """
 Description: Client en mode console dédié à l'admin de l'application.
 """
-import jwt
 
 try:
     from src.views.authentication_view import AuthenticationView
@@ -22,7 +21,9 @@ class AdminConsoleClient:
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        self.app_view = AuthenticationView(user_login=f"{settings.ADMIN_LOGIN}", user_pwd=f"{settings.ADMIN_PASSWORD}")
+        self.app_view = AuthenticationView(
+            user_login=f"{settings.ADMIN_LOGIN}", user_pwd=f"{settings.ADMIN_PASSWORD}"
+        )
         self.jwt_view = JwtView(self.app_view)
 
     def init_db(self):

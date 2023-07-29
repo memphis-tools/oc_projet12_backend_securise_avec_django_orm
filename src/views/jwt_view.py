@@ -5,10 +5,8 @@ from rich import print
 
 try:
     from src.controllers.jwt_controller import JwtController
-    from src.utils.utils import check_password_hash_from_input
 except ModuleNotFoundError:
     from controllers.jwt_controller import JwtController
-    from utils.utils import check_password_hash_from_input
 
 
 class JwtView:
@@ -28,14 +26,17 @@ class JwtView:
         Description: vue dédiée à obtenir un token, nécessaire pour s'authentifier sur l'application.
         """
         try:
-            collaborator, collaborator_department_name = self.app_view.db_controller.get_collaborator(
+            (
+                collaborator,
+                collaborator_department_name,
+            ) = self.app_view.db_controller.get_collaborator(
                 self.app_view.session, registration_number
             )
 
             r_number = registration_number
             u_name = collaborator.username
             department = collaborator_department_name
-            information = '[bold cyan]Add the following in your path and run any commands (try oc12_help)[/bold cyan]:'
+            information = "[bold cyan]Add the following in your path and run any commands (try oc12_help)[/bold cyan]:"
             to_do = f"OC_12_JWT='{self.jwt_controller.get_token(self.app_view.session, r_number, u_name, department)}'"
             print(information)
             print(to_do)

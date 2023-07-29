@@ -20,3 +20,19 @@ class CollaboratorsView:
         Description: vue dédiée à "méthode GET".
         """
         return self.db_controller.get_collaborators(self.session)
+
+    def get_collaborator(self, collaborator_id):
+        """
+        Description: Vue dédiée à obtenir le collaborateur dont l'id est indiqué en entrée.
+        Parameters:
+        - collaborator_id: une chaine libre qui identifie un collaborateur.
+        """
+        return self.db_controller.get_collaborator(self.session, collaborator_id)
+
+    def add_company(self, collaborator):
+        """
+        Description: Vue dédiée à ajouter un collaborateur de l'entreprise.
+        Parameters:
+        - collaborator: une instance du modèle de classe User.
+        """
+        return self.db_controller.add_collaborator(self.session, collaborator)

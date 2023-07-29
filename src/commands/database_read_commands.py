@@ -21,6 +21,7 @@ def get_clients():
     except Exception:
         print("[bold red]Missing token[/bold red]")
 
+
 @click.command
 def get_collaborators():
     """
@@ -31,6 +32,7 @@ def get_collaborators():
         print(console_client.get_collaborators())
     except Exception:
         print("[bold red]Missing token[/bold red]")
+
 
 @click.command
 def get_companies():
@@ -43,6 +45,7 @@ def get_companies():
     except Exception:
         print("[bold red]Missing token[/bold red]")
 
+
 @click.command
 def get_contracts():
     """
@@ -53,6 +56,7 @@ def get_contracts():
         print(console_client.get_contracts())
     except Exception:
         print("[bold red]Missing token[/bold red]")
+
 
 @click.command
 def get_departments():
@@ -65,6 +69,7 @@ def get_departments():
     except Exception:
         print("[bold red]Missing token[/bold red]")
 
+
 @click.command
 def get_events():
     """
@@ -76,6 +81,7 @@ def get_events():
     except Exception:
         print("[bold red]Missing token[/bold red]")
 
+
 @click.command
 def get_locations():
     """
@@ -86,6 +92,7 @@ def get_locations():
         print(console_client.get_locations())
     except Exception:
         print("[bold red]Missing token[/bold red]")
+
 
 @click.command
 def get_roles():

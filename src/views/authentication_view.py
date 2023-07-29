@@ -2,10 +2,14 @@
 On fournit uniquement dédiée à une connexion initiale et direct de/par l'utilisateur.
 """
 try:
-    from src.controllers.database_initializer_controller import DatabaseInitializerController
+    from src.controllers.database_initializer_controller import (
+        DatabaseInitializerController,
+    )
     from src.controllers.database_read_controller import DatabaseReadController
 except ModuleNotFoundError:
-    from controllers.database_initializer_controller import DatabaseInitializerController
+    from controllers.database_initializer_controller import (
+        DatabaseInitializerController,
+    )
     from controllers.database_read_controller import DatabaseReadController
 
 
@@ -24,7 +28,9 @@ class AuthenticationView:
         """
         self.db_controller = DatabaseReadController()
         self.db_initializer = DatabaseInitializerController()
-        self.engine, self.session = self.db_initializer.return_engine_and_session(user_login, user_pwd)
+        self.engine, self.session = self.db_initializer.return_engine_and_session(
+            user_login, user_pwd
+        )
 
     def init_db(self):
         """

@@ -1,10 +1,11 @@
 """
 On fournit une vue dédiée d'atteindre les modèles métier.
 """
-from termcolor import cprint
+
 try:
-    from src.controllers.database_initializer_controller import DatabaseInitializerController
-    from src.controllers.database_read_controller import DatabaseReadController
+    from src.controllers.database_initializer_controller import (
+        DatabaseInitializerController,
+    )
     from src.controllers.database_create_controller import DatabaseCreateController
     from src.views.jwt_view import JwtView
     from src.views.clients_view import ClientsView
@@ -16,8 +17,9 @@ try:
     from src.views.locations_view import LocationsView
     from src.views.roles_view import RolesView
 except ModuleNotFoundError:
-    from controllers.database_initializer_controller import DatabaseInitializerController
-    from controllers.database_read_controller import DatabaseReadController
+    from controllers.database_initializer_controller import (
+        DatabaseInitializerController,
+    )
     from controllers.database_create_controller import DatabaseCreateController
     from views.jwt_view import JwtView
     from views.clients_view import ClientsView
@@ -46,7 +48,9 @@ class CreateAppViews:
         # il faut charger le token de l'utilisateur, le décoder et le transmettre en clair
         # le "role" (exemple oc12_commercial) dans le token servira à créer la connexion à la bdd
         # il porte les permissions et chaque "department" (services, équipes) aura ses permissions.
-        self.engine, self.session = self.db_initializer.return_engine_and_session(decoded_token=decoded_token)
+        self.engine, self.session = self.db_initializer.return_engine_and_session(
+            decoded_token=decoded_token
+        )
 
     def get_clients_view(self):
         """

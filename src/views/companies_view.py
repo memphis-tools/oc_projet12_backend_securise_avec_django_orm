@@ -27,7 +27,7 @@ class CompaniesView:
         Parameters:
         - company_id: une chaine libre qui identifie une entreprise.
         """
-        return self.db_controller.get_company(self.session)
+        return self.db_controller.get_company(self.session, company_id)
 
     def add_company(self, company):
         """

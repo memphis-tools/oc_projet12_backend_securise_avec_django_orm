@@ -6,7 +6,6 @@ Permettre login, logout. Controler le jeton /token utilisé par l'utilisateur co
 import os
 from datetime import datetime, timedelta
 import jwt
-from rich import print
 
 try:
     from src.settings import settings

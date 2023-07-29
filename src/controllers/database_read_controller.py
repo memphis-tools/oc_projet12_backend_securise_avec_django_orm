@@ -1,13 +1,12 @@
 """
 Un controleur avec toutes méthodes GET.
 """
-from sqlalchemy.sql import text
+
 try:
     from src.models import models
-    from src.controllers.database_initializer_controller import DatabaseInitializerController
 except ModuleNotFoundError:
     from models import models
-    from controllers.database_initializer_controller import DatabaseInitializerController
+
 
 class DatabaseReadController:
     """
@@ -21,9 +20,7 @@ class DatabaseReadController:
         """
         try:
             db_client_queryset = (
-                session.query(models.Client)
-                .filter_by(client_id=client_id)
-                .first()
+                session.query(models.Client).filter_by(client_id=client_id).first()
             )
             session.close()
             return db_client_queryset
@@ -73,10 +70,10 @@ class DatabaseReadController:
         """
         try:
             db_company_queryset = (
-                session.query(models.Company, models.Location)
-                .filter(models.Company.location_id == models.Location.id)
-                .filter_by(company_id=company_id)
-                .first()
+                session.query(models.Company)
+                # session.query(models.Company, models.Location)
+                # .filter(models.Company.location_id == models.Location.id)
+                .filter_by(company_id=company_id).first()
             )
             session.close()
             return db_company_queryset
@@ -123,6 +120,8 @@ class DatabaseReadController:
         """
         Description: Fonction dédiée à servir la vue lors d'une requête d'une localité (entreprise ou évènement).
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Location.
+        Paramètres:
+        - location_id: chaine de caractères (ce n'est pas l'id integer pour la clef primaire).
         """
         try:
             db_locations_queryset = (
@@ -133,7 +132,7 @@ class DatabaseReadController:
             session.close()
             return db_locations_queryset
         except Exception as error:
-            print(f"Company not found: {error}")
+            print(f"Location not found: {error}")
 
     def get_locations(self, session):
         """

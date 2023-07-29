@@ -1,23 +1,14 @@
 """
 Description: Client en mode console
 """
-import sys
-from functools import wraps
-import maskpass
-import jwt
-import pyfiglet
-from rich import print
-import pkg_resources
 
 try:
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
-    from src.settings import settings
     from src.utils.utils import authentication_permission_decorator, display_banner
 except ModuleNotFoundError:
     from views.views import AppViews
     from views.jwt_view import JwtView
-    from settings import settings
     from utils.utils import authentication_permission_decorator, display_banner
 
 
