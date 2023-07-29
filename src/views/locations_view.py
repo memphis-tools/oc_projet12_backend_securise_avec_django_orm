@@ -17,6 +17,22 @@ class LocationsView:
 
     def get_locations(self):
         """
-        Description: vue dédiée à "méthode GET".
+        Description: vue dédiée à obtenir les localités.
         """
         return self.db_controller.get_locations(self.session)
+
+    def get_location(self, location_id):
+        """
+        Description: vue dédiée à obtenir une localité.
+        Parameters:
+        - location_id: la clef primaire, un entier (en autoincrement) du modèle.
+        """
+        return self.db_controller.get_location(self.session, location_id)
+
+    def add_location(self, location):
+        """
+        Description: vue dédiée à enregistrer une localité.
+        Parameters:
+        - location: une instance valide de la classe Location.
+        """
+        return self.db_controller.add_location(self.session, location)

@@ -118,6 +118,7 @@ class Company(Base):
 
     __tablename__ = "company"
     id = Column(Integer, primary_key=True)
+    company_id = Column(String(120), nullable=False)
     company_name = Column(String(130), nullable=False)
     company_registration_number = Column(String(100), nullable=False)
     company_subregistration_number = Column(String(50), nullable=False)
@@ -125,7 +126,7 @@ class Company(Base):
     client = relationship("Client", back_populates="company")
 
     def __str__(self):
-        return f"{self.company_name}"
+        return f"{self.company_id}: {self.company_name}"
 
     def __repr__(self):
         return self.__str__()
@@ -150,7 +151,7 @@ class Client(Base):
     employee_role = Column(String(100), nullable=False)
     email = Column(String(130), nullable=False)
     telephone = Column(String(60), nullable=True)
-    company_id = Column(Integer, ForeignKey("collaborator.id"))
+    company_id = Column(Integer, ForeignKey("company.id"))
     creation_date = Column(Date(), nullable=False, default=get_today_date())
     last_update_date = Column(Date(), nullable=False, default=get_today_date())
     commercial_contact = Column(Integer, ForeignKey("collaborator.id"))
@@ -174,7 +175,6 @@ class Contract(Base):
 
     __tablename__ = "contract"
     id = Column(Integer, primary_key=True)
-    information = Column(String(2500), nullable=True)
     full_amount_to_pay = Column(Float, nullable=False)
     remain_amount_to_pay = Column(Float, nullable=False, default=full_amount_to_pay)
     creation_date = Column(

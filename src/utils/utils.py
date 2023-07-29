@@ -213,15 +213,37 @@ def database_postinstall_tasks():
         cursor.execute(sql)
         sql = f"""GRANT CONNECT ON DATABASE projet12 TO {role[0]}"""
         cursor.execute(sql)
-        # voir si on peut exclure la table collaborator et collaborator_department
-        # attention ils sont utilisés pour la mécanique de controle des autorisations
-        for model in ["client", "collaborator", "collaborator_department", "contract", "event", "location", "collaborator_role"]:
+        for model in [
+            "client",
+            "collaborator",
+            "collaborator_department",
+            "collaborator_role",
+            "company",
+            "contract",
+            "event",
+            "location",
+        ]:
             sql = f"""GRANT SELECT ON {model} TO {role[0]}"""
             cursor.execute(sql)
+
+    oc12_commercial_allowed_tables = ["client", "company", "contract", "location"]
+    for table in oc12_commercial_allowed_tables:
+        sql = f"""GRANT INSERT ON {table} TO oc12_commercial"""
+        cursor.execute(sql)
+        sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_commercial"""
+        cursor.execute(sql)
+
+    oc12_gestion_allowed_tables = ["collaborator", "collaborator_department", "collaborator_role", "contract", "location"]
+    for table in oc12_gestion_allowed_tables:
+        sql = f"""GRANT INSERT ON {table} TO oc12_gestion"""
+        cursor.execute(sql)
+        sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_gestion"""
+        cursor.execute(sql)
 
     conn.commit()
     conn.close()
     return True
+
 
 def dummy_database_creation():
     """
@@ -318,9 +340,10 @@ def dummy_database_creation():
 
     # 1 entreprise en exemple
     sql = """
-    INSERT INTO company(company_name, company_registration_number, company_subregistration_number, location_id)
-    VALUES ('Cool Startup LLC', '777222888', '12345', '1')
+    INSERT INTO company(company_id, company_name, company_registration_number, company_subregistration_number, location_id)
+    VALUES ('CSLLC12345', 'Cool Startup LLC', '777222888', '12345', '1')
     """
+    cursor.execute(sql)
 
     # 1 client en exemple
     sql = """
@@ -331,8 +354,8 @@ def dummy_database_creation():
 
     # 1 contrat en exemple
     sql = """
-    INSERT INTO contract(information, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('Memes infos que le client ?', '999.99', '999.99', 'False', '1', '2')
+    INSERT INTO contract(full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
+    VALUES('999.99', '999.99', 'False', '1', '2')
     """
     cursor.execute(sql)
 
