@@ -31,7 +31,7 @@
 
 |COMMAND|INFO|
 |-------|----|
-|oc12_launch_application| initialiser un POC|
+|oc12_init_application| initialiser un POC|
 |oc12_token| obtenir un jeton d'accès|
 |oc12_logout| se déconnecter de l'application|
 |oc12_clients| obtenir les clients de l'entreprise|
