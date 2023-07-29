@@ -5,6 +5,7 @@ from termcolor import cprint
 try:
     from src.controllers.database_initializer_controller import DatabaseInitializerController
     from src.controllers.database_read_controller import DatabaseReadController
+    from src.controllers.database_create_controller import DatabaseCreateController
     from src.views.jwt_view import JwtView
     from src.views.clients_view import ClientsView
     from src.views.collaborators_view import CollaboratorsView
@@ -17,6 +18,7 @@ try:
 except ModuleNotFoundError:
     from controllers.database_initializer_controller import DatabaseInitializerController
     from controllers.database_read_controller import DatabaseReadController
+    from controllers.database_create_controller import DatabaseCreateController
     from views.jwt_view import JwtView
     from views.clients_view import ClientsView
     from views.collaborators_view import CollaboratorsView
@@ -28,16 +30,16 @@ except ModuleNotFoundError:
     from views.roles_view import RolesView
 
 
-class AppViews:
+class CreateAppViews:
     """
     Description: une classe dédiée à servir les vues de l'application.
     """
 
     def __init__(self):
         """
-        Description: vue dédiée à instancier la base de données et retourner un controleur.
+        Description: vue dédiée à instancier la base de données et retourner un controleur pour la modification.
         """
-        self.db_controller = DatabaseReadController()
+        self.db_controller = DatabaseCreateController()
         self.db_initializer = DatabaseInitializerController()
         self.jwt_view = JwtView(self)
         decoded_token = self.jwt_view.get_decoded_token()

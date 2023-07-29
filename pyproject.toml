@@ -9,6 +9,8 @@ packages = [
   {include = "clients", from = "src"},
   {include = "commands", from = "src"},
   {include = "controllers", from = "src"},
+  {include = "exceptions", from = "src"},
+  {include = "forms", from = "src"},
   {include = "models", from = "src"},
   {include = "settings", from = "src"},
   {include = "utils", from = "src"},
@@ -37,17 +39,30 @@ pyfiglet = "^0.8.post1"
 termcolor = "^2.3.0"
 
 [tool.poetry.scripts]
+# commandes pour gérer l'authentification
 oc12_init_application = "commands.init_commands:init_application"
 oc12_token = "commands.authentication_commands:get_token"
 oc12_logout = "commands.authentication_commands:logout"
+# commandes pour accéder en lecture aux données
 oc12_clients = "commands.database_read_commands:get_clients"
 oc12_collaborators = "commands.database_read_commands:get_collaborators"
+oc12_companies = "commands.database_read_commands:get_companies"
 oc12_contracts = "commands.database_read_commands:get_contracts"
 oc12_departments = "commands.database_read_commands:get_departments"
 oc12_events = "commands.database_read_commands:get_events"
 oc12_locations = "commands.database_read_commands:get_locations"
 oc12_roles = "commands.database_read_commands:get_roles"
+# commande pour obtenir de l'aide
 oc12_help = "commands.helps:help"
+# commandes pour ajouter des données
+oc12_add_client = "commands.database_create_commands:add_client"
+oc12_add_collaborator = "commands.database_create_commands:add_collaborator"
+oc12_add_company = "commands.database_create_commands:add_company"
+oc12_add_contract = "commands.database_create_commands:add_contract"
+oc12_add_department = "commands.database_create_commands:add_department"
+oc12_add_event = "commands.database_create_commands:add_event"
+oc12_add_location = "commands.database_create_commands:add_location"
+oc12_add_role = "commands.database_create_commands:add_role"
 
 [build-system]
 requires = ["poetry-core"]

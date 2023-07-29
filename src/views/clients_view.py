@@ -17,6 +17,20 @@ class ClientsView:
 
     def get_clients(self):
         """
-        Description: vue dédiée à "méthode GET".
+        Description: vue dédiée à obtenir les clients de l'entreprise.
         """
         return self.db_controller.get_clients(self.session)
+
+    def get_client(self, client_id):
+        """
+        Description: vue dédiée à obtenir un client de l'entreprise.
+        """
+        return self.db_controller.get_client(self.session, client_id)
+
+    def add_client(self, client):
+        """
+        Description: vue dédiée à enregistrer un client.
+        Parameters:
+        - client: une instance valide de la classe Client.
+        """
+        return self.db_controller.add_client(self.session, client)

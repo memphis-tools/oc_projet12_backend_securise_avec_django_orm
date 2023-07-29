@@ -33,6 +33,17 @@ def get_collaborators():
         print("[bold red]Missing token[/bold red]")
 
 @click.command
+def get_companies():
+    """
+    Description: commande dédiée à récupérer les entreprises clientes.
+    """
+    try:
+        console_client = ConsoleClient()
+        print(console_client.get_companies())
+    except Exception:
+        print("[bold red]Missing token[/bold red]")
+
+@click.command
 def get_contracts():
     """
     Description: commande dédiée à récupérer les contrats de l'entreprise.

@@ -49,6 +49,13 @@ class ConsoleClient:
         return self.app_view.get_collaborators_view().get_collaborators()
 
     @authentication_permission_decorator
+    def get_companies(self):
+        """
+        Description: vue dédiée à obtenir les entreprises clientes.
+        """
+        return self.app_view.get_companies_view().get_companies()
+
+    @authentication_permission_decorator
     def get_contracts(self):
         """
         Description: vue dédiée à obtenir les contrats de l'entreprise.
