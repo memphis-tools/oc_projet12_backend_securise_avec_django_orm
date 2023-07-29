@@ -2,8 +2,6 @@
 Description:
 Test de la vue pour joindre les controleurs en mode lecture ("GET").
 """
-import pytest
-from rich import print
 
 try:
     from src.views.clients_view import ClientsView
@@ -14,7 +12,6 @@ try:
     from src.views.locations_view import LocationsView
     from src.views.roles_view import RolesView
     from src.views.views import AppViews
-    from src.views.jwt_view import JwtView
     from src.controllers.jwt_controller import JwtController
 except ModuleNotFoundError:
     from views.clients_view import ClientsView
@@ -25,7 +22,6 @@ except ModuleNotFoundError:
     from views.locations_view import LocationsView
     from views.roles_view import RolesView
     from views.views import AppViews
-    from views.jwt_view import JwtView
     from controllers.jwt_controller import JwtController
 
 

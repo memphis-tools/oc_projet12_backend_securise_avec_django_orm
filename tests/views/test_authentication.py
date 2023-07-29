@@ -3,16 +3,13 @@ Description:
 Test de la vue pour l'authentification.
 """
 import pytest
-import jwt
 import sqlalchemy
 
 try:
-    from src.settings import settings
     from src.views.views import AppViews
     from src.views.authentication_view import AuthenticationView
     from src.views.jwt_view import JwtView
 except ModuleNotFoundError:
-    from settings import settings
     from views.views import AppViews
     from views.authentication_view import AuthenticationView
     from views.jwt_view import JwtView

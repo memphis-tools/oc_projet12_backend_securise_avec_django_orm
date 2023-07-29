@@ -42,5 +42,8 @@ def get_unvalid_decoded_token(mocker):
     }
     mocker.patch('views.jwt_view.JwtView.get_decoded_token', return_value=dummy_payload_data)
     mocker.patch('controllers.jwt_controller.JwtController.get_decoded_token', return_value=dummy_payload_data)
-    mocker.patch('authenticators.jwt_authenticator.JwtAuthenticator.get_decoded_token', return_value=dummy_payload_data))
+    mocker.patch(
+        'authenticators.jwt_authenticator.JwtAuthenticator.get_decoded_token',
+        return_value=dummy_payload_data
+    )
     return dummy_payload_data

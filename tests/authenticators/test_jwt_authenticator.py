@@ -4,28 +4,19 @@ Test du authenticator type JWT de l'application.
 """
 import os
 import pytest
-import psycopg
-from time import sleep
 from datetime import datetime, timedelta
 import jwt
-from rich import print
 
 try:
     from src.views.authentication_view import AuthenticationView
     from src.views.jwt_view import JwtView
-    import src.controllers.jwt_controller
     from src.controllers.jwt_controller import JwtController
-    from src.commands import authentication_commands
     from src.settings import settings
-    from src.authenticators.jwt_authenticator import JwtAuthenticator
 except ModuleNotFoundError:
     from views.authentication_view import AuthenticationView
     from views.jwt_view import JwtView
-    import controllers.jwt_controller
     from controllers.jwt_controller import JwtController
-    from commands import authentication_commands
     from settings import settings
-    from authenticators.jwt_authenticator import JwtAuthenticator
 
 
 def test_get_token_with_unvalid_credentials():
