@@ -21,6 +21,7 @@ def add_client():
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
+
 @click.command
 def add_collaborator():
     """
@@ -31,6 +32,7 @@ def add_collaborator():
         print(console_client.add_collaborator())
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
+
 
 @click.command
 def add_company():
@@ -43,6 +45,7 @@ def add_company():
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
+
 @click.command
 def add_contract():
     """
@@ -53,6 +56,7 @@ def add_contract():
         print(console_client.add_contract())
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
+
 
 @click.command
 def add_department():
@@ -65,6 +69,7 @@ def add_department():
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
+
 @click.command
 def add_event():
     """
@@ -76,6 +81,7 @@ def add_event():
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
+
 @click.command
 def add_location():
     """
@@ -86,6 +92,7 @@ def add_location():
         print(console_client.add_location())
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
+
 
 @click.command
 def add_role():

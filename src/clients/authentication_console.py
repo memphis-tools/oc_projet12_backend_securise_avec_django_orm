@@ -2,12 +2,9 @@
 Description: console dédiée aux seules opérations de login et logout
 """
 import sys
-from functools import wraps
 import maskpass
-import jwt
 from rich import print
 from rich.prompt import Prompt
-import pkg_resources
 
 try:
     from src.views.authentication_view import AuthenticationView

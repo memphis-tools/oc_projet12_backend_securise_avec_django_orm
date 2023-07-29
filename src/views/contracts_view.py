@@ -20,3 +20,19 @@ class ContractsView:
         Description: vue dédiée à "méthode GET".
         """
         return self.db_controller.get_contracts(self.session)
+
+    def get_contract(self, contract_id):
+        """
+        Description: Vue dédiée à obtenir le contrat dont l'id est indiqué en entrée.
+        Parameters:
+        - contract_id: une chaine libre qui identifie un contrat.
+        """
+        return self.db_controller.get_contract(self.session, contract_id)
+
+    def add_company(self, contract):
+        """
+        Description: Vue dédiée à ajouter un contrat.
+        Parameters:
+        - contract: une instance du modèle de classe Contract.
+        """
+        return self.db_controller.add_contract(self.session, contract)

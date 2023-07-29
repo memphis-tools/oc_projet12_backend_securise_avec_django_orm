@@ -75,9 +75,7 @@ def init_application():
 
     try:
         subprocess.run(
-            [
-                f"sudo -u postgres createuser -s -i -d -r -l -w {settings.ADMIN_LOGIN}"
-            ],
+            [f"sudo -u postgres createuser -s -i -d -r -l -w {settings.ADMIN_LOGIN}"],
             shell=True,
             check=True,
             capture_output=True,
@@ -115,7 +113,9 @@ def init_application():
         sys.exit(0)
 
     try:
-        os.system("sudo su -c 'psql -c \"ALTER DATABASE projet12 OWNER TO admin\"' postgres")
+        os.system(
+            "sudo su -c 'psql -c \"ALTER DATABASE projet12 OWNER TO admin\"' postgres"
+        )
         print(
             f"[bold green][START CONTROL][/bold green] {settings.DATABASE_NAME} owner is now {settings.ADMIN_LOGIN}"
         )

@@ -20,3 +20,19 @@ class EventsView:
         Description: vue dédiée à "méthode GET".
         """
         return self.db_controller.get_events(self.session)
+
+    def get_event(self, event_id):
+        """
+        Description: Vue dédiée à obtenir l'évènement dont l'id est indiqué en entrée.
+        Parameters:
+        - event_id: une chaine libre qui identifie un évènement.
+        """
+        return self.db_controller.get_event(self.session, event_id)
+
+    def add_event(self, event):
+        """
+        Description: Vue dédiée à ajouter un évènement.
+        Parameters:
+        - event: une instance du modèle de classe Event.
+        """
+        return self.db_controller.add_event(self.session, event)

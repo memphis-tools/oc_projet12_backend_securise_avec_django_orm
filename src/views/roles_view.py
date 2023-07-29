@@ -20,3 +20,19 @@ class RolesView:
         Description: vue dédiée à "méthode GET".
         """
         return self.db_controller.get_roles(self.session)
+
+    def get_role(self, role_id):
+        """
+        Description: Vue dédiée à obtenir le role dont l'id est indiqué en entrée.
+        Parameters:
+        - role_id: une chaine libre qui identifie un role.
+        """
+        return self.db_controller.get_role(self.session, role_id)
+
+    def add_role(self, role):
+        """
+        Description: Vue dédiée à ajouter un role.
+        Parameters:
+        - role: une instance du modèle de classe UserRole.
+        """
+        return self.db_controller.add_role(self.session, role)

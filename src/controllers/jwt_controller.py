@@ -24,7 +24,9 @@ class JwtController:
         Fonction dédiée à obtenir un token, nécessaire pour s'authentifier sur l'application.
         """
 
-        self.jwt_authenticator = JwtAuthenticator(registration_number, username, department)
+        self.jwt_authenticator = JwtAuthenticator(
+            registration_number, username, department
+        )
         token = self.jwt_authenticator.get_token()
         return token
 
