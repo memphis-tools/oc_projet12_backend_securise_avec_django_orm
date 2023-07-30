@@ -297,7 +297,7 @@ class ConsoleClientForCreate:
                     contract_attributes_dict
                 )
                 if b1 and b2:
-                    company = models.Contract(contract_attributes_dict)
+                    company = models.Contract(**contract_attributes_dict)
                 else:
                     raise SuppliedDataNotMatchModel()
             else:
@@ -329,7 +329,7 @@ class ConsoleClientForCreate:
                     department_attributes_dict
                 )
                 if b1 and b2:
-                    department = models.Department(department_attributes_dict)
+                    department = models.Department(**department_attributes_dict)
                 else:
                     raise SuppliedDataNotMatchModel()
             else:
@@ -361,7 +361,7 @@ class ConsoleClientForCreate:
                 b1 = add_data_validators.data_is_dict(event_attributes_dict)
                 b2 = add_data_validators.add_event_data_is_valid(event_attributes_dict)
                 if b1 and b2:
-                    event = models.Event(event_attributes_dict)
+                    event = models.Event(**event_attributes_dict)
                 else:
                     raise SuppliedDataNotMatchModel()
             else:
@@ -393,7 +393,7 @@ class ConsoleClientForCreate:
                     location_attributes_dict
                 )
                 if b1 and b2:
-                    event = models.Location(location_attributes_dict)
+                    location = models.Location(**location_attributes_dict)
                 else:
                     raise SuppliedDataNotMatchModel()
             else:
@@ -425,7 +425,7 @@ class ConsoleClientForCreate:
                     role_attributes_dict
                 )
                 if b1 and b2:
-                    role = models.Role(role_attributes_dict)
+                    role = models.Role(**role_attributes_dict)
                 else:
                     raise SuppliedDataNotMatchModel()
             else:
