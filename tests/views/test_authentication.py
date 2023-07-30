@@ -25,12 +25,12 @@ def test_authentication_with_wrong_credentials():
 
 def test_authentication_with_valid_credentials(get_runner, mocker):
     dummy_payload_data = {
-        "registration_number": 'aa123456789',
-        "username": 'donald duck',
-        "department": 'oc12_commercial',
-        "expiration": '2023-07-25 11:57:57.081336'
+        "registration_number": "aa123456789",
+        "username": "donald duck",
+        "department": "oc12_commercial",
+        "expiration": "2023-07-25 11:57:57.081336",
     }
-    mocker.patch.object(JwtView, 'get_decoded_token', return_value=dummy_payload_data)
+    mocker.patch.object(JwtView, "get_decoded_token", return_value=dummy_payload_data)
     auth_view = AppViews()
     clients = auth_view.get_clients_view().get_clients()
     assert len(clients) > 0
