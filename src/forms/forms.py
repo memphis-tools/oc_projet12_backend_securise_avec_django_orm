@@ -14,9 +14,7 @@ def submit_a_location_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][LOCATION LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask(
-                "id localité (ne rien saisir si inconnue): "
-            )
+            custom_id = Prompt.ask("id localité (ne rien saisir si inconnue): ")
         except KeyboardInterrupt:
             print("[bold green][LOCATION LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
@@ -29,7 +27,7 @@ def submit_a_location_create_form(custom_dict={}):
     """
     if custom_dict == {}:
         location_expected_attributes_dict = {
-            "location_id": "id",
+            "location_id": "id (chaine libre)",
             "adresse": "adresse",
             "complement_adresse": "complement_adresse",
             "code_postal": "code_postal",
@@ -38,9 +36,7 @@ def submit_a_location_create_form(custom_dict={}):
         }
         print("[bold blue][LOCATION CREATION][/bold blue]")
         try:
-            while not len(custom_dict) == len(
-                location_expected_attributes_dict
-            ):
+            while not len(custom_dict) == len(location_expected_attributes_dict):
                 for key, value in location_expected_attributes_dict.items():
                     if key not in custom_dict.keys():
                         item = Prompt.ask(f"{value}: ")
@@ -74,7 +70,7 @@ def submit_a_company_create_form(custom_dict={}):
     """
     if custom_dict == {}:
         company_expected_attributes_dict = {
-            "company_id": "id entreprise",
+            "company_id": "id entreprise (chaine libre)",
             "company_name": "nom entreprise",
             "company_registration_number": "siren",
             "company_subregistration_number": "nic",
@@ -115,7 +111,7 @@ def submit_a_client_create_form(custom_dict={}):
     """
     if custom_dict == {}:
         client_expected_attributes_dict = {
-            "client_id": "id",
+            "client_id": "id (chaine libre)",
             "civility": "civilité",
             "first_name": "prénom",
             "last_name": "nom",
@@ -167,9 +163,7 @@ def submit_a_collaborator_role_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][ROLE LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask(
-                "id role (ne rien saisir si inconnu): "
-            )
+            custom_id = Prompt.ask("id role (ne rien saisir si inconnu): ")
         except KeyboardInterrupt:
             print("[bold green][ROLE LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
@@ -181,14 +175,19 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
     Description: Fonction dédiée à créer un nouveau rôle pour un collaborateur de l'entreprise.
     """
     if custom_dict == {}:
-        collaborator_role_expected_attributes_dict = {"name": "name (MANAGER, EMPLOYEE)"}
+        collaborator_role_expected_attributes_dict = {
+            "role_id": "role (chaine libre)",
+            "name": "name (MANAGER, EMPLOYEE, etc)",
+        }
         print("[bold blue][COLLABORATOR ROLE CREATION][/bold blue]")
         try:
             for key, value in collaborator_role_expected_attributes_dict.items():
                 item = Prompt.ask(f"{value}: ")
                 custom_dict[key] = item
         except KeyboardInterrupt:
-            print("[bold green][COLLABORATOR ROLE CREATION][/bold green] Creation aborted")
+            print(
+                "[bold green][COLLABORATOR ROLE CREATION][/bold green] Creation aborted"
+            )
             sys.exit(0)
     return custom_dict
 
@@ -215,7 +214,8 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
     """
     if custom_dict == {}:
         collaborator_department_expected_attributes_dict = {
-            "department": "service (examples: OC12_COMMERCIAL, OC12_GESTION, ...)"
+            "department_id": "id service (chaine de caractères libre)",
+            "department": "service (examples: OC12_COMMERCIAL, OC12_GESTION, ...)",
         }
         print("[bold blue][COLLABORATOR DEPARTMENT CREATION][/bold blue]")
         try:
@@ -237,9 +237,7 @@ def submit_a_contract_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][CONTRACT LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask(
-                "id contrat (ne rien saisir si inconnu): "
-            )
+            custom_id = Prompt.ask("id contrat (ne rien saisir si inconnu): ")
         except KeyboardInterrupt:
             print("[bold green][CONTRACT LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
@@ -276,9 +274,7 @@ def submit_a_event_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][EVENT LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask(
-                "id evènement (ne rien saisir si inconnu): "
-            )
+            custom_id = Prompt.ask("id evènement (ne rien saisir si inconnu): ")
         except KeyboardInterrupt:
             print("[bold green][EVENT LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)

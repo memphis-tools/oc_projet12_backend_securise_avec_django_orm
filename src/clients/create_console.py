@@ -13,6 +13,7 @@ try:
     from src.views.jwt_view import JwtView
     from src.settings import settings
     from src.utils.utils import authentication_permission_decorator, display_banner
+    from src.validators import add_data_validators
 except ModuleNotFoundError:
     from exceptions import exceptions
     from forms import forms
@@ -22,6 +23,7 @@ except ModuleNotFoundError:
     from views.jwt_view import JwtView
     from settings import settings
     from utils.utils import authentication_permission_decorator, display_banner
+    from validators import add_data_validators
 
 
 class ConsoleClientForCreate:
@@ -63,7 +65,9 @@ class ConsoleClientForCreate:
         contract_lookup = None
         try:
             # on propose de rechercher le contrat
-            contract_lookup = self.app_view.get_contracts_view().get_contract(contract_id)
+            contract_lookup = self.app_view.get_contracts_view().get_contract(
+                contract_id
+            )
             return contract_lookup.get_dict()
         except Exception as error:
             print(f"No such contract sir: {error}")
@@ -77,9 +81,7 @@ class ConsoleClientForCreate:
         company_lookup = None
         try:
             # on propose de rechercher l'entreprise
-            company_lookup = self.app_view.get_companies_view().get_company(
-                company_id
-            )
+            company_lookup = self.app_view.get_companies_view().get_company(company_id)
             return company_lookup.get_dict()
         except Exception as error:
             print(f"No such company sir: {error}")
@@ -92,8 +94,10 @@ class ConsoleClientForCreate:
             return False
         department_lookup = None
         try:
-            # on propose de rechercher l'évènement
-            department_lookup = self.app_view.get_departments_view().get_department(department_id)
+            # on propose de rechercher led département /service
+            department_lookup = self.app_view.get_departments_view().get_department(
+                department_id
+            )
             return department_lookup.get_dict()
         except Exception as error:
             print(f"No such department sir: {error}")
@@ -136,7 +140,7 @@ class ConsoleClientForCreate:
             return False
         role_lookup = None
         try:
-            # on propose de rechercher l'évènement
+            # on propose de rechercher le role
             role_lookup = self.app_view.get_roles_view().get_role(role_id)
             return role_lookup.get_dict()
         except Exception as error:
@@ -144,7 +148,7 @@ class ConsoleClientForCreate:
             return False
 
     @authentication_permission_decorator
-    def add_client(self):
+    def add_client(self, client=""):
         # rechercher le id de l'utilisateur courant
         # obtenir le token décodé (et valide)
         # demander mot de passe à utilisateur en cours
@@ -212,41 +216,61 @@ class ConsoleClientForCreate:
         return client_id
 
     @authentication_permission_decorator
-    def add_collaborators(self):
+    def add_collaborator(self, collaborator_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un nouvel utilisateur /collaborateur de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        collaborator = {}
+        collaborator = ""
         try:
             if "collaborator" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
-            collaborator = models.User(**collaborator_attributes_dict)
+            if collaborator_attributes_dict != "":
+                b1 = add_data_validators.data_is_dict(collaborator_attributes_dict)
+                b2 = add_data_validators.add_collaborator_data_is_valid(
+                    collaborator_attributes_dict
+                )
+                if b1 and b2:
+                    collaborator = models.User(**collaborator_attributes_dict)
+                else:
+                    raise SuppliedDataNotMatchModel()
+            else:
+                collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
+                collaborator = models.User(**collaborator_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.app_view.get_collaborators_view().add_collaborator()
+        return self.app_view.get_collaborators_view().add_collaborator(collaborator)
 
     @authentication_permission_decorator
-    def add_company(self):
+    def add_company(self, company_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        company = {}
+        company = ""
         try:
             if "company" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            company_attributes_dict = forms.submit_a_company_create_form()
-            company = models.Company(**company_attributes_dict)
+            if company_attributes_dict != "":
+                b1 = add_data_validators.data_is_dict(company_attributes_dict)
+                b2 = add_data_validators.add_company_data_is_valid(
+                    company_attributes_dict
+                )
+                if b1 and b2:
+                    company = models.Company(**company_attributes_dict)
+                else:
+                    raise SuppliedDataNotMatchModel()
+            else:
+                company_attributes_dict = forms.submit_a_company_create_form()
+                company = models.Company(**company_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -256,19 +280,29 @@ class ConsoleClientForCreate:
         return self.create_app_view.get_companies_view().add_company(company)
 
     @authentication_permission_decorator
-    def add_contract(self):
+    def add_contract(self, contract_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un contrat pour l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        contract = {}
+        contract = ""
         try:
             if "contract" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            contract_attributes_dict = forms.submit_a_contract_create_form()
-            contract = models.Contract(**contract_attributes_dict)
+            if contract_attributes_dict != "":
+                b1 = add_data_validators.data_is_dict(contract_attributes_dict)
+                b2 = add_data_validators.add_contract_data_is_valid(
+                    contract_attributes_dict
+                )
+                if b1 and b2:
+                    company = models.Contract(contract_attributes_dict)
+                else:
+                    raise SuppliedDataNotMatchModel()
+            else:
+                contract_attributes_dict = forms.submit_a_contract_create_form()
+                contract = models.Contract(**contract_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -278,19 +312,31 @@ class ConsoleClientForCreate:
         return self.app_view.get_contracts_view().add_contract(contract)
 
     @authentication_permission_decorator
-    def add_department(self):
+    def add_department(self, department_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un nouveau départements /services de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        department = {}
+        department = ""
         try:
             if "collaborator_department" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            department_attributes_dict = forms.submit_a_collaborator_department_create_form()
-            department = models.UserDepartment(**department_attributes_dict)
+            if department_attributes_dict != "":
+                b1 = add_data_validators.data_is_dict(department_attributes_dict)
+                b2 = add_data_validators.add_department_data_is_valid(
+                    department_attributes_dict
+                )
+                if b1 and b2:
+                    department = models.Department(department_attributes_dict)
+                else:
+                    raise SuppliedDataNotMatchModel()
+            else:
+                department_attributes_dict = (
+                    forms.submit_a_collaborator_department_create_form()
+                )
+                department = models.Department(**department_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -300,19 +346,27 @@ class ConsoleClientForCreate:
         return self.app_view.get_departments_view().add_department(department)
 
     @authentication_permission_decorator
-    def add_event(self):
+    def add_event(self, event_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un évènement de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        event = {}
+        event = ""
         try:
             if "event" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            event_attributes_dict = forms.submit_a_event_create_form()
-            event = models.Event(**event_attributes_dict)
+            if event_attributes_dict != "":
+                b1 = add_data_validators.data_is_dict(event_attributes_dict)
+                b2 = add_data_validators.add_event_data_is_valid(event_attributes_dict)
+                if b1 and b2:
+                    event = models.Event(event_attributes_dict)
+                else:
+                    raise SuppliedDataNotMatchModel()
+            else:
+                event_attributes_dict = forms.submit_a_event_create_form()
+                event = models.Event(**event_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -322,19 +376,29 @@ class ConsoleClientForCreate:
         return self.app_view.get_events_view().add_event(event)
 
     @authentication_permission_decorator
-    def add_location(self):
+    def add_location(self, location_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer une localité.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        location = {}
+        location = ""
         try:
             if "location" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            location_attributes_dict = forms.submit_a_location_create_form()
-            location = models.Location(**location_attributes_dict)
+            if location_attributes_dict != "":
+                b1 = add_data_validators.data_is_dict(location_attributes_dict)
+                b2 = add_data_validators.add_location_data_is_valid(
+                    location_attributes_dict
+                )
+                if b1 and b2:
+                    event = models.Location(location_attributes_dict)
+                else:
+                    raise SuppliedDataNotMatchModel()
+            else:
+                location_attributes_dict = forms.submit_a_location_create_form()
+                location = models.Location(**location_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -344,19 +408,29 @@ class ConsoleClientForCreate:
         return self.create_app_view.get_locations_view().add_location(location)
 
     @authentication_permission_decorator
-    def add_role(self):
+    def add_role(self, role_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un nouveau rôle pour les collaborateurs de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        role = {}
+        role = ""
         try:
             if "collaborator_role" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            role_attributes_dict = forms.submit_a_collaborator_role_create_form()
-            role = models.UserRole(**role_attributes_dict)
+            if role_attributes_dict != "":
+                b1 = add_data_validators.data_is_dict(role_attributes_dict)
+                b2 = add_data_validators.add_location_data_is_valid(
+                    role_attributes_dict
+                )
+                if b1 and b2:
+                    role = models.Role(role_attributes_dict)
+                else:
+                    raise SuppliedDataNotMatchModel()
+            else:
+                role_attributes_dict = forms.submit_a_collaborator_role_create_form()
+                role = models.Role(**role_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)

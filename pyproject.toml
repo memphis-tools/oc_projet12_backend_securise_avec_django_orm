@@ -14,6 +14,7 @@ packages = [
   {include = "models", from = "src"},
   {include = "settings", from = "src"},
   {include = "utils", from = "src"},
+  {include = "validators", from = "src"},
   {include = "views", from = "src"}
 ]
 
