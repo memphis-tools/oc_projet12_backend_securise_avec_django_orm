@@ -12,7 +12,7 @@ except ModuleNotFoundError:
 def test_generate_password_hash_from_input():
     result = utils.generate_password_hash_from_input("alouette")
     pattern_to_find = "pbkdf2:sha256"
-    assert result[0:len(pattern_to_find)] == pattern_to_find
+    assert result[0 : len(pattern_to_find)] == pattern_to_find
 
 
 # def test_check_password_hash_from_input():

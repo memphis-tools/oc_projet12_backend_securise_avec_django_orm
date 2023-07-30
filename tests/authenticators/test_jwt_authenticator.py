@@ -91,10 +91,10 @@ def test_check_token_expiration_when_time_elapsed_valid(get_runner, mocker):
     """
     expiration = datetime.utcnow() + timedelta(days=1)
     dummy_payload_data = {
-        "registration_number": 'aa123456789',
-        "username": 'donald duck',
-        "department": 'oc12_commercial',
-        "expiration": f'{expiration}'
+        "registration_number": "aa123456789",
+        "username": "donald duck",
+        "department": "oc12_commercial",
+        "expiration": f"{expiration}",
     }
 
     revocation = JwtController.is_token_revoked("", dummy_payload_data)
@@ -108,10 +108,10 @@ def test_check_token_expiration_when_time_elapsed_not_valid():
     Au delà du délai il doit être non révoqué.
     """
     dummy_payload_data = {
-        "registration_number": 'aa123456789',
-        "username": 'donald duck',
-        "department": 'oc12_commercial',
-        "expiration": '2023-07-23 11:57:57.081336'
+        "registration_number": "aa123456789",
+        "username": "donald duck",
+        "department": "oc12_commercial",
+        "expiration": "2023-07-23 11:57:57.081336",
     }
 
     jwt_controller = JwtController()
