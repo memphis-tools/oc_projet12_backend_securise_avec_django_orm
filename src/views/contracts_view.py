@@ -29,7 +29,7 @@ class ContractsView:
         """
         return self.db_controller.get_contract(self.session, contract_id)
 
-    def add_company(self, contract):
+    def add_contract(self, contract):
         """
         Description: Vue dédiée à ajouter un contrat.
         Parameters:

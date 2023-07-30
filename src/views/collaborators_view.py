@@ -29,7 +29,7 @@ class CollaboratorsView:
         """
         return self.db_controller.get_collaborator(self.session, collaborator_id)
 
-    def add_company(self, collaborator):
+    def add_collaborator(self, collaborator):
         """
         Description: Vue dédiée à ajouter un collaborateur de l'entreprise.
         Parameters:

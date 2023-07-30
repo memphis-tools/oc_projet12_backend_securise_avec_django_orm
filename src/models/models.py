@@ -139,7 +139,7 @@ class User(Base):
             "registration_number": self.registration_number,
             "username": self.username,
             "department": self.department,
-            "role": self.role
+            "role": self.role,
         }
         return collaborator_dict
 
@@ -266,7 +266,7 @@ class Contract(Base):
             "creation_date": self.creation_date.strftime("%d-%m-%Y"),
             "status": self.status,
             "client_id": self.client_id,
-            "collaborator_id": self.collaborator_id
+            "collaborator_id": self.collaborator_id,
         }
         return contract_dict
 
