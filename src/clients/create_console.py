@@ -43,13 +43,13 @@ class ConsoleClientForCreate:
 
     def ask_for_a_client_id(self):
         client_id = forms.submit_a_client_get_form()
-        if client_id["id"] == "":
+        if client_id == "":
             print("Pas d'id client saisi, recherche d'une entreprise")
             return False
         client_lookup = None
         try:
             # on propose de rechercher le client
-            client_lookup = self.app_view.get_clients_view().get_client(client_id["id"])
+            client_lookup = self.app_view.get_clients_view().get_client(client_id)
             return client_lookup.get_dict()
         except Exception as error:
             print(f"No such client sir: {error}")
@@ -57,13 +57,13 @@ class ConsoleClientForCreate:
 
     def ask_for_a_contract_id(self):
         contract_id = forms.submit_a_contract_get_form()
-        if contract_id["id"] == "":
+        if contract_id == "":
             print("Pas d'id contrat saisi")
             return False
         contract_lookup = None
         try:
             # on propose de rechercher le contrat
-            contract_lookup = self.app_view.get_contracts_view().get_contract(contract_id["id"])
+            contract_lookup = self.app_view.get_contracts_view().get_contract(contract_id)
             return contract_lookup.get_dict()
         except Exception as error:
             print(f"No such contract sir: {error}")
@@ -71,14 +71,14 @@ class ConsoleClientForCreate:
 
     def ask_for_a_company_id(self):
         company_id = forms.submit_a_company_get_form()
-        if company_id["id"] == "":
+        if company_id == "":
             print("Pas d'id entreprise saisi, recherche d'une localité")
             return False
         company_lookup = None
         try:
             # on propose de rechercher l'entreprise
             company_lookup = self.app_view.get_companies_view().get_company(
-                company_id["id"]
+                company_id
             )
             return company_lookup.get_dict()
         except Exception as error:
@@ -87,13 +87,13 @@ class ConsoleClientForCreate:
 
     def ask_for_a_department_id(self):
         department_id = forms.submit_a_collaborator_department_get_form()
-        if department_id["id"] == "":
+        if department_id == "":
             print("Pas d'id département /service saisi")
             return False
         department_lookup = None
         try:
             # on propose de rechercher l'évènement
-            department_lookup = self.app_view.get_departments_view().get_department(department_id["id"])
+            department_lookup = self.app_view.get_departments_view().get_department(department_id)
             return department_lookup.get_dict()
         except Exception as error:
             print(f"No such department sir: {error}")
@@ -101,13 +101,13 @@ class ConsoleClientForCreate:
 
     def ask_for_a_event_id(self):
         event_id = forms.submit_a_event_get_form()
-        if event_id["id"] == "":
+        if event_id == "":
             print("Pas d'id évènement saisi")
             return False
         event_lookup = None
         try:
             # on propose de rechercher l'évènement
-            event_lookup = self.app_view.get_events_view().get_event(event_id["id"])
+            event_lookup = self.app_view.get_events_view().get_event(event_id)
             return event_lookup.get_dict()
         except Exception as error:
             print(f"No such event sir: {error}")
@@ -115,14 +115,14 @@ class ConsoleClientForCreate:
 
     def ask_for_a_location_id(self):
         location_id = forms.submit_a_location_get_form()
-        if location_id["id"] == "":
+        if location_id == "":
             print("Pas d'id localité saisi")
             return False
         location_lookup = None
         try:
             # on propose de rechercher la localité
             location_lookup = self.app_view.get_locations_view().get_location(
-                location_id["id"]
+                location_id
             )
             return location_lookup.get_dict()
         except Exception as error:
@@ -131,13 +131,13 @@ class ConsoleClientForCreate:
 
     def ask_for_a_role_id(self):
         role_id = forms.submit_a_collaborator_role_get_form()
-        if role_id["id"] == "":
+        if role_id == "":
             print("Pas d'id role saisi")
             return False
         role_lookup = None
         try:
             # on propose de rechercher l'évènement
-            role_lookup = self.app_view.get_roles_view().get_role(role_id["id"])
+            role_lookup = self.app_view.get_roles_view().get_role(role_id)
             return role_lookup.get_dict()
         except Exception as error:
             print(f"No such role sir: {error}")
