@@ -1,4 +1,3 @@
-tests/utils/test_utils.py]
 """
 Description:
 Test de fonctions utiles.
