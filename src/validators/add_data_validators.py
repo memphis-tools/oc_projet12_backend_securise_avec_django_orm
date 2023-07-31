@@ -27,6 +27,7 @@ def add_client_data_is_valid(data) -> bool:
         "email",
         "telephone",
         "company_id",
+        "commercial_contact"
     ]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b

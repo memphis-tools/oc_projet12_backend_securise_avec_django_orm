@@ -165,12 +165,16 @@ class ConsoleClientForCreate:
             if "client" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if client_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(client_attributes_dict)
-                b2 = add_data_validators.add_collaborator_data_is_valid(
+                b1 = add_data_validators.data_is_dict(
+                client_attributes_dict)
+                b2 = add_data_validators.add_client_data_is_valid(
                     client_attributes_dict
                 )
                 if b1 and b2:
-                    collaborator = models.Client(**client_attributes_dict)
+                    # client = models.Client(**client_attributes_dict)
+                    client_id = self.create_app_view.get_clients_view().add_client(
+                        models.Client(**client_attributes_dict)
+                    )
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
@@ -339,14 +343,14 @@ class ConsoleClientForCreate:
                     department_attributes_dict
                 )
                 if b1 and b2:
-                    department = models.Department(**department_attributes_dict)
+                    department = models.UserDepartment(**department_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 department_attributes_dict = (
                     forms.submit_a_collaborator_department_create_form()
                 )
-                department = models.Department(**department_attributes_dict)
+                department = models.UserDepartment(**department_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
