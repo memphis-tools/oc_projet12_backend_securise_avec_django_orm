@@ -36,3 +36,11 @@ class ContractsView:
         - contract: une instance du modèle de classe Contract.
         """
         return self.db_controller.add_contract(self.session, contract)
+
+    def delete_contract(self, contract):
+        """
+        Description: Vue dédiée à supprimer un contrat.
+        Parameters:
+        - contract: une instance du modèle de classe Contract.
+        """
+        return self.db_controller.delete_contract(self.session, contract)
