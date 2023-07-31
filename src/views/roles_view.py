@@ -36,3 +36,11 @@ class RolesView:
         - role: une instance du modèle de classe UserRole.
         """
         return self.db_controller.add_role(self.session, role)
+
+    def delete_role(self, role):
+        """
+        Description: Vue dédiée à supprimer un role.
+        Parameters:
+        - role: une instance du modèle de classe UserRole.
+        """
+        return self.db_controller.delete_role(self.session, role)

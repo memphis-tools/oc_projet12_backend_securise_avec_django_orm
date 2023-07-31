@@ -36,3 +36,11 @@ class EventsView:
         - event: une instance du modèle de classe Event.
         """
         return self.db_controller.add_event(self.session, event)
+
+    def delete_event(self, event):
+        """
+        Description: Vue dédiée à supprimer un évènement.
+        Parameters:
+        - event: une instance du modèle de classe Event.
+        """
+        return self.db_controller.delete_event(self.session, event)

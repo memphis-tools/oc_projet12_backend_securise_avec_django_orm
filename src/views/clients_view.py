@@ -34,3 +34,9 @@ class ClientsView:
         - client: une instance valide de la classe Client.
         """
         return self.db_controller.add_client(self.session, client)
+
+    def delete_client(self, client):
+        """
+        Description: vue dédiée à supprimer un client de l'entreprise.
+        """
+        return self.db_controller.delete_client(self.session, client)

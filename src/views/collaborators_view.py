@@ -36,3 +36,11 @@ class CollaboratorsView:
         - collaborator: une instance du modèle de classe User.
         """
         return self.db_controller.add_collaborator(self.session, collaborator)
+
+    def delete_collaborator(self, collaborator):
+        """
+        Description: Vue dédiée à supprimer un collaborateur de l'entreprise.
+        Parameters:
+        - collaborator: une instance du modèle de classe User.
+        """
+        return self.db_controller.delete_collaborator(self.session, collaborator)
