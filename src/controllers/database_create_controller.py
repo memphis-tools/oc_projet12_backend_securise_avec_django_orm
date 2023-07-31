@@ -68,6 +68,18 @@ class DatabaseCreateController:
         except Exception as error:
             print(f"Error while adding: {error}")
 
+    def add_event(self, session, event):
+        """
+        Description: Fonction dédiée à servir la vue lors de l'ajout d'un évènement.
+        Requête de la base de données et renvoie l'id enregistré.
+        """
+        try:
+            session.add(event)
+            session.commit()
+            return event.id
+        except Exception as error:
+            print(f"Error while adding: {error}")
+
     def add_location(self, session, location):
         """
         Description: Fonction dédiée à servir la vue lors d'un ajout d'une localité (entreprise ou évènement).

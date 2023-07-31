@@ -5,10 +5,12 @@ On insistera avant tout sur une application fonctionnelle et sécurisée, quitte
 """
 import click
 from rich import print
+
 try:
     from src.utils.utils import display_banner
 except ModuleNotFoundError:
     from utils.utils import display_banner
+
 
 @click.command
 def help():

@@ -90,13 +90,10 @@ class UserRole(Base):
     """
 
     __tablename__ = "collaborator_role"
-    ROLES = [
-        ("MANAGER", "manager"),
-        ("EMPLOYEE", "employee"),
-    ]
+
     id = Column(Integer, primary_key=True)
     role_id = Column(String(120), nullable=False, unique=True)
-    name = Column(ChoiceType(ROLES), nullable=False)
+    name = Column(String(50), nullable=False, unique=True)
 
     def __str__(self):
         return f"{self.name}"
