@@ -37,10 +37,10 @@ class EventsView:
         """
         return self.db_controller.add_event(self.session, event)
 
-    def delete_event(self, event):
+    def delete_event(self, event_id):
         """
         Description: Vue dédiée à supprimer un évènement.
         Parameters:
-        - event: une instance du modèle de classe Event.
+        - event_id: id de l'objet (la clef primaire).
         """
-        return self.db_controller.delete_event(self.session, event)
+        return self.db_controller.delete_event(self.session, event_id)

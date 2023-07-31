@@ -214,7 +214,7 @@ class ConsoleClientForDelete:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.delete_app_view.get_collaborators_view().delete_collaborator(client_id)
+        return self.delete_app_view.get_clients_view().delete_client(client_id)
 
     @authentication_permission_decorator
     def delete_collaborator(self, collaborator_custom_id=""):
@@ -314,7 +314,7 @@ class ConsoleClientForDelete:
             if department_custom_id != "":
                 department_id = self.ask_for_a_department_id(department_custom_id)["id"]
             else:
-                department_id = self.ask_for_a_department_id()
+                department_id = self.ask_for_a_department_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -324,7 +324,7 @@ class ConsoleClientForDelete:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.delete_app_view.get_departments_view().delete_department(department_id)["id"]
+        return self.delete_app_view.get_departments_view().delete_department(department_id)
 
     @authentication_permission_decorator
     def delete_event(self, event_custom_id=""):

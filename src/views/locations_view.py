@@ -37,10 +37,10 @@ class LocationsView:
         """
         return self.db_controller.add_location(self.session, location)
 
-    def delete_location(self, location):
+    def delete_location(self, location_id):
         """
         Description: vue dédiée à supprimer une localité.
         Parameters:
-        - location: une instance valide de la classe Location.
+        - location_id: id de l'objet (la clef primaire).
         """
-        return self.db_controller.delete_location(self.session, location)
+        return self.db_controller.delete_location(self.session, location_id)

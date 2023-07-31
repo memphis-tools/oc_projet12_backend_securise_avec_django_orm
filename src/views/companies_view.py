@@ -37,10 +37,10 @@ class CompaniesView:
         """
         return self.db_controller.add_company(self.session, company)
 
-    def delete_company(self, company):
+    def delete_company(self, company_id):
         """
         Description: Vue dédiée à supprimer une entreprise.
         Parameters:
-        - company: une instance du modèle de classe Company.
+        - company_id: id de l'objet (la clef primaire).
         """
-        return self.db_controller.delete_company(self.session, company)
+        return self.db_controller.delete_company(self.session, company_id)
