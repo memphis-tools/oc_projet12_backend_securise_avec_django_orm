@@ -25,7 +25,7 @@ except ModuleNotFoundError:
     from controllers.jwt_controller import JwtController
 
 
-def test_get_clients(get_valid_decoded_token):
+def test_get_clients(get_valid_decoded_token_for_a_commercial_collaborator):
     result = JwtController().does_a_valid_token_exist()
     app_view = AppViews()
     clients_view = ClientsView(app_view.db_controller, app_view.session)
@@ -34,7 +34,7 @@ def test_get_clients(get_valid_decoded_token):
     assert type(result) == list
 
 
-def test_get_collaborators(mocker, get_valid_decoded_token):
+def test_get_collaborators(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
     app_view = AppViews()
     clients_view = CollaboratorsView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
@@ -42,7 +42,7 @@ def test_get_collaborators(mocker, get_valid_decoded_token):
     assert type(result) == list
 
 
-def test_get_contracts(mocker, get_valid_decoded_token):
+def test_get_contracts(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
     app_view = AppViews()
     clients_view = ContractsView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
@@ -50,7 +50,7 @@ def test_get_contracts(mocker, get_valid_decoded_token):
     assert type(result) == list
 
 
-def test_get_events(mocker, get_valid_decoded_token):
+def test_get_events(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
     app_view = AppViews()
     clients_view = EventsView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
@@ -58,7 +58,7 @@ def test_get_events(mocker, get_valid_decoded_token):
     assert type(result) == list
 
 
-def test_get_locations(mocker, get_valid_decoded_token):
+def test_get_locations(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
     app_view = AppViews()
     clients_view = LocationsView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
@@ -66,7 +66,7 @@ def test_get_locations(mocker, get_valid_decoded_token):
     assert type(result) == list
 
 
-def test_get_roles(mocker, get_valid_decoded_token):
+def test_get_roles(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
     app_view = AppViews()
     clients_view = RolesView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()

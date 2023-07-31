@@ -21,12 +21,48 @@ def get_runner():
 
 
 @pytest.fixture
-def get_valid_decoded_token(mocker):
+def get_valid_decoded_token_for_a_commercial_collaborator(mocker):
     expiration = datetime.utcnow() + timedelta(minutes=1)
     dummy_payload_data = {
         "registration_number": "aa123456789",
         "username": "donald duck",
         "department": "oc12_commercial",
+        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}'
+    }
+    mocker.patch(
+        "controllers.jwt_controller.JwtController.get_decoded_token",
+        return_value=dummy_payload_data,
+    )
+    mocker.patch.object(JwtController, "does_a_valid_token_exist", return_value=True)
+    mocker.patch.object(JwtView, "get_decoded_token", return_value=dummy_payload_data)
+    return dummy_payload_data
+
+
+@pytest.fixture
+def get_valid_decoded_token_for_a_gestion_collaborator(mocker):
+    expiration = datetime.utcnow() + timedelta(minutes=1)
+    dummy_payload_data = {
+        "registration_number": "ac123456789",
+        "username": "daisy duck",
+        "department": "oc12_gestion",
+        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}'
+    }
+    mocker.patch(
+        "controllers.jwt_controller.JwtController.get_decoded_token",
+        return_value=dummy_payload_data,
+    )
+    mocker.patch.object(JwtController, "does_a_valid_token_exist", return_value=True)
+    mocker.patch.object(JwtView, "get_decoded_token", return_value=dummy_payload_data)
+    return dummy_payload_data
+
+
+@pytest.fixture
+def get_valid_decoded_token_for_a_support_collaborator(mocker):
+    expiration = datetime.utcnow() + timedelta(minutes=1)
+    dummy_payload_data = {
+        "registration_number": "ae123456789",
+        "username": "louloute duck",
+        "department": "oc12_support",
         "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}'
     }
     mocker.patch(
