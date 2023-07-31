@@ -1,6 +1,9 @@
 """
 Description:
-Test de la vue "create_views.py", on test l'ajout de données métier avec authentification (token calide).
+Test de la vue "create_views.py", on test l'ajout de données métier avec authentification (token valide).
+Attention à l'ordre. Exemple on ne peut pas créer un client tant que l'entreprise /company correspondante
+n'est pas encore créée.
+Plus largement, les tests de suppression doivent venir après les créations ci-dessous.
 """
 
 import pytest
@@ -10,6 +13,8 @@ except ModuleNotFoundError:
     from clients.create_console import ConsoleClientForCreate
 
 
+# différents dictionnaires correspondants aux modèles
+# noter qu'on ne créé /supprime qu'avec des objets peuplés au préalable
 location_attributes_dict = {
     "location_id": "PL24250",
     "adresse": "3 rue de la tannerie",
@@ -24,18 +29,19 @@ company_attributes_dict = {
     "company_name": "A la bonne meule",
     "company_registration_number": "777666111",
     "company_subregistration_number": "99998",
-    "location_id": "1"
+    "location_id": "2"
 }
 
 client_attributes_dict = {
-    "client_id": "id",
+    "client_id": "poabm",
     "civility": "MR",
     "first_name": "john",
     "last_name": "doe",
     "employee_role": "press officer",
     "email": "j.doe@abm.fr",
     "telephone": "+611223344",
-    "company_id": "2"
+    "company_id": "1",
+    "commercial_contact": "2",
 }
 
 commercial_collaborator_attributes_dict = {
@@ -81,13 +87,28 @@ event_attributes_dict = {
     "collaborator_id": "2"
 }
 
+department_attributes_dict = {
+    "department_id": "design",
+    "name": "oc12_design"
+}
+
+
 role_attributes_dict = {
     "role_id": "sec",
     "name": "SECRETARY"
 }
 
 
-def test_add_collaborator_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator):
+def test_add_commercial_collaborator_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator):
+    try:
+        result = ConsoleClientForCreate().add_collaborator(commercial_collaborator_attributes_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+def test_add_gestion_collaborator_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator):
     try:
         result = ConsoleClientForCreate().add_collaborator(gestion_collaborator_attributes_dict)
         assert isinstance(result, int)
@@ -96,9 +117,18 @@ def test_add_collaborator_view(get_runner, get_valid_decoded_token_for_a_gestion
         print(error)
 
 
-def test_add_client_view(get_runner, get_valid_decoded_token_for_a_commercial_collaborator):
+def test_add_support_collaborator_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator):
     try:
-        result = ConsoleClientForCreate().add_client(client_attributes_dict)
+        result = ConsoleClientForCreate().add_collaborator(support_collaborator_attributes_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+def test_add_location_view(get_runner, get_valid_decoded_token_for_a_commercial_collaborator):
+    try:
+        result = ConsoleClientForCreate().add_location(location_attributes_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -132,18 +162,27 @@ def test_add_event_view(get_runner, get_valid_decoded_token_for_a_commercial_col
         print(error)
 
 
-def test_add_location_view(get_runner, get_valid_decoded_token_for_a_commercial_collaborator):
+def test_add_role_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator):
     try:
-        result = ConsoleClientForCreate().add_location(location_attributes_dict)
+        result = ConsoleClientForCreate().add_role(role_attributes_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
         print(error)
 
 
-def test_add_role_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator):
+def test_add_department_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator):
     try:
-        result = ConsoleClientForCreate().add_role(role_attributes_dict)
+        result = ConsoleClientForCreate().add_department(department_attributes_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+def test_add_client_view(get_runner, get_valid_decoded_token_for_a_commercial_collaborator):
+    try:
+        result = ConsoleClientForCreate().add_client(client_attributes_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
