@@ -60,14 +60,9 @@ class UserDepartment(Base):
     """
 
     __tablename__ = "collaborator_department"
-    DEPARTEMENTS = [
-        ("OC12_COMMERCIAL", "oc12_commercial"),
-        ("OC12_GESTION", "oc12_gestion"),
-        ("OC12_SUPPORT", "oc12_support"),
-    ]
     id = Column(Integer, primary_key=True)
     department_id = Column(String(120), nullable=False, unique=True)
-    name = Column(ChoiceType(DEPARTEMENTS), nullable=False)
+    name = Column(String(50), nullable=False, unique=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -90,7 +85,6 @@ class UserRole(Base):
     """
 
     __tablename__ = "collaborator_role"
-
     id = Column(Integer, primary_key=True)
     role_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
@@ -117,7 +111,7 @@ class User(Base):
 
     __tablename__ = "collaborator"
     id = Column(Integer, primary_key=True)
-    registration_number = Column(String(12), nullable=False)
+    registration_number = Column(String(12), nullable=False, unique=True)
     username = Column(String(65), nullable=False)
     department = Column(Integer, ForeignKey("collaborator_department.id"))
     role = Column(Integer, ForeignKey("collaborator_role.id"), default=2)
