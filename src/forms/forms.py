@@ -14,7 +14,7 @@ def submit_a_location_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][LOCATION LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask("id localité (ne rien saisir si inconnue): ")
+            custom_id = Prompt.ask("id localité: ")
         except KeyboardInterrupt:
             print("[bold green][LOCATION LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
@@ -56,7 +56,7 @@ def submit_a_company_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][COMPANY LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask("id entreprise (ne rien saisir si inconnue): ")
+            custom_id = Prompt.ask("id entreprise: ")
         except KeyboardInterrupt:
             print("[bold green][COMPANY LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
@@ -97,7 +97,7 @@ def submit_a_client_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][CLIENT LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask("id client (ne rien saisir si inconnu): ")
+            custom_id = Prompt.ask("id client: ")
         except KeyboardInterrupt:
             print("[bold green][CLIENT LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
@@ -133,6 +133,20 @@ def submit_a_client_create_form(custom_dict={}):
     return custom_dict
 
 
+def submit_a_collaborator_get_form(custom_id=""):
+    """
+    Description: Fonction dédiée à permettre à l'utilisateur d'indiquer l'id d'un collaborateur.
+    """
+    if custom_id == "":
+        print("[bold blue][ROLE LOOKUP][/bold blue]")
+        try:
+            custom_id = Prompt.ask("matricule employé: ")
+        except KeyboardInterrupt:
+            print("[bold green][ROLE LOOKUP][/bold green] Lookup aborted")
+            sys.exit(0)
+    return custom_id
+
+
 def submit_a_collaborator_create_form(custom_dict={}):
     """
     Description: Fonction dédiée à créer un collaborateur /utilisateur, de l'entreprise.
@@ -163,13 +177,13 @@ def submit_a_collaborator_role_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][ROLE LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask("id role (ne rien saisir si inconnu): ")
+            custom_id = Prompt.ask("id role: ")
         except KeyboardInterrupt:
             print("[bold green][ROLE LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
     return custom_id
 
-
+ 
 def submit_a_collaborator_role_create_form(custom_dict={}):
     """
     Description: Fonction dédiée à créer un nouveau rôle pour un collaborateur de l'entreprise.
@@ -200,7 +214,7 @@ def submit_a_collaborator_department_get_form(custom_id=""):
         print("[bold blue][DEPARTMENT LOOKUP][/bold blue]")
         try:
             custom_id = Prompt.ask(
-                "id service/département (ne rien saisir si inconnu): "
+                "id service/département: "
             )
         except KeyboardInterrupt:
             print("[bold green][DEPARTMENT LOOKUP][/bold green] Lookup aborted")
@@ -237,7 +251,7 @@ def submit_a_contract_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][CONTRACT LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask("id contrat (ne rien saisir si inconnu): ")
+            custom_id = Prompt.ask("id contrat: ")
         except KeyboardInterrupt:
             print("[bold green][CONTRACT LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
@@ -279,7 +293,7 @@ def submit_a_event_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][EVENT LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask("id evènement (ne rien saisir si inconnu): ")
+            custom_id = Prompt.ask("id evènement: ")
         except KeyboardInterrupt:
             print("[bold green][EVENT LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
