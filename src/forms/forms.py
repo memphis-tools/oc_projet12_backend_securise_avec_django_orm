@@ -254,12 +254,17 @@ def submit_a_contract_create_form(custom_dict={}):
             "contract_id": "id",
             "full_amount_to_pay": "total à payer",
             "remain_amount_to_pay": "total restant à payer",
-            "status": "statut ('True' ou 'False')",
+            "status": "signé /conclu ('oui' ou 'non')",
         }
         print("[bold blue][CONTRACT CREATION][/bold blue]")
         try:
             for key, value in contract_expected_attributes_dict.items():
                 item = Prompt.ask(f"{value}: ")
+                if key == "status":
+                    if item == "oui":
+                        item = True
+                    else:
+                        item = False
                 custom_dict[key] = item
         except KeyboardInterrupt:
             print("[bold green][CONTRACT CREATION][/bold green] Creation aborted")
@@ -292,6 +297,8 @@ def submit_a_event_create_form(custom_dict={}):
             "title": "titre",
             "attendees": "public max attendu",
             "notes": "description",
+            "event_start_date": "date début (format: 2023-04-12 15:00:00)",
+            "event_end_date": "date début (format: 2023-04-15 22:00:00)"
         }
         print("[bold blue][EVENT CREATION][/bold blue]")
         try:

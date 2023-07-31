@@ -17,10 +17,16 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 APP_FIGLET_TITLE = "EPIC EVENTS"
 
 # variables dédiées aux autorisations
-OC12_COMMERCIAL_CRUD_TABLES = ["client", "company", "contract", "location"]
+OC12_COMMERCIAL_CRUD_TABLES = ["client", "company", "contract", "event", "location"]
 OC12_COMMERCIAL_PWD = os.environ.get("OC12_COMMERCIAL_PWD")
 
-OC12_GESTION_CRUD_TABLES = []
+OC12_GESTION_CRUD_TABLES = [
+    "collaborator",
+    "collaborator_department",
+    "collaborator_role",
+    "contract",
+    "location",
+]
 OC12_GESTION_PWD = os.environ.get("OC12_GESTION_PWD")
 
 OC12_SUPPORT_CRUD_TABLES = []
