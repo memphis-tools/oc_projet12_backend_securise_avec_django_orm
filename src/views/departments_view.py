@@ -37,10 +37,10 @@ class DepartmentsView:
         """
         return self.db_controller.add_department(self.session, department)
 
-    def delete_department(self, department):
+    def delete_department(self, department_id):
         """
         Description: Vue dédiée à supprimer un département /service.
         Parameters:
-        - department: une instance du modèle de classe UserDepartment.
+        - department_id: id de l'objet (la clef primaire).
         """
-        return self.db_controller.delete_department(self.session, department)
+        return self.db_controller.delete_department(self.session, department_id)

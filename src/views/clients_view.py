@@ -35,8 +35,10 @@ class ClientsView:
         """
         return self.db_controller.add_client(self.session, client)
 
-    def delete_client(self, client):
+    def delete_client(self, client_id):
         """
         Description: vue dédiée à supprimer un client de l'entreprise.
+        Parameters:
+        - client_id: id de l'objet (la clef primaire).
         """
-        return self.db_controller.delete_client(self.session, client)
+        return self.db_controller.delete_client(self.session, client_id)
