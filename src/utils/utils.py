@@ -63,15 +63,21 @@ def check_password_hash_from_input(db_user_password, password):
     return check_password_hash(db_user_password, password)
 
 
-def get_a_database_connection(user_name, user_pwd):
+def get_a_database_connection(user_name="", user_pwd=""):
     """
     Description:
     Dédiée à obtenir un curseur pour interragir avec le SGBD.
     """
+    if user_name != "" and user_pwd != "":
+        user = user_name
+        password = user_pwd
+    else:
+        user=f"{settings.ADMIN_LOGIN}"
+        password=f"{settings.ADMIN_PASSWORD}"
     conn = psycopg.connect(
         dbname=f"{settings.DATABASE_NAME}",
-        user=f"{settings.ADMIN_LOGIN}",
-        password=f"{settings.ADMIN_PASSWORD}",
+        user=user,
+        password=password,
         host=f"{settings.DATABASE_HOST}",
         port=f"{settings.DATABASE_PORT}",
     )
