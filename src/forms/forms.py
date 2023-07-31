@@ -183,7 +183,7 @@ def submit_a_collaborator_role_get_form(custom_id=""):
             sys.exit(0)
     return custom_id
 
-
+ 
 def submit_a_collaborator_role_create_form(custom_dict={}):
     """
     Description: Fonction dédiée à créer un nouveau rôle pour un collaborateur de l'entreprise.

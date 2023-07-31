@@ -29,7 +29,7 @@ class JwtView:
             (
                 collaborator,
                 collaborator_department_name,
-            ) = self.app_view.db_controller.get_collaborator(
+            ) = self.app_view.db_controller.get_collaborator_join_department(
                 self.app_view.session, registration_number
             )
 

@@ -230,9 +230,9 @@ def database_postinstall_tasks():
             sql = f"""GRANT SELECT ON {model} TO {role[0]}"""
             cursor.execute(sql)
 
-    oc12_commercial_allowed_tables = ["client", "company", "contract", "location"]
+    oc12_commercial_allowed_tables = ["client", "company", "contract", "event", "location"]
     for table in oc12_commercial_allowed_tables:
-        sql = f"""GRANT INSERT ON {table} TO oc12_commercial"""
+        sql = f"""GRANT INSERT, DELETE ON {table} TO oc12_commercial"""
         cursor.execute(sql)
         sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_commercial"""
         cursor.execute(sql)
@@ -241,11 +241,10 @@ def database_postinstall_tasks():
         "collaborator",
         "collaborator_department",
         "collaborator_role",
-        "contract",
-        "location",
+        "contract"
     ]
     for table in oc12_gestion_allowed_tables:
-        sql = f"""GRANT INSERT ON {table} TO oc12_gestion"""
+        sql = f"""GRANT INSERT, DELETE ON {table} TO oc12_gestion"""
         cursor.execute(sql)
         sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_gestion"""
         cursor.execute(sql)

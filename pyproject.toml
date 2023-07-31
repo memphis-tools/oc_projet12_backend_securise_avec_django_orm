@@ -14,6 +14,7 @@ packages = [
   {include = "models", from = "src"},
   {include = "settings", from = "src"},
   {include = "utils", from = "src"},
+  {include = "validators", from = "src"},
   {include = "views", from = "src"}
 ]
 
@@ -63,6 +64,15 @@ oc12_add_department = "commands.database_create_commands:add_department"
 oc12_add_event = "commands.database_create_commands:add_event"
 oc12_add_location = "commands.database_create_commands:add_location"
 oc12_add_role = "commands.database_create_commands:add_role"
+# commandes pour supprimer des données
+oc12_delete_client = "commands.database_delete_commands:delete_client"
+oc12_delete_collaborator = "commands.database_delete_commands:delete_collaborator"
+oc12_delete_company = "commands.database_delete_commands:delete_company"
+oc12_delete_contract = "commands.database_delete_commands:delete_contract"
+oc12_delete_department = "commands.database_delete_commands:delete_department"
+oc12_delete_event = "commands.database_delete_commands:delete_event"
+oc12_delete_location = "commands.database_delete_commands:delete_location"
+oc12_delete_role = "commands.database_delete_commands:delete_role"
 
 [build-system]
 requires = ["poetry-core"]

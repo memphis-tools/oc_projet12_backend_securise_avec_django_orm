@@ -90,13 +90,10 @@ class UserRole(Base):
     """
 
     __tablename__ = "collaborator_role"
-    ROLES = [
-        ("MANAGER", "manager"),
-        ("EMPLOYEE", "employee"),
-    ]
+
     id = Column(Integer, primary_key=True)
     role_id = Column(String(120), nullable=False, unique=True)
-    name = Column(ChoiceType(ROLES), nullable=False)
+    name = Column(String(50), nullable=False, unique=True)
 
     def __str__(self):
         return f"{self.name}"
@@ -139,7 +136,7 @@ class User(Base):
             "registration_number": self.registration_number,
             "username": self.username,
             "department": self.department,
-            "role": self.role
+            "role": self.role,
         }
         return collaborator_dict
 
@@ -266,7 +263,7 @@ class Contract(Base):
             "creation_date": self.creation_date.strftime("%d-%m-%Y"),
             "status": self.status,
             "client_id": self.client_id,
-            "collaborator_id": self.collaborator_id
+            "collaborator_id": self.collaborator_id,
         }
         return contract_dict
 

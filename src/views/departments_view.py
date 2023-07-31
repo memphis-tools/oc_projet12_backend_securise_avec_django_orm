@@ -36,3 +36,11 @@ class DepartmentsView:
         - department: une instance du modèle de classe UserDepartment.
         """
         return self.db_controller.add_department(self.session, department)
+
+    def delete_department(self, department):
+        """
+        Description: Vue dédiée à supprimer un département /service.
+        Parameters:
+        - department: une instance du modèle de classe UserDepartment.
+        """
+        return self.db_controller.delete_department(self.session, department)
