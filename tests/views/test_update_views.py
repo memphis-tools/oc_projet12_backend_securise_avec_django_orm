@@ -9,14 +9,26 @@ Cas particulier d'un collaborateur, le "custom_id" est son registration_number (
 import pytest
 try:
     from src.clients.update_console import ConsoleClientForUpdate
+    from src.commands import database_update_commands
 except ModuleNotFoundError:
     from clients.update_console import ConsoleClientForUpdate
+    from commands import database_update_commands
 
 
-client_partial_dict = {
+client_partial_dict_1 = {
     "client_id": "dduck",
     "telephone": "+677118822",
     "email": "daisy.duck@abm.fr"
+}
+
+client_partial_dict_2 = {
+    "client_id": "dduck",
+    "company_id": "cal7778",
+}
+
+client_partial_dict_3 = {
+    "client_id": "dduck",
+    "company_id": "xx666",
 }
 
 collaborator_partial_dict = {
@@ -58,12 +70,38 @@ event_partial_dict = {
 
 
 def test_update_client_view(get_runner, get_valid_decoded_token_for_a_commercial_collaborator):
-    try:
-        result = ConsoleClientForUpdate().update_client(client_partial_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
+    args_to_convert = client_partial_dict_1
+    custom_id = args_to_convert.pop("client_id")
+    args_converted = ""
+    for k, v in args_to_convert.items():
+        args_converted+=f"{k}={v} "
+    result = get_runner.invoke(database_update_commands.update_client, f"--client_id={custom_id} {args_converted}")
+    assert result.exit_code == 0
+    assert f"{custom_id}" in str(result.output).strip()
+
+
+def test_update_client_view_with_valid_company(get_runner, get_valid_decoded_token_for_a_commercial_collaborator):
+    args_to_convert = client_partial_dict_2
+    custom_id = args_to_convert.pop("client_id")
+    args_converted = ""
+    for k, v in args_to_convert.items():
+        args_converted+=f"{k}={v} "
+    result = get_runner.invoke(database_update_commands.update_client, f"--client_id={custom_id} {args_converted}")
+    assert result.exit_code == 0
+    assert f"{custom_id}" in str(result.output).strip()
+
+
+def test_update_client_view_with_unvalid_company(get_runner, get_valid_decoded_token_for_a_commercial_collaborator):
+    with pytest.raises(AttributeError):
+        args_to_convert = client_partial_dict_3
+        custom_id = args_to_convert.pop("client_id")
+        args_converted = ""
+        for k, v in args_to_convert.items():
+            args_converted+=f"{k}={v} "
+        result = get_runner.invoke(database_update_commands.update_client, f"--client_id={custom_id} {args_converted}")
+        # ce print permet de relever l'exception, ne pas supprimer.
+        print(result.error)
+        assert result.exit_code == 1
 
 
 def test_update_company_view(get_runner, get_valid_decoded_token_for_a_commercial_collaborator):
