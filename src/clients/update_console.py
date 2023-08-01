@@ -44,7 +44,7 @@ class ConsoleClientForUpdate:
         settings.APP_FIGLET_TITLE
 
     @authentication_permission_decorator
-    def update_client(self, client_partial_dict):
+    def update_client(self, custom_partial_dict):
         # rechercher le id de l'utilisateur courant
         # obtenir le token décodé (et valide)
         # demander mot de passe à utilisateur en cours
@@ -68,10 +68,10 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_clients_view().update_client(client_partial_dict)
+        return self.update_app_view.get_clients_view().update_client(custom_partial_dict)
 
     @authentication_permission_decorator
-    def update_collaborator(self, collaborator_custom_id=""):
+    def update_collaborator(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un utilisateur /collaborateur de l'entreprise.
         """
@@ -82,10 +82,6 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            if collaborator_custom_id != "":
-                collaborator_id = self.ask_for_a_collaborator_id(collaborator_custom_id)["id"]
-            else:
-                collaborator_id =self.ask_for_a_collaborator_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -96,11 +92,11 @@ class ConsoleClientForUpdate:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
         return self.update_app_view.get_collaborators_view().update_collaborator(
-            collaborator_id
+            custom_partial_dict
         )
 
     @authentication_permission_decorator
-    def update_company(self, company_custom_id=""):
+    def update_company(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour une entreprise sans client, mais avec une localité nécessaire.
         """
@@ -111,10 +107,6 @@ class ConsoleClientForUpdate:
         try:
             if "company" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            if company_custom_id != "":
-                company_id = self.ask_for_a_company_id(company_custom_id)["id"]
-            else:
-                company_id = self.ask_for_a_company_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -124,10 +116,10 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_companies_view().update_company(company_id)
+        return self.update_app_view.get_companies_view().update_company(custom_partial_dict)
 
     @authentication_permission_decorator
-    def update_contract(self, contract_custom_id=""):
+    def update_contract(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un contrat pour l'entreprise.
         """
@@ -138,10 +130,6 @@ class ConsoleClientForUpdate:
         try:
             if "contract" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            if contract_custom_id != "":
-                contract_id = self.ask_for_a_contract_id(contract_custom_id)["id"]
-            else:
-                contract_id = self.ask_for_a_contract_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -151,10 +139,10 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_contracts_view().update_contract(contract_id)
+        return self.update_app_view.get_contracts_view().update_contract(custom_partial_dict)
 
     @authentication_permission_decorator
-    def update_department(self, department_custom_id=""):
+    def update_department(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un département /service de l'entreprise.
         """
@@ -165,10 +153,6 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator_department" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            if department_custom_id != "":
-                department_id = self.ask_for_a_department_id(department_custom_id)["id"]
-            else:
-                department_id = self.ask_for_a_department_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -178,10 +162,10 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_departments_view().update_department(department_id)
+        return self.update_app_view.get_departments_view().update_department(custom_partial_dict)
 
     @authentication_permission_decorator
-    def update_event(self, event_custom_id=""):
+    def update_event(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un évènement de l'entreprise.
         """
@@ -192,10 +176,6 @@ class ConsoleClientForUpdate:
         try:
             if "event" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            if event_custom_id != "":
-                event_id = self.ask_for_a_event_id(event_custom_id)["id"]
-            else:
-                event_id = self.ask_for_a_event_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -205,10 +185,10 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_events_view().update_event(event_id)
+        return self.update_app_view.get_events_view().update_event(custom_partial_dict)
 
     @authentication_permission_decorator
-    def update_location(self, location_custom_id=""):
+    def update_location(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour une localité.
         """
@@ -219,10 +199,6 @@ class ConsoleClientForUpdate:
         try:
             if "location" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            if location_custom_id != "":
-                location_id = self.ask_for_a_location_id(location_custom_id)["id"]
-            else:
-                location_id = self.ask_for_a_location_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -232,10 +208,10 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_locations_view().update_location(location_id)
+        return self.update_app_view.get_locations_view().update_location(custom_partial_dict)
 
     @authentication_permission_decorator
-    def update_role(self, role_custom_id=""):
+    def update_role(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un rôle pour les collaborateurs de l'entreprise.
         """
@@ -246,10 +222,6 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator_role" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            if role_custom_id != "":
-                role_id = self.ask_for_a_role_id(role_custom_id)["id"]
-            else:
-                role_id = self.ask_for_a_role_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
@@ -259,4 +231,4 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_roles_view().update_role(role_id)
+        return self.update_app_view.get_roles_view().update_role(custom_partial_dict)
