@@ -49,5 +49,4 @@ class ClientsView:
         Parameters:
         - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
-        print(f"DEBUG ClientsView:update_client - call good with custom_dict=={custom_dict}")
         return self.db_controller.update_client(self.session, custom_dict)
