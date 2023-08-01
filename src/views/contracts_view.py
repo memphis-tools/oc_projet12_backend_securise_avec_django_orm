@@ -44,3 +44,11 @@ class ContractsView:
         - contract_id: id de l'objet (la clef primaire).
         """
         return self.db_controller.delete_contract(self.session, contract_id)
+
+    def update_contract(self, custom_dict):
+        """
+        Description: vue dédiée à mettre à jour un contrat.
+        Parameters:
+        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+        """
+        return self.db_controller.update_contract(self.session, custom_dict)

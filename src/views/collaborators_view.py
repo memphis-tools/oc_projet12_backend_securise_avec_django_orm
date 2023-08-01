@@ -44,3 +44,11 @@ class CollaboratorsView:
         - collaborator_id: id de l'objet (la clef primaire).
         """
         return self.db_controller.delete_collaborator(self.session, collaborator_id)
+
+    def update_collaborator(self, custom_dict):
+        """
+        Description: vue dédiée à mettre à jour un collaborateur.
+        Parameters:
+        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+        """
+        return self.db_controller.update_collaborator(self.session, custom_dict)

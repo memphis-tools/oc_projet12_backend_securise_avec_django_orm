@@ -7,5 +7,9 @@ class InsufficientPrivilegeException(Exception):
     pass
 
 
+class MissingUpdateParamException(Exception):
+    pass
+
+
 class SuppliedDataNotMatchModel(Exception):
     pass

@@ -44,3 +44,11 @@ class DepartmentsView:
         - department_id: id de l'objet (la clef primaire).
         """
         return self.db_controller.delete_department(self.session, department_id)
+
+    def update_department(self, custom_dict):
+        """
+        Description: vue dédiée à mettre à jour un departement /service.
+        Parameters:
+        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+        """
+        return self.db_controller.update_department(self.session, custom_dict)
