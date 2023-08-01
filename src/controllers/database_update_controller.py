@@ -59,7 +59,7 @@ class DatabaseUpdateController:
         Description: Fonction dédiée à servir la vue lors d'une mise à jour d'une entreprise.
         Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
-        company_id = company_dict.pop("client_id")
+        company_id = company_dict.pop("company_id")
         company = session.query(models.Company).filter_by(company_id=company_id).first()
         keys_to_explore = models.Company.metadata.tables['company'].columns.keys()
 
