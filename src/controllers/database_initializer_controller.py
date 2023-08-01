@@ -32,7 +32,7 @@ class DatabaseInitializerController:
                 user_pwd = user_pwd
             else:
                 # l'utilisateur vient de demander un token, l'a obtenu et requete la bdd, on exploite le token décodé
-                user_login = str(decoded_token["department"])
+                user_login = str(decoded_token["department"]).lower()
                 dprt = str(decoded_token["department"]).upper()
                 user_pwd = eval(f"settings.{dprt}_PWD")
             db_name = settings.DATABASE_NAME
