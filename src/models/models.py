@@ -78,6 +78,12 @@ class UserDepartment(Base):
         }
         return department_dict
 
+    @staticmethod
+    def _get_keys():
+        return [
+            "name",
+        ]
+
 
 class UserRole(Base):
     """
@@ -102,6 +108,12 @@ class UserRole(Base):
             "name": self.name,
         }
         return role_dict
+
+    @staticmethod
+    def _get_keys():
+        return [
+            "name",
+        ]
 
 
 class User(Base):
@@ -134,6 +146,14 @@ class User(Base):
         }
         return collaborator_dict
 
+    @staticmethod
+    def _get_keys():
+        return [
+            "username",
+            "department",
+            "role",
+        ]
+
 
 class Company(Base):
     """
@@ -165,6 +185,15 @@ class Company(Base):
             "location_id": self.location_id,
         }
         return company_dict
+
+    @staticmethod
+    def _get_keys():
+        return [
+            "company_name",
+            "company_registration_number",
+            "company_subregistration_number",
+            "location_id",
+        ]
 
 
 class Client(Base):
@@ -219,6 +248,19 @@ class Client(Base):
         }
         return client_dict
 
+    @staticmethod
+    def _get_keys():
+        return [
+            "civility",
+            "first_name",
+            "last_name",
+            "employee_role",
+            "email",
+            "telephone",
+            "company_id",
+            "commercial_contact",
+        ]
+
 
 class Contract(Base):
     """
@@ -261,6 +303,18 @@ class Contract(Base):
         }
         return contract_dict
 
+    @staticmethod
+    def _get_keys():
+        return [
+            "full_amount_to_pay",
+            "remain_amount_to_pay",
+            "creation_date",
+            "status",
+            "client_id",
+            "telephone",
+            "collaborator_id",
+        ]
+
 
 class Location(Base, ModelMixin):
     """
@@ -293,6 +347,16 @@ class Location(Base, ModelMixin):
             "pays": self.pays,
         }
         return location_dict
+
+    @staticmethod
+    def _get_keys():
+        return [
+            "adresse",
+            "complement_adresse",
+            "code_postal",
+            "ville",
+            "pays",
+        ]
 
 
 class Event(Base):
@@ -340,3 +404,17 @@ class Event(Base):
             "notes": self.notes,
         }
         return event_dict
+
+    @staticmethod
+    def _get_keys():
+        return [
+            "title",
+            "contract_id",
+            "client_id",
+            "collaborator_id",
+            "event_start_date",
+            "event_end_date",
+            "location_id",
+            "attendees",
+            "notes",
+        ]

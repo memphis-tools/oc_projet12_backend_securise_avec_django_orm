@@ -73,6 +73,15 @@ oc12_delete_department = "commands.database_delete_commands:delete_department"
 oc12_delete_event = "commands.database_delete_commands:delete_event"
 oc12_delete_location = "commands.database_delete_commands:delete_location"
 oc12_delete_role = "commands.database_delete_commands:delete_role"
+# commandes pour mettre à jour des données
+oc12_update_client = "commands.database_update_commands:update_client"
+oc12_update_collaborator = "commands.database_update_commands:update_collaborator"
+oc12_update_company = "commands.database_update_commands:update_company"
+oc12_update_contract = "commands.database_update_commands:update_contract"
+oc12_update_department = "commands.database_update_commands:update_department"
+oc12_update_event = "commands.database_update_commands:update_event"
+oc12_update_location = "commands.database_update_commands:update_location"
+oc12_update_role = "commands.database_update_commands:update_role"
 
 [build-system]
 requires = ["poetry-core"]

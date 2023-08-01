@@ -42,3 +42,12 @@ class ClientsView:
         - client_id: id de l'objet (la clef primaire).
         """
         return self.db_controller.delete_client(self.session, client_id)
+
+    def update_client(self, custom_dict):
+        """
+        Description: vue dédiée à mettre à jour un client.
+        Parameters:
+        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+        """
+        print(f"DEBUG ClientsView:update_client - call good with custom_dict=={custom_dict}")
+        return self.db_controller.update_client(self.session, custom_dict)

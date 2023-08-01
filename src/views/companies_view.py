@@ -44,3 +44,11 @@ class CompaniesView:
         - company_id: id de l'objet (la clef primaire).
         """
         return self.db_controller.delete_company(self.session, company_id)
+
+    def update_company(self, custom_dict):
+        """
+        Description: vue dédiée à mettre à jour une entreprise.
+        Parameters:
+        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+        """
+        return self.db_controller.update_company(self.session, custom_dict)

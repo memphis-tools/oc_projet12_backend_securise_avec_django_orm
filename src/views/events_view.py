@@ -44,3 +44,11 @@ class EventsView:
         - event_id: id de l'objet (la clef primaire).
         """
         return self.db_controller.delete_event(self.session, event_id)
+
+    def update_event(self, custom_dict):
+        """
+        Description: vue dédiée à mettre à jour un évènement.
+        Parameters:
+        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+        """
+        return self.db_controller.update_event(self.session, custom_dict)

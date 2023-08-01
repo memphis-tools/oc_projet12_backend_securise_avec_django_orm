@@ -44,3 +44,11 @@ class LocationsView:
         - location_id: id de l'objet (la clef primaire).
         """
         return self.db_controller.delete_location(self.session, location_id)
+
+    def update_location(self, custom_dict):
+        """
+        Description: vue dédiée à mettre à jour une localité.
+        Parameters:
+        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+        """
+        return self.db_controller.update_location(self.session, custom_dict)

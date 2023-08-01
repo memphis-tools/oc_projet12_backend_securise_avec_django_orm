@@ -44,3 +44,11 @@ class RolesView:
         - role_id: id de l'objet (la clef primaire).
         """
         return self.db_controller.delete_role(self.session, role_id)
+
+    def update_role(self, custom_dict):
+        """
+        Description: vue dédiée à mettre à jour un rôle.
+        Parameters:
+        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+        """
+        return self.db_controller.update_role(self.session, custom_dict)
