@@ -120,7 +120,7 @@ def test_update_department_view(get_runner, get_valid_decoded_token_for_a_gestio
         print(error)
 
 
-def test_update_collaborator_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator, matricule):
+def test_update_collaborator_view(get_runner, get_valid_decoded_token_for_a_gestion_collaborator):
     try:
         result = ConsoleClientForUpdate().update_collaborator(collaborator_partial_dict)
         assert isinstance(result, int)
