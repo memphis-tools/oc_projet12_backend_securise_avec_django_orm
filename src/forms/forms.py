@@ -183,7 +183,7 @@ def submit_a_collaborator_role_get_form(custom_id=""):
             sys.exit(0)
     return custom_id
 
- 
+
 def submit_a_collaborator_role_create_form(custom_dict={}):
     """
     Description: Fonction dédiée à créer un nouveau rôle pour un collaborateur de l'entreprise.
@@ -213,9 +213,7 @@ def submit_a_collaborator_department_get_form(custom_id=""):
     if custom_id == "":
         print("[bold blue][DEPARTMENT LOOKUP][/bold blue]")
         try:
-            custom_id = Prompt.ask(
-                "id service/département: "
-            )
+            custom_id = Prompt.ask("id service/département: ")
         except KeyboardInterrupt:
             print("[bold green][DEPARTMENT LOOKUP][/bold green] Lookup aborted")
             sys.exit(0)
@@ -312,7 +310,7 @@ def submit_a_event_create_form(custom_dict={}):
             "attendees": "public max attendu",
             "notes": "description",
             "event_start_date": "date début (format: 2023-04-12 15:00:00)",
-            "event_end_date": "date début (format: 2023-04-15 22:00:00)"
+            "event_end_date": "date début (format: 2023-04-15 22:00:00)",
         }
         print("[bold blue][EVENT CREATION][/bold blue]")
         try:

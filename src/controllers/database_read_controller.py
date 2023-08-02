@@ -175,9 +175,7 @@ class DatabaseReadController:
         """
         try:
             db_collaborators_event = (
-                session.query(models.Event)
-                .filter_by(event_id=event_id)
-                .first()
+                session.query(models.Event).filter_by(event_id=event_id).first()
             )
             session.close()
             return db_collaborators_event
@@ -229,9 +227,7 @@ class DatabaseReadController:
         """
         try:
             db_collaborators_role = (
-                session.query(models.UserRole)
-                .filter_by(role_id=role_id)
-                .first()
+                session.query(models.UserRole).filter_by(role_id=role_id).first()
             )
             session.close()
             return db_collaborators_role

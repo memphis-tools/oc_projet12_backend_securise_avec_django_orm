@@ -7,23 +7,19 @@ from rich import print
 try:
     from src.exceptions import exceptions
     from src.forms import forms
-    from src.models import models
     from src.views.delete_views import DeleteAppViews
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings
     from src.utils.utils import authentication_permission_decorator, display_banner
-    from src.validators import add_data_validators
 except ModuleNotFoundError:
     from exceptions import exceptions
     from forms import forms
-    from models import models
     from views.delete_views import DeleteAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings
     from utils.utils import authentication_permission_decorator, display_banner
-    from validators import add_data_validators
 
 
 class ConsoleClientForDelete:
@@ -91,7 +87,9 @@ class ConsoleClientForDelete:
             collaborator_id = custom_id
         try:
             # on propose de rechercher le collaborateur
-            collaborator_lookup = self.app_view.get_collaborators_view().get_collaborator(collaborator_id)
+            collaborator_lookup = (
+                self.app_view.get_collaborators_view().get_collaborator(collaborator_id)
+            )
             return collaborator_lookup.get_dict()
         except Exception as error:
             print(f"No such collaborator sir: {error}")
@@ -209,7 +207,7 @@ class ConsoleClientForDelete:
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -229,14 +227,16 @@ class ConsoleClientForDelete:
             if "collaborator" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if collaborator_custom_id != "":
-                collaborator_id = self.ask_for_a_collaborator_id(collaborator_custom_id)["id"]
+                collaborator_id = self.ask_for_a_collaborator_id(
+                    collaborator_custom_id
+                )["id"]
             else:
-                collaborator_id =self.ask_for_a_collaborator_id()["id"]
+                collaborator_id = self.ask_for_a_collaborator_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -265,7 +265,7 @@ class ConsoleClientForDelete:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -292,7 +292,7 @@ class ConsoleClientForDelete:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -319,12 +319,14 @@ class ConsoleClientForDelete:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.delete_app_view.get_departments_view().delete_department(department_id)
+        return self.delete_app_view.get_departments_view().delete_department(
+            department_id
+        )
 
     @authentication_permission_decorator
     def delete_event(self, event_custom_id=""):
@@ -346,7 +348,7 @@ class ConsoleClientForDelete:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -373,7 +375,7 @@ class ConsoleClientForDelete:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -400,7 +402,7 @@ class ConsoleClientForDelete:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")

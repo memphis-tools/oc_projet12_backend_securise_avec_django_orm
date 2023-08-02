@@ -72,8 +72,8 @@ def get_a_database_connection(user_name="", user_pwd=""):
         user = user_name
         password = user_pwd
     else:
-        user=f"{settings.ADMIN_LOGIN}"
-        password=f"{settings.ADMIN_PASSWORD}"
+        user = f"{settings.ADMIN_LOGIN}"
+        password = f"{settings.ADMIN_PASSWORD}"
     conn = psycopg.connect(
         dbname=f"{settings.DATABASE_NAME}",
         user=user,
@@ -236,7 +236,13 @@ def database_postinstall_tasks():
             sql = f"""GRANT SELECT ON {model} TO {role[0]}"""
             cursor.execute(sql)
 
-    oc12_commercial_allowed_tables = ["client", "company", "contract", "event", "location"]
+    oc12_commercial_allowed_tables = [
+        "client",
+        "company",
+        "contract",
+        "event",
+        "location",
+    ]
     for table in oc12_commercial_allowed_tables:
         sql = f"""GRANT INSERT, DELETE, UPDATE ON {table} TO oc12_commercial"""
         cursor.execute(sql)
@@ -247,7 +253,7 @@ def database_postinstall_tasks():
         "collaborator",
         "collaborator_department",
         "collaborator_role",
-        "contract"
+        "contract",
     ]
     for table in oc12_gestion_allowed_tables:
         sql = f"""GRANT INSERT, DELETE, UPDATE ON {table} TO oc12_gestion"""
@@ -255,9 +261,9 @@ def database_postinstall_tasks():
         sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_gestion"""
         cursor.execute(sql)
 
-    sql = f"""GRANT UPDATE ON event TO oc12_support"""
+    sql = """GRANT UPDATE ON event TO oc12_support"""
     cursor.execute(sql)
-    sql = f"""GRANT USAGE ON SEQUENCE event_id_seq TO oc12_support"""
+    sql = """GRANT USAGE ON SEQUENCE event_id_seq TO oc12_support"""
     cursor.execute(sql)
 
     conn.commit()

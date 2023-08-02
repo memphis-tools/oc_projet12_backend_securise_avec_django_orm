@@ -165,8 +165,7 @@ class ConsoleClientForCreate:
             if "client" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if client_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(
-                client_attributes_dict)
+                b1 = add_data_validators.data_is_dict(client_attributes_dict)
                 b2 = add_data_validators.add_client_data_is_valid(
                     client_attributes_dict
                 )
@@ -188,32 +187,48 @@ class ConsoleClientForCreate:
                         if not location_queryset:
                             # pas de localité trouvée,
                             # on entame le dialogue pour enregistrer localité, entreprise, et client.
-                            location_attributes_dict = forms.submit_a_location_create_form()
-                            company_attributes_dict = forms.submit_a_company_create_form()
+                            location_attributes_dict = (
+                                forms.submit_a_location_create_form()
+                            )
+                            company_attributes_dict = (
+                                forms.submit_a_company_create_form()
+                            )
                             client_attributes_dict = forms.submit_a_client_create_form()
 
-                            loc_id = self.create_app_view.get_locations_view().add_location(
-                                models.Location(**location_attributes_dict)
+                            loc_id = (
+                                self.create_app_view.get_locations_view().add_location(
+                                    models.Location(**location_attributes_dict)
+                                )
                             )
                             company_attributes_dict["location_id"] = loc_id
-                            comp_id = self.create_app_view.get_companies_view().add_company(
-                                models.Company(**company_attributes_dict)
+                            comp_id = (
+                                self.create_app_view.get_companies_view().add_company(
+                                    models.Company(**company_attributes_dict)
+                                )
                             )
                             client_attributes_dict["company_id"] = comp_id
-                            client_id = self.create_app_view.get_clients_view().add_client(
-                                models.Client(**client_attributes_dict)
+                            client_id = (
+                                self.create_app_view.get_clients_view().add_client(
+                                    models.Client(**client_attributes_dict)
+                                )
                             )
                         else:
                             loc_id = location_queryset["id"]
-                            company_attributes_dict = forms.submit_a_company_create_form()
+                            company_attributes_dict = (
+                                forms.submit_a_company_create_form()
+                            )
                             client_attributes_dict = forms.submit_a_client_create_form()
                             company_attributes_dict["location_id"] = loc_id
-                            comp_id = self.create_app_view.get_companies_view().add_company(
-                                models.Company(**company_attributes_dict)
+                            comp_id = (
+                                self.create_app_view.get_companies_view().add_company(
+                                    models.Company(**company_attributes_dict)
+                                )
                             )
                             client_attributes_dict["company_id"] = id
-                            client_id = self.create_app_view.get_clients_view().add_client(
-                                models.Client(**client_attributes_dict)
+                            client_id = (
+                                self.create_app_view.get_clients_view().add_client(
+                                    models.Client(**client_attributes_dict)
+                                )
                             )
                     else:
                         company_id = company_queryset["id"]
@@ -259,7 +274,9 @@ class ConsoleClientForCreate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
+        return self.create_app_view.get_collaborators_view().add_collaborator(
+            collaborator
+        )
 
     @authentication_permission_decorator
     def add_company(self, company_attributes_dict=""):
@@ -435,9 +452,7 @@ class ConsoleClientForCreate:
                 raise exceptions.InsufficientPrivilegeException()
             if role_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(role_attributes_dict)
-                b2 = add_data_validators.add_role_data_is_valid(
-                    role_attributes_dict
-                )
+                b2 = add_data_validators.add_role_data_is_valid(role_attributes_dict)
                 if b1 and b2:
                     role = models.UserRole(**role_attributes_dict)
                 else:

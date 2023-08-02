@@ -3,6 +3,7 @@ Un controleur avec toutes méthodes pour supprimer des données.
 """
 
 import sqlalchemy
+
 try:
     from src.exceptions import exceptions
     from src.models import models
@@ -27,7 +28,7 @@ class DatabaseDeleteController:
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
-            if 'psycopg.errors.ForeignKeyViolation' in str(error):
+            if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
 
     def delete_collaborator(self, session, collaborator_id):
@@ -36,12 +37,14 @@ class DatabaseDeleteController:
         Requête de la base de données et renvoie l'id enregistré.
         """
         try:
-            collaborator = session.query(models.User).filter_by(id=collaborator_id).first()
+            collaborator = (
+                session.query(models.User).filter_by(id=collaborator_id).first()
+            )
             session.delete(collaborator)
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
-            if 'psycopg.errors.ForeignKeyViolation' in str(error):
+            if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
 
     def delete_company(self, session, company_id):
@@ -55,7 +58,7 @@ class DatabaseDeleteController:
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
-            if 'psycopg.errors.ForeignKeyViolation' in str(error):
+            if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
 
     def delete_contract(self, session, contract_id):
@@ -69,7 +72,7 @@ class DatabaseDeleteController:
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
-            if 'psycopg.errors.ForeignKeyViolation' in str(error):
+            if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
 
     def delete_department(self, session, department_id):
@@ -79,12 +82,14 @@ class DatabaseDeleteController:
         Requête de la base de données et renvoie l'id enregistré.
         """
         try:
-            department = session.query(models.UserDepartment).filter_by(id=department_id).first()
+            department = (
+                session.query(models.UserDepartment).filter_by(id=department_id).first()
+            )
             session.delete(department)
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
-            if 'psycopg.errors.ForeignKeyViolation' in str(error):
+            if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
 
     def delete_event(self, session, event_id):
@@ -98,7 +103,7 @@ class DatabaseDeleteController:
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
-            if 'psycopg.errors.ForeignKeyViolation' in str(error):
+            if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
 
     def delete_location(self, session, location_id):
@@ -112,7 +117,7 @@ class DatabaseDeleteController:
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
-            if 'psycopg.errors.ForeignKeyViolation' in str(error):
+            if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
 
     def delete_role(self, session, role_id):
@@ -126,5 +131,5 @@ class DatabaseDeleteController:
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
-            if 'psycopg.errors.ForeignKeyViolation' in str(error):
+            if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)

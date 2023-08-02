@@ -109,6 +109,7 @@ def delete_location():
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
+
 @click.command
 def delete_role():
     """

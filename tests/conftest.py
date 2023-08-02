@@ -27,7 +27,7 @@ def get_valid_decoded_token_for_a_commercial_collaborator(mocker):
         "registration_number": "aa123456789",
         "username": "donald duck",
         "department": "oc12_commercial",
-        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}'
+        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}',
     }
     mocker.patch(
         "controllers.jwt_controller.JwtController.get_decoded_token",
@@ -45,7 +45,7 @@ def get_valid_decoded_token_for_a_gestion_collaborator(mocker):
         "registration_number": "ac123456789",
         "username": "daisy duck",
         "department": "oc12_gestion",
-        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}'
+        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}',
     }
     mocker.patch(
         "controllers.jwt_controller.JwtController.get_decoded_token",
@@ -63,7 +63,7 @@ def get_valid_decoded_token_for_a_support_collaborator(mocker):
         "registration_number": "ae123456789",
         "username": "louloute duck",
         "department": "oc12_support",
-        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}'
+        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}',
     }
     mocker.patch(
         "controllers.jwt_controller.JwtController.get_decoded_token",
