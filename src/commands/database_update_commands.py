@@ -28,7 +28,7 @@ def display_option(options):
 def update_client(client_id, args):
     """
     Description: commande dédiée à mettre à jour un client de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
-    civility: expected 'MR, MRS, MISS, OTHER'\n
+    civility: expected 'MR, MME, MLE, AUTRE'\n
     first_name\n
     last_name\n
     employee_role\n
