@@ -55,6 +55,9 @@ oc12_locations = "commands.database_read_commands:get_locations"
 oc12_roles = "commands.database_read_commands:get_roles"
 # commande pour obtenir de l'aide
 oc12_help = "commands.helps:help"
+# commandes pour obtenir des infos sur les formats ou données attendues
+oc12_info_metiers = "commands.infos_data_commands:get_metiers"
+oc12_info_types_voies = "commands.infos_data_commands:get_types_voies"
 # commandes pour ajouter des données
 oc12_add_client = "commands.database_create_commands:add_client"
 oc12_add_collaborator = "commands.database_create_commands:add_collaborator"
