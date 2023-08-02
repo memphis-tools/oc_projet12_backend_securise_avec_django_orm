@@ -8,14 +8,26 @@ from termcolor import colored, cprint
 try:
     from src.clients.update_console import ConsoleClientForUpdate
     from src.exceptions import exceptions
+    from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from clients.update_console import ConsoleClientForUpdate
     from exceptions import exceptions
+    from validators.data_syntax.fr import validators
 
 
 def display_option(options):
     for option in options:
         cprint(colored(option), "yellow")
+
+
+def check_if_partial_dict_valid(partial_dict):
+    for key, value in partial_dict.items():
+        try:
+            eval(f"validators.is_{key}_valid")(value)
+        except:
+            print(f"[bold red]{value}[/bold red] not valid for {key}")
+            break
+    return True
 
 
 @click.command()
@@ -52,13 +64,15 @@ def update_client(client_id, args):
                 client_dict[k] = str(v)
         if len(client_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        check_if_partial_dict_valid(client_dict)
         console_client_return = ConsoleClientForUpdate().update_client(client_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Client utilisé[/bold red]: {error}")
-    except NameError:
+    except NameError as error:
+        print(f"[bold red]Entreprise non trouvée avec id[/bold red]: {error}")
         print("[bold red]Entreprise non trouvée avec id[/bold red]")
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
@@ -89,6 +103,7 @@ def update_collaborator(registration_number, args):
             collaborator_dict[k] = v
         if len(collaborator_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        check_if_partial_dict_valid(collaborator_dict)
         console_client_return = ConsoleClientForUpdate().update_collaborator(
             collaborator_dict
         )
@@ -132,6 +147,7 @@ def update_company(company_id, args):
                 company_dict[k] = str(v)
         if len(company_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        check_if_partial_dict_valid(company_dict)
         console_client_return = ConsoleClientForUpdate().update_company(company_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
@@ -179,6 +195,7 @@ def update_contract(contract_id, args):
                 contract_dict[k] = str(v)
         if len(contract_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        check_if_partial_dict_valid(contract_dict)
         console_client_return = ConsoleClientForUpdate().update_contract(contract_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
@@ -212,6 +229,7 @@ def update_department(department_id, args):
             department_dict[k] = v
         if len(department_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        check_if_partial_dict_valid(department_dict)
         console_client_return = ConsoleClientForUpdate().update_department(
             department_dict
         )
@@ -272,6 +290,7 @@ def update_event(event_id, args):
                 event_dict[k] = str(v)
         if len(event_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        check_if_partial_dict_valid(event_dict)
         console_client_return = ConsoleClientForUpdate().update_event(event_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
@@ -309,6 +328,7 @@ def update_location(location_id, args):
             location_dict[k] = v
         if len(location_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        check_if_partial_dict_valid(location_dict)
         console_client_return = ConsoleClientForUpdate().update_location(location_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
@@ -340,6 +360,7 @@ def update_role(role_id, args):
             role_dict[k] = v
         if len(role_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        check_if_partial_dict_valid(role_dict)
         console_client_return = ConsoleClientForUpdate().update_role(role_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
