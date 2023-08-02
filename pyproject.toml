@@ -85,6 +85,8 @@ oc12_update_department = "commands.database_update_commands:update_department"
 oc12_update_event = "commands.database_update_commands:update_event"
 oc12_update_location = "commands.database_update_commands:update_location"
 oc12_update_role = "commands.database_update_commands:update_role"
+# commande pour générer un fichier échantillon d'entreprises
+oc12_generate_companies_sample = "commands.generate_sample_commands:generate_companies_sample"
 
 [build-system]
 requires = ["poetry-core"]
