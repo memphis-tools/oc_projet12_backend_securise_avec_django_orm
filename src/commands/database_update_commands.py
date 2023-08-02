@@ -34,7 +34,7 @@ def update_client(client_id, args):
     employee_role\n
     email\n
     telephone\n
-    company_id: expected is custom id you set\n
+    company_id: expected is custom id you set (free chars string)\n
     commercial_contact: expected is registration_number\n
     Exemple usage:
     'oc12_update_client --client_id az123456789 first_name="john" last_name="doe"'
@@ -44,7 +44,12 @@ def update_client(client_id, args):
         client_dict["client_id"] = f"{client_id}"
         for arg in args:
             k, v = arg.split("=")
-            client_dict[k] = v
+            if k == "company_id":
+                expected_company = ConsoleClientForUpdate().app_view.get_companies_view().get_company(v)
+                expected_company_id = expected_company.get_dict()["id"]
+                client_dict[k] = str(expected_company_id)
+            else:
+                client_dict[k] = str(v)
         if len(client_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_client(client_dict)
@@ -53,6 +58,8 @@ def update_client(client_id, args):
         print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Client utilisé[/bold red]: {error}")
+    except NameError:
+        print("[bold red]Entreprise non trouvée avec id[/bold red]")
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
@@ -108,7 +115,7 @@ def update_company(company_id, args):
     company_name\n
     company_registration_number\n
     company_subregistration_number\n
-    location_id\n
+    location_id: expected is custom id you set (free chars string)\n
     Exemple usage:
     'oc12_update_company --company_id mtcx55124 company_subregistration_number="77785"
     """
@@ -117,7 +124,12 @@ def update_company(company_id, args):
         company_dict["company_id"] = f"{company_id}"
         for arg in args:
             k, v = arg.split("=")
-            company_dict[k] = v
+            if k == "location_id":
+                expected_location = ConsoleClientForUpdate().app_view.get_locations_view().get_location(v)
+                expected_location_id = expected_location.get_dict()["id"]
+                company_dict[k] = str(expected_location_id)
+            else:
+                company_dict[k] = str(v)
         if len(company_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_company(company_dict)
@@ -145,8 +157,8 @@ def update_contract(contract_id, args):
     remain_amount_to_pay\n
     creation_date\n
     status\n
-    client_id\n
-    collaborator_id\n
+    client_id: expected is custom id you set (free chars string)\n
+    collaborator_id: expected is registration_number\n
     Exemple usage:
     'oc12_update_contract --contract_id c20z38 remain_amount_to_pay="66.55"
     """
@@ -155,7 +167,16 @@ def update_contract(contract_id, args):
         contract_dict["contract_id"] = f"{contract_id}"
         for arg in args:
             k, v = arg.split("=")
-            contract_dict[k] = v
+            if k == "client_id":
+                expected_client = ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
+                expected_client_id = expected_client.get_dict()["id"]
+                contract_dict[k] = str(expected_client_id)
+            elif k == "collaborator_id":
+                expected_collaborator = ConsoleClientForUpdate().app_view.get_collaborators_view().get_collaborator(v)
+                expected_collaborator_id = expected_collaborator.get_dict()["id"]
+                contract_dict[k] = str(expected_collaborator_id)
+            else:
+                contract_dict[k] = str(v)
         if len(contract_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_contract(contract_dict)
@@ -215,10 +236,10 @@ def update_event(event_id, args):
     Description:
     Commande dédiée à mettre à jour un évènement avec 1 ou plusieurs options ci-dessous:\n
     title\n
-    contract_id\n
-    client_id\n
-    collaborator_id\n
-    location_id\n
+    contract_id: expected is custom id you set (free chars string)\n
+    client_id: expected is custom id you set (free chars string)\n
+    collaborator_id: expected is registration_number\n
+    location_id: expected is custom id you set (free chars string)\n
     event_start_date\n
     event_end_date\n
     attendees\n
@@ -231,7 +252,24 @@ def update_event(event_id, args):
         event_dict["event_id"] = f"{event_id}"
         for arg in args:
             k, v = arg.split("=")
-            event_dict[k] = v
+            if k == "client_id":
+                expected_client = ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
+                expected_client_id = expected_client.get_dict()["id"]
+                event_dict[k] = str(expected_client_id)
+            elif k == "collaborator_id":
+                expected_collaborator = ConsoleClientForUpdate().app_view.get_collaborators_view().get_collaborator(v)
+                expected_collaborator_id = expected_collaborator.get_dict()["id"]
+                event_dict[k] = str(expected_collaborator_id)
+            elif k == "contract_id":
+                expected_contract = ConsoleClientForUpdate().app_view.get_contracts_view().get_contract(v)
+                expected_contract_id = expected_contract.get_dict()["id"]
+                event_dict[k] = str(expected_contract_id)
+            elif k == "location_id":
+                expected_location = ConsoleClientForUpdate().app_view.get_locations_view().get_location(v)
+                expected_location_id = expected_location.get_dict()["id"]
+                event_dict[k] = str(expected_location_id)
+            else:
+                event_dict[k] = str(v)
         if len(event_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_event(event_dict)
