@@ -73,13 +73,6 @@ event_partial_dict = {
 def test_update_client_view(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    try:
-        result = ConsoleClientForUpdate().update_client(client_partial_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
-
     args_to_convert = client_partial_dict_1
     custom_id = args_to_convert.pop("client_id")
     args_converted = ""
