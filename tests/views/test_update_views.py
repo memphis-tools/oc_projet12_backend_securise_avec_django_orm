@@ -5,7 +5,7 @@ Pas de bases de données de test, içi on met à jour les données créées via 
 On recherche un "custom id" (une chaine libre), pas l'id entier auto incrémenté de la table.
 Cas particulier d'un collaborateur, le "custom_id" est son registration_number (matricule).
 """
-
+import pytest
 try:
     from src.clients.update_console import ConsoleClientForUpdate
     from src.commands import database_update_commands
