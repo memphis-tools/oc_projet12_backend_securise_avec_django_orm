@@ -204,9 +204,9 @@ class Client(Base):
     __tablename__ = "client"
     CIVILITIES = [
         ("MR", "monsieur"),
-        ("MRS", "madame"),
-        ("MISS", "madamoiselle"),
-        ("OTHER", "autre"),
+        ("MME", "madame"),
+        ("MLE", "mademoiselle"),
+        ("AUTRE", "autre"),
     ]
     id = Column(Integer, primary_key=True)
     client_id = Column(String(120), nullable=False, unique=True)
