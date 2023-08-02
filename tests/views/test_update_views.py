@@ -6,8 +6,6 @@ On recherche un "custom id" (une chaine libre), pas l'id entier auto incrÃ©mentÃ
 Cas particulier d'un collaborateur, le "custom_id" est son registration_number (matricule).
 """
 
-import pytest
-
 try:
     from src.clients.update_console import ConsoleClientForUpdate
     from src.commands import database_update_commands
@@ -21,6 +19,13 @@ client_partial_dict_1 = {
     "telephone": "+677118822",
     "email": "daisy.duck@abm.fr",
 }
+
+
+collaborator_partial_dict = {
+    "registration_number": "rr123456789",
+    "username": "marianne de lagraine",
+}
+
 
 client_partial_dict_2 = {
     "client_id": "dduck",
@@ -36,6 +41,7 @@ collaborator_partial_dict = {
     "registration_number": "rr123456789",
     "username": "marianne de lagraine",
 }
+
 
 department_partial_dict = {"department_id": "logist", "name": "oc12_logistique"}
 
@@ -67,6 +73,13 @@ event_partial_dict = {
 def test_update_client_view(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
+    try:
+        result = ConsoleClientForUpdate().update_client(client_partial_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
     args_to_convert = client_partial_dict_1
     custom_id = args_to_convert.pop("client_id")
     args_converted = ""

@@ -4,6 +4,7 @@ Test de fonctions utiles.
 """
 import pytest
 import psycopg
+
 try:
     from srv.utils import utils
 except ModuleNotFoundError:
@@ -13,16 +14,8 @@ except ModuleNotFoundError:
 def test_generate_password_hash_from_input():
     result = utils.generate_password_hash_from_input("alouette")
     pattern_to_find = "pbkdf2:sha256"
-    assert result[0 : len(pattern_to_find)] == pattern_to_find
+    assert len(pattern_to_find) == pattern_to_find
 
-
-# def test_check_password_hash_from_input():
-#     registration_number = "aa123456789"
-#     conn = utils.get_a_database_connection()
-#     cursor = conn.cursor()
-#     sql = f"""SELECT password,username FROM collaborator WHERE registration_number={registration_number}"""
-#     cursor.execute(sql)
-#     conn.commit()
 
 def test_get_a_database_connection_for_valid_user():
     user_name = "aa123456789"

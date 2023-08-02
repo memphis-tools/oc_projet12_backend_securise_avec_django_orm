@@ -5,11 +5,6 @@ La console en mode création permet les ajouts de données aux modèles de 2 man
 C'est pour le 2ème cas qu'on introduit ce module.
 """
 
-try:
-    from src.models import models
-except ModuleNotFoundError:
-    from models import models
-
 
 def data_is_dict(data) -> bool:
     if isinstance(data, dict):
@@ -27,7 +22,7 @@ def add_client_data_is_valid(data) -> bool:
         "email",
         "telephone",
         "company_id",
-        "commercial_contact"
+        "commercial_contact",
     ]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b
@@ -45,7 +40,7 @@ def add_company_data_is_valid(data) -> bool:
         "company_name",
         "company_registration_number",
         "company_subregistration_number",
-        "location_id"
+        "location_id",
     ]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b
@@ -58,7 +53,7 @@ def add_contract_data_is_valid(data) -> bool:
         "remain_amount_to_pay",
         "status",
         "client_id",
-        "collaborator_id"
+        "collaborator_id",
     ]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b
@@ -104,9 +99,6 @@ def add_location_data_is_valid(data) -> bool:
 
 
 def add_role_data_is_valid(data) -> bool:
-    expected_keys = [
-        "role_id",
-        "name"
-    ]
+    expected_keys = ["role_id", "name"]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b

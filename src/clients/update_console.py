@@ -6,24 +6,18 @@ from rich import print
 
 try:
     from src.exceptions import exceptions
-    from src.forms import forms
-    from src.models import models
     from src.views.update_views import UpdateAppViews
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings
     from src.utils.utils import authentication_permission_decorator, display_banner
-    from src.validators import add_data_validators
 except ModuleNotFoundError:
     from exceptions import exceptions
-    from forms import forms
-    from models import models
     from views.update_views import UpdateAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings
     from utils.utils import authentication_permission_decorator, display_banner
-    from validators import add_data_validators
 
 
 class ConsoleClientForUpdate:
@@ -63,12 +57,14 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_clients_view().update_client(custom_partial_dict)
+        return self.update_app_view.get_clients_view().update_client(
+            custom_partial_dict
+        )
 
     @authentication_permission_decorator
     def update_collaborator(self, custom_partial_dict=""):
@@ -86,7 +82,7 @@ class ConsoleClientForUpdate:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -111,12 +107,14 @@ class ConsoleClientForUpdate:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_companies_view().update_company(custom_partial_dict)
+        return self.update_app_view.get_companies_view().update_company(
+            custom_partial_dict
+        )
 
     @authentication_permission_decorator
     def update_contract(self, custom_partial_dict=""):
@@ -134,12 +132,14 @@ class ConsoleClientForUpdate:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_contracts_view().update_contract(custom_partial_dict)
+        return self.update_app_view.get_contracts_view().update_contract(
+            custom_partial_dict
+        )
 
     @authentication_permission_decorator
     def update_department(self, custom_partial_dict=""):
@@ -157,12 +157,14 @@ class ConsoleClientForUpdate:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_departments_view().update_department(custom_partial_dict)
+        return self.update_app_view.get_departments_view().update_department(
+            custom_partial_dict
+        )
 
     @authentication_permission_decorator
     def update_event(self, custom_partial_dict=""):
@@ -180,7 +182,7 @@ class ConsoleClientForUpdate:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -203,12 +205,14 @@ class ConsoleClientForUpdate:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_locations_view().update_location(custom_partial_dict)
+        return self.update_app_view.get_locations_view().update_location(
+            custom_partial_dict
+        )
 
     @authentication_permission_decorator
     def update_role(self, custom_partial_dict=""):
@@ -226,7 +230,7 @@ class ConsoleClientForUpdate:
             print("[bold red]You are not authorized.[/bold red]")
             sys.exit(0)
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red]")
+            print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")

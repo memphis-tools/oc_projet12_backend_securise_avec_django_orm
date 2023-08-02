@@ -4,16 +4,13 @@ Description: Toutes les commandes qui permettent les suppressions
 import click
 from rich import print
 from termcolor import colored, cprint
+
 try:
     from src.clients.update_console import ConsoleClientForUpdate
     from src.exceptions import exceptions
-    from src.models import models
-    from src.utils import utils
 except ModuleNotFoundError:
     from clients.update_console import ConsoleClientForUpdate
     from exceptions import exceptions
-    from models import models
-    from utils import utils
 
 
 def display_option(options):
@@ -23,9 +20,8 @@ def display_option(options):
 
 @click.command()
 @click.option("--client_id", prompt=True, help="")
-# @click.option("--client_id", prompt=True, help=click.secho('client_id: Id du client (votre id customisé)', bg='blue', fg='white'))
-# @click.option("--client_id", prompt=True, help=cprint(colored("client_id: Id du client (votre id customisé)"), "yellow"))
-@click.argument('args',
+@click.argument(
+    "args",
     nargs=-1,
     type=str,
 )
@@ -57,9 +53,9 @@ def update_client(client_id, args):
         if len(client_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_client(client_dict)
-        click.secho(console_client_return, bg='blue', fg='white')
+        click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print(f"[bold red]Aucuns arguments fournis[/bold red]")
+        print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Client utilisé[/bold red]: {error}")
     except NameError:
@@ -70,11 +66,12 @@ def update_client(client_id, args):
 
 @click.command
 @click.option("--registration_number", prompt=True, help="")
-@click.argument('args',
+@click.argument(
+    "args",
     nargs=-1,
     type=str,
 )
-def update_collaborator():
+def update_collaborator(registration_number, args):
     """
     Description:
     Commande dédiée à mettre à jour un collaborateur de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
@@ -92,10 +89,12 @@ def update_collaborator():
             collaborator_dict[k] = v
         if len(collaborator_dict) == 1:
             raise exceptions.MissingUpdateParamException()
-        console_client_return = ConsoleClientForUpdate().update_collaborator(collaborator_dict)
-        click.secho(console_client_return, bg='blue', fg='white')
+        console_client_return = ConsoleClientForUpdate().update_collaborator(
+            collaborator_dict
+        )
+        click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print(f"[bold red]Aucuns arguments fournis[/bold red]")
+        print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Collaborateur utilisé[/bold red]: {error}")
     except Exception as error:
@@ -104,11 +103,12 @@ def update_collaborator():
 
 @click.command
 @click.option("--company_id", prompt=True, help="")
-@click.argument('args',
+@click.argument(
+    "args",
     nargs=-1,
     type=str,
 )
-def update_company():
+def update_company(company_id, args):
     """
     Description:
     Commande dédiée à mettre à jour une entreprise avec 1 ou plusieurs options ci-dessous:\n
@@ -119,7 +119,7 @@ def update_company():
     Exemple usage:
     'oc12_update_company --company_id mtcx55124 company_subregistration_number="77785"
     """
-    company_dict = {}
+    company_dict = {company_id}
     try:
         company_dict["company_id"] = f"{company_id}"
         for arg in args:
@@ -133,9 +133,9 @@ def update_company():
         if len(company_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_company(company_dict)
-        click.secho(console_client_return, bg='blue', fg='white')
+        click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print(f"[bold red]Aucuns arguments fournis[/bold red]")
+        print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Entreprise utilisée[/bold red]: {error}")
     except Exception as error:
@@ -144,11 +144,12 @@ def update_company():
 
 @click.command
 @click.option("--contract_id", prompt=True, help="")
-@click.argument('args',
+@click.argument(
+    "args",
     nargs=-1,
     type=str,
 )
-def update_contract():
+def update_contract(contract_id, args):
     """
     Description:
     Commande dédiée à mettre à jour un contrat de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
@@ -179,9 +180,9 @@ def update_contract():
         if len(contract_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_contract(contract_dict)
-        click.secho(console_client_return, bg='blue', fg='white')
+        click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print(f"[bold red]Aucuns arguments fournis[/bold red]")
+        print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Contrat utilisé[/bold red]: {error}")
     except Exception as error:
@@ -190,11 +191,12 @@ def update_contract():
 
 @click.command
 @click.option("--department_id", prompt=True, help="")
-@click.argument('args',
+@click.argument(
+    "args",
     nargs=-1,
     type=str,
 )
-def update_department():
+def update_department(department_id, args):
     """
     Description:
     Commande dédiée à mettre à jour un département /service de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
@@ -210,10 +212,12 @@ def update_department():
             department_dict[k] = v
         if len(department_dict) == 1:
             raise exceptions.MissingUpdateParamException()
-        console_client_return = ConsoleClientForUpdate().update_department(department_dict)
-        click.secho(console_client_return, bg='blue', fg='white')
+        console_client_return = ConsoleClientForUpdate().update_department(
+            department_dict
+        )
+        click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print(f"[bold red]Aucuns arguments fournis[/bold red]")
+        print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Service utilisé[/bold red]: {error}")
     except Exception as error:
@@ -222,11 +226,12 @@ def update_department():
 
 @click.command
 @click.option("--event_id", prompt=True, help="")
-@click.argument('args',
+@click.argument(
+    "args",
     nargs=-1,
     type=str,
 )
-def update_event():
+def update_event(event_id, args):
     """
     Description:
     Commande dédiée à mettre à jour un évènement avec 1 ou plusieurs options ci-dessous:\n
@@ -268,9 +273,9 @@ def update_event():
         if len(event_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_event(event_dict)
-        click.secho(console_client_return, bg='blue', fg='white')
+        click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print(f"[bold red]Aucuns arguments fournis[/bold red]")
+        print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Evenement utilisé[/bold red]: {error}")
     except Exception as error:
@@ -279,11 +284,12 @@ def update_event():
 
 @click.command
 @click.option("--location_id", prompt=True, help="")
-@click.argument('args',
+@click.argument(
+    "args",
     nargs=-1,
     type=str,
 )
-def update_location():
+def update_location(location_id, args):
     """
     Description:
     Commande dédiée à mettre à jour une localité avec 1 ou plusieurs options ci-dessous:\n
@@ -304,22 +310,23 @@ def update_location():
         if len(location_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_location(location_dict)
-        click.secho(console_client_return, bg='blue', fg='white')
+        click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print(f"[bold red]Aucuns arguments fournis[/bold red]")
+        print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
-        print(f"[bold red]Locatité utilisée[/bold red]: {error}")
+        print("[bold red]Locatité utilisée[/bold red]: {error}")
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
 
 @click.command
 @click.option("--role_id", prompt=True, help="")
-@click.argument('args',
+@click.argument(
+    "args",
     nargs=-1,
     type=str,
 )
-def update_role():
+def update_role(role_id, args):
     """
     Description:
     Commande dédiée à mettre à jour un roles pour les collaborateurs de l'entreprise
@@ -334,9 +341,9 @@ def update_role():
         if len(role_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         console_client_return = ConsoleClientForUpdate().update_role(role_dict)
-        click.secho(console_client_return, bg='blue', fg='white')
+        click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print(f"[bold red]Aucuns arguments fournis[/bold red]")
+        print("[bold red]Aucuns arguments fournis[/bold red]")
     except exceptions.ForeignKeyDependyException as error:
         print(f"[bold red]Role utilisé[/bold red]: {error}")
     except Exception as error:
