@@ -4,6 +4,10 @@ Classe dédiée aux mises à jour des modèles. Utilisée pour le dialogue avec 
 import sys
 from rich import print
 from rich.prompt import Prompt
+try:
+    from src.validators.data_syntax.fr import validators
+except ModuleNotFoundError:
+    from validators.data_syntax.fr import validators
 
 
 def submit_a_location_get_form(custom_id=""):
@@ -16,7 +20,7 @@ def submit_a_location_get_form(custom_id=""):
         try:
             custom_id = Prompt.ask("id localité: ")
         except KeyboardInterrupt:
-            print("[bold green][LOCATION LOOKUP][/bold green] Lookup aborted")
+            print("[bold red][LOCATION LOOKUP][/bold red] Lookup aborted")
             sys.exit(0)
     return custom_id
 
@@ -41,9 +45,14 @@ def submit_a_location_create_form(custom_dict={}):
                     if key not in custom_dict.keys():
                         item = Prompt.ask(f"{value}: ")
                         if item.strip() != "":
-                            custom_dict[key] = item
+                            try:
+                                eval(f"validators.is_{key}_valid")(item)
+                                custom_dict[key] = item
+                            except:
+                                print(f"[bold red]{item}[/bold red] not valid for {key}")
+                                continue
         except KeyboardInterrupt:
-            print("[bold green][LOCATION CREATION][/bold green] Creation aborted")
+            print("[bold red][LOCATION CREATION][/bold red] Creation aborted")
             sys.exit(0)
     return custom_dict
 
@@ -82,7 +91,12 @@ def submit_a_company_create_form(custom_dict={}):
                     if key not in custom_dict.keys():
                         item = Prompt.ask(f"{value}: ")
                         if item.strip() != "":
-                            custom_dict[key] = item
+                            try:
+                                eval(f"validators.is_{key}_valid")(item)
+                                custom_dict[key] = item
+                            except:
+                                print(f"[bold red]{item}[/bold red] not valid for {key}")
+                                continue
         except KeyboardInterrupt:
             print("[bold green][COMPANY CREATION][/bold green] Creation aborted")
             sys.exit(0)
@@ -126,7 +140,12 @@ def submit_a_client_create_form(custom_dict={}):
                     if key not in custom_dict.keys():
                         item = Prompt.ask(f"{value}: ")
                         if item.strip() != "":
-                            custom_dict[key] = item
+                            try:
+                                eval(f"validators.is_{key}_valid")(item)
+                                custom_dict[key] = item
+                            except:
+                                print(f"[bold red]{item}[/bold red] not valid for {key}")
+                                continue
         except KeyboardInterrupt:
             print("[bold green][CLIENT CREATION][/bold green] Creation aborted")
             sys.exit(0)
@@ -163,7 +182,12 @@ def submit_a_collaborator_create_form(custom_dict={}):
         try:
             for key, value in collaborator_expected_attributes_dict.items():
                 item = Prompt.ask(f"{value}: ")
-                custom_dict[key] = item
+                try:
+                    eval(f"validators.is_{key}_valid")(item)
+                    custom_dict[key] = item
+                except:
+                    print(f"[bold red]{item}[/bold red] not valid for {key}")
+                    continue
         except KeyboardInterrupt:
             print("[bold green][COLLABORATOR CREATION][/bold green] Creation aborted")
             sys.exit(0)
@@ -197,7 +221,12 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
         try:
             for key, value in collaborator_role_expected_attributes_dict.items():
                 item = Prompt.ask(f"{value}: ")
-                custom_dict[key] = item
+                try:
+                    eval(f"validators.is_{key}_valid")(item)
+                    custom_dict[key] = item
+                except:
+                    print(f"[bold red]{item}[/bold red] not valid for {key}")
+                    continue
         except KeyboardInterrupt:
             print(
                 "[bold green][COLLABORATOR ROLE CREATION][/bold green] Creation aborted"
@@ -233,7 +262,12 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
         try:
             for key, value in collaborator_department_expected_attributes_dict.items():
                 item = Prompt.ask(f"{value}: ")
-                custom_dict[key] = item
+                try:
+                    eval(f"validators.is_{key}_valid")(item)
+                    custom_dict[key] = item
+                except:
+                    print(f"[bold red]{item}[/bold red] not valid for {key}")
+                    continue
         except KeyboardInterrupt:
             print(
                 "[bold green][COLLABORATOR DEPARTMENT CREATION][/bold green] Creation aborted"
@@ -277,7 +311,12 @@ def submit_a_contract_create_form(custom_dict={}):
                         item = True
                     else:
                         item = False
-                custom_dict[key] = item
+                try:
+                    eval(f"validators.is_{key}_valid")(item)
+                    custom_dict[key] = item
+                except:
+                    print(f"[bold red]{item}[/bold red] not valid for {key}")
+                    continue
         except KeyboardInterrupt:
             print("[bold green][CONTRACT CREATION][/bold green] Creation aborted")
             sys.exit(0)
@@ -316,7 +355,12 @@ def submit_a_event_create_form(custom_dict={}):
         try:
             for key, value in event_expected_attributes_dict.items():
                 item = Prompt.ask(f"{value}: ")
-                custom_dict[key] = item
+                try:
+                    eval(f"validators.is_{key}_valid")(item)
+                    custom_dict[key] = item
+                except:
+                    print(f"[bold red]{item}[/bold red] not valid for {key}")
+                    continue
         except KeyboardInterrupt:
             print("[bold green][EVENT CREATION][/bold green] Creation aborted")
             sys.exit(0)
