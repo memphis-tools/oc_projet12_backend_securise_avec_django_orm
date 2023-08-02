@@ -378,7 +378,7 @@ def dummy_database_creation():
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
-    VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '+678 123 456 78', '1', '2')
+    VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '067812345678', '1', '2')
     """
     cursor.execute(sql)
 
