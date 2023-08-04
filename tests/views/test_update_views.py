@@ -120,7 +120,7 @@ def test_update_client_view_with_unvalid_company(
         assert result.exit_code == 1
 
 
-def test_update_company_view(
+def test_update_company_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -131,7 +131,7 @@ def test_update_company_view(
         print(error)
 
 
-def test_update_contract_view(
+def test_update_contract_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -142,7 +142,7 @@ def test_update_contract_view(
         print(error)
 
 
-def test_update_event_view(
+def test_update_event_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -153,7 +153,7 @@ def test_update_event_view(
         print(error)
 
 
-def test_update_location_view(
+def test_update_location_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -164,7 +164,7 @@ def test_update_location_view(
         print(error)
 
 
-def test_update_role_view(
+def test_update_role_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
@@ -175,7 +175,7 @@ def test_update_role_view(
         print(error)
 
 
-def test_update_department_view(
+def test_update_department_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
@@ -186,7 +186,7 @@ def test_update_department_view(
         print(error)
 
 
-def test_update_collaborator_view(
+def test_update_collaborator_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:

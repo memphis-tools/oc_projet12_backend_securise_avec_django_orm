@@ -8,12 +8,16 @@ On supprime les données en recherchant un "custom id" (une chaine libre), pas l
 import pytest
 
 try:
+    from src.clients.create_console import ConsoleClientForCreate
     from src.clients.delete_console import ConsoleClientForDelete
+    from src.exceptions import exceptions
 except ModuleNotFoundError:
+    from clients.create_console import ConsoleClientForCreate
     from clients.delete_console import ConsoleClientForDelete
+    from exceptions import exceptions
 
 
-def test_delete_client_view(
+def test_delete_client_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -24,7 +28,7 @@ def test_delete_client_view(
         print(error)
 
 
-def test_delete_company_view(
+def test_delete_company_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -35,7 +39,7 @@ def test_delete_company_view(
         print(error)
 
 
-def test_delete_contract_view(
+def test_delete_contract_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -46,7 +50,7 @@ def test_delete_contract_view(
         print(error)
 
 
-def test_delete_event_view(
+def test_delete_event_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -57,7 +61,7 @@ def test_delete_event_view(
         print(error)
 
 
-def test_delete_location_view(
+def test_delete_location_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
@@ -68,7 +72,7 @@ def test_delete_location_view(
         print(error)
 
 
-def test_delete_role_view(
+def test_delete_role_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
@@ -79,7 +83,7 @@ def test_delete_role_view(
         print(error)
 
 
-def test_delete_department_view(
+def test_delete_department_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
@@ -91,7 +95,23 @@ def test_delete_department_view(
 
 
 @pytest.mark.parametrize("matricule", ["ww123456789", "xx123456789", "yy123456789"])
-def test_delete_collaborator_view(
+def test_delete_collaborator_view_with_commercial_profile(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator, matricule
+):
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        result = ConsoleClientForCreate().add_collaborator(matricule)
+
+
+@pytest.mark.parametrize("matricule", ["ww123456789", "xx123456789", "yy123456789"])
+def test_delete_collaborator_view_with_support_profile(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator, matricule
+):
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        result = ConsoleClientForCreate().add_collaborator(matricule)
+
+
+@pytest.mark.parametrize("matricule", ["ww123456789", "xx123456789", "yy123456789"])
+def test_delete_collaborator_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator, matricule
 ):
     try:

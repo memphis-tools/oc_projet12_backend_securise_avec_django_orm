@@ -10,8 +10,10 @@ import pytest
 
 try:
     from src.clients.create_console import ConsoleClientForCreate
+    from src.exceptions import exceptions
 except ModuleNotFoundError:
     from clients.create_console import ConsoleClientForCreate
+    from exceptions import exceptions
 
 
 # différents dictionnaires correspondants aux modèles
@@ -173,42 +175,55 @@ role_attributes_dict_2 = {"role_id": "driv", "name": "DRIVER"}
     "custom_dict",
     [
         commercial_collaborator_attributes_dict_1,
-        commercial_collaborator_attributes_dict_2,
+        gestion_collaborator_attributes_dict_2,
+        support_collaborator_attributes_dict_1
     ],
 )
-def test_add_commercial_collaborator_view(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+def test_add_collaborator_view_with_commercial_profile(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
 ):
-    try:
+    """
+    Vérifier si un membre du service commercial peut ajouter un collaborateur.
+    """
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
         result = ConsoleClientForCreate().add_collaborator(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
 
 
 @pytest.mark.parametrize(
     "custom_dict",
-    [gestion_collaborator_attributes_dict_1, gestion_collaborator_attributes_dict_2],
+    [
+        commercial_collaborator_attributes_dict_1,
+        gestion_collaborator_attributes_dict_2,
+        support_collaborator_attributes_dict_1
+    ],
 )
-def test_add_gestion_collaborator_view(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+def test_add_collaborator_view_with_support_profile(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator, custom_dict
 ):
-    try:
+    """
+    Vérifier si un membre du service support peut ajouter un collaborateur.
+    """
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
         result = ConsoleClientForCreate().add_collaborator(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
 
 
 @pytest.mark.parametrize(
     "custom_dict",
-    [support_collaborator_attributes_dict_1, support_collaborator_attributes_dict_2],
+    [
+        commercial_collaborator_attributes_dict_1,
+        commercial_collaborator_attributes_dict_2,
+        gestion_collaborator_attributes_dict_1,
+        gestion_collaborator_attributes_dict_2,
+        support_collaborator_attributes_dict_1,
+        support_collaborator_attributes_dict_2
+    ],
 )
-def test_add_support_collaborator_view(
+def test_add_collaborator_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
 ):
+    """
+    Vérifier si un membre du service gestion peut ajouter un collaborateur.
+    """
     try:
         result = ConsoleClientForCreate().add_collaborator(custom_dict)
         assert isinstance(result, int)
@@ -220,9 +235,46 @@ def test_add_support_collaborator_view(
 @pytest.mark.parametrize(
     "custom_dict", [location_attributes_dict_1, location_attributes_dict_2]
 )
-def test_add_location_view(
+def test_add_location_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
 ):
+    """
+    Vérifier si un membre du service commercial peut ajouter une localité.
+    """
+    try:
+        result = ConsoleClientForCreate().add_location(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [location_attributes_dict_1, location_attributes_dict_2]
+)
+def test_add_location_view_with_gestion_profile(
+    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service gestion peut ajouter une localité.
+    """
+    try:
+        result = ConsoleClientForCreate().add_location(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [location_attributes_dict_1, location_attributes_dict_2]
+)
+def test_add_location_view_with_support_profile(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service support peut ajouter une localité.
+    """
     try:
         result = ConsoleClientForCreate().add_location(custom_dict)
         assert isinstance(result, int)
@@ -234,9 +286,46 @@ def test_add_location_view(
 @pytest.mark.parametrize(
     "custom_dict", [company_attributes_dict_1, company_attributes_dict_2]
 )
-def test_add_company_view(
+def test_add_company_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
 ):
+    """
+    Vérifier si un membre du service commercial peut ajouter une entreprise.
+    """
+    try:
+        result = ConsoleClientForCreate().add_company(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [company_attributes_dict_1, company_attributes_dict_2]
+)
+def test_add_company_view_with_gestion_profile(
+    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service gestion peut ajouter une entreprise.
+    """
+    try:
+        result = ConsoleClientForCreate().add_company(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [company_attributes_dict_1, company_attributes_dict_2]
+)
+def test_add_company_view_with_support_profile(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service support peut ajouter une entreprise.
+    """
     try:
         result = ConsoleClientForCreate().add_company(custom_dict)
         assert isinstance(result, int)
@@ -248,9 +337,46 @@ def test_add_company_view(
 @pytest.mark.parametrize(
     "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2]
 )
-def test_add_contract_view(
+def test_add_contract_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
 ):
+    """
+    Vérifier si un membre du service commercial peut ajouter un contrat.
+    """
+    try:
+        result = ConsoleClientForCreate().add_contract(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2]
+)
+def test_add_contract_view_with_gestion_profile(
+    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service gestion peut ajouter un contrat.
+    """
+    try:
+        result = ConsoleClientForCreate().add_contract(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2]
+)
+def test_add_contract_view_with_support_profile(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service support peut ajouter un contrat.
+    """
     try:
         result = ConsoleClientForCreate().add_contract(custom_dict)
         assert isinstance(result, int)
@@ -262,9 +388,46 @@ def test_add_contract_view(
 @pytest.mark.parametrize(
     "custom_dict", [event_attributes_dict_1, event_attributes_dict_2]
 )
-def test_add_event_view(
+def test_add_event_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
 ):
+    """
+    Vérifier si un membre du service commercial peut ajouter un évènement.
+    """
+    try:
+        result = ConsoleClientForCreate().add_event(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [event_attributes_dict_1, event_attributes_dict_2]
+)
+def test_add_event_view_with_gestion_profile(
+    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service gestion peut ajouter un évènement.
+    """
+    try:
+        result = ConsoleClientForCreate().add_event(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [event_attributes_dict_1, event_attributes_dict_2]
+)
+def test_add_event_view_with_support_profile(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service support peut ajouter un évènement.
+    """
     try:
         result = ConsoleClientForCreate().add_event(custom_dict)
         assert isinstance(result, int)
@@ -276,9 +439,12 @@ def test_add_event_view(
 @pytest.mark.parametrize(
     "custom_dict", [role_attributes_dict_1, role_attributes_dict_2]
 )
-def test_add_role_view(
+def test_add_role_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
 ):
+    """
+    Vérifier si un membre du service gestion peut ajouter un role.
+    """
     try:
         result = ConsoleClientForCreate().add_role(custom_dict)
         assert isinstance(result, int)
@@ -290,9 +456,12 @@ def test_add_role_view(
 @pytest.mark.parametrize(
     "custom_dict", [department_attributes_dict_1, department_attributes_dict_2]
 )
-def test_add_department_view(
+def test_add_department_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
 ):
+    """
+    Vérifier si un membre du service gestion peut ajouter un departement (service).
+    """
     try:
         result = ConsoleClientForCreate().add_department(custom_dict)
         assert isinstance(result, int)
@@ -304,9 +473,47 @@ def test_add_department_view(
 @pytest.mark.parametrize(
     "custom_dict", [client_attributes_dict_1, client_attributes_dict_2]
 )
-def test_add_client_view(
+def test_add_client_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
 ):
+    """
+    Vérifier si un membre du service commercial peut ajouter un client.
+    """
+    try:
+        result = ConsoleClientForCreate().add_client(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [client_attributes_dict_1, client_attributes_dict_2]
+)
+def test_add_client_view_with_gestion_profile(
+    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service gestion peut ajouter un client.
+    """
+    try:
+        result = ConsoleClientForCreate().add_client(custom_dict)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [client_attributes_dict_1, client_attributes_dict_2]
+)
+def test_add_client_view_with_support_profile(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service support peut ajouter un client.
+    """
     try:
         result = ConsoleClientForCreate().add_client(custom_dict)
         assert isinstance(result, int)
