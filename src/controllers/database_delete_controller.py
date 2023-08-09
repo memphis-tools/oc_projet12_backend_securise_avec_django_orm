@@ -3,6 +3,7 @@ Un controleur avec toutes méthodes pour supprimer des données.
 """
 
 import sqlalchemy
+from sqlalchemy import text
 
 try:
     from src.exceptions import exceptions
@@ -20,7 +21,7 @@ class DatabaseDeleteController:
     def delete_client(self, session, client_id):
         """
         Description: Fonction dédiée à servir la vue lors de la suppression d'un client.
-        Requête de la base de données et renvoie l'id enregistré.
+        Requête de la base de données et renvoie True si réussie.
         """
         try:
             client = session.query(models.Client).filter_by(id=client_id).first()
@@ -34,13 +35,18 @@ class DatabaseDeleteController:
     def delete_collaborator(self, session, collaborator_id):
         """
         Description: Fonction dédiée à servir la vue lors de la suppression d'un collaborateur.
-        Requête de la base de données et renvoie l'id enregistré.
+        Requête de la base de données et renvoie True si réussie.
         """
         try:
             collaborator = (
                 session.query(models.User).filter_by(id=collaborator_id).first()
             )
             session.delete(collaborator)
+
+            role = collaborator.registration_number
+            sql = text(f"""DROP ROLE {role}""")
+            session.execute(sql)
+
             session.commit()
             return True
         except sqlalchemy.exc.IntegrityError as error:
@@ -50,7 +56,7 @@ class DatabaseDeleteController:
     def delete_company(self, session, company_id):
         """
         Description: Fonction dédiée à servir la vue lors d'une suppression d'une entreprise.
-        Requête de la base de données et renvoie l'id enregistré.
+        Requête de la base de données et renvoie True si réussie.
         """
         try:
             company = session.query(models.Company).filter_by(id=company_id).first()
@@ -64,7 +70,7 @@ class DatabaseDeleteController:
     def delete_contract(self, session, contract_id):
         """
         Description: Fonction dédiée à servir la vue lors de la suppression d'un contrat.
-        Requête de la base de données et renvoie l'id enregistré.
+        Requête de la base de données et renvoie True si réussie.
         """
         try:
             contract = session.query(models.Contract).filter_by(id=contract_id).first()
@@ -79,7 +85,7 @@ class DatabaseDeleteController:
         """
         Description:
         Fonction dédiée à servir la vue lors de la suppression d'un department /service de l'entreprise.
-        Requête de la base de données et renvoie l'id enregistré.
+        Requête de la base de données et renvoie True si réussie.
         """
         try:
             department = (
@@ -95,7 +101,7 @@ class DatabaseDeleteController:
     def delete_event(self, session, event_id):
         """
         Description: Fonction dédiée à servir la vue lors de la suppression d'un évènement.
-        Requête de la base de données et renvoie l'id enregistré.
+        Requête de la base de données et renvoie True si réussie.
         """
         try:
             event = session.query(models.Event).filter_by(id=event_id).first()
@@ -109,7 +115,7 @@ class DatabaseDeleteController:
     def delete_location(self, session, location_id):
         """
         Description: Fonction dédiée à servir la vue lors d'une suppression d'une localité (entreprise ou évènement).
-        Requête de la base de données et renvoie l'id enregistré.
+        Requête de la base de données et renvoie True si réussie.
         """
         try:
             location = session.query(models.Location).filter_by(id=location_id).first()
@@ -123,7 +129,7 @@ class DatabaseDeleteController:
     def delete_role(self, session, role_id):
         """
         Description: Fonction dédiée à servir la vue lors de la suppression d'un rôle pour collaborateur.
-        Requête de la base de données et renvoie l'id enregistré.
+        Requête de la base de données et renvoie True si réussie.
         """
         try:
             role = session.query(models.UserRole).filter_by(id=role_id).first()
