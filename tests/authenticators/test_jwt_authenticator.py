@@ -19,7 +19,7 @@ except ModuleNotFoundError:
     from settings import settings
 
 
-def test_get_token_with_unvalid_credentials():
+def test_get_token_with_unvalid_credentials(db_name=f"{settings.TEST_DATABASE_NAME}"):
     """
     Description:
     Pour obtenir un token l'utilisateur doit fournir un "registration_number" valide.
@@ -28,13 +28,13 @@ def test_get_token_with_unvalid_credentials():
     registration_number = "xx123456789"
     password = "Gr@TStuff"
     with pytest.raises(Exception):
-        app_view = AuthenticationView(registration_number, password)
+        app_view = AuthenticationView(registration_number, password, db_name)
         jwt_view = JwtView(app_view)
         result = jwt_view.get_token(registration_number)
         assert "User or Department not found" in f"{Exception}"
 
 
-def test_get_token_with_valid_credentials(get_runner):
+def test_get_token_with_valid_credentials(get_runner, db_name=f"{settings.TEST_DATABASE_NAME}"):
     """
     Description:
     Pour obtenir un token l'utilisateur doit fournir un "registration_number" valide.
@@ -42,7 +42,7 @@ def test_get_token_with_valid_credentials(get_runner):
     """
     registration_number = "aa123456789"
     password = "applepie94"
-    app_view = AuthenticationView(registration_number, password)
+    app_view = AuthenticationView(registration_number, password, db_name)
     jwt_view = JwtView(app_view)
     jwt_view.get_token(registration_number)
 

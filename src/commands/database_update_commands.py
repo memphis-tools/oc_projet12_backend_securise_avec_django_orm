@@ -8,10 +8,12 @@ from termcolor import colored, cprint
 try:
     from src.clients.update_console import ConsoleClientForUpdate
     from src.exceptions import exceptions
+    from src.settings import settings
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from clients.update_console import ConsoleClientForUpdate
     from exceptions import exceptions
+    from settings import settings
     from validators.data_syntax.fr import validators
 
 
@@ -57,13 +59,14 @@ def update_client(client_id, args):
         for arg in args:
             k, v = arg.split("=")
             if k == "company_id":
-                expected_company = ConsoleClientForUpdate().app_view.get_companies_view().get_company(v)
+                expected_company = ConsoleClientForUpdate(custom_id="").app_view.get_companies_view().get_company(v)
                 expected_company_id = expected_company.get_dict()["id"]
                 client_dict[k] = str(expected_company_id)
             else:
                 client_dict[k] = str(v)
         if len(client_dict) == 1:
             raise exceptions.MissingUpdateParamException()
+        print(client_dict)
         check_if_partial_dict_valid(client_dict)
         console_client_return = ConsoleClientForUpdate().update_client(client_dict)
         click.secho(console_client_return, bg="blue", fg="white")

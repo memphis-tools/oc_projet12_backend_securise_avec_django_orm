@@ -1,15 +1,23 @@
 import pytest
 from datetime import datetime, timedelta
 from click.testing import CliRunner
-
+import subprocess
 try:
-    from src.settings import settings
-    from src.views.jwt_view import JwtView
+    from src.clients.admin_console import AdminConsoleClient
+    from src.commands import init_commands
     from src.controllers.jwt_controller import JwtController
+    from src.models import models
+    from src.settings import settings
+    from src.utils import utils
+    from src.views.jwt_view import JwtView
 except ModuleNotFoundError:
-    from settings import settings
-    from views.jwt_view import JwtView
+    from clients.admin_console import AdminConsoleClient
+    from commands import init_commands
     from controllers.jwt_controller import JwtController
+    from models import models
+    from settings import settings
+    from src.utils import utils
+    from views.jwt_view import JwtView
 
 
 @pytest.fixture

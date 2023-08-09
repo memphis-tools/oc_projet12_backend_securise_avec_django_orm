@@ -31,13 +31,13 @@ class ConsoleClientForCreate:
     Description: la classe dédiée à l'usage d'un client en mode console, pour la création /ajout de données.
     """
 
-    def __init__(self):
+    def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
         display_banner()
-        self.app_view = AppViews()
-        self.create_app_view = CreateAppViews()
+        self.app_view = AppViews(db_name)
+        self.create_app_view = CreateAppViews(db_name)
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
@@ -242,7 +242,7 @@ class ConsoleClientForCreate:
 
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException
+            raise exceptions.InsufficientPrivilegeException()
         return client_id
 
     @authentication_permission_decorator
@@ -271,7 +271,7 @@ class ConsoleClientForCreate:
                 collaborator = models.User(**collaborator_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -306,7 +306,7 @@ class ConsoleClientForCreate:
                 company = models.Company(**company_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -339,7 +339,7 @@ class ConsoleClientForCreate:
                 contract = models.Contract(**contract_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -374,7 +374,7 @@ class ConsoleClientForCreate:
                 department = models.UserDepartment(**department_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -391,7 +391,7 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event = ""
         try:
-            if "event" not in allowed_crud_tables:
+            if "event" not in allowed_crud_tables or "OC12_COMMERCIAL" not in user_service:
                 raise exceptions.InsufficientPrivilegeException()
             if event_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(event_attributes_dict)
@@ -405,7 +405,7 @@ class ConsoleClientForCreate:
                 event = models.Event(**event_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -438,7 +438,7 @@ class ConsoleClientForCreate:
                 location = models.Location(**location_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -469,7 +469,7 @@ class ConsoleClientForCreate:
                 role = models.UserRole(**role_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")

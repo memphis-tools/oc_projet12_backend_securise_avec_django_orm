@@ -63,7 +63,7 @@ def check_password_hash_from_input(db_user_password, password):
     return check_password_hash(db_user_password, password)
 
 
-def get_a_database_connection(user_name="", user_pwd=""):
+def get_a_database_connection(user_name="", user_pwd="", db_name=f"{settings.DATABASE_NAME}"):
     """
     Description:
     Dédiée à obtenir un curseur pour interragir avec le SGBD.
@@ -75,7 +75,7 @@ def get_a_database_connection(user_name="", user_pwd=""):
         user = f"{settings.ADMIN_LOGIN}"
         password = f"{settings.ADMIN_PASSWORD}"
     conn = psycopg.connect(
-        dbname=f"{settings.DATABASE_NAME}",
+        dbname=db_name,
         user=user,
         password=password,
         host=f"{settings.DATABASE_HOST}",
@@ -115,53 +115,23 @@ def display_postgresql_controls():
     return True
 
 
-def database_postinstall_alter_tables():
-    """
-    Description:
-    Dédiée à forcer la mise à jour de valeurs par défaut.
-    """
-    conn = get_a_database_connection(
-        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}"
-    )
-    cursor = conn.cursor()
-
-    sql = """ALTER TABLE client ALTER COLUMN creation_date SET NOT NULL"""
-    cursor.execute(sql)
-
-    sql = """ALTER TABLE client ALTER COLUMN last_update_date SET NOT NULL"""
-    cursor.execute(sql)
-
-    sql = """ALTER TABLE client ALTER COLUMN "creation_date" SET DEFAULT CURRENT_DATE"""
-    cursor.execute(sql)
-
-    sql = """ALTER TABLE client ALTER COLUMN "last_update_date" SET DEFAULT CURRENT_DATE"""
-    cursor.execute(sql)
-
-    sql = """ALTER TABLE contract ALTER COLUMN "creation_date" SET DEFAULT NOW()"""
-    cursor.execute(sql)
-
-    conn.commit()
-    conn.close()
-    return True
-
-
-def database_postinstall_tasks():
+def database_postinstall_tasks(db_name="projet12"):
     """
     Description:
     Dédiée à mettre à jour la base de données après une création initiale.
     """
     conn = get_a_database_connection(
-        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}"
+        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
     )
     cursor = conn.cursor()
 
-    sql = f"""ALTER DATABASE {settings.DATABASE_NAME} OWNER TO {settings.ADMIN_LOGIN}"""
+    sql = f"""ALTER DATABASE {db_name} OWNER TO {settings.ADMIN_LOGIN}"""
     cursor.execute(sql)
 
     sql = f"""ALTER USER {settings.ADMIN_LOGIN} WITH PASSWORD '{settings.ADMIN_PASSWORD}'"""
     cursor.execute(sql)
 
-    sql = f"""GRANT ALL PRIVILEGES ON DATABASE {settings.DATABASE_NAME} TO {settings.ADMIN_LOGIN}"""
+    sql = f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
     cursor.execute(sql)
 
     # Environnement de développement, on ré-initialise les ids des "collaborators", "location", etc
@@ -209,19 +179,28 @@ def database_postinstall_tasks():
     except Exception:
         pass
 
-    for role in ["oc12_commercial", "oc12_gestion", "oc12_support"]:
-        sql = f"""DROP ROLE IF EXISTS {role}"""
-        cursor.execute(sql)
-        conn.commit()
+    try:
+        for role in ["oc12_commercial", "oc12_gestion", "oc12_support"]:
+            sql = f"""DROP ROLE IF EXISTS {role}"""
+            cursor.execute(sql)
+            conn.commit()
+
+        for role in [
+            ("oc12_commercial", f"{settings.OC12_COMMERCIAL_PWD}"),
+            ("oc12_gestion", f"{settings.OC12_GESTION_PWD}"),
+            ("oc12_support", f"{settings.OC12_SUPPORT_PWD}"),
+        ]:
+            sql = f"""CREATE ROLE {role[0]} LOGIN PASSWORD '{role[1]}'"""
+            cursor.execute(sql)
+    except Exception:
+        pass
 
     for role in [
         ("oc12_commercial", f"{settings.OC12_COMMERCIAL_PWD}"),
         ("oc12_gestion", f"{settings.OC12_GESTION_PWD}"),
         ("oc12_support", f"{settings.OC12_SUPPORT_PWD}"),
     ]:
-        sql = f"""CREATE ROLE {role[0]} LOGIN PASSWORD '{role[1]}'"""
-        cursor.execute(sql)
-        sql = f"""GRANT CONNECT ON DATABASE projet12 TO {role[0]}"""
+        sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
         cursor.execute(sql)
         for model in [
             "client",
@@ -239,7 +218,6 @@ def database_postinstall_tasks():
     oc12_commercial_allowed_tables = [
         "client",
         "company",
-        "contract",
         "event",
         "location",
     ]
@@ -248,12 +226,17 @@ def database_postinstall_tasks():
         cursor.execute(sql)
         sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_commercial"""
         cursor.execute(sql)
+    sql = f"""GRANT UPDATE ON contract TO oc12_commercial"""
+    cursor.execute(sql)
+    sql = f"""GRANT UPDATE ON event TO oc12_commercial"""
+    cursor.execute(sql)
 
     oc12_gestion_allowed_tables = [
         "collaborator",
         "collaborator_department",
         "collaborator_role",
         "contract",
+        "event",
     ]
     for table in oc12_gestion_allowed_tables:
         sql = f"""GRANT INSERT, DELETE, UPDATE ON {table} TO oc12_gestion"""
@@ -261,23 +244,55 @@ def database_postinstall_tasks():
         sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_gestion"""
         cursor.execute(sql)
 
-    sql = """GRANT UPDATE ON event TO oc12_support"""
-    cursor.execute(sql)
-    sql = """GRANT USAGE ON SEQUENCE event_id_seq TO oc12_support"""
-    cursor.execute(sql)
+    allowed_services = ["oc12_gestion", "oc12_support"]
+    for service in allowed_services:
+        sql = f"""GRANT UPDATE ON event TO {service}"""
+        cursor.execute(sql)
+        sql = f"""GRANT USAGE ON SEQUENCE event_id_seq TO {service}"""
+        cursor.execute(sql)
 
     conn.commit()
     conn.close()
     return True
 
 
-def dummy_database_creation():
+def database_postinstall_alter_tables(db_name="projet12"):
+    """
+    Description:
+    Dédiée à forcer la mise à jour de valeurs par défaut.
+    """
+    conn = get_a_database_connection(
+        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
+    )
+    cursor = conn.cursor()
+
+    sql = """ALTER TABLE client ALTER COLUMN creation_date SET NOT NULL"""
+    cursor.execute(sql)
+
+    sql = """ALTER TABLE client ALTER COLUMN last_update_date SET NOT NULL"""
+    cursor.execute(sql)
+
+    sql = """ALTER TABLE client ALTER COLUMN "creation_date" SET DEFAULT CURRENT_DATE"""
+    cursor.execute(sql)
+
+    sql = """ALTER TABLE client ALTER COLUMN "last_update_date" SET DEFAULT CURRENT_DATE"""
+    cursor.execute(sql)
+
+    sql = """ALTER TABLE contract ALTER COLUMN "creation_date" SET DEFAULT NOW()"""
+    cursor.execute(sql)
+    conn.commit()
+
+    conn.close()
+    return True
+
+
+def dummy_database_creation(db_name="projet12"):
     """
     Description:
     Dédiée à peupler la base de données avec des données fictives
     """
     conn = get_a_database_connection(
-        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}"
+        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
     )
     cursor = conn.cursor()
 
@@ -343,21 +358,25 @@ def dummy_database_creation():
 
     conn.commit()
 
-    # On crée un "rôle" pour chaque utilisateur prévu. Chacun hérite des permissions de son service.
-    for user in [
-        ("aa123456789", "oc12_commercial"),
-        ("ab123456789", "oc12_commercial"),
-        ("ac123456789", "oc12_gestion"),
-        ("ad123456789", "oc12_gestion"),
-        ("ae123456789", "oc12_support"),
-        ("af123456789", "oc12_support"),
-        ("ag123456789", "oc12_support"),
-    ]:
-        sql = f"""CREATE ROLE {user[0]} LOGIN PASSWORD 'applepie94'"""
-        cursor.execute(sql)
-        sql = f"""GRANT {user[1]} TO {user[0]}"""
-        cursor.execute(sql)
-        conn.commit()
+    try:
+        # On crée un "rôle" pour chaque utilisateur prévu. Chacun hérite des permissions de son service.
+        # on crée le try/except parce qu'on ne CREATE/GRANT qu'une fois pour N bases.
+        for user in [
+            ("aa123456789", "oc12_commercial"),
+            ("ab123456789", "oc12_commercial"),
+            ("ac123456789", "oc12_gestion"),
+            ("ad123456789", "oc12_gestion"),
+            ("ae123456789", "oc12_support"),
+            ("af123456789", "oc12_support"),
+            ("ag123456789", "oc12_support"),
+        ]:
+            sql = f"""CREATE ROLE {user[0]} LOGIN PASSWORD 'applepie94'"""
+            cursor.execute(sql)
+            sql = f"""GRANT {user[1]} TO {user[0]}"""
+            cursor.execute(sql)
+            conn.commit()
+    except:
+        pass
 
     # 1 localisation en exemple pour une entreprise
     sql = """
@@ -374,7 +393,7 @@ def dummy_database_creation():
     """
     cursor.execute(sql)
 
-    # 1 client en exemple
+    # 2 client en exemples
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
@@ -382,10 +401,15 @@ def dummy_database_creation():
     """
     cursor.execute(sql)
 
-    # 1 contrat en exemple
+    # 2 contrat en exemples
     sql = """
     INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('kc555', '999.99', '999.99', 'False', '1', '2')
+    VALUES('kc555', '999.99', '999.99', 'False', '1', '1')
+    """
+    cursor.execute(sql)
+    sql = """
+    INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
+    VALUES('ff555', '444.55', '20.99', 'True', '1', '2')
     """
     cursor.execute(sql)
 

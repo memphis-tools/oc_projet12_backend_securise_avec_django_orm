@@ -25,20 +25,20 @@ class ConsoleClientForUpdate:
     Description: la classe dédiée à l'usage d'un client en mode console, pour la mise à jour de données.
     """
 
-    def __init__(self, custom_id=""):
+    def __init__(self, custom_id="", db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
         display_banner()
-        self.app_view = AppViews()
-        self.update_app_view = UpdateAppViews()
+        self.app_view = AppViews(db_name)
+        self.update_app_view = UpdateAppViews(db_name)
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
         settings.APP_FIGLET_TITLE
 
     @authentication_permission_decorator
-    def update_client(self, custom_partial_dict):
+    def update_client(self, custom_partial_dict, db_name=f"{settings.DATABASE_NAME}"):
         # rechercher le id de l'utilisateur courant
         # obtenir le token décodé (et valide)
         # demander mot de passe à utilisateur en cours
@@ -58,6 +58,7 @@ class ConsoleClientForUpdate:
             print("[bold red]You are not authorized.[/bold red]")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -80,6 +81,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -105,6 +107,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -130,6 +133,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -155,6 +159,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -180,6 +185,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -203,6 +209,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -228,6 +235,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")

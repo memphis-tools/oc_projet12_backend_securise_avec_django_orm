@@ -6,11 +6,13 @@ try:
         DatabaseInitializerController,
     )
     from src.controllers.database_read_controller import DatabaseReadController
+    from src.settings import settings
 except ModuleNotFoundError:
     from controllers.database_initializer_controller import (
         DatabaseInitializerController,
     )
     from controllers.database_read_controller import DatabaseReadController
+    from settings import settings
 
 
 class AuthenticationView:
@@ -18,7 +20,7 @@ class AuthenticationView:
     Description: une classe dédiée à servir les vues de l'application.
     """
 
-    def __init__(self, user_login, user_pwd):
+    def __init__(self, user_login, user_pwd, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description:
         Dédiée à la première connexion de l'utilisateur pour obtenir un token.
@@ -29,12 +31,17 @@ class AuthenticationView:
         self.db_controller = DatabaseReadController()
         self.db_initializer = DatabaseInitializerController()
         self.engine, self.session = self.db_initializer.return_engine_and_session(
-            user_login, user_pwd
+            user_login, user_pwd, "", db_name=db_name
         )
 
     def init_db(self):
         """
-        Description: on va purger la base de données de tout enregistrement, puis la repeupler.
-        Une fois la phase POC terminée on arretera le drop_all, et le create_all ne sera effectif qu'une fois.
+        Description: Dédié à aider au développement. On détruit et recrée les tables de la base de données.
         """
         self.db_initializer.init_db(self.engine)
+
+    def flush_db(self):
+        """
+        Description: Dédié à aider au développement. On détruit les tables de la base de données.
+        """
+        self.db_initializer.flush_db(self.engine)
