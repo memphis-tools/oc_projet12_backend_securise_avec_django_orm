@@ -7,8 +7,10 @@ import pytest
 
 try:
     from src.commands import database_read_commands
+    from src.settings import settings
 except ModuleNotFoundError:
     from commands import database_read_commands
+    from settings import settings
 
 
 @pytest.mark.parametrize(

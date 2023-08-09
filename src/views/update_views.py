@@ -16,6 +16,7 @@ try:
     from src.views.events_view import EventsView
     from src.views.locations_view import LocationsView
     from src.views.roles_view import RolesView
+    from src.settings import settings
 except ModuleNotFoundError:
     from controllers.database_initializer_controller import (
         DatabaseInitializerController,
@@ -30,6 +31,7 @@ except ModuleNotFoundError:
     from views.events_view import EventsView
     from views.locations_view import LocationsView
     from views.roles_view import RolesView
+    from settings import settings
 
 
 class UpdateAppViews:
@@ -37,7 +39,7 @@ class UpdateAppViews:
     Description: une classe dédiée à servir les vues de l'application dans le cas d'une mise à jour.
     """
 
-    def __init__(self):
+    def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: vue dédiée à instancier la base de données et retourner un controleur pour la mise à jour.
         """
@@ -49,7 +51,7 @@ class UpdateAppViews:
         # le "role" (exemple oc12_commercial) dans le token servira à créer la connexion à la bdd
         # il porte les permissions et chaque "department" (services, équipes) aura ses permissions.
         self.engine, self.session = self.db_initializer.return_engine_and_session(
-            decoded_token=decoded_token
+            decoded_token=decoded_token, db_name=db_name
         )
 
     def get_clients_view(self):

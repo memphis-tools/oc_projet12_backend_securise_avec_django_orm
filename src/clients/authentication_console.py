@@ -23,7 +23,7 @@ class AuthenticationConsoleClient:
     Description: la classe dédiée à l'usage d'un client en mode console.
     """
 
-    def __init__(self):
+    def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
@@ -31,7 +31,7 @@ class AuthenticationConsoleClient:
         try:
             registration_number = Prompt.ask("Matricule employé: ")
             password = maskpass.askpass(prompt="Mot de passe: ")
-            self.app_view = AuthenticationView(registration_number, password)
+            self.app_view = AuthenticationView(registration_number, password, db_name)
             self.jwt_view = JwtView(self.app_view)
             return self.jwt_view.get_token(registration_number)
         except Exception:

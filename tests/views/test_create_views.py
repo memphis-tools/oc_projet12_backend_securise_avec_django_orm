@@ -11,9 +11,11 @@ import pytest
 try:
     from src.clients.create_console import ConsoleClientForCreate
     from src.exceptions import exceptions
+    from src.settings import settings
 except ModuleNotFoundError:
     from clients.create_console import ConsoleClientForCreate
     from exceptions import exceptions
+    from settings import settings
 
 
 # différents dictionnaires correspondants aux modèles
@@ -59,7 +61,7 @@ client_attributes_dict_1 = {
     "last_name": "doe",
     "employee_role": "press officer",
     "email": "j.doe@abm.fr",
-    "telephone": "+611223344",
+    "telephone": "0611223344",
     "company_id": "1",
     "commercial_contact": "2",
 }
@@ -71,7 +73,7 @@ client_attributes_dict_2 = {
     "last_name": "duck",
     "employee_role": "logistic officer",
     "email": "d.duck@abm.fr",
-    "telephone": "+611223344",
+    "telephone": "0655228844",
     "company_id": "1",
     "commercial_contact": "2",
 }
@@ -186,7 +188,8 @@ def test_add_collaborator_view_with_commercial_profile(
     Vérifier si un membre du service commercial peut ajouter un collaborateur.
     """
     with pytest.raises(exceptions.InsufficientPrivilegeException):
-        result = ConsoleClientForCreate().add_collaborator(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_collaborator(custom_dict)
 
 
 @pytest.mark.parametrize(
@@ -204,7 +207,8 @@ def test_add_collaborator_view_with_support_profile(
     Vérifier si un membre du service support peut ajouter un collaborateur.
     """
     with pytest.raises(exceptions.InsufficientPrivilegeException):
-        result = ConsoleClientForCreate().add_collaborator(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_collaborator(custom_dict)
 
 
 @pytest.mark.parametrize(
@@ -225,7 +229,8 @@ def test_add_collaborator_view_with_gestion_profile(
     Vérifier si un membre du service gestion peut ajouter un collaborateur.
     """
     try:
-        result = ConsoleClientForCreate().add_collaborator(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_collaborator(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -242,7 +247,8 @@ def test_add_location_view_with_commercial_profile(
     Vérifier si un membre du service commercial peut ajouter une localité.
     """
     try:
-        result = ConsoleClientForCreate().add_location(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_location(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -259,7 +265,8 @@ def test_add_location_view_with_gestion_profile(
     Vérifier si un membre du service gestion peut ajouter une localité.
     """
     try:
-        result = ConsoleClientForCreate().add_location(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_location(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -276,7 +283,8 @@ def test_add_location_view_with_support_profile(
     Vérifier si un membre du service support peut ajouter une localité.
     """
     try:
-        result = ConsoleClientForCreate().add_location(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_location(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -293,7 +301,8 @@ def test_add_company_view_with_commercial_profile(
     Vérifier si un membre du service commercial peut ajouter une entreprise.
     """
     try:
-        result = ConsoleClientForCreate().add_company(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_company(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -310,7 +319,8 @@ def test_add_company_view_with_gestion_profile(
     Vérifier si un membre du service gestion peut ajouter une entreprise.
     """
     try:
-        result = ConsoleClientForCreate().add_company(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_company(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -327,7 +337,8 @@ def test_add_company_view_with_support_profile(
     Vérifier si un membre du service support peut ajouter une entreprise.
     """
     try:
-        result = ConsoleClientForCreate().add_company(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_company(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -343,12 +354,9 @@ def test_add_contract_view_with_commercial_profile(
     """
     Vérifier si un membre du service commercial peut ajouter un contrat.
     """
-    try:
-        result = ConsoleClientForCreate().add_contract(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_collaborator(custom_dict)
 
 
 @pytest.mark.parametrize(
@@ -361,7 +369,8 @@ def test_add_contract_view_with_gestion_profile(
     Vérifier si un membre du service gestion peut ajouter un contrat.
     """
     try:
-        result = ConsoleClientForCreate().add_contract(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_contract(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -377,12 +386,9 @@ def test_add_contract_view_with_support_profile(
     """
     Vérifier si un membre du service support peut ajouter un contrat.
     """
-    try:
-        result = ConsoleClientForCreate().add_contract(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_contract(custom_dict)
 
 
 @pytest.mark.parametrize(
@@ -395,7 +401,8 @@ def test_add_event_view_with_commercial_profile(
     Vérifier si un membre du service commercial peut ajouter un évènement.
     """
     try:
-        result = ConsoleClientForCreate().add_event(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_event(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -411,12 +418,9 @@ def test_add_event_view_with_gestion_profile(
     """
     Vérifier si un membre du service gestion peut ajouter un évènement.
     """
-    try:
-        result = ConsoleClientForCreate().add_event(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_event(custom_dict)
 
 
 @pytest.mark.parametrize(
@@ -428,12 +432,9 @@ def test_add_event_view_with_support_profile(
     """
     Vérifier si un membre du service support peut ajouter un évènement.
     """
-    try:
-        result = ConsoleClientForCreate().add_event(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_event(custom_dict)
 
 
 @pytest.mark.parametrize(
@@ -446,7 +447,8 @@ def test_add_role_view_with_gestion_profile(
     Vérifier si un membre du service gestion peut ajouter un role.
     """
     try:
-        result = ConsoleClientForCreate().add_role(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_role(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -463,7 +465,8 @@ def test_add_department_view_with_gestion_profile(
     Vérifier si un membre du service gestion peut ajouter un departement (service).
     """
     try:
-        result = ConsoleClientForCreate().add_department(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_department(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -480,7 +483,8 @@ def test_add_client_view_with_commercial_profile(
     Vérifier si un membre du service commercial peut ajouter un client.
     """
     try:
-        result = ConsoleClientForCreate().add_client(custom_dict)
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_client(custom_dict)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -496,13 +500,9 @@ def test_add_client_view_with_gestion_profile(
     """
     Vérifier si un membre du service gestion peut ajouter un client.
     """
-    try:
-        result = ConsoleClientForCreate().add_client(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
-
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_client(custom_dict)
 
 
 @pytest.mark.parametrize(
@@ -514,9 +514,6 @@ def test_add_client_view_with_support_profile(
     """
     Vérifier si un membre du service support peut ajouter un client.
     """
-    try:
-        result = ConsoleClientForCreate().add_client(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_client(custom_dict)

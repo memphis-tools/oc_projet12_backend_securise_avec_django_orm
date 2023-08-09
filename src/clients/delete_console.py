@@ -27,13 +27,13 @@ class ConsoleClientForDelete:
     Description: la classe dédiée à l'usage d'un client en mode console, pour la création /ajout de données.
     """
 
-    def __init__(self, custom_id=""):
+    def __init__(self, custom_id="", db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
         display_banner()
-        self.app_view = AppViews()
-        self.delete_app_view = DeleteAppViews()
+        self.app_view = AppViews(db_name)
+        self.delete_app_view = DeleteAppViews(db_name)
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
@@ -206,6 +206,7 @@ class ConsoleClientForDelete:
                 client_id = self.ask_for_a_client_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
@@ -237,6 +238,7 @@ class ConsoleClientForDelete:
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
@@ -263,6 +265,7 @@ class ConsoleClientForDelete:
                 company_id = self.ask_for_a_company_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -282,7 +285,7 @@ class ConsoleClientForDelete:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract_id = ""
         try:
-            if "contract" not in allowed_crud_tables:
+            if "contract" not in allowed_crud_tables or user_service != "OC12_GESTION":
                 raise exceptions.InsufficientPrivilegeException()
             if contract_custom_id != "":
                 contract_id = self.ask_for_a_contract_id(contract_custom_id)["id"]
@@ -290,6 +293,7 @@ class ConsoleClientForDelete:
                 contract_id = self.ask_for_a_contract_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -317,6 +321,7 @@ class ConsoleClientForDelete:
                 department_id = self.ask_for_a_department_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -338,7 +343,7 @@ class ConsoleClientForDelete:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event_id = ""
         try:
-            if "event" not in allowed_crud_tables:
+            if "event" not in allowed_crud_tables or user_service != "OC12_GESTION":
                 raise exceptions.InsufficientPrivilegeException()
             if event_custom_id != "":
                 event_id = self.ask_for_a_event_id(event_custom_id)["id"]
@@ -346,6 +351,7 @@ class ConsoleClientForDelete:
                 event_id = self.ask_for_a_event_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -373,6 +379,7 @@ class ConsoleClientForDelete:
                 location_id = self.ask_for_a_location_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -400,6 +407,7 @@ class ConsoleClientForDelete:
                 role_id = self.ask_for_a_role_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")

@@ -37,41 +37,43 @@ def init_application():
     print(
         "[bold blue][START CONTROL][/bold blue] Next you may have to type your password to run sudo commands"
     )
-    try:
-        subprocess.run(
-            [f"sudo -u postgres dropdb {settings.DATABASE_NAME}"],
-            shell=True,
-            check=True,
-            capture_output=True,
-        )
-        print(
-            f"[bold green][START CONTROL][/bold green] Database {settings.DATABASE_NAME} droped"
-        )
-    except subprocess.CalledProcessError:
-        print(
-            f"[bold red][START CONTROL][/bold red] Can not drop database {settings.DATABASE_NAME}, it does not exist"
-        )
-    except KeyboardInterrupt:
-        print("[bold green][START CONTROL][/bold green] Launch application aborted")
-        sys.exit(0)
 
-    try:
-        subprocess.run(
-            [f"sudo -u postgres dropuser {settings.ADMIN_LOGIN}"],
-            shell=True,
-            check=True,
-            capture_output=True,
-        )
-        print(
-            f"[bold green][START CONTROL][/bold green] User {settings.ADMIN_LOGIN} droped"
-        )
-    except subprocess.CalledProcessError:
-        print(
-            f"[bold red][START CONTROL][/bold red] Can not drop user {settings.ADMIN_LOGIN}, he does not exist"
-        )
-    except KeyboardInterrupt:
-        print("[bold green][START CONTROL][/bold green] Application startup aborted")
-        sys.exit(0)
+    for database in settings.DATABASE_TO_CREATE:
+        try:
+            subprocess.run(
+                [f"sudo -u postgres dropdb {database}"],
+                shell=True,
+                check=True,
+                capture_output=True,
+            )
+            print(
+                f"[bold green][START CONTROL][/bold green] Database {database} droped"
+            )
+        except subprocess.CalledProcessError:
+            print(
+                f"[bold red][START CONTROL][/bold red] Can not drop database {database}, it does not exist"
+            )
+        except KeyboardInterrupt:
+            print("[bold green][START CONTROL][/bold green] Launch application aborted")
+            sys.exit(0)
+
+        try:
+            subprocess.run(
+                [f"sudo -u postgres dropuser {database}"],
+                shell=True,
+                check=True,
+                capture_output=True,
+            )
+            print(
+                f"[bold green][START CONTROL][/bold green] User {database} droped"
+            )
+        except subprocess.CalledProcessError:
+            print(
+                f"[bold red][START CONTROL][/bold red] Can not drop user {database}, he does not exist"
+            )
+        except KeyboardInterrupt:
+            print("[bold green][START CONTROL][/bold green] Application startup aborted")
+            sys.exit(0)
 
     try:
         subprocess.run(
@@ -97,41 +99,47 @@ def init_application():
         print("[bold green][START CONTROL][/bold green] Application startup aborted")
         sys.exit(0)
 
-    try:
-        subprocess.run(
-            [f"sudo -u postgres createdb '{settings.DATABASE_NAME}'"],
-            shell=True,
-            check=True,
-            capture_output=True,
-        )
-    except subprocess.CalledProcessError:
-        print(
-            f"[bold green][START CONTROL][/bold green] database '{settings.DATABASE_NAME}' already exists"
-        )
-    except KeyboardInterrupt:
-        print("[bold green][START CONTROL][/bold green] Application startup aborted")
-        sys.exit(0)
+    for database in settings.DATABASE_TO_CREATE:
+        try:
+            subprocess.run(
+                [f"sudo -u postgres createdb '{database}'"],
+                shell=True,
+                check=True,
+                capture_output=True,
+            )
+        except subprocess.CalledProcessError:
+            print(
+                f"[bold green][START CONTROL][/bold green] database '{database}' already exists"
+            )
+        except KeyboardInterrupt:
+            print("[bold green][START CONTROL][/bold green] Application startup aborted")
+            sys.exit(0)
 
-    try:
-        os.system(
-            "sudo su -c 'psql -c \"ALTER DATABASE projet12 OWNER TO admin\"' postgres"
-        )
-        print(
-            f"[bold green][START CONTROL][/bold green] {settings.DATABASE_NAME} owner is now {settings.ADMIN_LOGIN}"
-        )
-    except subprocess.CalledProcessError:
-        print(
-            f"[bold red][START CONTROL][/bold red] Can not ALTER {settings.DATABASE_NAME} owner"
-        )
-    except KeyboardInterrupt:
-        print("[bold green][START CONTROL][/bold green] Application startup aborted")
-        sys.exit(0)
+        try:
+            os.system(
+                "sudo su -c 'psql -c \"ALTER DATABASE projet12 OWNER TO admin\"' postgres"
+            )
+            print(
+                f"[bold green][START CONTROL][/bold green] {database} owner is now {settings.ADMIN_LOGIN}"
+            )
+        except subprocess.CalledProcessError:
+            print(
+                f"[bold red][START CONTROL][/bold red] Can not ALTER {database} owner"
+            )
+        except KeyboardInterrupt:
+            print("[bold green][START CONTROL][/bold green] Application startup aborted")
+            sys.exit(0)
 
     admin_console_client = AdminConsoleClient()
     admin_console_client.init_db()
+    admin_console_client = AdminConsoleClient(db_name=f"{settings.TEST_DATABASE_NAME}")
+    admin_console_client.init_db(db_name=f"{settings.TEST_DATABASE_NAME}")
     utils.display_postgresql_controls()
     utils.database_postinstall_tasks()
+    utils.database_postinstall_tasks(db_name=f"{settings.TEST_DATABASE_NAME}")
     utils.database_postinstall_alter_tables()
+    utils.database_postinstall_alter_tables(db_name=f"{settings.TEST_DATABASE_NAME}")
 
     # On peuple la base de données avec des données quelconques, pour le POC, en développement
-    utils.dummy_database_creation()
+    # utils.dummy_database_creation()
+    utils.dummy_database_creation(db_name=f"{settings.TEST_DATABASE_NAME}")

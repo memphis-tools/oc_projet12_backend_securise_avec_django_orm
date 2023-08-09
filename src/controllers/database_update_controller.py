@@ -21,7 +21,6 @@ class DatabaseUpdateController:
         client_id = client_dict.pop("client_id")
         client = session.query(models.Client).filter_by(client_id=client_id).first()
         keys_to_explore = models.Client.metadata.tables["client"].columns.keys()
-
         try:
             for key in keys_to_explore:
                 if key in client_dict.keys():
@@ -62,6 +61,7 @@ class DatabaseUpdateController:
         """
         company_id = company_dict.pop("company_id")
         company = session.query(models.Company).filter_by(company_id=company_id).first()
+        companies =  session.query(models.Company).all()
         keys_to_explore = models.Company.metadata.tables["company"].columns.keys()
 
         try:
@@ -84,7 +84,6 @@ class DatabaseUpdateController:
             session.query(models.Contract).filter_by(contract_id=contract_id).first()
         )
         keys_to_explore = models.Contract.metadata.tables["contract"].columns.keys()
-
         try:
             for key in keys_to_explore:
                 if key in contract_dict.keys():
