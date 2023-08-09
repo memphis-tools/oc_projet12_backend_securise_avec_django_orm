@@ -15,6 +15,7 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
 # variables diverses
 APP_FIGLET_TITLE = "EPIC EVENTS"
+DEFAULT_NEW_COLLABORATOR_PASSWORD = "applepie94"
 
 # variables dédiées aux autorisations
 OC12_COMMERCIAL_CRUD_TABLES = ["client", "company", "contract", "event", "location"]

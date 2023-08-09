@@ -190,8 +190,13 @@ def database_postinstall_tasks(db_name="projet12"):
             ("oc12_gestion", f"{settings.OC12_GESTION_PWD}"),
             ("oc12_support", f"{settings.OC12_SUPPORT_PWD}"),
         ]:
-            sql = f"""CREATE ROLE {role[0]} LOGIN PASSWORD '{role[1]}'"""
-            cursor.execute(sql)
+            # le privilège CREATEROLE ne sera pas hérité par défaut
+            if role[0] == "oc12_gestion":
+                sql = f"""CREATE ROLE {role[0]} CREATEROLE LOGIN PASSWORD '{role[1]}'"""
+                cursor.execute(sql)
+            else:
+                sql = f"""CREATE ROLE {role[0]} LOGIN PASSWORD '{role[1]}'"""
+                cursor.execute(sql)
     except Exception:
         pass
 
@@ -361,6 +366,7 @@ def dummy_database_creation(db_name="projet12"):
     try:
         # On crée un "rôle" pour chaque utilisateur prévu. Chacun hérite des permissions de son service.
         # on crée le try/except parce qu'on ne CREATE/GRANT qu'une fois pour N bases.
+        password = settings.DEFAULT_NEW_COLLABORATOR_PASSWORD
         for user in [
             ("aa123456789", "oc12_commercial"),
             ("ab123456789", "oc12_commercial"),
@@ -370,8 +376,12 @@ def dummy_database_creation(db_name="projet12"):
             ("af123456789", "oc12_support"),
             ("ag123456789", "oc12_support"),
         ]:
-            sql = f"""CREATE ROLE {user[0]} LOGIN PASSWORD 'applepie94'"""
-            cursor.execute(sql)
+            if user[1] == "oc12_gestion":
+                sql = f"""CREATE ROLE {user[0]} CREATEROLE LOGIN PASSWORD '{password}'"""
+                cursor.execute(sql)
+            else:
+                sql = f"""CREATE ROLE {user[0]} LOGIN PASSWORD '{password}'"""
+                cursor.execute(sql)
             sql = f"""GRANT {user[1]} TO {user[0]}"""
             cursor.execute(sql)
             conn.commit()
