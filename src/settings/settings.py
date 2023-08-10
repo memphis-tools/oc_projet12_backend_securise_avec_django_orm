@@ -36,7 +36,7 @@ OC12_SUPPORT_PWD = os.environ.get("OC12_SUPPORT_PWD")
 # variables dédiées pour définir la base de données à joindre
 DATABASE_TO_CREATE = ["projet12", "test_projet12"]
 DATABASE_HOST = "127.0.0.1"
-DATABASE_NAME = "test_projet12"
+DATABASE_NAME = "projet12"
 TEST_DATABASE_NAME = "test_projet12"
 DATABASE_PORT = "5432"
 

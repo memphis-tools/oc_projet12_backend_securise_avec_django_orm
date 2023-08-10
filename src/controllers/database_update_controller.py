@@ -1,13 +1,11 @@
 """
 Un controleur avec toutes méthodes pour mettre à jour des données.
 """
-from sqlalchemy import text
+
 try:
     from src.models import models
-    from src.utils import utils
 except ModuleNotFoundError:
     from models import models
-    from utils import utils
 
 
 class DatabaseUpdateController:
@@ -18,7 +16,7 @@ class DatabaseUpdateController:
     def update_client(self, session, client_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un client.
-        Requête de la base de données et renvoie True si réussie..
+        Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
         client_id = client_dict.pop("client_id")
         client = session.query(models.Client).filter_by(client_id=client_id).first()
@@ -36,7 +34,7 @@ class DatabaseUpdateController:
     def update_collaborator(self, session, collaborator_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un collaborateur.
-        Requête de la base de données et renvoie True si réussie..
+        Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
         collaborator_id = collaborator_dict.pop("registration_number")
         collaborator = (
@@ -45,25 +43,11 @@ class DatabaseUpdateController:
             .first()
         )
         keys_to_explore = models.User.metadata.tables["collaborator"].columns.keys()
-        department_id = collaborator.department
-        current_department_name = utils.get_department_name_from_id(session, department_id)
 
         try:
             for key in keys_to_explore:
                 if key in collaborator_dict.keys():
-                    if key == "department":
-                        asked_departement = collaborator_dict["department"]
-                        new_department_id = utils.get_department_id_from_name(session, asked_departement)
-                        new_department_name = utils.get_department_name_from_id(session, new_department_id)
-                        setattr(collaborator, key, new_department_id)
-                        utils.update_grant_for_collaborator(
-                            session,
-                            collaborator_id,
-                            current_department_name,
-                            new_department_name
-                        )
-                    else:
-                        setattr(collaborator, key, collaborator_dict[key])
+                    setattr(collaborator, key, collaborator_dict[key])
         except KeyError:
             session.flush()
             session.rollback()
@@ -73,7 +57,7 @@ class DatabaseUpdateController:
     def update_company(self, session, company_dict):
         """
         Description: Fonction dédiée à servir la vue lors d'une mise à jour d'une entreprise.
-        Requête de la base de données et renvoie True si réussie..
+        Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
         company_id = company_dict.pop("company_id")
         company = session.query(models.Company).filter_by(company_id=company_id).first()
@@ -93,7 +77,7 @@ class DatabaseUpdateController:
     def update_contract(self, session, contract_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un contrat.
-        Requête de la base de données et renvoie True si réussie..
+        Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
         contract_id = contract_dict.pop("contract_id")
         contract = (
@@ -113,7 +97,7 @@ class DatabaseUpdateController:
         """
         Description:
         Fonction dédiée à servir la vue lors de la mise à jour d'un department /service de l'entreprise.
-        Requête de la base de données et renvoie True si réussie..
+        Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
         department_id = department_dict.pop("department_id")
         department = (
@@ -138,7 +122,7 @@ class DatabaseUpdateController:
     def update_event(self, session, event_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un évènement.
-        Requête de la base de données et renvoie True si réussie..
+        Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
         event_id = event_dict.pop("event_id")
         event = session.query(models.Event).filter_by(event_id=event_id).first()
@@ -157,7 +141,7 @@ class DatabaseUpdateController:
     def update_location(self, session, location_dict):
         """
         Description: Fonction dédiée à servir la vue lors d'une mise à jour d'une localité (entreprise ou évènement).
-        Requête de la base de données et renvoie True si réussie..
+        Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
         location_id = location_dict.pop("location_id")
         location = (
@@ -178,7 +162,7 @@ class DatabaseUpdateController:
     def update_role(self, session, role_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un rôle pour collaborateur.
-        Requête de la base de données et renvoie True si réussie..
+        Requête de la base de données et renvoie le custom_id (ou matricule pour employé) de l'instance.
         """
         role_id = role_dict.pop("role_id")
         role = session.query(models.UserRole).filter_by(role_id=role_id).first()
