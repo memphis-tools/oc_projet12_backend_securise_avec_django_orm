@@ -1,7 +1,7 @@
 """
 Un controleur avec toutes méthodes GET.
 """
-from sqlalchemy import create_engine
+
 try:
     from src.models import models
 except ModuleNotFoundError:
