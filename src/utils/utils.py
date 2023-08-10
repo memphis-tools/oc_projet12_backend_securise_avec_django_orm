@@ -1,6 +1,7 @@
 import sys
 import subprocess
 import psycopg
+from sqlalchemy import text
 from rich import print
 from functools import wraps
 import jwt
@@ -83,6 +84,63 @@ def get_a_database_connection(user_name="", user_pwd="", db_name=f"{settings.DAT
     )
     conn.autocommit = True
     return conn
+
+
+def get_department_name_from_id(session, department_id):
+    """
+    Description:
+    Récupérer le nom du service /département à partir de l'id.
+    C'est un besoin récurrent lors de la mise à jour des collaborateurs.
+    Leur attribut department est la clef étrangère de celui-ci.
+    Paramètres:
+    - session: une session ouverte sur la base de données
+    - department_id: entier, clef primaire d'un service /department
+    """
+    sql = text(f"""SELECT name FROM collaborator_department WHERE id = '{department_id}'""")
+    result = session.execute(sql).first()
+    department_name = str(result[0]).lower()
+    return department_name
+
+
+def get_department_id_from_name(session, department_name):
+    """
+    Description:
+    Récupérer le id du service /département à partir du nom.
+    C'est un besoin récurrent lors de la mise à jour des collaborateurs.
+    Paramètres:
+    - session: une session ouverte sur la base de données
+    - department_name: chaine de caractères qui doit être un service existant
+    """
+    sql = text(f"""SELECT id FROM collaborator_department WHERE name='{department_name}'""")
+    result = session.execute(sql).first()
+    department_id = str(result[0]).lower()
+    return department_id
+
+
+def update_grant_for_collaborator(session, registration_number, current_department_name, new_department_name):
+    """
+    Description:
+    Sert lors de la mise à jour du service d'un collaborateur.
+    Il doit hériter des droits du 'role' (sens postgresql) parent.
+    Il doit perdre les droits du 'role' précedemment parent.
+    Pour l'ajout au service gestion il faut explicitement donner le privilège CREATEROLE.
+    Paramètres:
+    - session: une session ouverte sur la base de données
+    - registration_number: chaine de caractères qui correspond à un matricule employé /collaborateur
+    - current_department_name: chaine de caractères qui doit être un service existant
+    - new_department_name: chaine de caractères qui doit être un service existant
+    """
+    sql = text(f"""REVOKE {current_department_name} FROM {registration_number}""")
+    session.execute(sql)
+    sql = text(f""" GRANT {new_department_name} TO {registration_number}""")
+    session.execute(sql)
+    if current_department_name == "oc12_gestion":
+        sql = text(f"""ALTER ROLE {registration_number} NOCREATEROLE""")
+        session.execute(sql)
+    if new_department_name == "oc12_gestion":
+        sql = text(f"""ALTER ROLE {registration_number} CREATEROLE""")
+        session.execute(sql)
+    return True
 
 
 def display_postgresql_controls():
@@ -301,13 +359,13 @@ def dummy_database_creation(db_name="projet12"):
     )
     cursor = conn.cursor()
 
-    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('ccial', 'OC12_COMMERCIAL')"""
+    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('ccial', 'oc12_commercial')"""
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('gest', 'OC12_GESTION')"""
+    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('gest', 'oc12_gestion')"""
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('supp', 'OC12_SUPPORT')"""
+    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('supp', 'oc12_support')"""
     cursor.execute(sql)
 
     sql = """INSERT INTO collaborator_role(role_id, name) VALUES('man', 'MANAGER')"""
