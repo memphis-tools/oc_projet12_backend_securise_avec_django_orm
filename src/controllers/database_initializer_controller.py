@@ -1,6 +1,7 @@
 import psycopg
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+import urllib.parse
 
 try:
     from src.models import models
@@ -38,8 +39,9 @@ class DatabaseInitializerController:
                 dprt = str(decoded_token["department"]).upper()
                 user_pwd = eval(f"settings.{dprt}_PWD")
 
+            password_with_specialchars_escape = urllib.parse.quote_plus(user_pwd)
             engine = create_engine(
-                f"postgresql+psycopg://{user_login}:{user_pwd}@localhost/{db_name}"
+                f"postgresql+psycopg://{user_login}:{password_with_specialchars_escape}@localhost/{db_name}"
             )
         except psycopg.OperationalError as error:
             print(f"[bold red][START CONTROL][/bold red] {error}")
