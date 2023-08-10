@@ -30,12 +30,28 @@ class AdminConsoleClient:
 
     def init_db(self, db_name=f"{settings.DATABASE_NAME}"):
         """
-        Description: vue dédiée à supprimer et recréer les tables de la base de données, à vide.
+        Description:
+        Dédiée à supprimer et recréer les tables de la base de données, à vide.
         """
         self.app_view.init_db()
 
-    def flush_db(self, db_name=f"{settings.DATABASE_NAME}"):
+    def reset_db(self, db_name=f"{settings.DATABASE_NAME}"):
         """
-        Description: vue dédiée à supprimer les tables de la base de données.
+        Description:
+        Dédiée à supprimer les tables de la base de données.
         """
-        self.app_view.flush_db()
+        self.app_view.reset_db(db_name=db_name)
+
+    def database_postinstall_tasks(self, db_name=f"{settings.DATABASE_NAME}"):
+        """
+        Description:
+        Dédiée à mettre à jour les tables de la base de données après initialisation de l'application.
+        """
+        self.app_view.database_postinstall_tasks(db_name=db_name)
+
+    def database_postinstall_alter_tables(self, db_name=f"{settings.DATABASE_NAME}"):
+        """
+        Description:
+        Dédiée à forcer la mise à jour de valeurs par défaut de tables.
+        """
+        self.app_view.database_postinstall_alter_tables(db_name=db_name)

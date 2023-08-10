@@ -173,182 +173,6 @@ def display_postgresql_controls():
     return True
 
 
-def database_postinstall_tasks(db_name="projet12"):
-    """
-    Description:
-    Dédiée à mettre à jour la base de données après une création initiale.
-    """
-    conn = get_a_database_connection(
-        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
-    )
-    cursor = conn.cursor()
-
-    sql = f"""ALTER DATABASE {db_name} OWNER TO {settings.ADMIN_LOGIN}"""
-    cursor.execute(sql)
-
-    sql = f"""ALTER USER {settings.ADMIN_LOGIN} WITH PASSWORD '{settings.ADMIN_PASSWORD}'"""
-    cursor.execute(sql)
-
-    sql = f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
-    cursor.execute(sql)
-
-    # Environnement de développement, on ré-initialise les ids des "collaborators", "location", etc
-    sql = """TRUNCATE TABLE client RESTART IDENTITY CASCADE"""
-    cursor.execute(sql)
-
-    sql = """TRUNCATE TABLE collaborator RESTART IDENTITY CASCADE"""
-    cursor.execute(sql)
-
-    sql = """TRUNCATE TABLE collaborator_department RESTART IDENTITY CASCADE"""
-    cursor.execute(sql)
-
-    sql = """TRUNCATE TABLE collaborator_role RESTART IDENTITY CASCADE"""
-    cursor.execute(sql)
-
-    sql = """TRUNCATE TABLE event RESTART IDENTITY CASCADE"""
-    cursor.execute(sql)
-
-    sql = """TRUNCATE TABLE location RESTART IDENTITY CASCADE"""
-    cursor.execute(sql)
-
-    sql = """TRUNCATE TABLE contract RESTART IDENTITY CASCADE"""
-    cursor.execute(sql)
-
-    # on crée un "role" pour chaque départements de l'entreprise
-
-    # VOIR SI DROP A CONSERVER POST POC
-    # d'abord on se débarasse de précédentes données de POC
-    try:
-        for role in [
-            "aa123456789",
-            "ab123456789",
-            "ac123456789",
-            "ad123456789",
-            "ae123456789",
-            "af123456789",
-            "ag123456789",
-        ]:
-            sql = f"""REVOKE ALL ON ALL TABLES IN SCHEMA public FROM {role}"""
-            cursor.execute(sql)
-            conn.commit()
-            sql = f"""DROP ROLE IF EXISTS {role}"""
-            cursor.execute(sql)
-        conn.commit()
-    except Exception:
-        pass
-
-    try:
-        for role in ["oc12_commercial", "oc12_gestion", "oc12_support"]:
-            sql = f"""DROP ROLE IF EXISTS {role}"""
-            cursor.execute(sql)
-            conn.commit()
-
-        for role in [
-            ("oc12_commercial", f"{settings.OC12_COMMERCIAL_PWD}"),
-            ("oc12_gestion", f"{settings.OC12_GESTION_PWD}"),
-            ("oc12_support", f"{settings.OC12_SUPPORT_PWD}"),
-        ]:
-            # le privilège CREATEROLE ne sera pas hérité par défaut
-            if role[0] == "oc12_gestion":
-                sql = f"""CREATE ROLE {role[0]} CREATEROLE LOGIN PASSWORD '{role[1]}'"""
-                cursor.execute(sql)
-            else:
-                sql = f"""CREATE ROLE {role[0]} LOGIN PASSWORD '{role[1]}'"""
-                cursor.execute(sql)
-    except Exception:
-        pass
-
-    for role in [
-        ("oc12_commercial", f"{settings.OC12_COMMERCIAL_PWD}"),
-        ("oc12_gestion", f"{settings.OC12_GESTION_PWD}"),
-        ("oc12_support", f"{settings.OC12_SUPPORT_PWD}"),
-    ]:
-        sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
-        cursor.execute(sql)
-        for model in [
-            "client",
-            "collaborator",
-            "collaborator_department",
-            "collaborator_role",
-            "company",
-            "contract",
-            "event",
-            "location",
-        ]:
-            sql = f"""GRANT SELECT ON {model} TO {role[0]}"""
-            cursor.execute(sql)
-
-    oc12_commercial_allowed_tables = [
-        "client",
-        "company",
-        "event",
-        "location",
-    ]
-    for table in oc12_commercial_allowed_tables:
-        sql = f"""GRANT INSERT, DELETE, UPDATE ON {table} TO oc12_commercial"""
-        cursor.execute(sql)
-        sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_commercial"""
-        cursor.execute(sql)
-    sql = f"""GRANT UPDATE ON contract TO oc12_commercial"""
-    cursor.execute(sql)
-    sql = f"""GRANT UPDATE ON event TO oc12_commercial"""
-    cursor.execute(sql)
-
-    oc12_gestion_allowed_tables = [
-        "collaborator",
-        "collaborator_department",
-        "collaborator_role",
-        "contract",
-        "event",
-    ]
-    for table in oc12_gestion_allowed_tables:
-        sql = f"""GRANT INSERT, DELETE, UPDATE ON {table} TO oc12_gestion"""
-        cursor.execute(sql)
-        sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_gestion"""
-        cursor.execute(sql)
-
-    allowed_services = ["oc12_gestion", "oc12_support"]
-    for service in allowed_services:
-        sql = f"""GRANT UPDATE ON event TO {service}"""
-        cursor.execute(sql)
-        sql = f"""GRANT USAGE ON SEQUENCE event_id_seq TO {service}"""
-        cursor.execute(sql)
-
-    conn.commit()
-    conn.close()
-    return True
-
-
-def database_postinstall_alter_tables(db_name="projet12"):
-    """
-    Description:
-    Dédiée à forcer la mise à jour de valeurs par défaut.
-    """
-    conn = get_a_database_connection(
-        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
-    )
-    cursor = conn.cursor()
-
-    sql = """ALTER TABLE client ALTER COLUMN creation_date SET NOT NULL"""
-    cursor.execute(sql)
-
-    sql = """ALTER TABLE client ALTER COLUMN last_update_date SET NOT NULL"""
-    cursor.execute(sql)
-
-    sql = """ALTER TABLE client ALTER COLUMN "creation_date" SET DEFAULT CURRENT_DATE"""
-    cursor.execute(sql)
-
-    sql = """ALTER TABLE client ALTER COLUMN "last_update_date" SET DEFAULT CURRENT_DATE"""
-    cursor.execute(sql)
-
-    sql = """ALTER TABLE contract ALTER COLUMN "creation_date" SET DEFAULT NOW()"""
-    cursor.execute(sql)
-    conn.commit()
-
-    conn.close()
-    return True
-
-
 def dummy_database_creation(db_name="projet12"):
     """
     Description:
@@ -379,7 +203,10 @@ def dummy_database_creation(db_name="projet12"):
         INSERT INTO collaborator(registration_number, username, department, role)
         VALUES('aa123456789', 'donald duck', '1', '1')
     """
-    cursor.execute(sql)
+    try:
+        cursor.execute(sql)
+    except:
+        pass
 
     sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
@@ -418,7 +245,6 @@ def dummy_database_creation(db_name="projet12"):
         VALUES('ag123456789', 'Kate Hastroff', '3', '2')
     """
     cursor.execute(sql)
-
     conn.commit()
 
     try:

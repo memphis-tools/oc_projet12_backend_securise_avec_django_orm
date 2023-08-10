@@ -34,14 +34,28 @@ class AuthenticationView:
             user_login, user_pwd, "", db_name=db_name
         )
 
-    def init_db(self):
+    def init_db(self, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: Dédié à aider au développement. On détruit et recrée les tables de la base de données.
         """
         self.db_initializer.init_db(self.engine)
 
-    def flush_db(self):
+    def reset_db(self, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: Dédié à aider au développement. On détruit les tables de la base de données.
         """
-        self.db_initializer.flush_db(self.engine)
+        self.db_initializer.reset_db(self.engine, db_name=db_name)
+
+    def database_postinstall_tasks(self, db_name=f"{settings.DATABASE_NAME}"):
+        """
+        Description:
+        Dédiée à mettre à jour les tables de la base de données après initialisation de l'application.
+        """
+        self.db_initializer.database_postinstall_tasks(db_name=db_name)
+
+    def database_postinstall_alter_tables(self, db_name=f"{settings.DATABASE_NAME}"):
+        """
+        Description:
+        Dédiée à forcer la mise à jour de valeurs par défaut de tables.
+        """
+        self.db_initializer.database_postinstall_alter_tables(db_name=db_name)
