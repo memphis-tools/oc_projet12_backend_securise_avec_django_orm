@@ -2,10 +2,12 @@
 Description: Client en mode console, dédié aux mises à jour.
 """
 import sys
+import psycopg
 from rich import print
 
 try:
     from src.exceptions import exceptions
+    from src.forms import forms
     from src.views.update_views import UpdateAppViews
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
@@ -13,6 +15,7 @@ try:
     from src.utils.utils import authentication_permission_decorator, display_banner
 except ModuleNotFoundError:
     from exceptions import exceptions
+    from forms import forms
     from views.update_views import UpdateAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
@@ -92,6 +95,44 @@ class ConsoleClientForUpdate:
         return self.update_app_view.get_collaborators_view().update_collaborator(
             custom_partial_dict
         )
+
+    @authentication_permission_decorator
+    def update_collaborator_password(self, old_password="", new_password=""):
+        """
+        Description:
+        Dédiée à mettre à jour le mot de passe d'un collaborateur de l'entreprise.
+        """
+        if old_password == "" and new_password == "":
+            old_password, new_password = forms.submit_a_collaborator_new_password_get_form()
+        decoded_token = self.jwt_view.get_decoded_token()
+        user_registration_number = str(decoded_token["registration_number"])
+        if old_password == "" or new_password == "":
+            print("[bold red]Mot(s) de passe non saisi(s).[/bold red]")
+            raise exceptions.MissingUpdateParamException()
+        try:
+            if not bool(self.update_app_view.get_collaborators_view().old_collaborator_password_is_valid(
+                user_registration_number,
+                old_password
+            )):
+                raise exceptions.OldPasswordNotValidException
+            self.update_app_view.get_collaborators_view().new_collaborator_password_is_valid(new_password)
+
+        except exceptions.OldPasswordNotValidException:
+            print("[bold red]Mot de passe erroné.[/bold red]")
+            sys.exit(0)
+        except exceptions.NewPasswordDoesRespectMinSpecialCharsException:
+            print(
+                "[bold red]Nouveau mot de passe ne respecte pas le nombre mininum de caractères spéciaux.[/bold red]"
+            )
+            sys.exit(0)
+        except exceptions.NewPasswordDoesRespectForbiddenSpecialCharsException:
+            print("[bold red]Nouveau mot de passe possède des caractères spéciaux interdits.[/bold red]")
+            sys.exit(0)
+        return self.update_app_view.get_collaborators_view().update_collaborator_password(
+            user_registration_number,
+            old_password,
+            new_password
+            )
 
     @authentication_permission_decorator
     def update_company(self, custom_partial_dict=""):

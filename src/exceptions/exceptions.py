@@ -11,5 +11,21 @@ class MissingUpdateParamException(Exception):
     pass
 
 
+class NewPasswordIsNotValidException(Exception):
+    pass
+
+
+class NewPasswordDoesRespectMinSpecialCharsException(Exception):
+    pass
+
+
+class NewPasswordDoesRespectForbiddenSpecialCharsException(Exception):
+    pass
+
+
+class OldPasswordNotValidException(Exception):
+    pass
+
+
 class SuppliedDataNotMatchModel(Exception):
     pass

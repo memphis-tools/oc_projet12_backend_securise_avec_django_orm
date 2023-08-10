@@ -21,6 +21,7 @@ class DatabaseCreateController:
         try:
             session.add(client)
             session.commit()
+            session.close()
             return client.id
         except Exception as error:
             print(f"Error while adding: {error}")
@@ -32,7 +33,6 @@ class DatabaseCreateController:
         """
         try:
             session.add(collaborator)
-            session.commit()
 
             role = collaborator.registration_number
             password = settings.DEFAULT_NEW_COLLABORATOR_PASSWORD
@@ -50,8 +50,9 @@ class DatabaseCreateController:
 
             sql = text(f"""GRANT {department} TO {role}""")
             session.execute(sql)
-            
+
             session.commit()
+            session.close()
             return collaborator.id
         except Exception as error:
             print("ERROR SIR: ")
@@ -65,6 +66,7 @@ class DatabaseCreateController:
         try:
             session.add(company)
             session.commit()
+            session.close()
             return company.id
         except Exception as error:
             print(f"Error while adding: {error}")
@@ -77,6 +79,7 @@ class DatabaseCreateController:
         try:
             session.add(contract)
             session.commit()
+            session.close()
             return contract.id
         except Exception as error:
             print(f"Error while adding: {error}")
@@ -101,6 +104,7 @@ class DatabaseCreateController:
         try:
             session.add(event)
             session.commit()
+            session.close()
             return event.id
         except Exception as error:
             print(f"Error while adding: {error}")
@@ -113,6 +117,7 @@ class DatabaseCreateController:
         try:
             session.add(location)
             session.commit()
+            session.close()
             return location.id
         except Exception as error:
             print(f"Error while adding: {error}")
@@ -125,6 +130,7 @@ class DatabaseCreateController:
         try:
             session.add(role)
             session.commit()
+            session.close()
             return role.id
         except Exception as error:
             print(f"Error while adding: {error}")

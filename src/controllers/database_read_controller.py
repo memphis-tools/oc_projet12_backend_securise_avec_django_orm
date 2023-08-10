@@ -1,7 +1,7 @@
 """
 Un controleur avec toutes méthodes GET.
 """
-
+from sqlalchemy import create_engine
 try:
     from src.models import models
 except ModuleNotFoundError:
@@ -72,6 +72,7 @@ class DatabaseReadController:
                 .filter_by(registration_number=registration_number)
                 .first()
             )
+
             session.close()
             return db_collaborator_queryset
         except Exception as error:

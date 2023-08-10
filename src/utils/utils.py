@@ -230,7 +230,7 @@ def dummy_database_creation(db_name="projet12"):
     # 3 membres de l'équipe SUPPORT, dont 2 nommés dans les exemples du cahier des charges
     sql = """
         INSERT INTO collaborator(registration_number, username, department, role)
-        VALUES('ae123456789', 'louloute duck', '2', '2')
+        VALUES('ae123456789', 'louloute duck', '3', '2')
     """
     cursor.execute(sql)
 

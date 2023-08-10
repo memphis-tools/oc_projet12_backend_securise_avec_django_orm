@@ -65,7 +65,7 @@ class UpdateAppViews:
         """
         Description: vue dédiée à obtenir la vue sur les utilisateurs /collaborateurs de l'entreprise.
         """
-        collaborators_view = CollaboratorsView(self.db_controller, self.session)
+        collaborators_view = CollaboratorsView(self.db_controller, self.db_initializer, self.session)
         return collaborators_view
 
     def get_companies_view(self):

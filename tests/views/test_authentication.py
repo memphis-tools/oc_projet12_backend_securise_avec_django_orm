@@ -41,7 +41,7 @@ def test_authentication_with_valid_credentials(get_runner, mocker):
 
 def test_db_initialization_with_nonadmin_credentials():
     user_login = "aa123456789"
-    user_pwd = "applepie94"
+    user_pwd = "@pplepie94"
     db_name = f"{settings.TEST_DATABASE_NAME}"
     with pytest.raises(sqlalchemy.exc.ProgrammingError):
         authentication_view = AuthenticationView(user_login, user_pwd, db_name).init_db()

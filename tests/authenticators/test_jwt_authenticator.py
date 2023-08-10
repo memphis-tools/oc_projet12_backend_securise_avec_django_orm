@@ -41,7 +41,7 @@ def test_get_token_with_valid_credentials(get_runner, db_name=f"{settings.TEST_D
     On tente de récupérer le jeton avec un un registration_number existant.
     """
     registration_number = "aa123456789"
-    password = "applepie94"
+    password = "@pplepie94"
     app_view = AuthenticationView(registration_number, password, db_name)
     jwt_view = JwtView(app_view)
     jwt_view.get_token(registration_number)

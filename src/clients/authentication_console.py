@@ -34,8 +34,8 @@ class AuthenticationConsoleClient:
             self.app_view = AuthenticationView(registration_number, password, db_name)
             self.jwt_view = JwtView(self.app_view)
             return self.jwt_view.get_token(registration_number)
-        except Exception:
-            print("[bold red]Wrong credentials[/bold red]")
+        except Exception as error:
+            print(f"[bold red]Wrong credentials[/bold red] {error}")
 
     @authentication_permission_decorator
     def logout(self):

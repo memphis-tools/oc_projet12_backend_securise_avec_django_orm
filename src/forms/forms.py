@@ -2,6 +2,7 @@
 Classe dédiée aux mises à jour des modèles. Utilisée pour le dialogue avec l'utilisateur de l'application.
 """
 import sys
+import maskpass
 from rich import print
 from rich.prompt import Prompt
 try:
@@ -67,7 +68,7 @@ def submit_a_company_get_form(custom_id=""):
         try:
             custom_id = Prompt.ask("id entreprise: ")
         except KeyboardInterrupt:
-            print("[bold green][COMPANY LOOKUP][/bold green] Lookup aborted")
+            print("[bold red][COMPANY LOOKUP][/bold red] Lookup aborted")
             sys.exit(0)
     return custom_id
 
@@ -98,7 +99,7 @@ def submit_a_company_create_form(custom_dict={}):
                                 print(f"[bold red]{item}[/bold red] not valid for {key}")
                                 continue
         except KeyboardInterrupt:
-            print("[bold green][COMPANY CREATION][/bold green] Creation aborted")
+            print("[bold red][COMPANY CREATION][/bold red] Creation aborted")
             sys.exit(0)
     return custom_dict
 
@@ -113,7 +114,7 @@ def submit_a_client_get_form(custom_id=""):
         try:
             custom_id = Prompt.ask("id client: ")
         except KeyboardInterrupt:
-            print("[bold green][CLIENT LOOKUP][/bold green] Lookup aborted")
+            print("[bold red][CLIENT LOOKUP][/bold red] Lookup aborted")
             sys.exit(0)
     return custom_id
 
@@ -147,7 +148,7 @@ def submit_a_client_create_form(custom_dict={}):
                                 print(f"[bold red]{item}[/bold red] not valid for {key}")
                                 continue
         except KeyboardInterrupt:
-            print("[bold green][CLIENT CREATION][/bold green] Creation aborted")
+            print("[bold red][CLIENT CREATION][/bold red] Creation aborted")
             sys.exit(0)
     return custom_dict
 
@@ -161,7 +162,7 @@ def submit_a_collaborator_get_form(custom_id=""):
         try:
             custom_id = Prompt.ask("matricule employé: ")
         except KeyboardInterrupt:
-            print("[bold green][ROLE LOOKUP][/bold green] Lookup aborted")
+            print("[bold red][ROLE LOOKUP][/bold red] Lookup aborted")
             sys.exit(0)
     return custom_id
 
@@ -189,7 +190,7 @@ def submit_a_collaborator_create_form(custom_dict={}):
                     print(f"[bold red]{item}[/bold red] not valid for {key}")
                     continue
         except KeyboardInterrupt:
-            print("[bold green][COLLABORATOR CREATION][/bold green] Creation aborted")
+            print("[bold red][COLLABORATOR CREATION][/bold red] Creation aborted")
             sys.exit(0)
     return custom_dict
 
@@ -203,7 +204,7 @@ def submit_a_collaborator_role_get_form(custom_id=""):
         try:
             custom_id = Prompt.ask("id role: ")
         except KeyboardInterrupt:
-            print("[bold green][ROLE LOOKUP][/bold green] Lookup aborted")
+            print("[bold red][ROLE LOOKUP][/bold red] Lookup aborted")
             sys.exit(0)
     return custom_id
 
@@ -229,7 +230,7 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
                     continue
         except KeyboardInterrupt:
             print(
-                "[bold green][COLLABORATOR ROLE CREATION][/bold green] Creation aborted"
+                "[bold red][COLLABORATOR ROLE CREATION][/bold red] Creation aborted"
             )
             sys.exit(0)
     return custom_dict
@@ -244,7 +245,7 @@ def submit_a_collaborator_department_get_form(custom_id=""):
         try:
             custom_id = Prompt.ask("id service/département: ")
         except KeyboardInterrupt:
-            print("[bold green][DEPARTMENT LOOKUP][/bold green] Lookup aborted")
+            print("[bold red][DEPARTMENT LOOKUP][/bold red] Lookup aborted")
             sys.exit(0)
     return custom_id
 
@@ -270,10 +271,25 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
                     continue
         except KeyboardInterrupt:
             print(
-                "[bold green][COLLABORATOR DEPARTMENT CREATION][/bold green] Creation aborted"
+                "[bold red][COLLABORATOR DEPARTMENT CREATION][/bold red] Creation aborted"
             )
             sys.exit(0)
     return custom_dict
+
+
+def submit_a_collaborator_new_password_get_form(old_password="", new_password=""):
+    """
+    Deescription: Fonction dédiée à permettre à l'utilisateur d'indiquer l'id d'un département /service.
+    """
+    if new_password == "":
+        print("[bold blue][COLLABORATOR PASSWORD LOOKUP][/bold blue]")
+        try:
+            old_password = maskpass.askpass(prompt="Ancien mot de passe: ")
+            new_password = maskpass.askpass(prompt="Nouveau mot de passe: ")
+        except KeyboardInterrupt:
+            print("[bold red][DEPARTMENT LOOKUP][/bold red] Lookup aborted")
+            sys.exit(0)
+    return (old_password, new_password)
 
 
 def submit_a_contract_get_form(custom_id=""):
@@ -285,7 +301,7 @@ def submit_a_contract_get_form(custom_id=""):
         try:
             custom_id = Prompt.ask("id contrat: ")
         except KeyboardInterrupt:
-            print("[bold green][CONTRACT LOOKUP][/bold green] Lookup aborted")
+            print("[bold red][CONTRACT LOOKUP][/bold red] Lookup aborted")
             sys.exit(0)
     return custom_id
 
