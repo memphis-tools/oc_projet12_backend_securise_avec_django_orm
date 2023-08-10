@@ -235,10 +235,10 @@ class ConsoleClientForDelete:
                 collaborator_id = self.ask_for_a_collaborator_id()["id"]
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
-            raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
