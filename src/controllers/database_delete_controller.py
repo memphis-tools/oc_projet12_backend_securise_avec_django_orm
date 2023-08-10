@@ -27,6 +27,7 @@ class DatabaseDeleteController:
             client = session.query(models.Client).filter_by(id=client_id).first()
             session.delete(client)
             session.commit()
+            session.close()
             return True
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
@@ -46,8 +47,8 @@ class DatabaseDeleteController:
             role = collaborator.registration_number
             sql = text(f"""DROP ROLE {role}""")
             session.execute(sql)
-
             session.commit()
+            session.close()
             return True
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
@@ -62,6 +63,7 @@ class DatabaseDeleteController:
             company = session.query(models.Company).filter_by(id=company_id).first()
             session.delete(company)
             session.commit()
+            session.close()
             return True
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
@@ -76,6 +78,7 @@ class DatabaseDeleteController:
             contract = session.query(models.Contract).filter_by(id=contract_id).first()
             session.delete(contract)
             session.commit()
+            session.close()
             return True
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
@@ -93,6 +96,7 @@ class DatabaseDeleteController:
             )
             session.delete(department)
             session.commit()
+            session.close()
             return True
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
@@ -107,6 +111,7 @@ class DatabaseDeleteController:
             event = session.query(models.Event).filter_by(id=event_id).first()
             session.delete(event)
             session.commit()
+            session.close()
             return True
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
@@ -121,6 +126,7 @@ class DatabaseDeleteController:
             location = session.query(models.Location).filter_by(id=location_id).first()
             session.delete(location)
             session.commit()
+            session.close()
             return True
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
@@ -135,6 +141,7 @@ class DatabaseDeleteController:
             role = session.query(models.UserRole).filter_by(id=role_id).first()
             session.delete(role)
             session.commit()
+            session.close()
             return True
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):

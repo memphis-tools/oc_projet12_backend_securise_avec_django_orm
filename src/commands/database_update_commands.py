@@ -120,6 +120,22 @@ def update_collaborator(registration_number, args):
 
 
 @click.command
+def update_collaborator_password():
+    """
+    Description:
+    Commande dédiée à mettre à jour le mot de passe d'un collaborateur de l'entreprise.
+    """
+    try:
+        console_client = ConsoleClientForUpdate()
+        if console_client.update_collaborator_password():
+            print("[bold green]Votre mot de passe est mis à jour.[/bold green]")
+    except exceptions.NewPasswordIsNotValidException:
+        print(f"[bold red]Nouveau mot de passe invalide[/bold red]: {error}")
+    except Exception as error:
+        print(f"[bold red]Missing token[/bold red]: {error}")
+
+
+@click.command
 @click.option("--company_id", prompt=True, help="")
 @click.argument(
     "args",

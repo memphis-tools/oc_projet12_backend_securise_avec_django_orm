@@ -147,6 +147,7 @@ class DatabaseInitializerController:
             pass
 
         conn.commit()
+        conn.close()
 
     def database_postinstall_task_for_test_db(self, db_name=f"{settings.TEST_DATABASE_NAME}"):
         """
@@ -169,6 +170,8 @@ class DatabaseInitializerController:
             pass
         sql = f"""GRANT oc12_commercial TO {dummy_registration_number}"""
         cursor.execute(sql)
+        conn.commit()
+        conn.close()
 
     def database_postinstall_tasks(self, db_name="projet12"):
         """
@@ -289,6 +292,5 @@ class DatabaseInitializerController:
         sql = """ALTER TABLE contract ALTER COLUMN "creation_date" SET DEFAULT NOW()"""
         cursor.execute(sql)
         conn.commit()
-
         conn.close()
         return True
