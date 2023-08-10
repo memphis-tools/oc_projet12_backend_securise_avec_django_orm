@@ -221,7 +221,7 @@ def test_delete_collaborator_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator, matricule
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
-        result = ConsoleClientForCreate().add_collaborator(matricule)
+        result = ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_collaborator(matricule)
 
 
 @pytest.mark.parametrize("matricule", [
@@ -237,7 +237,7 @@ def test_delete_collaborator_view_with_support_profile(
     get_runner, get_valid_decoded_token_for_a_support_collaborator, matricule
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
-        result = ConsoleClientForCreate().add_collaborator(matricule)
+        result = ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_collaborator(matricule)
 
 
 @pytest.mark.parametrize("matricule", [
