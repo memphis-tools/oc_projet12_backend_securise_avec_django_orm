@@ -247,19 +247,19 @@ def dummy_database_creation(db_name="projet12"):
     cursor.execute(sql)
     conn.commit()
 
-    try:
-        # On crée un "rôle" pour chaque utilisateur prévu. Chacun hérite des permissions de son service.
-        # on crée le try/except parce qu'on ne CREATE/GRANT qu'une fois pour N bases.
-        password = settings.DEFAULT_NEW_COLLABORATOR_PASSWORD
-        for user in [
-            ("aa123456789", "oc12_commercial"),
-            ("ab123456789", "oc12_commercial"),
-            ("ac123456789", "oc12_gestion"),
-            ("ad123456789", "oc12_gestion"),
-            ("ae123456789", "oc12_support"),
-            ("af123456789", "oc12_support"),
-            ("ag123456789", "oc12_support"),
-        ]:
+    # On crée un "rôle" pour chaque utilisateur prévu. Chacun hérite des permissions de son service.
+    # on crée le try/except parce qu'on ne CREATE/GRANT qu'une fois pour N bases.
+    password = settings.DEFAULT_NEW_COLLABORATOR_PASSWORD
+    for user in [
+        ("aa123456789", "oc12_commercial"),
+        ("ab123456789", "oc12_commercial"),
+        ("ac123456789", "oc12_gestion"),
+        ("ad123456789", "oc12_gestion"),
+        ("ae123456789", "oc12_support"),
+        ("af123456789", "oc12_support"),
+        ("ag123456789", "oc12_support"),
+    ]:
+        try:
             if user[1] == "oc12_gestion":
                 sql = f"""CREATE ROLE {user[0]} CREATEROLE LOGIN PASSWORD '{password}'"""
                 cursor.execute(sql)
@@ -269,8 +269,8 @@ def dummy_database_creation(db_name="projet12"):
             sql = f"""GRANT {user[1]} TO {user[0]}"""
             cursor.execute(sql)
             conn.commit()
-    except:
-        pass
+        except:
+            continue
 
     # 1 localisation en exemple pour une entreprise
     sql = """
