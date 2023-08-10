@@ -132,14 +132,14 @@ def init_application():
 
     admin_console_client = AdminConsoleClient()
     admin_console_client.init_db()
-    admin_console_client = AdminConsoleClient(db_name=f"{settings.TEST_DATABASE_NAME}")
-    admin_console_client.init_db(db_name=f"{settings.TEST_DATABASE_NAME}")
     utils.display_postgresql_controls()
-    utils.database_postinstall_tasks()
-    utils.database_postinstall_tasks(db_name=f"{settings.TEST_DATABASE_NAME}")
-    utils.database_postinstall_alter_tables()
-    utils.database_postinstall_alter_tables(db_name=f"{settings.TEST_DATABASE_NAME}")
+    admin_console_client.database_postinstall_tasks()
+    admin_console_client.database_postinstall_alter_tables()
+    admin_console_client = AdminConsoleClient(db_name=f"{settings.TEST_DATABASE_NAME}")
+    admin_console_client.reset_db(db_name=f"{settings.TEST_DATABASE_NAME}")
+    admin_console_client.init_db(db_name=f"{settings.TEST_DATABASE_NAME}")
+    admin_console_client.database_postinstall_tasks(db_name=f"{settings.TEST_DATABASE_NAME}")
+    admin_console_client.database_postinstall_alter_tables(db_name=f"{settings.TEST_DATABASE_NAME}")
 
     # On peuple la base de données avec des données quelconques, pour le POC, en développement
-    # utils.dummy_database_creation()
     utils.dummy_database_creation(db_name=f"{settings.TEST_DATABASE_NAME}")
