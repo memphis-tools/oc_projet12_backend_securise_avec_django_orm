@@ -15,10 +15,12 @@ class ContractsView:
         self.db_controller = db_controller
         self.session = session
 
-    def get_contracts(self):
+    def get_contracts(self, user_query_filters_args=""):
         """
         Description: vue dédiée à "méthode GET".
         """
+        if user_query_filters_args != "":
+            return self.db_controller.get_filtered_contracts(self.session, user_query_filters_args[0])
         return self.db_controller.get_contracts(self.session)
 
     def get_contract(self, contract_id):
