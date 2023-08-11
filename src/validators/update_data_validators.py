@@ -48,7 +48,7 @@ def new_collaborator_password_is_valid(new_password):
     b2 = bool(len(new_password) < settings.DEFAULT_NEW_PASSWORD_MAX_LENGTH)
 
     min_digits = settings.DEFAULT_NEW_PASSWORD_MIN_DIGITS
-    pattern = re.compile(r'.*(\d{min_digits,}).*')
+    pattern = re.compile(rf'.*(\d{{{min_digits}}}).*')
     b3 = bool(re.match(pattern, new_password))
 
     min_specialchars = settings.DEFAULT_NEW_PASSWORD_MIN_SPECIAL_CHAR
