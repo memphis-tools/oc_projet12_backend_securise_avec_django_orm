@@ -63,7 +63,7 @@ if os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "TEST":
     JWT_DURATION = 1
 elif os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "DEV":
     JWT_UNIT_DURATION = "seconds"
-    JWT_DURATION = 1200
+    JWT_DURATION = 3600
 elif os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "PROD":
     JWT_UNIT_DURATION = "hours"
     JWT_DURATION = 24
