@@ -270,9 +270,9 @@ class Contract(Base):
 
     __tablename__ = "contract"
     STATUS = [
-        ("SIGNED", "signed"),
-        ("UNSIGNED", "unsigned"),
-        ("CANCELED", "canceled")
+        ("signed", "signed"),
+        ("unsigned", "unsigned"),
+        ("canceled", "canceled")
     ]
     id = Column(Integer, primary_key=True)
     contract_id = Column(String(120), nullable=False, unique=True)
@@ -290,7 +290,7 @@ class Contract(Base):
     event = relationship("Event", back_populates="contract")
 
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.get_dict}"
 
     def __repr__(self):
         return self.__str__()
@@ -302,7 +302,7 @@ class Contract(Base):
             "full_amount_to_pay": self.full_amount_to_pay,
             "remain_amount_to_pay": self.remain_amount_to_pay,
             "creation_date": self.creation_date.strftime("%d-%m-%Y"),
-            "status": self.status,
+            "status": f'{self.status}',
             "client_id": self.client_id,
             "collaborator_id": self.collaborator_id,
         }

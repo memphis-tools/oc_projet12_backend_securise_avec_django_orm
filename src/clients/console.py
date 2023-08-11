@@ -49,11 +49,11 @@ class ConsoleClient:
         return self.app_view.get_companies_view().get_companies()
 
     @authentication_permission_decorator
-    def get_contracts(self):
+    def get_contracts(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les contrats de l'entreprise.
         """
-        return self.app_view.get_contracts_view().get_contracts()
+        return self.app_view.get_contracts_view().get_contracts(user_query_filters_args)
 
     @authentication_permission_decorator
     def get_departments(self):
