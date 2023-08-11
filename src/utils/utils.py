@@ -272,38 +272,61 @@ def dummy_database_creation(db_name="projet12"):
         except:
             continue
 
-    # 1 localisation en exemple pour une entreprise
+    # 2 localisations en exemple pour 2 entreprises
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
     VALUES('p22240', '9 avenue de la bonbonière', '', '22240', 'Plurien', 'France')
     """
     cursor.execute(sql)
+    sql = """
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
+    VALUES('llb44430', 'Place de la Bretagne', '', '44430', 'Le Loroux-Bottereau', 'France')
+    """
+    cursor.execute(sql)
 
-    # 1 entreprise en exemple
+    # 2 entreprises en exemple
     sql = """
     INSERT INTO company
     (company_id, company_name, company_registration_number, company_subregistration_number, location_id)
     VALUES ('CSLLC12345', 'Cool Startup LLC', '777222888', '12345', '1')
     """
     cursor.execute(sql)
+    sql = """
+    INSERT INTO company
+    (company_id, company_name, company_registration_number, company_subregistration_number, location_id)
+    VALUES ('NFEPG12345', 'Nantes Free Escape Games', '865333888', '44888', '2')
+    """
+    cursor.execute(sql)
 
-    # 2 client en exemples
+    # 2 clients en exemples
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
     VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '067812345678', '1', '2')
     """
     cursor.execute(sql)
+    sql = """
+    INSERT INTO client
+    (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
+    VALUES('axs40', 'MLE', 'Alexia', 'Strak', 'Accountancy Officer', 'a.strak@startup.io', '067812345678', '2', '2')
+    """
+    cursor.execute(sql)
 
-    # 2 contrat en exemples
+    # 3 contrats en exemples
     sql = """
     INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('kc555', '999.99', '999.99', 'UNSIGNED', '1', '1')
+    VALUES('kc555', '999.99', '999.99', 'unsigned', '1', '1')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('ff555', '444.55', '20.99', 'SIGNED', '1', '2')
+    VALUES('ff555', '444.55', '20.99', 'signed', '1', '2')
+    """
+    cursor.execute(sql)
+    sql = """
+    INSERT INTO contract
+    (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
+    VALUES('zz123', '72.5', '0', 'signed', '2', '1', '2021-03-12')
     """
     cursor.execute(sql)
 
