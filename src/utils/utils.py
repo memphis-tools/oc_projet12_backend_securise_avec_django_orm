@@ -298,12 +298,12 @@ def dummy_database_creation(db_name="projet12"):
     # 2 contrat en exemples
     sql = """
     INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('kc555', '999.99', '999.99', 'False', '1', '1')
+    VALUES('kc555', '999.99', '999.99', 'UNSIGNED', '1', '1')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('ff555', '444.55', '20.99', 'True', '1', '2')
+    VALUES('ff555', '444.55', '20.99', 'SIGNED', '1', '2')
     """
     cursor.execute(sql)
 
