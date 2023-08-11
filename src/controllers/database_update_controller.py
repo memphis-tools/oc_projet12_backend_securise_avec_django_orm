@@ -31,7 +31,7 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        session.close()
+
         return f"{client.client_id}"
 
     def update_collaborator(self, session, collaborator_dict):
@@ -69,7 +69,7 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        session.close()
+
         return True
 
     def update_collaborator_password(self, conn, user_registration_number, new_password):
@@ -109,7 +109,7 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        session.close()
+
         return True
 
     def update_contract(self, session, contract_dict):
@@ -129,7 +129,7 @@ class DatabaseUpdateController:
         except KeyError:
             pass
         session.commit()
-        session.close()
+
         return True
 
     def update_department(self, session, department_dict):
@@ -156,7 +156,7 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        session.close()
+        
         return True
 
     def update_event(self, session, event_dict):
@@ -176,7 +176,7 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        session.close()
+
         return True
 
     def update_location(self, session, location_dict):
@@ -198,7 +198,7 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        session.close()
+
         return True
 
     def update_role(self, session, role_dict):
@@ -220,5 +220,5 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        session.close()
+
         return True
