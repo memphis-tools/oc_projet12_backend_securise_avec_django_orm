@@ -13,6 +13,9 @@ try:
     from src.views.roles_view import RolesView
     from src.views.views import AppViews
     from src.controllers.jwt_controller import JwtController
+    from src.controllers.database_initializer_controller import (
+        DatabaseInitializerController,
+    )
 except ModuleNotFoundError:
     from views.clients_view import ClientsView
     from views.collaborators_view import CollaboratorsView
@@ -23,6 +26,9 @@ except ModuleNotFoundError:
     from views.roles_view import RolesView
     from views.views import AppViews
     from controllers.jwt_controller import JwtController
+    from controllers.database_initializer_controller import (
+        DatabaseInitializerController,
+    )
 
 
 def test_get_clients(get_valid_decoded_token_for_a_commercial_collaborator):
@@ -38,7 +44,8 @@ def test_get_collaborators(
     mocker, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     app_view = AppViews()
-    clients_view = CollaboratorsView(app_view.db_controller, app_view.session)
+    db_initializer = DatabaseInitializerController()
+    clients_view = CollaboratorsView(app_view.db_controller, db_initializer, app_view.session)
     database_get_controller = DatabaseReadController()
     result = database_get_controller.get_collaborators(app_view.session)
     assert isinstance(result, list)
