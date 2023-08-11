@@ -37,7 +37,7 @@ class JwtView:
             u_name = collaborator.username
             department = collaborator_department_name
             information = "[bold cyan]Add the following in your path and run any commands (try oc12_help)[/bold cyan]:"
-            to_do = f"OC_12_JWT='{self.jwt_controller.get_token(self.app_view.session, r_number, u_name, department)}'"
+            to_do = f"OC_12_JWT='{self.jwt_controller.get_token(r_number, u_name, department)}'"
             print(information)
             print(to_do)
             return
