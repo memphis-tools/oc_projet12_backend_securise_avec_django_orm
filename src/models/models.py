@@ -269,6 +269,11 @@ class Contract(Base):
     """
 
     __tablename__ = "contract"
+    STATUS = [
+        ("SIGNED", "signed"),
+        ("UNSIGNED", "unsigned"),
+        ("CANCELED", "canceled")
+    ]
     id = Column(Integer, primary_key=True)
     contract_id = Column(String(120), nullable=False, unique=True)
     full_amount_to_pay = Column(Float, nullable=False)
@@ -277,7 +282,7 @@ class Contract(Base):
         DateTime(timezone=False), nullable=False, default=datetime.now()
     )
     # statut pour signifier si contrat signé ou non
-    status = Column(Boolean, default=False)
+    status = Column(ChoiceType(STATUS), default="unsigned")
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="contract")
     collaborator_id = Column(Integer, ForeignKey("collaborator.id"))
