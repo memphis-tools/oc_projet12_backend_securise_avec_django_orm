@@ -18,7 +18,7 @@ class JwtController:
     def __init__(self):
         self.jwt_authenticator = JwtAuthenticator()
 
-    def get_token(self, session, registration_number, username, department):
+    def get_token(self, registration_number, username, department):
         """
         Description:
         Fonction dédiée à obtenir un token, nécessaire pour s'authentifier sur l'application.
