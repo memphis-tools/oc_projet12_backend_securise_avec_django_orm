@@ -14,7 +14,7 @@ except ModuleNotFoundError:
     from utils.utils import authentication_permission_decorator, display_banner
 
 
-class ConsoleClient:
+class ConsoleClientForRead:
     """
     Description: la classe dédiée à l'usage d'un client en mode console.
     """

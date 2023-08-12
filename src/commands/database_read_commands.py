@@ -8,9 +8,9 @@ from functools import wraps
 from rich import print
 
 try:
-    from src.clients.console import ConsoleClient
+    from src.clients.read_console import ConsoleClientForRead
 except ModuleNotFoundError:
-    from clients.console import ConsoleClient
+    from clients.read_console import ConsoleClientForRead
 
 
 class ApplicationHelpFormatter(click.HelpFormatter):
@@ -37,7 +37,7 @@ def get_clients():
     Description: commande dédiée à récupérer les clients de l'entreprise.
     """
     try:
-        console_client = ConsoleClient()
+        console_client = ConsoleClientForRead()
         print(console_client.get_clients())
     except Exception:
         print("[bold red]Missing token[/bold red]")
@@ -49,7 +49,7 @@ def get_collaborators():
     Description: commande dédiée à récupérer les utilisateurs /collaborateurs de l'entreprise.
     """
     try:
-        console_client = ConsoleClient()
+        console_client = ConsoleClientForRead()
         print(console_client.get_collaborators())
     except Exception:
         print("[bold red]Missing token[/bold red]")
@@ -61,7 +61,7 @@ def get_companies():
     Description: commande dédiée à récupérer les entreprises clientes.
     """
     try:
-        console_client = ConsoleClient()
+        console_client = ConsoleClientForRead()
         print(console_client.get_companies())
     except Exception:
         print("[bold red]Missing token[/bold red]")
@@ -93,18 +93,8 @@ def get_contracts(args):
     """
     user_query_filters_args = args
     try:
-        console_client = ConsoleClient()
-        contracts = console_client.get_contracts(user_query_filters_args)
-        if len(contracts) > 0:
-            for contract in contracts:
-                try:
-                    print(contract)
-                except Exception as error:
-                    print(f"Echec de la requêter: {error}")
-                    raise Exception()
-            print("Pas d'autres contrats")
-        else:
-            print("Pas de contrats trouvés")
+        console_client = ConsoleClientForRead()
+        console_client.get_contracts(user_query_filters_args)
     except Exception as error:
         print(f"[bold red]Missing token[/bold red] {error}")
 
@@ -115,7 +105,7 @@ def get_departments():
     Description: commande dédiée à récupérer les départements /services de l'entreprise.
     """
     try:
-        console_client = ConsoleClient()
+        console_client = ConsoleClientForRead()
         print(console_client.get_departments())
     except Exception:
         print("[bold red]Missing token[/bold red]")
@@ -127,7 +117,7 @@ def get_events():
     Description: commande dédiée à récupérer les évènements organisés par l'entreprise.
     """
     try:
-        console_client = ConsoleClient()
+        console_client = ConsoleClientForRead()
         print(console_client.get_events())
     except Exception:
         print("[bold red]Missing token[/bold red]")
@@ -139,7 +129,7 @@ def get_locations():
     Description: commande dédiée à récupérer les localisations des évènements.
     """
     try:
-        console_client = ConsoleClient()
+        console_client = ConsoleClientForRead()
         print(console_client.get_locations())
     except Exception:
         print("[bold red]Missing token[/bold red]")
@@ -151,7 +141,7 @@ def get_roles():
     Description: commande dédiée à récupérer les roles des utilisateurs /collaborateurs de l'entreprise.
     """
     try:
-        console_client = ConsoleClient()
+        console_client = ConsoleClientForRead()
         print(console_client.get_roles())
     except Exception:
         print("[bold red]Missing token[/bold red]")
