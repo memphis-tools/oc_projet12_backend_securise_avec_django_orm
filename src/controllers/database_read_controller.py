@@ -26,7 +26,7 @@ class DatabaseReadController:
             db_client_queryset = (
                 session.query(models.Client).filter_by(client_id=client_id).first()
             )
-            session.close()
+
             return db_client_queryset
         except Exception as error:
             print(f"Client not found: {error}")
@@ -38,7 +38,7 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Client.
         """
         db_collaborators_clients = session.query(models.Client).all()
-        session.close()
+
         return db_collaborators_clients
 
     def get_collaborator(self, session, registration_number):
@@ -55,7 +55,7 @@ class DatabaseReadController:
                 .filter_by(registration_number=registration_number)
                 .first()
             )
-            session.close()
+
             return db_collaborator_queryset
         except Exception as error:
             print(f"User or Department not found: {error}")
@@ -76,7 +76,7 @@ class DatabaseReadController:
                 .first()
             )
 
-            session.close()
+
             return db_collaborator_queryset
         except Exception as error:
             print(f"User or Department not found: {error}")
@@ -88,7 +88,7 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle User.
         """
         db_collaborators = session.query(models.User).all()
-        session.close()
+
         return db_collaborators
 
     def get_company(self, session, company_id):
@@ -104,7 +104,7 @@ class DatabaseReadController:
                 # .filter(models.Company.location_id == models.Location.id)
                 .filter_by(company_id=company_id).first()
             )
-            session.close()
+
             return db_company_queryset
         except Exception as error:
             print(f"Company not found: {error}")
@@ -116,7 +116,7 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Company.
         """
         db_companies = session.query(models.Company).all()
-        session.close()
+
         return db_companies
 
     def get_contract(self, session, contract_id):
@@ -133,7 +133,7 @@ class DatabaseReadController:
                 .filter_by(contract_id=contract_id)
                 .first()
             )
-            session.close()
+
             return db_collaborators_contract
         except Exception as error:
             print(f"Department not found: {error}")
@@ -231,7 +231,6 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Contract.
         """
         db_collaborators_contracts = session.query(models.Contract).all()
-        session.close()
         return db_collaborators_contracts
 
     def get_department(self, session, department_id):
@@ -248,7 +247,7 @@ class DatabaseReadController:
                 .filter_by(department_id=department_id)
                 .first()
             )
-            session.close()
+
             return db_collaborators_department
         except Exception as error:
             print(f"Department not found: {error}")
@@ -260,7 +259,7 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle UserDepartment.
         """
         db_collaborators_department = session.query(models.UserDepartment).all()
-        session.close()
+
         return db_collaborators_department
 
     def get_event(self, session, event_id):
@@ -275,7 +274,7 @@ class DatabaseReadController:
             db_collaborators_event = (
                 session.query(models.Event).filter_by(event_id=event_id).first()
             )
-            session.close()
+
             return db_collaborators_event
         except Exception as error:
             print(f"Event not found: {error}")
@@ -287,7 +286,7 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Event.
         """
         db_collaborators_events = session.query(models.Event).all()
-        session.close()
+
         return db_collaborators_events
 
     def get_location(self, session, location_id):
@@ -304,7 +303,7 @@ class DatabaseReadController:
                 .filter_by(location_id=location_id)
                 .first()
             )
-            session.close()
+
             return db_locations_queryset
         except Exception as error:
             print(f"Location not found: {error}")
@@ -316,7 +315,7 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Location.
         """
         db_collaborators_locations = session.query(models.Location).all()
-        session.close()
+
         return db_collaborators_locations
 
     def get_role(self, session, role_id):
@@ -331,7 +330,7 @@ class DatabaseReadController:
             db_collaborators_role = (
                 session.query(models.UserRole).filter_by(role_id=role_id).first()
             )
-            session.close()
+
             return db_collaborators_role
         except Exception as error:
             print(f"Role not found: {error}")
@@ -343,5 +342,5 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle UserRole.
         """
         db_collaborators_role = session.query(models.UserRole).all()
-        session.close()
+
         return db_collaborators_role
