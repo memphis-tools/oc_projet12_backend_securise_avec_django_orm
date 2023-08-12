@@ -96,8 +96,12 @@ def get_contracts(args):
         console_client = ConsoleClient()
         contracts = console_client.get_contracts(user_query_filters_args)
         if len(contracts) > 0:
-            for element in contracts:
-                print(element.get_dict())
+            for contract in contracts:
+                try:
+                    print(contract)
+                except Exception as error:
+                    print(f"Echec de la requêter: {error}")
+                    raise Exception()
             print("Pas d'autres contrats")
         else:
             print("Pas de contrats trouvés")
