@@ -207,17 +207,18 @@ class DatabaseReadController:
                 if item_key == 'creation_date':
                     str_date = item_value.split("-")
                     item_value = str_date[2] + "-" + str_date[1] + "-" + str_date[0]
-                filter_to_apply += f"({item_key}{item_operator}'{item_value}')"
+                filter_to_apply += f"(Contract.{item_key}{item_operator}'{item_value}')"
             else:
                 filter_to_apply += f" {subquery_tuple[0]} "
 
         try:
             db_contracts = (
                 session.query(models.Contract)
+                .join(models.Client, models.Contract.client_id == models.Client.id)
+                .join(models.Event, models.Contract.id == models.Event.contract_id)
                 .filter(text(filter_to_apply))
                 .all()
             )
-            session.close()
             return db_contracts
         except Exception as error:
             print(f"Requête en échec: {error}")
