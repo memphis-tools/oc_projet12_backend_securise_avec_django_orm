@@ -3,6 +3,7 @@ import subprocess
 import psycopg
 from sqlalchemy import text
 from rich import print
+from rich.table import Table
 from functools import wraps
 import jwt
 import pyfiglet
@@ -33,11 +34,50 @@ def authentication_permission_decorator(func):
     return check_user_token
 
 
-def authorization_permission_decorator(func):
+def set_a_click_table_from_data(title: str, objects_queryset):
     """
     Description: (...).
+    Paramètres:
+    - title: chaine de caractères
+    - objects_queryset: une liste, de taille 1, avec 1 string dedans.
+        C'est le résultat de la requête à la base de données, chaque modèle métier est traduit /représenté par sa mth __str__
+        La méthode est une pseudo représentation d'une liste avec des pseudo ensembles (attribut|valeur)
+        Le queryset est donc une liste avec autant de listes incluses que de résultat trouvé
+        exemple:
+        [['(creation_date|12-08-2023),(contract_id|kc555),('client_id', 'Kevin Casey'),], [...]']
+        C'est une pseudo représentation de ce qu'on souhaite. On va transformer chaque résultat en une liste de tuple:
+        [[('creation_date', '12-08-2023'),('contract_id', 'kc555'),('client_id', 'Kevin Casey')], [...]]
     """
-    pass
+    rebuilt_queryset = []
+    for result_object in objects_queryset:
+        splited_data_list = []
+        # result_object: nous permet d'atteindre la string dans la liste
+        # str(result_object).split(","): la string est vue comme de type "Métier" (exemple Contrat), on force le cast en str
+        for temp_attribute in str(result_object).split(","):
+            # on parcourt chaque élement qui est de type str: '(creation_date|12-08-2023)'
+            # on fait un slice pour retirer les parenthèses, on modifie "|" par une ",", on retire espace vide en début de string
+            temp_attribute = temp_attribute[1:-1].replace("|", ",").lstrip()
+            # on obtient un elément de type str: creation_date,12-08-2023
+            # on l'éclate en une liste qu'on cast en tuple
+            tuple_attribute = tuple(temp_attribute.split(","))
+            # on ajoute à la liste splited_data_list un tuple: ('creation_date', '12-08-2023')
+            splited_data_list.append(tuple_attribute)
+        rebuilt_queryset.append(splited_data_list)
+    # on obtient (pour chaque résultat): ['(creation_date: 12-08-2023)','(contract_id: kc555)','(client_id: Kevin Casey)',]
+
+    headers = []
+    [headers.append(attr_tuple[0].replace("(","")) for attr_tuple in splited_data_list]
+    table = Table(title=title, style="blue")
+    for header in headers:
+        if "date" in header:
+            table.add_column(header.replace('_', ' '), justify="center", style="cyan", no_wrap=True)
+        else:
+            table.add_column(header.replace('_', ' '), justify="left", style="cyan", no_wrap=True)
+    for result in rebuilt_queryset:
+        values = []
+        [values.append(attr_tuple[1].replace(")","")) for attr_tuple in result]
+        table.add_row(*values)
+    return table
 
 
 def display_banner():
@@ -319,8 +359,9 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
     sql = """
-    INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('ff555', '444.55', '20.99', 'signed', '1', '2')
+    INSERT INTO contract
+    (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
+    VALUES('ff555', '444.55', '20.99', 'signed', '1', '2', '2022-04-1')
     """
     cursor.execute(sql)
     sql = """
@@ -342,7 +383,7 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    # 2 évènements en exemple
+    # 3 évènements en exemple
     sql = """
     INSERT INTO event(
         event_id,
@@ -364,7 +405,7 @@ def dummy_database_creation(db_name="projet12"):
         '5',
         '2023-07-25 16:00:00.000000',
         '2023-07-25 22:00:00.000000',
-        '2',
+        '1',
         '500',
         'bla bla bla penser au catering'
     )
@@ -385,13 +426,41 @@ def dummy_database_creation(db_name="projet12"):
         notes
     )
     VALUES(
-        'geg2023',
-        'Gourin escape game',
-        '3',
+        'geg2022',
+        'Gourin escape game 2022',
+        '2',
         '1',
-        '5',
-        '2020-07-25 16:00:00.000000',
-        '2020-07-25 22:00:00.000000',
+        '2',
+        '2022-07-25 16:00:00.000000',
+        '2022-07-25 22:00:00.000000',
+        '2',
+        '35',
+        'bla bla bla penser à tout le nécessaire. Ne pas oublier de gâteaux à la crème.'
+    )
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO event(
+        event_id,
+        title,
+        contract_id,
+        client_id,
+        collaborator_id,
+        event_start_date,
+        event_end_date,
+        location_id,
+        attendees,
+        notes
+    )
+    VALUES(
+        'geg2023',
+        'Gourin escape game 2021',
+        '3',
+        '2',
+        '1',
+        '2021-07-25 16:00:00.000000',
+        '2021-07-25 22:00:00.000000',
         '2',
         '35',
         'bla bla bla penser à tout le nécessaire. Ne pas oublier de gâteaux à la crème.'
