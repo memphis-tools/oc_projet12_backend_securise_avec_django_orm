@@ -330,14 +330,19 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    # 1 localisation en exemple pour un évènement
+    # 2 localisations en exemple pour 2 évènement
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
     VALUES('csb41120', '53 Rue du Château', '', '41120', 'Candé-sur-Beuvron', 'France')
     """
     cursor.execute(sql)
+    sql = """
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
+    VALUES('ggg56110', '20 Rue de Carhaix', '', '56110', 'Gourin', 'France')
+    """
+    cursor.execute(sql)
 
-    # 1 évènement en exemple
+    # 2 évènements en exemple
     sql = """
     INSERT INTO event(
         event_id,
@@ -362,6 +367,34 @@ def dummy_database_creation(db_name="projet12"):
         '2',
         '500',
         'bla bla bla penser au catering'
+    )
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO event(
+        event_id,
+        title,
+        contract_id,
+        client_id,
+        collaborator_id,
+        event_start_date,
+        event_end_date,
+        location_id,
+        attendees,
+        notes
+    )
+    VALUES(
+        'geg2023',
+        'Gourin escape game',
+        '3',
+        '1',
+        '5',
+        '2020-07-25 16:00:00.000000',
+        '2020-07-25 22:00:00.000000',
+        '2',
+        '35',
+        'bla bla bla penser à tout le nécessaire. Ne pas oublier de gâteaux à la crème.'
     )
     """
     cursor.execute(sql)
