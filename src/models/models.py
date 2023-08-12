@@ -281,7 +281,6 @@ class Contract(Base):
     creation_date = Column(
         DateTime(timezone=False), nullable=False, default=datetime.now()
     )
-    # statut pour signifier si contrat signé ou non
     status = Column(ChoiceType(STATUS), default="unsigned")
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="contract")
@@ -290,15 +289,17 @@ class Contract(Base):
     event = relationship("Event", back_populates="contract")
 
     def __str__(self):
-        return f"""
-creation_date: {self.creation_date.strftime("%d-%m-%Y")}
-contract_id: {self.contract_id}
-client_id: {self.client_id}
-status: {self.status}
-full_amount_to_pay: {self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]}
-remain_amount_to_pay: {self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]}
-event: {self.event[0]}
-        """
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(contract_id|{self.contract_id})'
+        descriptors += f',(client_id|{self.client.client_id})'
+        descriptors += f',(collaborator_id|{self.collaborator.registration_number})'
+        descriptors += f',(status|{self.status})'
+        descriptors += f',(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})'
+        descriptors += f',(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})'
+        descriptors += f',(event|{self.event[0]})'
+        descriptors += "]"
+        return descriptors
 
     def __repr__(self):
         return self.__str__()
