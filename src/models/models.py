@@ -4,7 +4,6 @@ Les modèles métier
 from sqlalchemy import (
     Column,
     ForeignKey,
-    Boolean,
     String,
     Integer,
     Date,
@@ -14,6 +13,11 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy_utils import ChoiceType
 from datetime import date, datetime
+
+try:
+    from src.settings import settings
+except ModuleNotFoundError:
+    from settings import settings
 
 
 Base = declarative_base()
@@ -269,11 +273,7 @@ class Contract(Base):
     """
 
     __tablename__ = "contract"
-    STATUS = [
-        ("signed", "signed"),
-        ("unsigned", "unsigned"),
-        ("canceled", "canceled")
-    ]
+    STATUS = [("signed", "signed"), ("unsigned", "unsigned"), ("canceled", "canceled")]
     id = Column(Integer, primary_key=True)
     contract_id = Column(String(120), nullable=False, unique=True)
     full_amount_to_pay = Column(Float, nullable=False)
@@ -290,7 +290,15 @@ class Contract(Base):
     event = relationship("Event", back_populates="contract")
 
     def __str__(self):
-        return f"{self.get_dict}"
+        return f"""
+creation_date: {self.creation_date.strftime("%d-%m-%Y")}
+contract_id: {self.contract_id}
+client_id: {self.client_id}
+status: {self.status}
+full_amount_to_pay: {self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]}
+remain_amount_to_pay: {self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]}
+event: {self.event[0]}
+        """
 
     def __repr__(self):
         return self.__str__()
@@ -302,7 +310,7 @@ class Contract(Base):
             "full_amount_to_pay": self.full_amount_to_pay,
             "remain_amount_to_pay": self.remain_amount_to_pay,
             "creation_date": self.creation_date.strftime("%d-%m-%Y"),
-            "status": f'{self.status}',
+            "status": f"{self.status}",
             "client_id": self.client_id,
             "collaborator_id": self.collaborator_id,
         }
