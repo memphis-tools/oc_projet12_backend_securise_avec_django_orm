@@ -112,15 +112,37 @@ def get_departments():
 
 
 @click.command
-def get_events():
+@click.argument(
+    "args",
+    nargs=-1,
+    type=str,
+)
+def get_events(args):
     """
-    Description: commande dédiée à récupérer les évènements organisés par l'entreprise.
+    [bold cyan]Description:[/bold cyan]
+    Commande dédiée à récupérer les évènements organisés par l'entreprise.
+    En l'absence d'arguments, l'ensemble des contrats est renvoyé.
+
+    [bold cyan]Arguments possibles:[/bold cyan]
+    [bright_white]event_id[/bright_white]: on filtre par evenementt id (le custom id).
+    [bright_white]event_start_date[/bright_white]: on filtre par date de début.
+    [bright_white]event_end_date[/bright_white]: on filtre par date de fin.
+    [bright_white]location_id[/bright_white]: on filtre par localité id (le custom id).
+    [bright_white]attendees[/bright_white]: on filtre par nombre de personnes attendues.
+    [bright_white]creation_date[/bright_white]: on filtre par date de création.
+    [bright_white]client_id[/bright_white]: on filtre par client id (le custom id).
+    [bright_white]contract_id[/bright_white]: on filtre par contrat id (le custom id).
+    [bright_white]collaborator_id[/bright_white]: on filtre par collaborateur id (le registration_number).
+
+    [bold cyan]Exemples d'usage:[/bold cyan]
+    [white]oc12_events "creation_date>15-07-2023"[/white]
     """
+    user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
-        print(console_client.get_events())
-    except Exception:
-        print("[bold red]Missing token[/bold red]")
+        console_client.get_events(user_query_filters_args)
+    except Exception as error:
+        print(f"[bold red]Missing token[/bold red] {error}")
 
 
 @click.command

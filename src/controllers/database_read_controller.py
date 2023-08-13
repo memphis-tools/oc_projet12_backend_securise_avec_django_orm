@@ -163,7 +163,6 @@ class DatabaseReadController:
         except Exception as error:
             print(f"Requête en échec: {error}")
 
-
     def get_contracts(self, session):
         """
         Description:
@@ -218,6 +217,31 @@ class DatabaseReadController:
             return db_collaborators_event
         except Exception as error:
             print(f"Event not found: {error}")
+
+    def get_filtered_events(self, session, user_query_filters_args):
+        """
+        Description:
+        Fonction dédiée à servir la vue lors d'une requête filtrée des évènements de l'entreprise.
+        On utilise une fonction utile "rebuild_filter_query" qui va construire une requête SQL.
+        La requête SQL va être construite au traver des arguments précisés par l'utilisateur.
+        Paramètre:
+        - user_query_filters_args: chaine de caractère avec 1 ou plusieurs filtres.
+            Exemple : "creation_date>15-07-2023"
+        """
+        filter_to_apply_rebuilt_query = utils.rebuild_filter_query(user_query_filters_args)
+        try:
+            db_contracts = (
+                session.query(models.Event)
+                # .join(models.Client, models.Event.client_id == models.Client.id)
+                # .join(models.User, models.Event.collaborator_id == models.User.registration_number)
+                # .join(models.Contract, models.Event.contract_id == models.Contract.contract_id)
+                # .join(models.Location, models.Event.location_id == models.Location.location_id)
+                .filter(text(filter_to_apply_rebuilt_query))
+                .all()
+            )
+            return db_contracts
+        except Exception as error:
+            print(f"Requête en échec: {error}")
 
     def get_events(self, session):
         """
