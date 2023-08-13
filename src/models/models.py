@@ -387,6 +387,10 @@ class Event(Base):
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="event")
     collaborator_id = Column(Integer, ForeignKey("collaborator.id"))
+    collaborator = relationship("User", back_populates="event")
+    creation_date = Column(
+        DateTime(timezone=False), nullable=False, default=datetime.now()
+    )
     event_start_date = Column(
         DateTime(timezone=False), nullable=False, default=datetime.now()
     )
@@ -394,11 +398,25 @@ class Event(Base):
         DateTime(timezone=False), nullable=False, default=datetime.now()
     )
     location_id = Column(Integer, ForeignKey("location.id"))
+    location = relationship("Location", back_populates="event")
     attendees = Column(Integer, nullable=False)
     notes = Column(String(2500), nullable=True)
 
     def __str__(self):
-        return f"{self.title}"
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(event_id|{self.event_id})'
+        descriptors += f',(title|{self.title})'
+        descriptors += f',(contract_id|{self.contract.contract_id})'
+        descriptors += f',(client_id|{self.client.client_id})'
+        descriptors += f',(collaborator_id|{self.collaborator.registration_number})'
+        descriptors += f',(event_start_date|{self.event_start_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(event_end_date|{self.event_end_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(location_id|{self.location.location_id})'
+        descriptors += f',(attendees|{self.attendees})'
+        descriptors += f',(notes|{self.notes})'
+        descriptors += "]"
+        return descriptors
 
     def __repr__(self):
         return self.__str__()
@@ -406,6 +424,7 @@ class Event(Base):
     def get_dict(self):
         event_dict = {
             "id": self.id,
+            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "event_id": self.event_id,
             "title": self.title,
             "contract_id": self.contract_id,

@@ -1,7 +1,11 @@
 """
 vue évènements
 """
-
+from rich.console import Console
+try:
+    from src.utils import utils
+except ModuleNotFoundError:
+    from utils import utils
 
 class EventsView:
     """
@@ -15,10 +19,32 @@ class EventsView:
         self.db_controller = db_controller
         self.session = session
 
-    def get_events(self):
+    def get_events(self, user_query_filters_args):
         """
         Description: vue dédiée à "méthode GET".
         """
+        console = Console()
+        if len(user_query_filters_args) > 0:
+            try:
+                events_queryset = self.db_controller.get_filtered_events(self.session, user_query_filters_args[0])
+                if len(events_queryset) > 0:
+                    table = utils.set_a_click_table_from_data("events", events_queryset)
+                    console.print(table)
+                    print("Pas d'autres évènements")
+                else:
+                    print("Pas d'évènement trouvé")
+            except Exception as error:
+                print(f"Echec de la requête: {error}")
+                raise Exception()
+        else:
+            events_queryset = self.db_controller.get_events(self.session)
+            if len(events_queryset) > 0:
+                table = utils.set_a_click_table_from_data("events", events_queryset)
+                console.print(table)
+                print("Pas d'autres évènements")
+            else:
+                print("Pas d'évènement trouvé")
+
         return self.db_controller.get_events(self.session)
 
     def get_event(self, event_id):

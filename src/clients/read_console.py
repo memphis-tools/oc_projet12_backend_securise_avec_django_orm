@@ -63,11 +63,11 @@ class ConsoleClientForRead:
         return self.app_view.get_departments_view().get_departments()
 
     @authentication_permission_decorator
-    def get_events(self):
+    def get_events(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les évènements de l'entreprise.
         """
-        return self.app_view.get_events_view().get_events()
+        return self.app_view.get_events_view().get_events(user_query_filters_args)
 
     @authentication_permission_decorator
     def get_locations(self):
