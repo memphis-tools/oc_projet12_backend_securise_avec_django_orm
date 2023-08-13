@@ -5,8 +5,10 @@ import re
 from sqlalchemy import and_, or_, not_, text
 try:
     from src.models import models
+    from src.utils import utils
 except ModuleNotFoundError:
     from models import models
+    from utils import utils
 
 
 class DatabaseReadController:
@@ -138,85 +140,23 @@ class DatabaseReadController:
         except Exception as error:
             print(f"Department not found: {error}")
 
-    @classmethod
-    def make_a_user_query_as_a_list(cls, splited_args):
-        """
-        Description:
-        Fonction dédiée à déconstruire les arguments de filtres données par l'utilisateur.
-        Elle est seulement utilisée par la fonction "get_filtered_contracts".
-        """
-        LOGICAL_OPERATORS_TAB_DICT = {
-            "et": "AND",
-            "ou": "OR"
-        }
-        user_query_as_a_list = []
-        for arg in splited_args:
-            arg_to_list = []
-            if '=' in arg and not any(['<' in arg, '>' in arg]):
-                arg_to_list = re.split('=', f"{arg}")
-                arg_to_list.append('=')
-            elif '>' in arg and '=' in arg:
-                operator_index = arg.index("=")
-                arg_to_list.append(arg[0:operator_index])
-                arg_to_list.append(arg[operator_index+2:len(arg)+1])
-                arg_to_list.append(">=")
-            elif '>' in arg:
-                arg_to_list = re.split('>', f"{arg}")
-                arg_to_list.append('>')
-            elif '<' in arg and '=' in arg:
-                arg_to_list = re.split('<=', f"{arg}")
-                arg_to_list.append('<=')
-            elif '<' in arg:
-                arg_to_list = re.split('<', f"{arg}")
-                arg_to_list.append('<')
-            elif arg in LOGICAL_OPERATORS_TAB_DICT:
-                arg_to_list.append(LOGICAL_OPERATORS_TAB_DICT[arg])
-            arg_tuple = tuple(arg_to_list)
-            user_query_as_a_list.append(arg_tuple)
-        return user_query_as_a_list
-
-
     def get_filtered_contracts(self, session, user_query_filters_args):
         """
         Description:
         Fonction dédiée à servir la vue lors d'une requête filtrée des contrats de l'entreprise.
-        On peut ajouter des filtres avec 2 opérateurs logique "et, ou".
+        On utilise une fonction utile "rebuild_filter_query" qui va construire une requête SQL.
+        La requête SQL va être construite au traver des arguments précisés par l'utilisateur.
+        Paramètre:
+        - user_query_filters_args: chaine de caractère avec 1 ou plusieurs filtres.
+            Exemple pour contrats: "status=signed et remain_amount_to_pay =>0"
         """
-
-        user_query_as_a_list = []
-        filter_to_apply = ""
-        try:
-            # on va retirer tous les espaces possibles autour des opérateurs
-            pattern_for_space_around_comparison_ops = re.compile(r'( *=> *| *<= *)')
-            striped_operators = re.search(pattern_for_space_around_comparison_ops, user_query_filters_args)
-            user_query_filters_args = user_query_filters_args.replace(striped_operators.group(), striped_operators.group().strip())
-        except AttributeError:
-            # pas d'espace autour des opérateurs, on ne fait rien
-            pass
-
-        # on éclate dans une liste chaque "triplet" (l'argument, l'opérateur, la valeur)
-        splited_args = user_query_filters_args.split(" ")
-
-        # on va déconstruire les arguments donnés par l'utilisateur dans une liste de tuple
-        # elle aura une forme de type: [('status', 'signed', '='), ('AND',), ('remain_amount_to_pay', '0', '>=')]
-        if len(splited_args) > 0:
-            user_query_as_a_list = self.make_a_user_query_as_a_list(splited_args)
-        for subquery_tuple in user_query_as_a_list:
-            if len(subquery_tuple) > 1:
-                item_key, item_value, item_operator = subquery_tuple
-                if item_key == 'creation_date':
-                    str_date = item_value.split("-")
-                    item_value = str_date[2] + "-" + str_date[1] + "-" + str_date[0]
-                filter_to_apply += f"(Contract.{item_key}{item_operator}'{item_value}')"
-            else:
-                filter_to_apply += f" {subquery_tuple[0]} "
-
+        filter_to_apply_rebuilt_query = utils.rebuild_filter_query(user_query_filters_args)
         try:
             db_contracts = (
                 session.query(models.Contract)
                 .join(models.Client, models.Contract.client_id == models.Client.id)
                 .join(models.Event, models.Contract.id == models.Event.contract_id)
-                .filter(text(filter_to_apply))
+                .filter(text(filter_to_apply_rebuilt_query))
                 .all()
             )
             return db_contracts
