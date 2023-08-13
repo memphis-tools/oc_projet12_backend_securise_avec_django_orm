@@ -68,12 +68,12 @@ def set_a_click_table_from_data(title: str, objects_queryset):
 
     headers = []
     [headers.append(attr_tuple[0].replace("(","")) for attr_tuple in splited_data_list]
-    table = Table(title=title, style="blue")
+    table = Table(title=title, style="blue", show_lines=True)
     for header in headers:
         if "date" in header:
             table.add_column(header.replace('_', ' '), justify="center", style="cyan", no_wrap=True)
         else:
-            table.add_column(header.replace('_', ' '), justify="left", style="cyan", no_wrap=True)
+            table.add_column(header.replace('_', ' '), justify="left", style="cyan", no_wrap=False)
     for result in rebuilt_queryset:
         values = []
         [values.append(attr_tuple[1].replace(")","")) for attr_tuple in result]
@@ -464,6 +464,7 @@ def dummy_database_creation(db_name="projet12"):
     sql = """
     INSERT INTO event(
         event_id,
+        creation_date,
         title,
         contract_id,
         client_id,
@@ -476,6 +477,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'hob2023',
+        '2023-7-03 10:35:22',
         'Holiday on beach',
         '1',
         '1',
@@ -492,6 +494,7 @@ def dummy_database_creation(db_name="projet12"):
     sql = """
     INSERT INTO event(
         event_id,
+        creation_date,
         title,
         contract_id,
         client_id,
@@ -504,6 +507,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'geg2022',
+        '2022-2-15 08:32:15',
         'Gourin escape game 2022',
         '2',
         '1',
@@ -520,6 +524,7 @@ def dummy_database_creation(db_name="projet12"):
     sql = """
     INSERT INTO event(
         event_id,
+        creation_date,
         title,
         contract_id,
         client_id,
@@ -531,7 +536,8 @@ def dummy_database_creation(db_name="projet12"):
         notes
     )
     VALUES(
-        'geg2023',
+        'geg2021',
+        '2021-7-03 14:25:10',
         'Gourin escape game 2021',
         '3',
         '2',
