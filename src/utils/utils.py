@@ -118,7 +118,7 @@ def make_a_user_query_as_a_list(splited_args):
     return user_query_as_a_list
 
 
-def rebuild_filter_query(user_query_filters_args):
+def rebuild_filter_query(user_query_filters_args, filtered_db_model):
     """
     Description:
     Fonction utilisée lorsque l'utilisateur demande une vue filtrée.
@@ -151,7 +151,10 @@ def rebuild_filter_query(user_query_filters_args):
             if item_key == 'creation_date':
                 str_date = item_value.split("-")
                 item_value = str_date[2] + "-" + str_date[1] + "-" + str_date[0]
-            filter_to_apply_rebuilt_query += f"(Contract.{item_key}{item_operator}'{item_value}')"
+            # filtered_db_model: Contract, Collaborator_Role, Client etc
+            # Le nom doit être celui de la table (__tablename__) du modèle.
+            # exemple: si filtered_db_model=='Contract' on aura 'contract.creation_date' en requête
+            filter_to_apply_rebuilt_query += f"({filtered_db_model}.{item_key}{item_operator}'{item_value}')"
         else:
             filter_to_apply_rebuilt_query += f" {subquery_tuple[0]} "
     return filter_to_apply_rebuilt_query
@@ -300,25 +303,40 @@ def dummy_database_creation(db_name="projet12"):
     )
     cursor = conn.cursor()
 
-    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('ccial', 'oc12_commercial')"""
+    sql = """
+        INSERT INTO collaborator_department(department_id, name, creation_date)
+        VALUES('ccial', 'oc12_commercial', '2022-08-02 09:35:14')
+    """
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('gest', 'oc12_gestion')"""
+    sql = """
+        INSERT INTO collaborator_department(department_id, name, creation_date)
+        VALUES('gest', 'oc12_gestion', '2022-08-02 09:35:14')
+    """
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_department(department_id, name) VALUES('supp', 'oc12_support')"""
+    sql = """
+        INSERT INTO collaborator_department(department_id, name, creation_date)
+        VALUES('supp', 'oc12_support', '2022-08-02 09:35:14')
+    """
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_role(role_id, name) VALUES('man', 'MANAGER')"""
+    sql = """
+        INSERT INTO collaborator_role(role_id, name, creation_date)
+        VALUES('man', 'MANAGER', '2022-08-02 09:35:14')
+    """
     cursor.execute(sql)
 
-    sql = """INSERT INTO collaborator_role(role_id, name) VALUES('emp', 'EMPLOYEE')"""
+    sql = """
+        INSERT INTO collaborator_role(role_id, name, creation_date)
+        VALUES('emp', 'EMPLOYEE', '2022-08-02 09:35:14')
+    """
     cursor.execute(sql)
 
     # 2 membres de l'équipe COMMERCIAL, dont 1 nommé dans les exemples du cahier des charges
     sql = """
-        INSERT INTO collaborator(registration_number, username, department, role)
-        VALUES('aa123456789', 'donald duck', '1', '1')
+        INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+        VALUES('aa123456789', 'donald duck', '1', '1', '2022-08-02 09:35:14')
     """
     try:
         cursor.execute(sql)
@@ -326,40 +344,40 @@ def dummy_database_creation(db_name="projet12"):
         pass
 
     sql = """
-        INSERT INTO collaborator(registration_number, username, department, role)
-        VALUES('ab123456789', 'Bill Boquet', '1', '2')
+        INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+        VALUES('ab123456789', 'Bill Boquet', '1', '2', '2022-08-02 09:35:14')
     """
     cursor.execute(sql)
 
     # 2 membres de l'équipe GESTION, pas d'exemples dans cahier des charges
     sql = """
-        INSERT INTO collaborator(registration_number, username, department, role)
-        VALUES('ac123456789', 'daisy duck', '2', '1')
+        INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+        VALUES('ac123456789', 'daisy duck', '2', '1', '2022-08-02 09:35:14')
     """
     cursor.execute(sql)
 
     sql = """
-        INSERT INTO collaborator(registration_number, username, department, role)
-        VALUES('ad123456789', 'loulou duck', '2', '2')
+        INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+        VALUES('ad123456789', 'loulou duck', '2', '2', '2022-08-02 09:35:14')
     """
     cursor.execute(sql)
 
     # 3 membres de l'équipe SUPPORT, dont 2 nommés dans les exemples du cahier des charges
     sql = """
-        INSERT INTO collaborator(registration_number, username, department, role)
-        VALUES('ae123456789', 'louloute duck', '3', '2')
+        INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+        VALUES('ae123456789', 'louloute duck', '3', '2', '2022-08-02 09:35:14')
     """
     cursor.execute(sql)
 
     sql = """
-        INSERT INTO collaborator(registration_number, username, department, role)
-        VALUES('af123456789', 'Aliénor Vichum', '3', '2')
+        INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+        VALUES('af123456789', 'Aliénor Vichum', '3', '2', '2022-08-02 09:35:14')
     """
     cursor.execute(sql)
 
     sql = """
-        INSERT INTO collaborator(registration_number, username, department, role)
-        VALUES('ag123456789', 'Kate Hastroff', '3', '2')
+        INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+        VALUES('ag123456789', 'Kate Hastroff', '3', '2', '2022-08-02 09:35:14')
     """
     cursor.execute(sql)
     conn.commit()
@@ -391,72 +409,72 @@ def dummy_database_creation(db_name="projet12"):
 
     # 2 localisations en exemple pour 2 entreprises
     sql = """
-    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
-    VALUES('p22240', '9 avenue de la bonbonière', '', '22240', 'Plurien', 'France')
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    VALUES('p22240', '9 avenue de la bonbonière', '', '22240', 'Plurien', 'France', '2022-01-02 09:35:14')
     """
     cursor.execute(sql)
     sql = """
-    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
-    VALUES('llb44430', 'Place de la Bretagne', '', '44430', 'Le Loroux-Bottereau', 'France')
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    VALUES('llb44430', 'Place de la Bretagne', '', '44430', 'Le Loroux-Bottereau', 'France', '2019-07-09 14:08:10')
     """
     cursor.execute(sql)
 
     # 2 entreprises en exemple
     sql = """
     INSERT INTO company
-    (company_id, company_name, company_registration_number, company_subregistration_number, location_id)
-    VALUES ('CSLLC12345', 'Cool Startup LLC', '777222888', '12345', '1')
+    (company_id, company_name, company_registration_number, company_subregistration_number, location_id, creation_date)
+    VALUES ('CSLLC12345', 'Cool Startup LLC', '777222888', '12345', '1', '2023-08-02 09:35:14')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO company
-    (company_id, company_name, company_registration_number, company_subregistration_number, location_id)
-    VALUES ('NFEPG12345', 'Nantes Free Escape Games', '865333888', '44888', '2')
+    (company_id, company_name, company_registration_number, company_subregistration_number, location_id, creation_date)
+    VALUES ('NFEPG12345', 'Nantes Free Escape Games', '865333888', '44888', '2', '2019-07-09 14:10:20')
     """
     cursor.execute(sql)
 
     # 2 clients en exemples
     sql = """
     INSERT INTO client
-    (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
-    VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '067812345678', '1', '2')
+    (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact, creation_date)
+    VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '067812345678', '1', '2', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO client
-    (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact)
-    VALUES('axs40', 'MLE', 'Alexia', 'Strak', 'Accountancy Officer', 'a.strak@startup.io', '067812345678', '2', '2')
+    (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact, creation_date)
+    VALUES('axs40', 'MLE', 'Alexia', 'Strak', 'Accountancy Officer', 'a.strak@startup.io', '067812345678', '2', '2', '2020-10-15 16:12:20')
     """
     cursor.execute(sql)
 
     # 3 contrats en exemples
     sql = """
-    INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id)
-    VALUES('kc555', '999.99', '999.99', 'unsigned', '1', '1')
+    INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
+    VALUES('kc555', '999.99', '999.99', 'unsigned', '1', '1', '2023-06-02 09:35:25')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
-    VALUES('ff555', '444.55', '20.99', 'signed', '1', '2', '2022-04-1')
+    VALUES('ff555', '444.55', '20.99', 'signed', '1', '2', '2022-01-16 10:40:14')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
-    VALUES('zz123', '72.5', '0', 'signed', '2', '1', '2021-03-12')
+    VALUES('zz123', '72.5', '0', 'signed', '2', '1','2021-04-15 14:40:14')
     """
     cursor.execute(sql)
 
     # 2 localisations en exemple pour 2 évènement
     sql = """
-    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
-    VALUES('csb41120', '53 Rue du Château', '', '41120', 'Candé-sur-Beuvron', 'France')
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    VALUES('csb41120', '53 Rue du Château', '', '41120', 'Candé-sur-Beuvron', 'France', '2023-08-02 09:35:14')
     """
     cursor.execute(sql)
     sql = """
-    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays)
-    VALUES('ggg56110', '20 Rue de Carhaix', '', '56110', 'Gourin', 'France')
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    VALUES('ggg56110', '20 Rue de Carhaix', '', '56110', 'Gourin', 'France', '2023-08-02 09:35:14')
     """
     cursor.execute(sql)
 
@@ -477,13 +495,13 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'hob2023',
-        '2023-7-03 10:35:22',
+        '2023-07-03 10:35:22',
         'Holiday on beach',
         '1',
         '1',
         '5',
-        '2023-07-25 16:00:00.000000',
-        '2023-07-25 22:00:00.000000',
+        '2023-07-25 16:00',
+        '2023-07-25 22:00',
         '1',
         '500',
         'bla bla bla penser au catering'
@@ -507,13 +525,13 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'geg2022',
-        '2022-2-15 08:32:15',
+        '2022-02-15 08:32:15',
         'Gourin escape game 2022',
         '2',
         '1',
         '2',
-        '2022-07-25 16:00:00.000000',
-        '2022-07-25 22:00:00.000000',
+        '2022-07-25 16:00',
+        '2022-07-25 22:00',
         '2',
         '35',
         'bla bla bla penser à tout le nécessaire. Ne pas oublier de gâteaux à la crème.'
@@ -537,13 +555,13 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'geg2021',
-        '2021-7-03 14:25:10',
+        '2021-07-03 14:25:10',
         'Gourin escape game 2021',
         '3',
         '2',
         '1',
-        '2021-07-25 16:00:00.000000',
-        '2021-07-25 22:00:00.000000',
+        '2021-07-25 16:00',
+        '2021-07-25 22:00',
         '2',
         '35',
         'bla bla bla penser à tout le nécessaire. Ne pas oublier de gâteaux à la crème.'
