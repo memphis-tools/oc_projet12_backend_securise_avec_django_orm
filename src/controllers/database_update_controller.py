@@ -41,11 +41,11 @@ class DatabaseUpdateController:
         """
         collaborator_id = collaborator_dict.pop("registration_number")
         collaborator = (
-            session.query(models.User)
+            session.query(models.Collaborator)
             .filter_by(registration_number=collaborator_id)
             .first()
         )
-        keys_to_explore = models.User.metadata.tables["collaborator"].columns.keys()
+        keys_to_explore = models.Collaborator.metadata.tables["collaborator"].columns.keys()
         department_id = collaborator.department
         current_department_name = utils.get_department_name_from_id(session, department_id)
 
@@ -140,11 +140,11 @@ class DatabaseUpdateController:
         """
         department_id = department_dict.pop("department_id")
         department = (
-            session.query(models.UserDepartment)
+            session.query(models.Collaborator_Department)
             .filter_by(department_id=department_id)
             .first()
         )
-        keys_to_explore = models.UserDepartment.metadata.tables[
+        keys_to_explore = models.Collaborator_Department.metadata.tables[
             "collaborator_department"
         ].columns.keys()
 
@@ -156,7 +156,7 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        
+
         return True
 
     def update_event(self, session, event_dict):
@@ -207,8 +207,8 @@ class DatabaseUpdateController:
         Requête de la base de données et renvoie True si réussie..
         """
         role_id = role_dict.pop("role_id")
-        role = session.query(models.UserRole).filter_by(role_id=role_id).first()
-        keys_to_explore = models.UserRole.metadata.tables[
+        role = session.query(models.Collaborator_Role).filter_by(role_id=role_id).first()
+        keys_to_explore = models.Collaborator_Role.metadata.tables[
             "collaborator_role"
         ].columns.keys()
 

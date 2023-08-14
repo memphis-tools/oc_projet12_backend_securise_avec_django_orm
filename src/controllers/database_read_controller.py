@@ -16,6 +16,34 @@ class DatabaseReadController:
     Description: Toutes les méthodes GET.
     """
 
+    def get_filtered_models(self, session, user_query_filters_args, filtered_db_model):
+        """
+        Description:
+        Fonction dédiée à servir la vue lors d'une requête filtrée à un modèle métier.
+        On utilise une fonction utile "rebuild_filter_query" qui va construire une requête SQL.
+        La requête SQL va être construite au traver des arguments précisés par l'utilisateur.
+        Paramètre:
+        - user_query_filters_args: chaine de caractère avec 1 ou plusieurs filtres.
+            Exemple pour contrats: "status=signed et remain_amount_to_pay =>0"
+        - filtered_db_model: chaine caractères qui nomme un modèle métier, Collaborator, Collaborator_Role, Client, Contract, etc
+        """
+        filter_to_apply_rebuilt_query = utils.rebuild_filter_query(user_query_filters_args, filtered_db_model)
+        try:
+            db_model_queryset = (
+                session.query(eval(f"models.{filtered_db_model}"))
+                # noter la possibilité de proposer des jointures, on ferait par exemple ceci
+                # .join(models.Client, models.Event.client_id == models.Client.id)
+                # .join(models.Collaborator, models.Event.collaborator_id == models.Collaborator.registration_number)
+                # .join(models.Contract, models.Event.contract_id == models.Contract.contract_id)
+                # .join(models.Location, models.Event.location_id == models.Location.location_id)
+                .filter(text(filter_to_apply_rebuilt_query))
+                .all()
+            )
+            return db_model_queryset
+        except Exception as error:
+            print(f"Requête en échec: {error}")
+
+
     def get_client(self, session, client_id):
         """
         Description:
@@ -47,49 +75,47 @@ class DatabaseReadController:
         """
         Description:
         Fonction dédiée à servir la vue lors d'une requête d'un utilisateur de l'entreprise.
-        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle User.
+        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator.
         Paramètres:
         - registration_number: c'est le matricule employé.
         """
         try:
             db_collaborator_queryset = (
-                session.query(models.User)
+                session.query(models.Collaborator)
                 .filter_by(registration_number=registration_number)
                 .first()
             )
 
             return db_collaborator_queryset
         except Exception as error:
-            print(f"User or Department not found: {error}")
+            print(f"Collaborator or Department not found: {error}")
 
     def get_collaborator_join_department(self, session, registration_number):
         """
         Description:
         Méthode dédiée à servir la vue lors d'une requête d'un utilisateur de l'entreprise pour la création du token.
-        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle User.
+        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator.
         Paramètres:
         - registration_number: c'est le matricule employé.
         """
         try:
             db_collaborator_queryset = (
-                session.query(models.User, models.UserDepartment)
-                .filter(models.User.department == models.UserDepartment.id)
+                session.query(models.Collaborator.username, models.Collaborator_Department.name)
+                .filter(models.Collaborator.department_id == models.Collaborator_Department.id)
                 .filter_by(registration_number=registration_number)
                 .first()
             )
-
-
             return db_collaborator_queryset
         except Exception as error:
-            print(f"User or Department not found: {error}")
+            print(f"Collaborator or Department not found: {error}")
 
     def get_collaborators(self, session):
         """
         Description:
 		Méthode dédiée à servir la vue lors d'une requête des utilisateurs de l'entreprise.
-        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle User.
+        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator.
         """
-        db_collaborators = session.query(models.User).all()
+        db_collaborators = session.query(models.Collaborator).all()
 
         return db_collaborators
 
@@ -102,8 +128,6 @@ class DatabaseReadController:
         try:
             db_company_queryset = (
                 session.query(models.Company)
-                # session.query(models.Company, models.Location)
-                # .filter(models.Company.location_id == models.Location.id)
                 .filter_by(company_id=company_id).first()
             )
 
@@ -118,7 +142,6 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Company.
         """
         db_companies = session.query(models.Company).all()
-
         return db_companies
 
     def get_contract(self, session, contract_id):
@@ -140,29 +163,6 @@ class DatabaseReadController:
         except Exception as error:
             print(f"Department not found: {error}")
 
-    def get_filtered_contracts(self, session, user_query_filters_args):
-        """
-        Description:
-        Fonction dédiée à servir la vue lors d'une requête filtrée des contrats de l'entreprise.
-        On utilise une fonction utile "rebuild_filter_query" qui va construire une requête SQL.
-        La requête SQL va être construite au traver des arguments précisés par l'utilisateur.
-        Paramètre:
-        - user_query_filters_args: chaine de caractère avec 1 ou plusieurs filtres.
-            Exemple pour contrats: "status=signed et remain_amount_to_pay =>0"
-        """
-        filter_to_apply_rebuilt_query = utils.rebuild_filter_query(user_query_filters_args)
-        try:
-            db_contracts = (
-                session.query(models.Contract)
-                .join(models.Client, models.Contract.client_id == models.Client.id)
-                .join(models.Event, models.Contract.id == models.Event.contract_id)
-                .filter(text(filter_to_apply_rebuilt_query))
-                .all()
-            )
-            return db_contracts
-        except Exception as error:
-            print(f"Requête en échec: {error}")
-
     def get_contracts(self, session):
         """
         Description:
@@ -176,13 +176,13 @@ class DatabaseReadController:
         """
         Description:
 		Méthode dédiée à servir la vue lors d'une requête d'un département /service de l'entreprise.
-        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle UserDepartment.
+        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator_Department.
         Paramètres:
         - department_id: c'est le custom id (chaine libre)
         """
         try:
             db_collaborators_department = (
-                session.query(models.UserDepartment)
+                session.query(models.Collaborator_Department)
                 .filter_by(department_id=department_id)
                 .first()
             )
@@ -195,9 +195,9 @@ class DatabaseReadController:
         """
         Description:
 		Méthode dédiée à servir la vue lors d'une requête des départements /services de l'entreprise.
-        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle UserDepartment.
+        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator_Department.
         """
-        db_collaborators_department = session.query(models.UserDepartment).all()
+        db_collaborators_department = session.query(models.Collaborator_Department).all()
 
         return db_collaborators_department
 
@@ -217,31 +217,6 @@ class DatabaseReadController:
             return db_collaborators_event
         except Exception as error:
             print(f"Event not found: {error}")
-
-    def get_filtered_events(self, session, user_query_filters_args):
-        """
-        Description:
-        Fonction dédiée à servir la vue lors d'une requête filtrée des évènements de l'entreprise.
-        On utilise une fonction utile "rebuild_filter_query" qui va construire une requête SQL.
-        La requête SQL va être construite au traver des arguments précisés par l'utilisateur.
-        Paramètre:
-        - user_query_filters_args: chaine de caractère avec 1 ou plusieurs filtres.
-            Exemple : "creation_date>15-07-2023"
-        """
-        filter_to_apply_rebuilt_query = utils.rebuild_filter_query(user_query_filters_args)
-        try:
-            db_contracts = (
-                session.query(models.Event)
-                # .join(models.Client, models.Event.client_id == models.Client.id)
-                # .join(models.User, models.Event.collaborator_id == models.User.registration_number)
-                # .join(models.Contract, models.Event.contract_id == models.Contract.contract_id)
-                # .join(models.Location, models.Event.location_id == models.Location.location_id)
-                .filter(text(filter_to_apply_rebuilt_query))
-                .all()
-            )
-            return db_contracts
-        except Exception as error:
-            print(f"Requête en échec: {error}")
 
     def get_events(self, session):
         """
@@ -286,13 +261,13 @@ class DatabaseReadController:
         """
         Description:
 		Méthode dédiée à servir la vue lors d'une requête d'un rôles du personnel de l'entreprise.
-        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle UserRole.
+        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator_Role.
         Paramètres:
         - role_id: c'est le custom id (chaine libre)
         """
         try:
             db_collaborators_role = (
-                session.query(models.UserRole).filter_by(role_id=role_id).first()
+                session.query(models.Collaborator_Role).filter_by(role_id=role_id).first()
             )
 
             return db_collaborators_role
@@ -303,8 +278,8 @@ class DatabaseReadController:
         """
         Description:
 		Méthode dédiée à servir la vue lors d'une requête des rôles du personnel de l'entreprise.
-        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle UserRole.
+        Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator_Role.
         """
-        db_collaborators_role = session.query(models.UserRole).all()
+        db_collaborators_role = session.query(models.Collaborator_Role).all()
 
         return db_collaborators_role

@@ -18,7 +18,6 @@ class ConsoleClientForRead:
     """
     Description: la classe dédiée à l'usage d'un client en mode console.
     """
-
     def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
@@ -28,25 +27,25 @@ class ConsoleClientForRead:
         self.jwt_view = JwtView(self.app_view)
 
     @authentication_permission_decorator
-    def get_clients(self):
+    def get_clients(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les clients de l'entreprise.
         """
-        return self.app_view.get_clients_view().get_clients()
+        return self.app_view.get_clients_view().get_clients(user_query_filters_args)
 
     @authentication_permission_decorator
-    def get_collaborators(self):
+    def get_collaborators(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les utilisateurs /collaborateurs de l'entreprise.
         """
-        return self.app_view.get_collaborators_view().get_collaborators()
+        return self.app_view.get_collaborators_view().get_collaborators(user_query_filters_args)
 
     @authentication_permission_decorator
-    def get_companies(self):
+    def get_companies(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les entreprises clientes.
         """
-        return self.app_view.get_companies_view().get_companies()
+        return self.app_view.get_companies_view().get_companies(user_query_filters_args)
 
     @authentication_permission_decorator
     def get_contracts(self, user_query_filters_args=""):
@@ -56,11 +55,11 @@ class ConsoleClientForRead:
         return self.app_view.get_contracts_view().get_contracts(user_query_filters_args)
 
     @authentication_permission_decorator
-    def get_departments(self):
+    def get_departments(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les départements /services de l'entreprise.
         """
-        return self.app_view.get_departments_view().get_departments()
+        return self.app_view.get_departments_view().get_departments(user_query_filters_args)
 
     @authentication_permission_decorator
     def get_events(self, user_query_filters_args=""):
@@ -70,15 +69,15 @@ class ConsoleClientForRead:
         return self.app_view.get_events_view().get_events(user_query_filters_args)
 
     @authentication_permission_decorator
-    def get_locations(self):
+    def get_locations(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les localisations des évènements de l'entreprise.
         """
-        return self.app_view.get_locations_view().get_locations()
+        return self.app_view.get_locations_view().get_locations(user_query_filters_args)
 
     @authentication_permission_decorator
-    def get_roles(self):
+    def get_roles(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les rôles prévus pour les collaborateurs de l'entreprise.
         """
-        return self.app_view.get_roles_view().get_roles()
+        return self.app_view.get_roles_view().get_roles(user_query_filters_args)

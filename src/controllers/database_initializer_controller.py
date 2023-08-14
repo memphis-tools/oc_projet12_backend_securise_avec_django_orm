@@ -27,7 +27,6 @@ class DatabaseInitializerController:
         Description: connexion à la base de données et renvoie le moteur dédié à initialiser les tables.
         Renvoie aussi de la session qui sera utilisée par la vue AppViews.
         """
-
         try:
             if decoded_token == "":
                 # l'utilisateur demande un token, c'est sa "connexion" initiale à l'application
@@ -45,6 +44,7 @@ class DatabaseInitializerController:
             )
         except psycopg.OperationalError as error:
             print(f"[bold red][START CONTROL][/bold red] {error}")
+
         session_maker = sessionmaker(engine)
         session = session_maker()
         return (engine, session)

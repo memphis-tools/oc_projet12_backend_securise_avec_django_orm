@@ -27,14 +27,14 @@ class JwtView:
         """
         try:
             (
-                collaborator,
+                collaborator_username,
                 collaborator_department_name,
             ) = self.app_view.db_controller.get_collaborator_join_department(
                 self.app_view.session, registration_number
             )
 
             r_number = registration_number
-            u_name = collaborator.username
+            u_name = collaborator_username
             department = collaborator_department_name
             information = "[bold cyan]Add the following in your path and run any commands (try oc12_help)[/bold cyan]:"
             to_do = f"OC_12_JWT='{self.jwt_controller.get_token(r_number, u_name, department)}'"

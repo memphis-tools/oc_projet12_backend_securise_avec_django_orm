@@ -26,24 +26,24 @@ class ContractsView:
         console = Console()
         if len(user_query_filters_args) > 0:
             try:
-                contracts_queryset = self.db_controller.get_filtered_contracts(self.session, user_query_filters_args[0])
-                if len(contracts_queryset) > 0:
-                    table = utils.set_a_click_table_from_data("contracts", contracts_queryset)
+                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Contract")
+                if len(db_model_queryset) > 0:
+                    table = utils.set_a_click_table_from_data("contracts", db_model_queryset)
                     console.print(table)
-                    print("Pas d'autres contrats")
+                    print("Aucuns autres contrats")
                 else:
-                    print("Pas de contrats trouvés")
+                    print("Aucun contrat trouvé")
             except Exception as error:
                 print(f"Echec de la requête: {error}")
                 raise Exception()
         else:
-            contracts_queryset = self.db_controller.get_contracts(self.session)
-            if len(contracts_queryset) > 0:
-                table = utils.set_a_click_table_from_data("contracts", contracts_queryset)
+            db_model_queryset = self.db_controller.get_contracts(self.session)
+            if len(db_model_queryset) > 0:
+                table = utils.set_a_click_table_from_data("contracts", db_model_queryset)
                 console.print(table)
-                print("Pas d'autres contrats")
+                print("Aucuns autres contrats")
             else:
-                print("Pas de contrats trouvés")
+                print("Pas de contrat trouvé")
 
         return self.db_controller.get_contracts(self.session)
 
