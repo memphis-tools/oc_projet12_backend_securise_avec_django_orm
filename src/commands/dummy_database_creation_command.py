@@ -149,13 +149,13 @@ def dummy_database_creation(db_name="projet12"):
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact, creation_date)
-    VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Press Officer', 'kevin@startup.io', '067812345678', '1', '2', '2021-12-25 19:40:06')
+    VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Attaché de Presse', 'kevin@startup.io', '067812345678', '1', '2', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact, creation_date)
-    VALUES('axs40', 'MLE', 'Alexia', 'Strak', 'Accountancy Officer', 'a.strak@startup.io', '067812345678', '2', '2', '2020-10-15 16:12:20')
+    VALUES('axs40', 'MLE', 'Alexia', 'Strak', 'Agent administratif', 'a.strak@startup.io', '067812345678', '2', '2', '2020-10-15 16:12:20')
     """
     cursor.execute(sql)
 
