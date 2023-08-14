@@ -10,10 +10,12 @@ from rich import print
 
 try:
     from src.clients.admin_console import AdminConsoleClient
+    from src.commands.dummy_database_creation_command import dummy_database_creation
     from src.settings import settings
     from src.utils import utils
 except ModuleNotFoundError:
     from clients.admin_console import AdminConsoleClient
+    from commands.dummy_database_creation_command import dummy_database_creation
     from settings import settings
     from utils import utils
 
@@ -142,4 +144,4 @@ def init_application():
     admin_console_client.database_postinstall_alter_tables(db_name=f"{settings.TEST_DATABASE_NAME}")
 
     # On peuple la base de données avec des données quelconques, pour le POC, en développement
-    utils.dummy_database_creation(db_name=f"{settings.TEST_DATABASE_NAME}")
+    dummy_database_creation(db_name=f"{settings.TEST_DATABASE_NAME}")
