@@ -65,7 +65,7 @@ def init_application():
                 capture_output=True,
             )
             print(
-                f"[bold green][START CONTROL][/bold green] User {database} droped"
+                f"[bold green][START CONTROL][/bold green] Collaborator {database} droped"
             )
         except subprocess.CalledProcessError:
             print(

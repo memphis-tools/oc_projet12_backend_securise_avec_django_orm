@@ -1,5 +1,6 @@
 """
-Les modèles métier
+Les modèles métier.
+
 """
 from sqlalchemy import (
     Column,
@@ -16,12 +17,14 @@ from datetime import date, datetime
 
 try:
     from src.settings import settings
+    from src.utils import utils
 except ModuleNotFoundError:
     from settings import settings
+    from utils import utils
 
 
 Base = declarative_base()
-MONTHS = [
+TRANSLATED_MONTHS = [
     ("janvier", "Jan"),
     ("février", "Feb"),
     ("mars", "Mar"),
@@ -49,7 +52,7 @@ def get_today_date():
     Description: on permet le formatage type '18 avril 2021' du cahier des charges pour les Clients.
     """
     today = date.today()
-    returned_date = f"{today.day}-{MONTHS[today.month-1][1]}-{today.year}"
+    returned_date = f"{today.day}-{TRANSLATED_MONTHS[today.month-1][1]}-{today.year}"
     return returned_date
 
 
@@ -58,18 +61,31 @@ class ModelMixin:
         return self.id
 
 
-class UserDepartment(Base):
+class Collaborator_Department(Base):
     """
     Description: table dédiée à référencer les départements des utilisateurs de l'application.
+    Remarque:
+    Nom de la classe doit correspondre au nom de __tablename__.
+    Lien avec la requete SQL construite à partir des arguments (lors d'une vue filtrée).
+    Voir filtered_db_model dans utils.rebuild_filter_query.
     """
 
     __tablename__ = "collaborator_department"
     id = Column(Integer, primary_key=True)
     department_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
+    creation_date = Column(
+        DateTime(timezone=False), default=datetime.now()
+    )
+    collaborator = relationship("Collaborator", back_populates="department")
 
     def __str__(self):
-        return f"{self.name}"
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(department_id|{self.department_id})'
+        descriptors += f',(name|{self.name})'
+        descriptors += "]"
+        return descriptors
 
     def __repr__(self):
         return self.__str__()
@@ -77,6 +93,7 @@ class UserDepartment(Base):
     def get_dict(self):
         department_dict = {
             "id": self.id,
+            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "department_id": self.department_id,
             "name": self.name,
         }
@@ -89,7 +106,7 @@ class UserDepartment(Base):
         ]
 
 
-class UserRole(Base):
+class Collaborator_Role(Base):
     """
     Description: table dédiée à référencer les rôles des utilisateurs /collaborateurs de l'application.
     """
@@ -98,9 +115,18 @@ class UserRole(Base):
     id = Column(Integer, primary_key=True)
     role_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
+    creation_date = Column(
+        DateTime(timezone=False), default=datetime.now()
+    )
+    collaborator = relationship("Collaborator", back_populates="role")
 
     def __str__(self):
-        return f"{self.name}"
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(role_id|{self.role_id})'
+        descriptors += f',(name|{self.name})'
+        descriptors += "]"
+        return descriptors
 
     def __repr__(self):
         return self.__str__()
@@ -108,6 +134,7 @@ class UserRole(Base):
     def get_dict(self):
         role_dict = {
             "id": self.id,
+            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "role_id": self.role_id,
             "name": self.name,
         }
@@ -120,7 +147,7 @@ class UserRole(Base):
         ]
 
 
-class User(Base):
+class Collaborator(Base):
     """
     Description: table dédiée à désigner /caractériser un utilisateur /collaborateur.
     """
@@ -129,13 +156,26 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     registration_number = Column(String(12), nullable=False, unique=True)
     username = Column(String(65), nullable=False)
-    department = Column(Integer, ForeignKey("collaborator_department.id"))
-    role = Column(Integer, ForeignKey("collaborator_role.id"), default=2)
+    department_id = Column(Integer, ForeignKey("collaborator_department.id"))
+    role_id = Column(Integer, ForeignKey("collaborator_role.id"), default=2)
+    department = relationship("Collaborator_Department", back_populates="collaborator")
+    role = relationship("Collaborator_Role", back_populates="collaborator")
     client = relationship("Client", back_populates="collaborator")
     contract = relationship("Contract", back_populates="collaborator")
+    event = relationship("Event", back_populates="collaborator")
+    creation_date = Column(
+        DateTime(timezone=False), default=datetime.now()
+    )
 
     def __str__(self):
-        return f"{self.username}"
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(user_id|{self.registration_number})'
+        descriptors += f',(username|{self.username})'
+        descriptors += f',(department_id|{self.department.department_id})'
+        descriptors += f',(role|{self.role.role_id})'
+        descriptors += "]"
+        return descriptors
 
     def __repr__(self):
         return self.__str__()
@@ -143,10 +183,11 @@ class User(Base):
     def get_dict(self):
         collaborator_dict = {
             "id": self.id,
+            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "registration_number": self.registration_number,
             "username": self.username,
-            "department": self.department,
-            "role": self.role,
+            "department_id": self.department_id,
+            "role_id": self.role.role_id,
         }
         return collaborator_dict
 
@@ -154,8 +195,8 @@ class User(Base):
     def _get_keys():
         return [
             "username",
-            "department",
-            "role",
+            "department_id",
+            "role_id",
         ]
 
 
@@ -172,9 +213,20 @@ class Company(Base):
     company_subregistration_number = Column(String(50), nullable=False)
     location_id = Column(Integer, ForeignKey("location.id"))
     client = relationship("Client", back_populates="company")
+    creation_date = Column(
+        DateTime(timezone=False), default=datetime.now()
+    )
 
     def __str__(self):
-        return f"{self.company_id}: {self.company_name}"
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(company_id|{self.company_id})'
+        descriptors += f',(company_name|{self.company_name})'
+        descriptors += f',(company_registration_number|{self.company_registration_number})'
+        descriptors += f',(company_subregistration_number|{self.company_subregistration_number})'
+        descriptors += f',(location_id|{self.location_id})'
+        descriptors += "]"
+        return descriptors
 
     def __repr__(self):
         return self.__str__()
@@ -182,6 +234,7 @@ class Company(Base):
     def get_dict(self):
         company_dict = {
             "id": self.id,
+            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "company_id": self.company_id,
             "company_name": self.company_name,
             "company_registration_number": self.company_registration_number,
@@ -224,13 +277,26 @@ class Client(Base):
     creation_date = Column(Date(), nullable=False, default=get_today_date())
     last_update_date = Column(Date(), nullable=False, default=get_today_date())
     commercial_contact = Column(Integer, ForeignKey("collaborator.id"))
-    collaborator = relationship("User", back_populates="client")
+    collaborator = relationship("Collaborator", back_populates="client")
     company = relationship("Company", back_populates="client")
     contract = relationship("Contract", back_populates="client")
     event = relationship("Event", back_populates="client")
 
     def __str__(self):
-        return f"{self.company_id} {self.civility} {self.first_name} {self.last_name}"
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(client_id|{self.client_id})'
+        descriptors += f',(civility|{self.civility})'
+        descriptors += f',(first_name|{self.first_name})'
+        descriptors += f',(last_name|{self.last_name})'
+        descriptors += f',(email|{self.email})'
+        descriptors += f',(telephone|{self.telephone})'
+        descriptors += f',(company_id|{self.company.company_id})'
+        descriptors += f',(commercial_contact|{self.commercial_contact})'
+        descriptors += f',(collaborator|{self.collaborator.registration_number})'
+        descriptors += f',(contract|{self.contract})'
+        descriptors += "]"
+        return descriptors
 
     def __repr__(self):
         return self.__str__()
@@ -238,6 +304,7 @@ class Client(Base):
     def get_dict(self):
         client_dict = {
             "id": self.id,
+            "creation_date": self.creation_date.strftime("%d-%m-%Y"),
             "client_id": self.client_id,
             "civility": f"{self.civility}",
             "first_name": self.first_name,
@@ -246,7 +313,6 @@ class Client(Base):
             "email": self.email,
             "telephone": self.telephone,
             "company_id": self.company_id,
-            "creation_date": self.creation_date.strftime("%d-%m-%Y"),
             "last_update_date": self.last_update_date.strftime("%d-%m-%Y"),
             "commercial_contact": self.commercial_contact,
         }
@@ -279,13 +345,13 @@ class Contract(Base):
     full_amount_to_pay = Column(Float, nullable=False)
     remain_amount_to_pay = Column(Float, nullable=False, default=full_amount_to_pay)
     creation_date = Column(
-        DateTime(timezone=False), nullable=False, default=datetime.now()
+        DateTime(timezone=False), default=datetime.now()
     )
     status = Column(ChoiceType(STATUS), default="unsigned")
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="contract")
     collaborator_id = Column(Integer, ForeignKey("collaborator.id"))
-    collaborator = relationship("User", back_populates="contract")
+    collaborator = relationship("Collaborator", back_populates="contract")
     event = relationship("Event", back_populates="contract")
 
     def __str__(self):
@@ -297,7 +363,6 @@ class Contract(Base):
         descriptors += f',(status|{self.status})'
         descriptors += f',(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})'
         descriptors += f',(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})'
-        descriptors += f',(event|{self.event[0]})'
         descriptors += "]"
         return descriptors
 
@@ -307,6 +372,7 @@ class Contract(Base):
     def get_dict(self):
         contract_dict = {
             "id": self.id,
+            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "contract_id": self.contract_id,
             "full_amount_to_pay": self.full_amount_to_pay,
             "remain_amount_to_pay": self.remain_amount_to_pay,
@@ -343,9 +409,22 @@ class Location(Base, ModelMixin):
     code_postal = Column(Integer, nullable=False)
     ville = Column(String(100), nullable=False)
     pays = Column(String(100), nullable=True, default="France")
+    event = relationship("Event", back_populates="location")
+    creation_date = Column(
+        DateTime(timezone=False), default=datetime.now()
+    )
 
     def __str__(self):
-        return f"{self.id}-{self.location_id}: {self.ville} {self.pays}"
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(location_id|{self.location_id})'
+        descriptors += f',(adresse|{self.adresse})'
+        descriptors += f',(complement_adresse|{self.complement_adresse})'
+        descriptors += f',(code_postal|{self.code_postal})'
+        descriptors += f',(ville|{self.ville})'
+        descriptors += f',(pays|{self.pays})'
+        descriptors += "]"
+        return descriptors
 
     def __repr__(self):
         return self.__str__()
@@ -353,6 +432,7 @@ class Location(Base, ModelMixin):
     def get_dict(self):
         location_dict = {
             "id": self.id,
+            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "location_id": self.location_id,
             "adresse": self.adresse,
             "complement_adresse": self.complement_adresse,
@@ -387,15 +467,15 @@ class Event(Base):
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="event")
     collaborator_id = Column(Integer, ForeignKey("collaborator.id"))
-    collaborator = relationship("User", back_populates="event")
+    collaborator = relationship("Collaborator", back_populates="event")
     creation_date = Column(
-        DateTime(timezone=False), nullable=False, default=datetime.now()
+        DateTime(timezone=False), default=datetime.now()
     )
     event_start_date = Column(
-        DateTime(timezone=False), nullable=False, default=datetime.now()
+        DateTime(timezone=False), default=datetime.now()
     )
     event_end_date = Column(
-        DateTime(timezone=False), nullable=False, default=datetime.now()
+        DateTime(timezone=False), default=datetime.now()
     )
     location_id = Column(Integer, ForeignKey("location.id"))
     location = relationship("Location", back_populates="event")

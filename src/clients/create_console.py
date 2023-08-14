@@ -263,12 +263,12 @@ class ConsoleClientForCreate:
                     collaborator_attributes_dict
                 )
                 if b1 and b2:
-                    collaborator = models.User(**collaborator_attributes_dict)
+                    collaborator = models.Collaborator(**collaborator_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
-                collaborator = models.User(**collaborator_attributes_dict)
+                collaborator = models.Collaborator(**collaborator_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()
@@ -364,14 +364,14 @@ class ConsoleClientForCreate:
                     department_attributes_dict
                 )
                 if b1 and b2:
-                    department = models.UserDepartment(**department_attributes_dict)
+                    department = models.Collaborator_Department(**department_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 department_attributes_dict = (
                     forms.submit_a_collaborator_department_create_form()
                 )
-                department = models.UserDepartment(**department_attributes_dict)
+                department = models.Collaborator_Department(**department_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()
@@ -461,12 +461,12 @@ class ConsoleClientForCreate:
                 b1 = add_data_validators.data_is_dict(role_attributes_dict)
                 b2 = add_data_validators.add_role_data_is_valid(role_attributes_dict)
                 if b1 and b2:
-                    role = models.UserRole(**role_attributes_dict)
+                    role = models.Collaborator_Role(**role_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 role_attributes_dict = forms.submit_a_collaborator_role_create_form()
-                role = models.UserRole(**role_attributes_dict)
+                role = models.Collaborator_Role(**role_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()

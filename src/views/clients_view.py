@@ -1,6 +1,11 @@
 """
 vue clients
 """
+from rich.console import Console
+try:
+    from src.utils import utils
+except ModuleNotFoundError:
+    from utils import utils
 
 
 class ClientsView:
@@ -15,10 +20,31 @@ class ClientsView:
         self.db_controller = db_controller
         self.session = session
 
-    def get_clients(self):
+    def get_clients(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les clients de l'entreprise.
         """
+        console = Console()
+        if len(user_query_filters_args) > 0:
+            try:
+                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Client")
+                if len(db_model_queryset) > 0:
+                    table = utils.set_a_click_table_from_data("clients", db_model_queryset)
+                    console.print(table)
+                    print("Aucun autres clients")
+                else:
+                    print("Aucun client trouvé")
+            except Exception as error:
+                print(f"Echec de la requête: {error}")
+                raise Exception()
+        else:
+            db_model_queryset = self.db_controller.get_clients(self.session)
+            if len(db_model_queryset) > 0:
+                table = utils.set_a_click_table_from_data("clients", db_model_queryset)
+                console.print(table)
+                print("Aucun autres clients")
+            else:
+                print("Aucun client trouvé")
         return self.db_controller.get_clients(self.session)
 
     def get_client(self, client_id):

@@ -40,7 +40,7 @@ class DatabaseDeleteController:
         """
         try:
             collaborator = (
-                session.query(models.User).filter_by(id=collaborator_id).first()
+                session.query(models.Collaborator).filter_by(id=collaborator_id).first()
             )
             session.delete(collaborator)
 
@@ -92,7 +92,7 @@ class DatabaseDeleteController:
         """
         try:
             department = (
-                session.query(models.UserDepartment).filter_by(id=department_id).first()
+                session.query(models.Collaborator_Department).filter_by(id=department_id).first()
             )
             session.delete(department)
             session.commit()
@@ -138,7 +138,7 @@ class DatabaseDeleteController:
         Requête de la base de données et renvoie True si réussie.
         """
         try:
-            role = session.query(models.UserRole).filter_by(id=role_id).first()
+            role = session.query(models.Collaborator_Role).filter_by(id=role_id).first()
             session.delete(role)
             session.commit()
             session.close()

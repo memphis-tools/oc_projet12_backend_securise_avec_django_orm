@@ -1,6 +1,11 @@
 """
 vue localisations
 """
+from rich.console import Console
+try:
+    from src.utils import utils
+except ModuleNotFoundError:
+    from utils import utils
 
 
 class LocationsView:
@@ -15,10 +20,31 @@ class LocationsView:
         self.db_controller = db_controller
         self.session = session
 
-    def get_locations(self):
+    def get_locations(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les localités.
         """
+        console = Console()
+        if len(user_query_filters_args) > 0:
+            try:
+                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Location")
+                if len(db_model_queryset) > 0:
+                    table = utils.set_a_click_table_from_data("lieu", db_model_queryset)
+                    console.print(table)
+                    print("Aucunes autres localités")
+                else:
+                    print("Aucune localité trouvée")
+            except Exception as error:
+                print(f"Echec de la requête: {error}")
+                raise Exception()
+        else:
+            db_model_queryset = self.db_controller.get_locations(self.session)
+            if len(db_model_queryset) > 0:
+                table = utils.set_a_click_table_from_data("lieu", db_model_queryset)
+                console.print(table)
+                print("Aucun autres localités")
+            else:
+                print("Aucune localité trouvée")
         return self.db_controller.get_locations(self.session)
 
     def get_location(self, location_id):

@@ -32,39 +32,58 @@ click.Context.formatter_class = ApplicationHelpFormatter
 
 
 @click.command
-def get_clients():
+@click.argument(
+    "args",
+    nargs=-1,
+    type=str,
+)
+def get_clients(args):
     """
     Description: commande dédiée à récupérer les clients de l'entreprise.
     """
+    user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
-        print(console_client.get_clients())
-    except Exception:
-        print("[bold red]Missing token[/bold red]")
+        console_client.get_clients(user_query_filters_args)
+    except Exception as error:
+        print(f"[bold red]Missing token[/bold red] {error}")
 
 
 @click.command
-def get_collaborators():
+@click.argument(
+    "args",
+    nargs=-1,
+    type=str,
+)
+def get_collaborators(args):
     """
     Description: commande dédiée à récupérer les utilisateurs /collaborateurs de l'entreprise.
     """
+    user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
-        print(console_client.get_collaborators())
+        console_client.get_collaborators(user_query_filters_args)
     except Exception:
         print("[bold red]Missing token[/bold red]")
 
 
 @click.command
-def get_companies():
+@click.argument(
+    "args",
+    nargs=-1,
+    type=str,
+)
+def get_companies(args):
     """
     Description: commande dédiée à récupérer les entreprises clientes.
     """
+    user_query_filters_args = args
     try:
+        print("LETS GO SIR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         console_client = ConsoleClientForRead()
-        print(console_client.get_companies())
-    except Exception:
-        print("[bold red]Missing token[/bold red]")
+        console_client.get_companies(user_query_filters_args)
+    except Exception as error:
+        print(f"[bold red]Missing token[/bold red] {error}")
 
 
 @click.command
@@ -100,13 +119,19 @@ def get_contracts(args):
 
 
 @click.command
-def get_departments():
+@click.argument(
+    "args",
+    nargs=-1,
+    type=str,
+)
+def get_departments(args):
     """
     Description: commande dédiée à récupérer les départements /services de l'entreprise.
     """
+    user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
-        print(console_client.get_departments())
+        console_client.get_departments(user_query_filters_args)
     except Exception:
         print("[bold red]Missing token[/bold red]")
 
@@ -146,24 +171,36 @@ def get_events(args):
 
 
 @click.command
-def get_locations():
+@click.argument(
+    "args",
+    nargs=-1,
+    type=str,
+)
+def get_locations(args):
     """
     Description: commande dédiée à récupérer les localisations des évènements.
     """
+    user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
-        print(console_client.get_locations())
+        console_client.get_locations(user_query_filters_args)
     except Exception:
         print("[bold red]Missing token[/bold red]")
 
 
 @click.command
-def get_roles():
+@click.argument(
+    "args",
+    nargs=-1,
+    type=str,
+)
+def get_roles(args):
     """
     Description: commande dédiée à récupérer les roles des utilisateurs /collaborateurs de l'entreprise.
     """
+    user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
-        print(console_client.get_roles())
+        console_client.get_roles(user_query_filters_args)
     except Exception:
         print("[bold red]Missing token[/bold red]")
