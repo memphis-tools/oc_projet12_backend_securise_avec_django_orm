@@ -1,21 +1,17 @@
 import csv
-from tkinter import Tk, Text, INSERT, Button, S
-
+from rich import print
 try:
     from src.settings import settings
+    from src.utils.utils import display_banner
 except ModuleNotFoundError:
     from settings import settings
+    from utils.utils import display_banner
 
 
 def display_info_password_policy():
-    items = settings.NEW_PASSWORD_POLICY
-    popup = Tk()
-    popup.geometry("650x500")
-    popup.title("POLITIQUE DES MOTS DE PASSE")
-    text = Text(popup, background= "cyan", font=("consolas", 10))
-    for item in items:
-        text.insert(INSERT, f"{item}:")
-        text.insert(INSERT, str(eval(f"settings.{item}")) + "\n")
-        text.pack()
-    Button(popup, text="fermer", command=popup.destroy).place(relx=0.5, rely=1.0, anchor=S)
-    popup.mainloop()
+    directives = settings.NEW_PASSWORD_POLICY
+    title = "[bold #F7E987]POLITIQUE DES MOTS DE PASSE[/bold #F7E987]"
+    print(title)
+    for directive in directives:
+        directive_styled = f"[bold cyan]{directive}[/bold cyan]"
+        print(f'{directive_styled}: [white]{eval(f"settings.{directive}")}[/white]')
