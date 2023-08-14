@@ -289,12 +289,11 @@ class Client(Base):
         descriptors += f',(civility|{self.civility})'
         descriptors += f',(first_name|{self.first_name})'
         descriptors += f',(last_name|{self.last_name})'
+        descriptors += f',(employee_role|{self.employee_role})'
         descriptors += f',(email|{self.email})'
         descriptors += f',(telephone|{self.telephone})'
         descriptors += f',(company_id|{self.company.company_id})'
-        descriptors += f',(commercial_contact|{self.commercial_contact})'
-        descriptors += f',(collaborator|{self.collaborator.registration_number})'
-        # descriptors += f',(contract|{self.contract})'
+        descriptors += f',(commercial_contact|{self.collaborator.registration_number})'
         descriptors += "]"
         return descriptors
 
