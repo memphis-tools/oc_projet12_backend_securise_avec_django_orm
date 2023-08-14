@@ -14,6 +14,7 @@ def data_is_dict(data) -> bool:
 
 def add_client_data_is_valid(data) -> bool:
     expected_keys = [
+        "creation_date",
         "client_id",
         "civility",
         "first_name",
@@ -29,13 +30,14 @@ def add_client_data_is_valid(data) -> bool:
 
 
 def add_collaborator_data_is_valid(data) -> bool:
-    expected_keys = ["registration_number", "username", "department", "role"]
+    expected_keys = ["creation_date", "registration_number", "username", "department_id", "role_id"]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b
 
 
 def add_company_data_is_valid(data) -> bool:
     expected_keys = [
+        "creation_date",
         "company_id",
         "company_name",
         "company_registration_number",
@@ -48,6 +50,7 @@ def add_company_data_is_valid(data) -> bool:
 
 def add_contract_data_is_valid(data) -> bool:
     expected_keys = [
+        "creation_date",
         "contract_id",
         "full_amount_to_pay",
         "remain_amount_to_pay",
@@ -61,6 +64,7 @@ def add_contract_data_is_valid(data) -> bool:
 
 def add_department_data_is_valid(data) -> bool:
     expected_keys = [
+        "creation_date",
         "department_id",
         "name",
     ]
@@ -70,6 +74,7 @@ def add_department_data_is_valid(data) -> bool:
 
 def add_event_data_is_valid(data) -> bool:
     expected_keys = [
+        "creation_date",
         "event_id",
         "title",
         "attendees",
@@ -87,6 +92,7 @@ def add_event_data_is_valid(data) -> bool:
 
 def add_location_data_is_valid(data) -> bool:
     expected_keys = [
+        "creation_date",
         "location_id",
         "adresse",
         "complement_adresse",
@@ -99,6 +105,6 @@ def add_location_data_is_valid(data) -> bool:
 
 
 def add_role_data_is_valid(data) -> bool:
-    expected_keys = ["role_id", "name"]
+    expected_keys = ["creation_date", "role_id", "name"]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b

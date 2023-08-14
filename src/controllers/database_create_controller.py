@@ -36,7 +36,7 @@ class DatabaseCreateController:
 
             role = collaborator.registration_number
             password = settings.DEFAULT_NEW_COLLABORATOR_PASSWORD
-            department_id = collaborator.department
+            department_id = collaborator.department_id
             sql = text(f"""SELECT name FROM collaborator_department WHERE id = {department_id}""")
             result = session.execute(sql).first()
             department = str(result[0]).lower()

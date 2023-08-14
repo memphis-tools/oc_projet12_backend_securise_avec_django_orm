@@ -56,6 +56,14 @@ def get_today_date():
     return returned_date
 
 
+def get_today_fulldate():
+    """
+    Description: on permet le formatage type '18 avril 2021 15:32:20'.
+    """
+    today = datetime.now()
+    return today.strftime("%Y-%m:%d %H:%M:%S")
+
+
 class ModelMixin:
     def get_id(self):
         return self.id
@@ -74,9 +82,7 @@ class Collaborator_Department(Base):
     id = Column(Integer, primary_key=True)
     department_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
-    creation_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
+    creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     collaborator = relationship("Collaborator", back_populates="department")
 
     def __str__(self):
@@ -115,9 +121,7 @@ class Collaborator_Role(Base):
     id = Column(Integer, primary_key=True)
     role_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
-    creation_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
+    creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     collaborator = relationship("Collaborator", back_populates="role")
 
     def __str__(self):
@@ -163,17 +167,15 @@ class Collaborator(Base):
     client = relationship("Client", back_populates="collaborator")
     contract = relationship("Contract", back_populates="collaborator")
     event = relationship("Event", back_populates="collaborator")
-    creation_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
+    creation_date = Column(DateTime(), nullable=False, default=get_today_fulldate())
 
     def __str__(self):
         descriptors = "["
-        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f'(creation_date|{self.creation_date})'
         descriptors += f',(user_id|{self.registration_number})'
         descriptors += f',(username|{self.username})'
-        descriptors += f',(department_id|{self.department.department_id})'
-        descriptors += f',(role|{self.role.role_id})'
+        descriptors += f',(department_id|{self.department_id})'
+        descriptors += f',(role|{self.role_id})'
         descriptors += "]"
         return descriptors
 
@@ -182,12 +184,12 @@ class Collaborator(Base):
 
     def get_dict(self):
         collaborator_dict = {
-            "id": self.id,
-            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
+            # "id": self.id,
+            "creation_date": self.creation_date,
             "registration_number": self.registration_number,
             "username": self.username,
             "department_id": self.department_id,
-            "role_id": self.role.role_id,
+            "role_id": self.role_id,
         }
         return collaborator_dict
 
@@ -213,9 +215,7 @@ class Company(Base):
     company_subregistration_number = Column(String(50), nullable=False)
     location_id = Column(Integer, ForeignKey("location.id"))
     client = relationship("Client", back_populates="company")
-    creation_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
+    creation_date = Column(DateTime(), nullable=False, default=datetime.now())
 
     def __str__(self):
         descriptors = "["
@@ -274,7 +274,7 @@ class Client(Base):
     email = Column(String(130), nullable=False)
     telephone = Column(String(60), nullable=True)
     company_id = Column(Integer, ForeignKey("company.id"))
-    creation_date = Column(Date(), nullable=False, default=get_today_date())
+    creation_date = Column(Date(), nullable=False, default=date.today())
     last_update_date = Column(Date(), nullable=False, default=get_today_date())
     commercial_contact = Column(Integer, ForeignKey("collaborator.id"))
     collaborator = relationship("Collaborator", back_populates="client")
@@ -294,7 +294,7 @@ class Client(Base):
         descriptors += f',(company_id|{self.company.company_id})'
         descriptors += f',(commercial_contact|{self.commercial_contact})'
         descriptors += f',(collaborator|{self.collaborator.registration_number})'
-        descriptors += f',(contract|{self.contract})'
+        # descriptors += f',(contract|{self.contract})'
         descriptors += "]"
         return descriptors
 
@@ -344,9 +344,7 @@ class Contract(Base):
     contract_id = Column(String(120), nullable=False, unique=True)
     full_amount_to_pay = Column(Float, nullable=False)
     remain_amount_to_pay = Column(Float, nullable=False, default=full_amount_to_pay)
-    creation_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
+    creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     status = Column(ChoiceType(STATUS), default="unsigned")
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="contract")
@@ -410,9 +408,7 @@ class Location(Base, ModelMixin):
     ville = Column(String(100), nullable=False)
     pays = Column(String(100), nullable=True, default="France")
     event = relationship("Event", back_populates="location")
-    creation_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
+    creation_date = Column(DateTime(), nullable=False, default=datetime.now())
 
     def __str__(self):
         descriptors = "["
@@ -468,9 +464,7 @@ class Event(Base):
     client = relationship("Client", back_populates="event")
     collaborator_id = Column(Integer, ForeignKey("collaborator.id"))
     collaborator = relationship("Collaborator", back_populates="event")
-    creation_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
+    creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     event_start_date = Column(
         DateTime(timezone=False), default=datetime.now()
     )

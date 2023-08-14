@@ -5,9 +5,9 @@ On retient les critères Français.
 
 import re
 try:
-    from src.commands import infos_data_commands
+    from src.controllers import infos_data_controller
 except ModuleNotFoundError:
-    from commands import infos_data_commands
+    from controllers import infos_data_controller
 
 
 def is_adresse_valid(adresse):
@@ -83,7 +83,7 @@ def is_company_registration_number_valid(company_registration_number):
     return re.match(pattern, company_registration_number).group()
 
 
-def is_company_subregistration_number_valid(company_registration_number):
+def is_company_subregistration_number_valid(company_subregistration_number):
     """
     Description: Controler le NIC saisi.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
@@ -142,7 +142,7 @@ def is_employee_role_valid(employee_role):
     Description: Controler la nature d'emploi saisie.
     Fonction renvoie une exception AttributeError si libellé invalide.
     """
-    valid_roles_list = infos_data.get_metiers_roles_file()
+    valid_roles_list = infos_data_controller.get_infos_data("metiers")
     if employee_role not in valid_roles_list:
         raise AttributeError()
 
@@ -264,7 +264,7 @@ def is_status_valid(status):
     Description: Controler le statut saisi.
     Fonction renvoie une exception AttributeError si montant invalide.
     """
-    if status not in ["oui", "non"]:
+    if status not in ["signed", "unsigned", "canceled"]:
         raise AttributeError()
 
 
