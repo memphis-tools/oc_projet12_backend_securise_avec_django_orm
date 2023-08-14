@@ -31,7 +31,7 @@ def test_get_token_with_unvalid_credentials(db_name=f"{settings.TEST_DATABASE_NA
         app_view = AuthenticationView(registration_number, password, db_name)
         jwt_view = JwtView(app_view)
         result = jwt_view.get_token(registration_number)
-        assert "User or Department not found" in f"{Exception}"
+        assert "Collaborator or Department not found" in f"{Exception}"
 
 
 def test_get_token_with_valid_credentials(get_runner, db_name=f"{settings.TEST_DATABASE_NAME}"):
@@ -41,7 +41,7 @@ def test_get_token_with_valid_credentials(get_runner, db_name=f"{settings.TEST_D
     On tente de récupérer le jeton avec un un registration_number existant.
     """
     registration_number = "aa123456789"
-    password = "@pplepie94"
+    password = f"{settings.DEFAULT_NEW_COLLABORATOR_PASSWORD}"
     app_view = AuthenticationView(registration_number, password, db_name=db_name)
     jwt_view = JwtView(app_view)
     jwt_view.get_token(registration_number)

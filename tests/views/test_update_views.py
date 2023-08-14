@@ -65,19 +65,19 @@ company_partial_dict = {
 contract_partial_dict1 = {
     "contract_id": "kc555",
     "remain_amount_to_pay": "9599.99",
-    "status": False,
+    "status": "unsigned",
 }
 
 contract_partial_dict2 = {
     "contract_id": "ff555",
     "remain_amount_to_pay": "9599.99",
-    "status": True,
+    "status": "canceled",
 }
 
 contract_partial_dict3 = {
     "contract_id": "ff555",
     "remain_amount_to_pay": "99.99",
-    "status": True,
+    "status": "signed",
 }
 
 location_partial_dict = {
@@ -154,7 +154,6 @@ def test_update_client_view_with_unvalid_company(
             f"--client_id={custom_id} {args_converted}",
             f"--db_name={settings.TEST_DATABASE_NAME}"
         )
-        # ce print permet de relever l'exception, ne pas supprimer.
         print(result.error)
         assert result.exit_code == 1
 

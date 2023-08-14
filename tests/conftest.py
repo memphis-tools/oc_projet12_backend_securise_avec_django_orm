@@ -107,6 +107,7 @@ def get_unvalid_decoded_token(mocker):
 @pytest.fixture(scope="session", autouse = True)
 def dummy_client_data(request):
     client = {
+        "creation_date": "2023-07-14 09:05:10",
         "client_id": "dduck",
         "civility": "MME",
         "first_name": "daisy",
@@ -123,6 +124,7 @@ def dummy_client_data(request):
 @pytest.fixture(scope="session", autouse = True)
 def dummy_collaborator_data(request):
     collaborator = {
+        "creation_date": "2023-07-14 09:05:10",
         "registration_number": "oo123456789",
         "username": "loulou duck",
         "department": "1",
@@ -133,19 +135,28 @@ def dummy_collaborator_data(request):
 
 @pytest.fixture(scope="session", autouse = True)
 def dummy_collaborator_department_data(request):
-    collaborator_department = {"department_id": "design", "name": "oc12_design"}
+    collaborator_department = {
+        "creation_date": "2023-07-14 09:05:10",
+        "department_id": "design",
+        "name": "oc12_design"
+    }
     return collaborator_department
 
 
 @pytest.fixture(scope="session", autouse = True)
 def dummy_collaborator_role_data(request):
-    collaborator_role = {"role_id": "sec", "name": "SECRETARY"}
+    collaborator_role = {
+        "creation_date": "2023-07-14 09:05:10",
+        "role_id": "sec",
+        "name": "SECRETARY"
+    }
     return collaborator_role
 
 
 @pytest.fixture(scope="session", autouse = True)
 def dummy_company_data(request):
     company = {
+        "creation_date": "2023-07-14 09:05:10",
         "company_id": "abm99998",
         "company_name": "A la bonne meule",
         "company_registration_number": "777666111",
@@ -158,10 +169,11 @@ def dummy_company_data(request):
 @pytest.fixture(scope="session", autouse = True)
 def dummy_contract_data(request):
     contract = {
+        "creation_date": "2023-07-14 09:05:10",
         "contract_id": "C9Z1",
         "full_amount_to_pay": "999.99",
         "remain_amount_to_pay": "999.99",
-        "status": False,
+        "status": "unsigned",
         "client_id": "1",
         "collaborator_id": "2",
     }
@@ -171,6 +183,7 @@ def dummy_contract_data(request):
 @pytest.fixture(scope="session", autouse = True)
 def dummy_event_data(request):
     event = {
+        "creation_date": "2023-07-14 09:05:10",
         "event_id": "EV971",
         "title": "What a Swing",
         "attendees": "2500",
@@ -188,6 +201,7 @@ def dummy_event_data(request):
 @pytest.fixture(scope="session", autouse = True)
 def dummy_location_data(request):
     location = {
+        "creation_date": "2023-07-14 09:05:10",
         "location_id": "PL24250",
         "adresse": "3 rue de la tannerie",
         "complement_adresse": "La meule en bière",

@@ -27,6 +27,7 @@ location_attributes_dict_1 = {
     "code_postal": "24250",
     "ville": "Plurien",
     "pays": "France",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 location_attributes_dict_2 = {
@@ -36,6 +37,7 @@ location_attributes_dict_2 = {
     "code_postal": "13540",
     "ville": "Gardanne",
     "pays": "France",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 company_attributes_dict_1 = {
@@ -44,6 +46,7 @@ company_attributes_dict_1 = {
     "company_registration_number": "777666111",
     "company_subregistration_number": "99998",
     "location_id": "2",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 company_attributes_dict_2 = {
@@ -52,6 +55,7 @@ company_attributes_dict_2 = {
     "company_registration_number": "444111888",
     "company_subregistration_number": "22228",
     "location_id": "2",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 client_attributes_dict_1 = {
@@ -64,6 +68,7 @@ client_attributes_dict_1 = {
     "telephone": "0611223344",
     "company_id": "1",
     "commercial_contact": "2",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 client_attributes_dict_2 = {
@@ -76,66 +81,75 @@ client_attributes_dict_2 = {
     "telephone": "0655228844",
     "company_id": "1",
     "commercial_contact": "2",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 commercial_collaborator_attributes_dict_1 = {
     "registration_number": "ww123456789",
     "username": "dummy bigtooth",
-    "department": "1",
-    "role": "2",
+    "department_id": "1",
+    "role_id": "2",
+    "creation_date": "2023-05-15 10:50"
 }
 
 commercial_collaborator_attributes_dict_2 = {
     "registration_number": "pp123456789",
     "username": "dummy bigfoot",
-    "department": "1",
-    "role": "2",
+    "department_id": "1",
+    "role_id": "2",
+    "creation_date": "2023-05-15 10:50"
 }
 
 gestion_collaborator_attributes_dict_1 = {
     "registration_number": "xx123456789",
     "username": "dustin river",
-    "department": "2",
-    "role": "2",
+    "department_id": "2",
+    "role_id": "2",
+    "creation_date": "2023-05-15 10:50"
 }
 
 gestion_collaborator_attributes_dict_2 = {
     "registration_number": "qq123456789",
     "username": "myriam lake",
-    "department": "2",
-    "role": "2",
+    "department_id": "2",
+    "role_id": "2",
+    "creation_date": "2023-05-15 10:50"
 }
 
 support_collaborator_attributes_dict_1 = {
     "registration_number": "yy123456789",
     "username": "william summerland",
-    "department": "3",
-    "role": "2",
+    "department_id": "3",
+    "role_id": "2",
+    "creation_date": "2023-05-15 10:50"
 }
 
 support_collaborator_attributes_dict_2 = {
     "registration_number": "rr123456789",
     "username": "marianne dupin",
-    "department": "3",
-    "role": "2",
+    "department_id": "3",
+    "role_id": "2",
+    "creation_date": "2023-05-15 10:50"
 }
 
 contract_attributes_dict_1 = {
     "contract_id": "C9Z1",
     "full_amount_to_pay": "999.99",
     "remain_amount_to_pay": "999.99",
-    "status": False,
+    "status": "unsigned",
     "client_id": "1",
     "collaborator_id": "2",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 contract_attributes_dict_2 = {
     "contract_id": "D9Z1",
     "full_amount_to_pay": "9599.99",
     "remain_amount_to_pay": "932.44",
-    "status": True,
+    "status": "signed",
     "client_id": "1",
     "collaborator_id": "2",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 event_attributes_dict_1 = {
@@ -149,6 +163,7 @@ event_attributes_dict_1 = {
     "contract_id": "1",
     "location_id": "2",
     "collaborator_id": "2",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
 event_attributes_dict_2 = {
@@ -162,15 +177,16 @@ event_attributes_dict_2 = {
     "contract_id": "1",
     "location_id": "2",
     "collaborator_id": "2",
+    "creation_date": "2023-07-15 22:00:00",
 }
 
-department_attributes_dict_1 = {"department_id": "design", "name": "oc12_design"}
+department_attributes_dict_1 = {"department_id": "design", "name": "oc12_design", "creation_date": "2023-07-15 22:00:00"}
 
-department_attributes_dict_2 = {"department_id": "logist", "name": "oc12_logistic"}
+department_attributes_dict_2 = {"department_id": "logist", "name": "oc12_logistic", "creation_date": "2023-07-15 22:00:00"}
 
-role_attributes_dict_1 = {"role_id": "sec", "name": "SECRETARY"}
+role_attributes_dict_1 = {"role_id": "sec", "name": "SECRETARY", "creation_date": "2023-07-15 22:00:00"}
 
-role_attributes_dict_2 = {"role_id": "driv", "name": "DRIVER"}
+role_attributes_dict_2 = {"role_id": "driv", "name": "DRIVER", "creation_date": "2023-07-15 22:00:00"}
 
 
 @pytest.mark.parametrize(
