@@ -52,13 +52,13 @@ class CollaboratorsView:
                 print("Aucun utilisateur trouvé")
         return self.db_controller.get_collaborators(self.session)
 
-    def get_collaborator(self, collaborator_id):
+    def get_collaborator(self, registration_number):
         """
         Description: Vue dédiée à obtenir le collaborateur dont l'id est indiqué en entrée.
         Parameters:
-        - collaborator_id: une chaine libre qui identifie un collaborateur.
+        - registration_number: une chaine libre qui identifie un collaborateur, un matricule.
         """
-        return self.db_controller.get_collaborator(self.session, collaborator_id)
+        return self.db_controller.get_collaborator(self.session, registration_number)
 
     def add_collaborator(self, collaborator):
         """

@@ -2,6 +2,7 @@
 Classe dédiée aux mises à jour des modèles. Utilisée pour le dialogue avec l'utilisateur de l'application.
 """
 import sys
+from datetime import datetime
 import maskpass
 from rich import print
 from rich.prompt import Prompt
@@ -55,6 +56,7 @@ def submit_a_location_create_form(custom_dict={}):
         except KeyboardInterrupt:
             print("[bold red][LOCATION CREATION][/bold red] Creation aborted")
             sys.exit(0)
+    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -101,6 +103,7 @@ def submit_a_company_create_form(custom_dict={}):
         except KeyboardInterrupt:
             print("[bold red][COMPANY CREATION][/bold red] Creation aborted")
             sys.exit(0)
+    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -150,6 +153,7 @@ def submit_a_client_create_form(custom_dict={}):
         except KeyboardInterrupt:
             print("[bold red][CLIENT CREATION][/bold red] Creation aborted")
             sys.exit(0)
+    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -192,6 +196,7 @@ def submit_a_collaborator_create_form(custom_dict={}):
         except KeyboardInterrupt:
             print("[bold red][COLLABORATOR CREATION][/bold red] Creation aborted")
             sys.exit(0)
+    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -233,6 +238,7 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
                 "[bold red][COLLABORATOR ROLE CREATION][/bold red] Creation aborted"
             )
             sys.exit(0)
+    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -274,6 +280,7 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
                 "[bold red][COLLABORATOR DEPARTMENT CREATION][/bold red] Creation aborted"
             )
             sys.exit(0)
+    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -336,6 +343,7 @@ def submit_a_contract_create_form(custom_dict={}):
         except KeyboardInterrupt:
             print("[bold green][CONTRACT CREATION][/bold green] Creation aborted")
             sys.exit(0)
+    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -380,4 +388,5 @@ def submit_a_event_create_form(custom_dict={}):
         except KeyboardInterrupt:
             print("[bold green][EVENT CREATION][/bold green] Creation aborted")
             sys.exit(0)
+    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict

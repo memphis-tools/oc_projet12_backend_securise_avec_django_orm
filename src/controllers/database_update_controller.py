@@ -46,7 +46,7 @@ class DatabaseUpdateController:
             .first()
         )
         keys_to_explore = models.Collaborator.metadata.tables["collaborator"].columns.keys()
-        department_id = collaborator.department
+        department_id = collaborator.department_id
         current_department_name = utils.get_department_name_from_id(session, department_id)
 
         try:

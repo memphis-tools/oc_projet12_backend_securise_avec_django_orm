@@ -2,6 +2,7 @@
 Description: Client en mode console, dédié aux mises à jour (ajout, modification, suppression).
 """
 import sys
+from datetime import datetime
 from rich import print
 
 try:
@@ -170,7 +171,6 @@ class ConsoleClientForCreate:
                     client_attributes_dict
                 )
                 if b1 and b2:
-                    # client = models.Client(**client_attributes_dict)
                     client_id = self.create_app_view.get_clients_view().add_client(
                         models.Client(**client_attributes_dict)
                     )
@@ -234,6 +234,7 @@ class ConsoleClientForCreate:
                         company_id = company_queryset["id"]
                         client_attributes_dict = forms.submit_a_client_create_form()
                         client_attributes_dict["company_id"] = company_id
+                        client_attributes_dict["creation_date"] = datetime.now()
                         client_id = self.create_app_view.get_clients_view().add_client(
                             models.Client(**client_attributes_dict)
                         )
@@ -311,6 +312,7 @@ class ConsoleClientForCreate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
+        company.creation_date = datetime.now()
         return self.create_app_view.get_companies_view().add_company(company)
 
     @authentication_permission_decorator
@@ -344,6 +346,7 @@ class ConsoleClientForCreate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
+        contract.creation_date = datetime.now()
         return self.create_app_view.get_contracts_view().add_contract(contract)
 
     @authentication_permission_decorator
@@ -379,6 +382,7 @@ class ConsoleClientForCreate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
+        department.creation_date = datetime.now()
         return self.create_app_view.get_departments_view().add_department(department)
 
     @authentication_permission_decorator
@@ -410,6 +414,7 @@ class ConsoleClientForCreate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
+        event.creation_date = datetime.now()
         return self.create_app_view.get_events_view().add_event(event)
 
     @authentication_permission_decorator
@@ -443,6 +448,7 @@ class ConsoleClientForCreate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
+        location.creation_date = datetime.now()
         return self.create_app_view.get_locations_view().add_location(location)
 
     @authentication_permission_decorator
@@ -474,4 +480,5 @@ class ConsoleClientForCreate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
+        role.creation_date = datetime.now()
         return self.create_app_view.get_roles_view().add_role(role)

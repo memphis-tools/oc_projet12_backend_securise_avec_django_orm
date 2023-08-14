@@ -51,7 +51,7 @@ class ConsoleClientForDelete:
             client_id = custom_id
         try:
             # on propose de rechercher le client
-            client_lookup = self.app_view.get_clients_view().get_client(client_id)
+            client_lookup = self.app_view.get_clients_view().get_client(client_id=client_id)
             return client_lookup.get_dict()
         except Exception as error:
             print(f"No such client sir: {error}")
@@ -69,7 +69,7 @@ class ConsoleClientForDelete:
         try:
             # on propose de rechercher le contrat
             contract_lookup = self.app_view.get_contracts_view().get_contract(
-                contract_id
+                contract_id=contract_id
             )
             return contract_lookup.get_dict()
         except Exception as error:
@@ -78,19 +78,20 @@ class ConsoleClientForDelete:
 
     def ask_for_a_collaborator_id(self, custom_id=""):
         if custom_id == "":
-            collaborator_id = forms.submit_a_collaborator_get_form()
-            if collaborator_id == "":
+            registration_number = forms.submit_a_collaborator_get_form()
+            if registration_number == "":
                 print("Pas d'id collaborateur saisi")
                 return False
             collaborator_lookup = None
         else:
-            collaborator_id = custom_id
+            registration_number = custom_id
         try:
             # on propose de rechercher le collaborateur
             collaborator_lookup = (
-                self.app_view.get_collaborators_view().get_collaborator(collaborator_id)
+                self.app_view.get_collaborators_view().get_collaborator(registration_number)
             )
-            return collaborator_lookup.get_dict()
+
+            return collaborator_lookup.id
         except Exception as error:
             print(f"No such collaborator sir: {error}")
             return False
@@ -106,7 +107,7 @@ class ConsoleClientForDelete:
             company_id = custom_id
         try:
             # on propose de rechercher l'entreprise
-            company_lookup = self.app_view.get_companies_view().get_company(company_id)
+            company_lookup = self.app_view.get_companies_view().get_company(company_id=company_id)
             return company_lookup.get_dict()
         except Exception as error:
             print(f"No such company sir: {error}")
@@ -124,7 +125,7 @@ class ConsoleClientForDelete:
         try:
             # on propose de rechercher led département /service
             department_lookup = self.app_view.get_departments_view().get_department(
-                department_id
+                department_id=department_id
             )
             return department_lookup.get_dict()
         except Exception as error:
@@ -142,7 +143,7 @@ class ConsoleClientForDelete:
             event_id = custom_id
         try:
             # on propose de rechercher l'évènement
-            event_lookup = self.app_view.get_events_view().get_event(event_id)
+            event_lookup = self.app_view.get_events_view().get_event(event_id=event_id)
             return event_lookup.get_dict()
         except Exception as error:
             print(f"No such event sir: {error}")
@@ -160,7 +161,7 @@ class ConsoleClientForDelete:
         try:
             # on propose de rechercher la localité
             location_lookup = self.app_view.get_locations_view().get_location(
-                location_id
+                location_id=location_id
             )
             return location_lookup.get_dict()
         except Exception as error:
@@ -177,7 +178,7 @@ class ConsoleClientForDelete:
             role_id = custom_id
         try:
             # on propose de rechercher le role
-            role_lookup = self.app_view.get_roles_view().get_role(role_id)
+            role_lookup = self.app_view.get_roles_view().get_role(role_id=role_id)
             return role_lookup.get_dict()
         except Exception as error:
             print(f"No such role sir: {error}")
@@ -230,9 +231,10 @@ class ConsoleClientForDelete:
             if collaborator_custom_id != "":
                 collaborator_id = self.ask_for_a_collaborator_id(
                     collaborator_custom_id
-                )["id"]
+                )
             else:
-                collaborator_id = self.ask_for_a_collaborator_id()["id"]
+                collaborator_id = self.ask_for_a_collaborator_id()
+            print(f"collaborator_id:{collaborator_id}")
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()
@@ -296,7 +298,7 @@ class ConsoleClientForDelete:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+            print(f"[bold red]Id non trouvé.[/bold red] {error}")
             sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")

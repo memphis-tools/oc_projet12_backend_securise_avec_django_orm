@@ -85,7 +85,6 @@ class DatabaseReadController:
                 .filter_by(registration_number=registration_number)
                 .first()
             )
-
             return db_collaborator_queryset
         except Exception as error:
             print(f"Collaborator or Department not found: {error}")
@@ -161,7 +160,7 @@ class DatabaseReadController:
 
             return db_collaborators_contract
         except Exception as error:
-            print(f"Department not found: {error}")
+            print(f"Contract not found: {error}")
 
     def get_contracts(self, session):
         """
@@ -189,7 +188,7 @@ class DatabaseReadController:
 
             return db_collaborators_department
         except Exception as error:
-            print(f"Department not found: {error}")
+            print(f"Contract not found: {error}")
 
     def get_departments(self, session):
         """
