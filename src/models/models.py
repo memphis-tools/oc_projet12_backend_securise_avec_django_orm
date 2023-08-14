@@ -24,20 +24,6 @@ except ModuleNotFoundError:
 
 
 Base = declarative_base()
-TRANSLATED_MONTHS = [
-    ("janvier", "Jan"),
-    ("février", "Feb"),
-    ("mars", "Mar"),
-    ("avril", "Apr"),
-    ("mai", "May"),
-    ("juin", "Jun"),
-    ("juillet", "Jul"),
-    ("aout", "Aug"),
-    ("septembre", "Sep"),
-    ("octobre", "Oct"),
-    ("novembre", "Nov"),
-    ("décembre", "Dec"),
-]
 
 
 def get_base():
@@ -52,7 +38,7 @@ def get_today_date():
     Description: on permet le formatage type '18 avril 2021' du cahier des charges pour les Clients.
     """
     today = date.today()
-    returned_date = f"{today.day}-{TRANSLATED_MONTHS[today.month-1][1]}-{today.year}"
+    returned_date = f"{today.day}-{settings.TRANSLATED_MONTHS[today.month-1][1]}-{today.year}"
     return returned_date
 
 
