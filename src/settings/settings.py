@@ -16,6 +16,20 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 # variables diverses
 APP_FIGLET_TITLE = "EPIC EVENTS"
 DEFAULT_CURRENCY = ("euro", "€")
+TRANSLATED_MONTHS = [
+    ("janvier", "Jan"),
+    ("février", "Feb"),
+    ("mars", "Mar"),
+    ("avril", "Apr"),
+    ("mai", "May"),
+    ("juin", "Jun"),
+    ("juillet", "Jul"),
+    ("aout", "Aug"),
+    ("septembre", "Sep"),
+    ("octobre", "Oct"),
+    ("novembre", "Nov"),
+    ("décembre", "Dec"),
+]
 DEFAULT_NEW_COLLABORATOR_PASSWORD = "@pplepie94"
 DEFAULT_NEW_PASSWORD_MIN_LENGTH = 8
 DEFAULT_NEW_PASSWORD_MAX_LENGTH = 30
