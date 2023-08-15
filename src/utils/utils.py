@@ -206,6 +206,19 @@ def get_a_database_connection(user_name="", user_pwd="", db_name=f"{settings.DAT
     return conn
 
 
+def get_user_id_from_registration_number(session, registration_number):
+    """
+    Description:
+    Récupérer l'id en bdd de l'utilisateur ayant le matricule en argument.
+    Paramètres:
+    - registration_number: chaine libre de caractères, le matricule de l'employé
+    """
+    sql = text(f"""SELECT id FROM collaborator WHERE registration_number='{registration_number}'""")
+    result = session.execute(sql).first()
+    registration_number = str(result[0]).lower()
+    return registration_number
+
+
 def get_department_name_from_id(session, department_id):
     """
     Description:
