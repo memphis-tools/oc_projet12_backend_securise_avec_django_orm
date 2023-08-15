@@ -55,13 +55,13 @@ class EventsView:
         """
         return self.db_controller.get_event(self.session, event_id)
 
-    def add_event(self, event):
+    def add_event(self, current_user_collaborator_id, event):
         """
         Description: Vue dédiée à ajouter un évènement.
         Parameters:
         - event: une instance du modèle de classe Event.
         """
-        return self.db_controller.add_event(self.session, event)
+        return self.db_controller.add_event(self.session, current_user_collaborator_id, event)
 
     def delete_event(self, event_id):
         """
@@ -71,11 +71,12 @@ class EventsView:
         """
         return self.db_controller.delete_event(self.session, event_id)
 
-    def update_event(self, current_user_collaborator_id, custom_dict):
+    def update_event(self, current_user_collaborator_id, user_service, custom_dict):
         """
         Description: vue dédiée à mettre à jour un évènement.
         Parameters:
         - current_user_collaborator_id: l'id (la clef primaire, 'pas un custom id')
+        - user_service: chaine de caractère, le nom du service de l'utilisateur courant (exemple: oc12_commercial)
         - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
-        return self.db_controller.update_event(self.session, current_user_collaborator_id, custom_dict)
+        return self.db_controller.update_event(self.session, current_user_collaborator_id, user_service, custom_dict)
