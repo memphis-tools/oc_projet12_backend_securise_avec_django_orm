@@ -199,7 +199,7 @@ class ConsoleClientForDelete:
         user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         try:
-            if "client" not in allowed_crud_tables:
+            if "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if client_custom_id != "":
                 client_id = self.ask_for_a_client_id(client_custom_id)["id"]
