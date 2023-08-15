@@ -71,10 +71,12 @@ class ContractsView:
         """
         return self.db_controller.delete_contract(self.session, contract_id)
 
-    def update_contract(self, custom_dict):
+    def update_contract(self, current_user_collaborator_id, user_service, custom_dict):
         """
         Description: vue dédiée à mettre à jour un contrat.
         Parameters:
+        - current_user_collaborator_id: l'id (la clef primaire, 'pas un custom id')
+        - user_service: chaine de caractère, le nom du service de l'utilisateur courant (exemple: oc12_commercial)
         - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
-        return self.db_controller.update_contract(self.session, custom_dict)
+        return self.db_controller.update_contract(self.session, current_user_collaborator_id, user_service, custom_dict)
