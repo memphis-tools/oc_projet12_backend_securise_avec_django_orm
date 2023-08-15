@@ -25,12 +25,6 @@ client_partial_dict_1 = {
 }
 
 
-collaborator_partial_dict = {
-    "registration_number": "rr123456789",
-    "username": "marianne de lagraine",
-}
-
-
 client_partial_dict_2 = {
     "client_id": "dduck",
     "company_id": "cal7778",
@@ -63,13 +57,13 @@ company_partial_dict = {
 }
 
 contract_partial_dict1 = {
-    "contract_id": "kc555",
+    "contract_id": "ff555",
     "remain_amount_to_pay": "9599.99",
     "status": "unsigned",
 }
 
 contract_partial_dict2 = {
-    "contract_id": "ff555",
+    "contract_id": "zz123",
     "remain_amount_to_pay": "9599.99",
     "status": "canceled",
 }
@@ -80,27 +74,15 @@ contract_partial_dict3 = {
     "status": "signed",
 }
 
+contract_partial_dict4 = {
+    "contract_id": "zz123",
+    "remain_amount_to_pay": "599.19",
+    "status": "signed",
+}
+
 location_partial_dict = {
     "location_id": "CAL13540",
     "complement_adresse": "allée de la patissière",
-}
-
-event_partial_dict = {
-    "event_id": "hob2023",
-    "attendees": "500",
-    "notes": "Prévoir eau plate et gazeuse",
-}
-
-event_partial_dict2 = {
-    "event_id": "hob2023",
-    "attendees": "2500",
-    "notes": "Prévoir eau plate et gazeuse.",
-}
-
-event_partial_dict3 = {
-    "event_id": "hob2023",
-    "attendees": "3500",
-    "notes": "Prévoir eau plate et gazeuse. Sirop et jus de fruits.",
 }
 
 
@@ -122,9 +104,13 @@ def test_update_client_view(
     assert f"{custom_id}" in str(result.output).strip()
 
 
-def test_update_client_view_with_valid_company(
+def test_update_client_view_with_valid_company_with_commercial_profile_assgined(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
+    """
+    Description:
+    Un commercial ne peut modifier un client que s'il est son commercial assigné.
+    """
     # on ne va pas invoquer la commande update_client
     # on va directement réaliser ce qu'elle fait
     # on ne veut pas ajouter un argument aux commandes dédiées à l'utilisateur, qui indiqueraient la bdd
@@ -136,8 +122,28 @@ def test_update_client_view_with_valid_company(
     expected_company_id = expected_company.get_dict()["id"]
     console_client = ConsoleClientForUpdate(custom_id="", db_name=f"{settings.TEST_DATABASE_NAME}")
     args_to_convert["company_id"] = str(expected_company_id)
-    result = console_client.update_app_view.get_clients_view().update_client(args_to_convert)
-    assert f"{custom_id}" in result
+    result = console_client.update_app_view.get_clients_view().update_client(2, "oc12_commecial", args_to_convert)
+    assert f"{custom_id}" == result['client_id']
+
+
+def test_update_client_view_with_valid_company_with_commercial_profile_assgined(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+):
+    """
+    Description:
+    Un commercial ne peut modifier un client que s'il est son commercial assigné.
+    Exception ''
+    """
+    args_to_convert = client_partial_dict_4
+    custom_id = args_to_convert["client_id"]
+    db_name = settings.TEST_DATABASE_NAME
+    company_id = client_partial_dict_4["company_id"]
+    expected_company = ConsoleClientForUpdate(custom_id=custom_id, db_name=db_name).app_view.get_companies_view().get_company(company_id)
+    expected_company_id = expected_company.get_dict()["id"]
+    console_client = ConsoleClientForUpdate(custom_id="", db_name=f"{settings.TEST_DATABASE_NAME}")
+    args_to_convert["company_id"] = str(expected_company_id)
+    with pytest.raises(exceptions.CommercialCollaboratorIsNotAssignedToClient):
+        result = console_client.update_app_view.get_clients_view().update_client(1, "oc12_commecial", args_to_convert)
 
 
 def test_update_client_view_with_unvalid_company(
@@ -164,8 +170,7 @@ def test_update_company_view_with_commercial_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_company(company_partial_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
 
@@ -186,14 +191,30 @@ def test_update_company_view_with_support_profile(
         result = ConsoleClientForUpdate(db_name=db_name).update_company(company_partial_dict)
 
 
-def test_update_contract_view_with_commercial_profile(
+def test_update_contract_view_with_commercial_profile_unassigned_to_contract(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    try:
+    """
+    Description:
+    Un commercial ne peut modifier un contrat que s'il est le commercial assigné.
+    Exception 'exceptions.CommercialCollaboratorIsNotAssignedToContract' levée autrement.
+    """
+    with pytest.raises(exceptions.CommercialCollaboratorIsNotAssignedToContract):
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict1)
-        assert isinstance(result, int)
-        assert result > 0
+
+
+def test_update_contract_view_with_commercial_profile_assigned_to_contract(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+):
+    """
+    Description:
+    Un commercial ne peut modifier un contrat que s'il est le commercial assigné.
+    """
+    try:
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict2)
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
 
@@ -203,9 +224,8 @@ def test_update_contract_view_with_gestion_profile(
 ):
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict2)
-        assert isinstance(result, int)
-        assert result > 0
+        result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict3)
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
 
@@ -215,40 +235,55 @@ def test_update_contract_view_with_support_profile(
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict3)
+        result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict4)
 
 
 def test_update_event_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator, dummy_event_partial_data_1
 ):
     # un membre du service commercial ne peut que 'créer', pas 'mettre à jour' voir cahier des charges
-    with pytest.raises(exceptions.SupportCollaboratorIsNotAssignedToEvent):
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_event(event_partial_dict)
+        result = ConsoleClientForUpdate(db_name=db_name).update_event(dummy_event_partial_data_1)
 
 
 def test_update_event_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, dummy_event_partial_data_1
 ):
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_event(event_partial_dict2)
-        assert isinstance(result, int)
-        assert result > 0
+        result = ConsoleClientForUpdate(db_name=db_name).update_event(dummy_event_partial_data_1)
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
 
 
-def test_update_event_view_with_support_profile(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+def test_update_event_view_with_support_profile_when_collaborator_is_assigned(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator, dummy_event_partial_data_2
 ):
+    """
+    Description:
+    Un membre du service support ne peut modifier un évènement que s'il le collaborateur assigné.
+    """
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_event(event_partial_dict3)
-        assert isinstance(result, int)
-        assert result > 0
+        result = ConsoleClientForUpdate(db_name=db_name).update_event(dummy_event_partial_data_2)
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
+
+
+def test_update_event_view_with_support_profile_when_collaborator_is_not_assigned(
+    get_runner, get_valid_decoded_token_for_a_support_collaborator_with_id_7, dummy_event_partial_data_3
+):
+    """
+    Description:
+    Un membre du service support ne peut modifier un évènement que s'il le collaborateur assigné.
+    On lève l'exception 'exceptions.SupportCollaboratorIsNotAssignedToEvent' dans le cas contraire.
+    """
+    with pytest.raises(exceptions.SupportCollaboratorIsNotAssignedToEvent):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForUpdate(db_name=db_name).update_event(dummy_event_partial_data_3)
 
 
 def test_update_location_view_with_commercial_profile(
@@ -257,8 +292,7 @@ def test_update_location_view_with_commercial_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_location(location_partial_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
 
@@ -285,8 +319,7 @@ def test_update_role_view_with_gestion_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_role(role_partial_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
 
@@ -313,8 +346,7 @@ def test_update_department_view_with_gestion_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_department(department_partial_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
 
@@ -341,8 +373,7 @@ def test_update_collaborator_view_with_gestion_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_collaborator(collaborator_partial_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, dict)
     except Exception as error:
         print(error)
 

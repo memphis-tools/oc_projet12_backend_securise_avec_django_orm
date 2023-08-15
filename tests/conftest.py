@@ -83,6 +83,24 @@ def get_valid_decoded_token_for_a_support_collaborator(mocker):
 
 
 @pytest.fixture
+def get_valid_decoded_token_for_a_support_collaborator_with_id_7(mocker):
+    expiration = datetime.utcnow() + timedelta(minutes=1)
+    dummy_payload_data = {
+        "registration_number": "af123456789",
+        "username": "Aliénor Vichum",
+        "department": "oc12_support",
+        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}',
+    }
+    mocker.patch(
+        "controllers.jwt_controller.JwtController.get_decoded_token",
+        return_value=dummy_payload_data,
+    )
+    mocker.patch.object(JwtController, "does_a_valid_token_exist", return_value=True)
+    mocker.patch.object(JwtView, "get_decoded_token", return_value=dummy_payload_data)
+    return dummy_payload_data
+
+
+@pytest.fixture
 def get_unvalid_decoded_token(mocker):
     dummy_payload_data = {
         "registration_number": "Zaa123456789",
@@ -196,6 +214,35 @@ def dummy_event_data(request):
         "collaborator_id": "2",
     }
     return event
+
+
+@pytest.fixture(scope="session", autouse = True)
+def dummy_event_partial_data_1(request):
+    event_partial_dict = {
+        "event_id": "hob2023",
+        "collaborator_id": 5
+    }
+    return event_partial_dict
+
+
+@pytest.fixture(scope="session", autouse = True)
+def dummy_event_partial_data_2(request):
+    event_partial_dict = {
+        "event_id": "hob2023",
+        "attendees": "3500",
+        "notes": "Prévoir eau plate et gazeuse. Sirop et jus de fruits.",
+    }
+    return event_partial_dict
+
+
+@pytest.fixture(scope="session", autouse = True)
+def dummy_event_partial_data_3(request):
+    event_partial_dict = {
+        "event_id": "geg2021",
+        "attendees": "2500",
+        "notes": "Prévoir eau plate et gazeuse.",
+    }
+    return event_partial_dict
 
 
 @pytest.fixture(scope="session", autouse = True)
