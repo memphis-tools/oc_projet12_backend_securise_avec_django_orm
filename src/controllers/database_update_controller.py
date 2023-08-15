@@ -3,9 +3,11 @@ Un controleur avec toutes méthodes pour mettre à jour des données.
 """
 from sqlalchemy import text
 try:
+    from src.exceptions import exceptions
     from src.models import models
     from src.utils import utils
 except ModuleNotFoundError:
+    from exceptions import exceptions
     from models import models
     from utils import utils
 
@@ -159,7 +161,7 @@ class DatabaseUpdateController:
 
         return True
 
-    def update_event(self, session, event_dict):
+    def update_event(self, session, current_user_collaborator_id, event_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un évènement.
         Requête de la base de données et renvoie True si réussie..
@@ -175,9 +177,12 @@ class DatabaseUpdateController:
         except KeyError:
             session.flush()
             session.rollback()
-        session.commit()
+        event_dict = event.get_dict()
+        if current_user_collaborator_id != event_dict["collaborator_id"]:
+            raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
 
-        return True
+        session.commit()
+        return event.get_dict()
 
     def update_location(self, session, location_dict):
         """
