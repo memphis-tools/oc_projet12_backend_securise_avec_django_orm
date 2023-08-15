@@ -69,10 +69,12 @@ class ClientsView:
         """
         return self.db_controller.delete_client(self.session, client_id)
 
-    def update_client(self, custom_dict):
+    def update_client(self, current_user_collaborator_id, user_service, custom_dict):
         """
         Description: vue dédiée à mettre à jour un client.
-        Parameters:
-        - custom_dict: un dictionnaire avec l'id et des données optionnelles.
+         Parameters:
+         - current_user_collaborator_id: l'id (la clef primaire, 'pas un custom id')
+         - user_service: chaine de caractère, le nom du service de l'utilisateur courant (exemple: oc12_commercial)
+         - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
-        return self.db_controller.update_client(self.session, custom_dict)
+        return self.db_controller.update_client(self.session, current_user_collaborator_id, user_service, custom_dict)
