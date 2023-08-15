@@ -13,7 +13,7 @@ try:
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings
-    from src.utils.utils import authentication_permission_decorator, display_banner
+    from src.utils import utils
     from src.validators import add_data_validators
 except ModuleNotFoundError:
     from exceptions import exceptions
@@ -23,7 +23,7 @@ except ModuleNotFoundError:
     from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings
-    from utils.utils import authentication_permission_decorator, display_banner
+    from utils import utils
     from validators import add_data_validators
 
 
@@ -36,7 +36,7 @@ class ConsoleClientForCreate:
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        display_banner()
+        utils.display_banner()
         self.app_view = AppViews(db_name)
         self.create_app_view = CreateAppViews(db_name)
         self.jwt_view = JwtView(self.app_view)
@@ -47,7 +47,7 @@ class ConsoleClientForCreate:
     def ask_for_a_client_id(self):
         client_id = forms.submit_a_client_get_form()
         if client_id == "":
-            print("Pas d'id client saisi, recherche d'une entreprise")
+            print("Pas d'id client saisi")
             return False
         client_lookup = None
         try:
@@ -69,7 +69,7 @@ class ConsoleClientForCreate:
             contract_lookup = self.app_view.get_contracts_view().get_contract(
                 contract_id
             )
-            return contract_lookup.get_dict()
+            return contract_lookup.id
         except Exception as error:
             print(f"No such contract sir: {error}")
             return False
@@ -77,13 +77,13 @@ class ConsoleClientForCreate:
     def ask_for_a_company_id(self):
         company_id = forms.submit_a_company_get_form()
         if company_id == "":
-            print("Pas d'id entreprise saisi, recherche d'une localité")
+            print("Pas d'id entreprise saisi")
             return False
         company_lookup = None
         try:
             # on propose de rechercher l'entreprise
             company_lookup = self.app_view.get_companies_view().get_company(company_id)
-            return company_lookup.get_dict()
+            return company_lookup.id
         except Exception as error:
             print(f"No such company sir: {error}")
             return False
@@ -129,7 +129,7 @@ class ConsoleClientForCreate:
             location_lookup = self.app_view.get_locations_view().get_location(
                 location_id
             )
-            return location_lookup.get_dict()
+            return location_lookup.id
         except Exception as error:
             print(f"No such location sir: {error}")
             return False
@@ -148,7 +148,7 @@ class ConsoleClientForCreate:
             print(f"No such role sir: {error}")
             return False
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def add_client(self, client_attributes_dict=""):
         # rechercher le id de l'utilisateur courant
         # obtenir le token décodé (et valide)
@@ -160,10 +160,11 @@ class ConsoleClientForCreate:
         client_id = ""
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
-        user_registration_number = str(decoded_token["registration_number"])
+        registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
+        user_id = utils.get_user_id_from_registration_number(self.app_view.session, registration_number)
         try:
-            if "client" not in allowed_crud_tables:
+            if "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if client_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(client_attributes_dict)
@@ -177,76 +178,26 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                client_queryset = self.ask_for_a_client_id()
-                if not client_queryset:
-                    # pas de client trouvé, on commence par demander l'entreprise à enregistrer.
-                    company_queryset = self.ask_for_a_company_id()
-                    if not company_queryset:
-                        # pas d'entreprise trouvée, on commence par demander la localité à enregistrer.
-                        location_queryset = self.ask_for_a_location_id()
-                        if not location_queryset:
-                            # pas de localité trouvée,
-                            # on entame le dialogue pour enregistrer localité, entreprise, et client.
-                            location_attributes_dict = (
-                                forms.submit_a_location_create_form()
-                            )
-                            company_attributes_dict = (
-                                forms.submit_a_company_create_form()
-                            )
-                            client_attributes_dict = forms.submit_a_client_create_form()
+                company_id = self.ask_for_a_company_id()
+                if not company_id:
+                    # on entame le dialogue pour enregistrer localité, entreprise.
+                    location_id = self.add_location()
+                    company_id = self.add_company(company_location_id=location_id)
 
-                            loc_id = (
-                                self.create_app_view.get_locations_view().add_location(
-                                    models.Location(**location_attributes_dict)
-                                )
-                            )
-                            company_attributes_dict["location_id"] = loc_id
-                            comp_id = (
-                                self.create_app_view.get_companies_view().add_company(
-                                    models.Company(**company_attributes_dict)
-                                )
-                            )
-                            client_attributes_dict["company_id"] = comp_id
-                            client_id = (
-                                self.create_app_view.get_clients_view().add_client(
-                                    models.Client(**client_attributes_dict)
-                                )
-                            )
-                        else:
-                            loc_id = location_queryset["id"]
-                            company_attributes_dict = (
-                                forms.submit_a_company_create_form()
-                            )
-                            client_attributes_dict = forms.submit_a_client_create_form()
-                            company_attributes_dict["location_id"] = loc_id
-                            comp_id = (
-                                self.create_app_view.get_companies_view().add_company(
-                                    models.Company(**company_attributes_dict)
-                                )
-                            )
-                            client_attributes_dict["company_id"] = id
-                            client_id = (
-                                self.create_app_view.get_clients_view().add_client(
-                                    models.Client(**client_attributes_dict)
-                                )
-                            )
-                    else:
-                        company_id = company_queryset["id"]
-                        client_attributes_dict = forms.submit_a_client_create_form()
-                        client_attributes_dict["company_id"] = company_id
-                        client_attributes_dict["creation_date"] = datetime.now()
-                        client_id = self.create_app_view.get_clients_view().add_client(
-                            models.Client(**client_attributes_dict)
-                        )
-                else:
-                    print(f"[INFO] all good client found: {client_queryset}")
-
+                client_attributes_dict = forms.submit_a_client_create_form()
+                client_attributes_dict["company_id"] = company_id
+                client_attributes_dict["commercial_contact"] = user_id
+                client_id = (
+                    self.create_app_view.get_clients_view().add_client(
+                        models.Client(**client_attributes_dict)
+                    )
+                )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()
         return client_id
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def add_collaborator(self, collaborator_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un nouvel utilisateur /collaborateur de l'entreprise.
@@ -256,7 +207,7 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         collaborator = ""
         try:
-            if "collaborator" not in allowed_crud_tables:
+            if "collaborator" not in allowed_crud_tables or user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if collaborator_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(collaborator_attributes_dict)
@@ -281,7 +232,7 @@ class ConsoleClientForCreate:
             collaborator
         )
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def add_company(self, company_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
@@ -291,7 +242,7 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         company = ""
         try:
-            if "company" not in allowed_crud_tables:
+            if "company" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if company_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(company_attributes_dict)
@@ -303,7 +254,10 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                company_attributes_dict = forms.submit_a_company_create_form()
+                company_location_id = self.ask_for_a_location_id()
+                if not company_location_id:
+                    company_location_id = self.add_location()
+                company_attributes_dict = forms.submit_a_company_create_form(company_location_id=company_location_id)
                 company = models.Company(**company_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
@@ -315,7 +269,7 @@ class ConsoleClientForCreate:
         company.creation_date = datetime.now()
         return self.create_app_view.get_companies_view().add_company(company)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def add_contract(self, contract_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un contrat pour l'entreprise.
@@ -325,7 +279,7 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract = ""
         try:
-            if "contract" not in allowed_crud_tables:
+            if "contract" not in allowed_crud_tables or user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if contract_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(contract_attributes_dict)
@@ -349,7 +303,7 @@ class ConsoleClientForCreate:
         contract.creation_date = datetime.now()
         return self.create_app_view.get_contracts_view().add_contract(contract)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def add_department(self, department_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un nouveau départements /services de l'entreprise.
@@ -359,7 +313,7 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         department = ""
         try:
-            if "collaborator_department" not in allowed_crud_tables:
+            if "collaborator_department" not in allowed_crud_tables or user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if department_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(department_attributes_dict)
@@ -385,17 +339,19 @@ class ConsoleClientForCreate:
         department.creation_date = datetime.now()
         return self.create_app_view.get_departments_view().add_department(department)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def add_event(self, event_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un évènement de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
+        registration_number = str(decoded_token["registration_number"])
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event = ""
+        user_id = utils.get_user_id_from_registration_number(self.app_view.session, registration_number)
         try:
-            if "event" not in allowed_crud_tables or "OC12_COMMERCIAL" not in user_service:
+            if "event" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if event_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(event_attributes_dict)
@@ -405,19 +361,33 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
+                contract_id_asked = self.ask_for_a_contract_id()
+                contract_id = utils.get_contract_id_from_contract_custom_id(self.app_view.session, contract_id_asked)
+                if not contract_id:
+                    raise exceptions.ContractNotFoundWithContractId()
                 event_attributes_dict = forms.submit_a_event_create_form()
+                event_attributes_dict["collaborator_id"] = user_id
+                event_attributes_dict["contract_id"] = contract_id
                 event = models.Event(**event_attributes_dict)
+            event.creation_date = datetime.now()
+            return self.create_app_view.get_events_view().add_event(user_id, event)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.ContractNotFoundWithContractId:
+            print("[bold red]Erreur[/bold red] Contrat non trouvé avec le contract_id fourni.")
+            raise exceptions.ContractNotFoundWithContractId()
+            sys.exit(0)
+        except exceptions.SupportCollaboratorIsNotAssignedToEvent:
+            print("[bold red]Erreur[/bold red] Vous n'avez pas signé le contrat dédié à l'évènement")
+            raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
+            sys.exit(0)
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        event.creation_date = datetime.now()
-        return self.create_app_view.get_events_view().add_event(event)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def add_location(self, location_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer une localité.
@@ -427,7 +397,7 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location = ""
         try:
-            if "location" not in allowed_crud_tables:
+            if "location" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if location_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(location_attributes_dict)
@@ -451,7 +421,7 @@ class ConsoleClientForCreate:
         location.creation_date = datetime.now()
         return self.create_app_view.get_locations_view().add_location(location)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def add_role(self, role_attributes_dict=""):
         """
         Description: vue dédiée à enregistrer un nouveau rôle pour les collaborateurs de l'entreprise.
@@ -461,7 +431,7 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         role = ""
         try:
-            if "collaborator_role" not in allowed_crud_tables:
+            if "collaborator_role" not in allowed_crud_tables or user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if role_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(role_attributes_dict)
