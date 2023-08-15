@@ -211,10 +211,10 @@ def dummy_database_creation(db_name="projet12"):
         'Holiday on beach',
         '1',
         '1',
-        '5',
+        '4',
         '2023-07-25 16:00',
         '2023-07-25 22:00',
-        '1',
+        '2',
         '500',
         'bla bla bla penser au catering'
     )
