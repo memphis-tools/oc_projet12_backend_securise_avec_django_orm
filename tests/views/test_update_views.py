@@ -221,13 +221,10 @@ def test_update_contract_view_with_support_profile(
 def test_update_event_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    try:
+    # un membre du service commercial ne peut que 'créer', pas 'mettre à jour' voir cahier des charges
+    with pytest.raises(exceptions.SupportCollaboratorIsNotAssignedToEvent):
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_event(event_partial_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
 
 
 def test_update_event_view_with_gestion_profile(
