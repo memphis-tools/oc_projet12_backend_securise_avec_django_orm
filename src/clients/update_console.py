@@ -54,13 +54,21 @@ class ConsoleClientForUpdate:
         client_id = ""
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
-        user_registration_number = str(decoded_token["registration_number"])
+        registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
+        current_user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
         try:
-            if "client" not in allowed_crud_tables:
+            if "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
+            return self.update_app_view.get_clients_view().update_client(current_user_collaborator_id, user_service, custom_partial_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
+            raise exceptions.InsufficientPrivilegeException()
+            sys.exit(0)
+        except exceptions.CommercialCollaboratorIsNotAssignedToClient:
+            print("[bold red]Accès non autorisé.[/bold red] Vous n'êtes pas le contact commercial du client; mise à jour non autorisée.")
+            raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
+            sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()
@@ -68,9 +76,6 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_clients_view().update_client(
-            custom_partial_dict
-        )
 
     @authentication_permission_decorator
     def update_collaborator(self, custom_partial_dict=""):
@@ -168,15 +173,22 @@ class ConsoleClientForUpdate:
         Description: vue dédiée à mettre à jour un contrat pour l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
+        registration_number = str(decoded_token["registration_number"])
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract_id = ""
+        current_user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
         try:
             if "contract" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
+            return self.update_app_view.get_contracts_view().update_contract(current_user_collaborator_id, user_service,custom_partial_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()
+            sys.exit(0)
+        except exceptions.CommercialCollaboratorIsNotAssignedToContract:
+            print("[bold red]Accès non autorisé.[/bold red] Vous n'êtes pas le commercial du contrat; mise à jour non autorisée.")
+            raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -184,9 +196,6 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_contracts_view().update_contract(
-            custom_partial_dict
-        )
 
     @authentication_permission_decorator
     def update_department(self, custom_partial_dict=""):
@@ -227,7 +236,8 @@ class ConsoleClientForUpdate:
         event_id = ""
         current_user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
         try:
-            if "event" not in allowed_crud_tables:
+            # un membre du service commercial n'a accès qu'en lecture seule
+            if "event" not in allowed_crud_tables or user_service.lower() == "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
@@ -241,7 +251,7 @@ class ConsoleClientForUpdate:
             sys.exit(0)
 
         # dans le cas où d'un collaborateur du serivce gestion, il modifie seulement s'il est assigné.
-        return self.update_app_view.get_events_view().update_event(current_user_collaborator_id, custom_partial_dict)
+        return self.update_app_view.get_events_view().update_event(current_user_collaborator_id, user_service, custom_partial_dict)
 
     @authentication_permission_decorator
     def update_location(self, custom_partial_dict=""):

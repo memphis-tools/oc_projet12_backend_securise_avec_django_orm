@@ -17,7 +17,7 @@ class DatabaseUpdateController:
     Description: Toutes les méthodes pour mettre à jour des données.
     """
 
-    def update_client(self, session, client_dict):
+    def update_client(self, session, current_user_collaborator_id, user_service, client_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un client.
         Requête de la base de données et renvoie True si réussie..
@@ -32,9 +32,12 @@ class DatabaseUpdateController:
         except KeyError:
             session.flush()
             session.rollback()
-        session.commit()
 
-        return f"{client.client_id}"
+        if int(current_user_collaborator_id) != int(client.commercial_contact):
+            raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
+
+        session.commit()
+        return client.get_dict()
 
     def update_collaborator(self, session, collaborator_dict):
         """
@@ -50,7 +53,6 @@ class DatabaseUpdateController:
         keys_to_explore = models.Collaborator.metadata.tables["collaborator"].columns.keys()
         department_id = collaborator.department_id
         current_department_name = utils.get_department_name_from_id(session, department_id)
-
         try:
             for key in keys_to_explore:
                 if key in collaborator_dict.keys():
@@ -72,7 +74,7 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return True
+        return collaborator.get_dict()
 
     def update_collaborator_password(self, conn, user_registration_number, new_password):
         """
@@ -112,9 +114,9 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return True
+        return company.get_dict()
 
-    def update_contract(self, session, contract_dict):
+    def update_contract(self, session, current_user_collaborator_id, user_service, contract_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un contrat.
         Requête de la base de données et renvoie True si réussie..
@@ -130,9 +132,14 @@ class DatabaseUpdateController:
                     setattr(contract, key, contract_dict[key])
         except KeyError:
             pass
-        session.commit()
+        # un collaborateur du service gestion peut modifier tout contrat
+        # un commercial ne peut modifier que les contrats auxquels il est rattaché
+        if user_service.lower() == "oc12_commercial":
+            if int(current_user_collaborator_id) != int(contract.collaborator_id):
+                raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
 
-        return True
+        session.commit()
+        return contract.get_dict()
 
     def update_department(self, session, department_dict):
         """
@@ -159,9 +166,9 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return True
+        return department.get_dict()
 
-    def update_event(self, session, current_user_collaborator_id, event_dict):
+    def update_event(self, session, current_user_collaborator_id, user_service, event_dict):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un évènement.
         Requête de la base de données et renvoie True si réussie..
@@ -178,8 +185,10 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         event_dict = event.get_dict()
-        if current_user_collaborator_id != event_dict["collaborator_id"]:
-            raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
+        # un collaborateur du service support ne peut modifier que les évènements qui lui sont assignés
+        if user_service.lower() == "oc12_support":
+            if current_user_collaborator_id != event_dict["collaborator_id"]:
+                raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
 
         session.commit()
         return event.get_dict()
@@ -204,7 +213,7 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return True
+        return location.get_dict()
 
     def update_role(self, session, role_dict):
         """
@@ -226,4 +235,4 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return True
+        return role.get_dict()
