@@ -49,6 +49,32 @@ class DatabaseInitializerController:
         session = session_maker()
         return (engine, session)
 
+    def return_session(self, user_login="", user_pwd="", decoded_token="", db_name=f"{settings.DATABASE_NAME}"):
+        """
+        Description: connexion à la base de données et renvoie une fabrique session qui sera utilisée par la vue AppViews.
+        """
+        try:
+            if decoded_token == "":
+                # l'utilisateur demande un token, c'est sa "connexion" initiale à l'application
+                user_login = user_login
+                user_pwd = user_pwd
+            else:
+                # l'utilisateur vient de demander un token, l'a obtenu et requete la bdd, on exploite le token décodé
+                user_login = str(decoded_token["department"]).lower()
+                dprt = str(decoded_token["department"]).upper()
+                user_pwd = eval(f"settings.{dprt}_PWD")
+
+            password_with_specialchars_escape = urllib.parse.quote_plus(user_pwd)
+            engine = create_engine(
+                f"postgresql+psycopg://{user_login}:{password_with_specialchars_escape}@localhost/{db_name}"
+            )
+        except psycopg.OperationalError as error:
+            print(f"[bold red][START CONTROL][/bold red] {error}")
+
+        session_maker = sessionmaker(engine)
+        session = session_maker()
+        return session
+
     def init_db(self, engine):
         """
         Description: Dédié à aider au développement. On détruit et (re)crée les tables de la base de données.
@@ -256,7 +282,7 @@ class DatabaseInitializerController:
             sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_gestion"""
             cursor.execute(sql)
 
-        allowed_services = ["oc12_gestion", "oc12_support"]
+        allowed_services = ["oc12_support"]
         for service in allowed_services:
             sql = f"""GRANT UPDATE ON event TO {service}"""
             cursor.execute(sql)
