@@ -11,6 +11,18 @@ class MissingUpdateParamException(Exception):
     pass
 
 
+class CommercialCollaboratorIsNotAssignedToClient(Exception):
+    pass
+
+
+class CommercialCollaboratorIsNotAssignedToContract(Exception):
+    pass
+
+
+class ContractNotFoundWithContractId(Exception):
+    pass
+
+
 class SupportCollaboratorIsNotAssignedToEvent(Exception):
     pass
 

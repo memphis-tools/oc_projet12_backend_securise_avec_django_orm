@@ -111,14 +111,14 @@ def test_delete_event_view_with_support_profile(
     get_runner, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
-        result = ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_event("EV971")
+        result = ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_event("geg2021")
 
 
 def test_delete_event_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
-        dummy_events_list = ["FW971", "EV971"]
+        dummy_events_list = ["EV971"]
         for event in dummy_events_list:
             result = ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_event(event)
             assert isinstance(result, int)

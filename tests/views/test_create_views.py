@@ -138,7 +138,7 @@ contract_attributes_dict_1 = {
     "remain_amount_to_pay": "999.99",
     "status": "unsigned",
     "client_id": "1",
-    "collaborator_id": "2",
+    "collaborator_id": "1",
     "creation_date": "2023-07-15 22:00:00",
 }
 
@@ -162,7 +162,7 @@ event_attributes_dict_1 = {
     "client_id": "1",
     "contract_id": "1",
     "location_id": "2",
-    "collaborator_id": "2",
+    "collaborator_id": "1",
     "creation_date": "2023-07-15 22:00:00",
 }
 
@@ -407,22 +407,32 @@ def test_add_contract_view_with_support_profile(
         result = ConsoleClientForCreate(db_name).add_contract(custom_dict)
 
 
-@pytest.mark.parametrize(
-    "custom_dict", [event_attributes_dict_1, event_attributes_dict_2]
-)
-def test_add_event_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
+def test_add_event_view_with_commercial_profile_when_assigned_contract(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     """
     Vérifier si un membre du service commercial peut ajouter un évènement.
     """
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForCreate(db_name).add_event(custom_dict)
+        result = ConsoleClientForCreate(db_name).add_event(event_attributes_dict_1)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
         print(error)
+
+
+def test_add_event_view_with_commercial_profile_when_unassigned_contract(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+):
+    """
+    Description:
+    Vérifier si un membre du service commercial peut ajouter un évènement
+    Il ne peut pas créer un évènement pour un contrat qu'il n'a pas signé
+    """
+    with pytest.raises(exceptions.SupportCollaboratorIsNotAssignedToEvent):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_event(event_attributes_dict_2)
 
 
 @pytest.mark.parametrize(
@@ -487,6 +497,20 @@ def test_add_department_view_with_gestion_profile(
         assert result > 0
     except Exception as error:
         print(error)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [department_attributes_dict_1, department_attributes_dict_2]
+)
+def test_add_department_view_with_commercial_profile(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
+):
+    """
+    Vérifier si un membre du service commercial peut ajouter un departement (service).
+    """
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_department(custom_dict)
 
 
 @pytest.mark.parametrize(
