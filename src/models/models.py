@@ -379,61 +379,6 @@ class Contract(Base):
         ]
 
 
-class Location(Base, ModelMixin):
-    """
-    Description: table dédiée à désigner /caractériser une localisation.
-    """
-
-    __tablename__ = "location"
-    id = Column(Integer, primary_key=True)
-    location_id = Column(String(120), nullable=False, unique=True)
-    adresse = Column(String(150), nullable=True)
-    complement_adresse = Column(String(75), nullable=True)
-    code_postal = Column(Integer, nullable=False)
-    ville = Column(String(100), nullable=False)
-    pays = Column(String(100), nullable=True, default="France")
-    event = relationship("Event", back_populates="location")
-    creation_date = Column(DateTime(), nullable=False, default=datetime.now())
-
-    def __str__(self):
-        descriptors = "["
-        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(location_id|{self.location_id})'
-        descriptors += f',(adresse|{self.adresse})'
-        descriptors += f',(complement_adresse|{self.complement_adresse})'
-        descriptors += f',(code_postal|{self.code_postal})'
-        descriptors += f',(ville|{self.ville})'
-        descriptors += f',(pays|{self.pays})'
-        descriptors += "]"
-        return descriptors
-
-    def __repr__(self):
-        return self.__str__()
-
-    def get_dict(self):
-        location_dict = {
-            "id": self.id,
-            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
-            "location_id": self.location_id,
-            "adresse": self.adresse,
-            "complement_adresse": self.complement_adresse,
-            "code_postal": self.code_postal,
-            "ville": self.ville,
-            "pays": self.pays,
-        }
-        return location_dict
-
-    @staticmethod
-    def _get_keys():
-        return [
-            "adresse",
-            "complement_adresse",
-            "code_postal",
-            "ville",
-            "pays",
-        ]
-
-
 class Event(Base):
     """
     Description: table dédiée à désigner /caractériser un évènement.
