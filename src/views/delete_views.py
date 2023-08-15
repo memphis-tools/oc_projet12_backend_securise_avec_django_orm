@@ -50,7 +50,7 @@ class DeleteAppViews:
         # il faut charger le token de l'utilisateur, le décoder et le transmettre en clair
         # le "role" (exemple oc12_commercial) dans le token servira à créer la connexion à la bdd
         # il porte les permissions et chaque "department" (services, équipes) aura ses permissions.
-        self.engine, self.session = self.db_initializer.return_engine_and_session(
+        self.session = self.db_initializer.return_session(
             decoded_token=decoded_token, db_name=db_name
         )
 
