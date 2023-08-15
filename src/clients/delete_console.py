@@ -234,7 +234,6 @@ class ConsoleClientForDelete:
                 )
             else:
                 collaborator_id = self.ask_for_a_collaborator_id()
-            print(f"collaborator_id:{collaborator_id}")
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]You are not authorized.[/bold red]")
             raise exceptions.InsufficientPrivilegeException()
