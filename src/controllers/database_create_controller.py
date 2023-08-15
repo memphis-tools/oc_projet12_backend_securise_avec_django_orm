@@ -3,8 +3,10 @@ Un controleur avec toutes méthodes pour ajouter des données.
 """
 from sqlalchemy import text
 try:
+    from src.exceptions import exceptions
     from src.settings import settings
 except ModuleNotFoundError:
+    from exceptions import exceptions
     from settings import settings
 
 
@@ -96,15 +98,17 @@ class DatabaseCreateController:
         except Exception as error:
             print(f"Error while adding: {error}")
 
-    def add_event(self, session, event):
+    def add_event(self, session, current_user_collaborator_id, event):
         """
         Description: Fonction dédiée à servir la vue lors de l'ajout d'un évènement.
         Requête de la base de données et renvoie l'id enregistré.
         """
+        # un collaborateur du service commercial ne peut créerun évènements que pour un contrat crée (signé ou non)
+        if current_user_collaborator_id != event.get_dict()["collaborator_id"]:
+            raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
         try:
             session.add(event)
             session.commit()
-
             return event.id
         except Exception as error:
             print(f"Error while adding: {error}")

@@ -75,7 +75,7 @@ def submit_a_company_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_company_create_form(custom_dict={}):
+def submit_a_company_create_form(company_location_id, custom_dict={}):
     """
     Description: Fonction dédiée à créer une entreprise.
     Noter qu'un attribut location_id est attendu pour respecter le modèle.
@@ -103,6 +103,7 @@ def submit_a_company_create_form(custom_dict={}):
         except KeyboardInterrupt:
             print("[bold red][COMPANY CREATION][/bold red] Creation aborted")
             sys.exit(0)
+    custom_dict["location_id"] = company_location_id
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
@@ -368,6 +369,7 @@ def submit_a_event_create_form(custom_dict={}):
     """
     if custom_dict == {}:
         event_expected_attributes_dict = {
+
             "event_id": "id",
             "title": "titre",
             "attendees": "public max attendu",
