@@ -11,6 +11,10 @@ class MissingUpdateParamException(Exception):
     pass
 
 
+class SupportCollaboratorIsNotAssignedToEvent(Exception):
+    pass
+
+
 class NewPasswordIsNotValidException(Exception):
     pass
 

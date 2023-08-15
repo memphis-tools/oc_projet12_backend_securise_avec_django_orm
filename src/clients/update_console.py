@@ -13,6 +13,7 @@ try:
     from src.views.jwt_view import JwtView
     from src.settings import settings
     from src.utils.utils import authentication_permission_decorator, display_banner
+    from src.utils import utils
 except ModuleNotFoundError:
     from exceptions import exceptions
     from forms import forms
@@ -21,6 +22,7 @@ except ModuleNotFoundError:
     from views.jwt_view import JwtView
     from settings import settings
     from utils.utils import authentication_permission_decorator, display_banner
+    from utils import utils
 
 
 class ConsoleClientForUpdate:
@@ -219,8 +221,11 @@ class ConsoleClientForUpdate:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        registration_number = str(decoded_token["registration_number"]).lower()
+        username = str(decoded_token["username"]).lower()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event_id = ""
+        current_user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
         try:
             if "event" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
@@ -234,7 +239,9 @@ class ConsoleClientForUpdate:
         except Exception as error:
             print(f"[ERROR SIR]: {error}")
             sys.exit(0)
-        return self.update_app_view.get_events_view().update_event(custom_partial_dict)
+
+        # dans le cas où d'un collaborateur du serivce gestion, il modifie seulement s'il est assigné.
+        return self.update_app_view.get_events_view().update_event(current_user_collaborator_id, custom_partial_dict)
 
     @authentication_permission_decorator
     def update_location(self, custom_partial_dict=""):
