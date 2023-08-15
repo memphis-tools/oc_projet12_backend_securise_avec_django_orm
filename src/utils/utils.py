@@ -215,8 +215,21 @@ def get_user_id_from_registration_number(session, registration_number):
     """
     sql = text(f"""SELECT id FROM collaborator WHERE registration_number='{registration_number}'""")
     result = session.execute(sql).first()
-    registration_number = str(result[0]).lower()
-    return registration_number
+    id = str(result[0]).lower()
+    return id
+
+
+def get_contract_id_from_contract_custom_id(session, contract_id):
+    """
+    Description:
+    Récupérer l'id en bdd de l'utilisateur ayant le custom id du modèle, en argument.
+    Paramètres:
+    - contract_id: chaine libre de caractères, le custom id du contrat
+    """
+    sql = text(f"""SELECT id FROM contract WHERE contract_id='{contract_id}'""")
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
 
 
 def get_department_name_from_id(session, department_id):
