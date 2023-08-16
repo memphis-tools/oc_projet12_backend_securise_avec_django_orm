@@ -6,8 +6,10 @@ from rich import print
 
 try:
     from src.clients.create_console import ConsoleClientForCreate
+    from src.exceptions import exceptions
 except ModuleNotFoundError:
     from clients.create_console import ConsoleClientForCreate
+    from exceptions import exceptions
 
 
 @click.command
@@ -90,6 +92,8 @@ def add_location():
     try:
         console_client = ConsoleClientForCreate()
         print(console_client.add_location())
+    except exceptions.LocationCustomIdAlReadyExists:
+        pass
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
