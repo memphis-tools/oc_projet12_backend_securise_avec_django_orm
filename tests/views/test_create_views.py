@@ -23,7 +23,7 @@ except ModuleNotFoundError:
 location_attributes_dict_1 = {
     "location_id": "PL24250",
     "adresse": "3 rue de la tannerie",
-    "complement_adresse": "La meule en bière",
+    "complement_adresse": "Voie de la bière",
     "code_postal": "24250",
     "ville": "Plurien",
     "pays": "France",
@@ -33,7 +33,7 @@ location_attributes_dict_1 = {
 location_attributes_dict_2 = {
     "location_id": "CAL13540",
     "adresse": "8 avenue des rillettes",
-    "complement_adresse": "Voie de l'amande",
+    "complement_adresse": "mur nord",
     "code_postal": "13540",
     "ville": "Gardanne",
     "pays": "France",
@@ -253,22 +253,30 @@ def test_add_collaborator_view_with_gestion_profile(
         print(error)
 
 
-@pytest.mark.parametrize(
-    "custom_dict", [location_attributes_dict_1, location_attributes_dict_2]
-)
-def test_add_location_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
+def test_add_valid_location_view_with_commercial_profile(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     """
-    Vérifier si un membre du service commercial peut ajouter une localité.
+    Vérifier si un membre du service commercial peut ajouter une localité valide.
     """
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForCreate(db_name).add_location(custom_dict)
+        result = ConsoleClientForCreate(db_name).add_location(location_attributes_dict_1)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
         print(error)
+
+
+def test_add_unvalid_location_view_with_commercial_profile(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+):
+    """
+    Vérifier si un membre du service commercial peut ajouter une localité invalide.
+    """
+    with pytest.raises(exceptions.SuppliedDataNotMatchModel):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_location(location_attributes_dict_2)
 
 
 @pytest.mark.parametrize(
@@ -280,13 +288,9 @@ def test_add_location_view_with_gestion_profile(
     """
     Vérifier si un membre du service gestion peut ajouter une localité.
     """
-    try:
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_location(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
 
 
 @pytest.mark.parametrize(
@@ -298,13 +302,9 @@ def test_add_location_view_with_support_profile(
     """
     Vérifier si un membre du service support peut ajouter une localité.
     """
-    try:
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_location(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
-    except Exception as error:
-        print(error)
 
 
 @pytest.mark.parametrize(
