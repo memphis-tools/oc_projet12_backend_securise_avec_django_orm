@@ -63,7 +63,7 @@ def test_delete_company_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
-        dummy_companies_list = ["cal7778", "abm99998"]
+        dummy_companies_list = ["db45785", "abm99998", "NFEPG12345"]
         for company in dummy_companies_list:
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"

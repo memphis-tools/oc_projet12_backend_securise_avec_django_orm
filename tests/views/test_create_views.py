@@ -28,7 +28,7 @@ location_attributes_dict_1 = {
     "cedex": "5",
     "ville": "Plurien",
     "pays": "France",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": "2020-02-13 20:00:00",
 }
 
 location_attributes_dict_2 = {
@@ -39,25 +39,48 @@ location_attributes_dict_2 = {
     "cedex": "0",
     "ville": "Gardanne",
     "pays": "France",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": "2021-03-14 21:00:00",
+}
+
+location_attributes_dict_3 = {
+    "location_id": "CAL13540",
+    "adresse": "3 rue des rossignols",
+    "complement_adresse": "Bourg de la reine",
+    "code_postal": "78646",
+    "cedex": "18",
+    "ville": "Versailles",
+    "pays": "France",
+    "creation_date": "2023-01-15 22:00:00",
 }
 
 company_attributes_dict_1 = {
     "company_id": "abm99998",
-    "company_name": "A la bonne meule",
     "company_registration_number": "777666111",
     "company_subregistration_number": "99998",
+    "company_name": "A la bonne meule",
+    "activite_principale": "",
     "location_id": "2",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": "2020-12-21 16:22:30",
 }
 
 company_attributes_dict_2 = {
     "company_id": "cal7778",
-    "company_name": "Calisson d'Aix",
     "company_registration_number": "444111888",
     "company_subregistration_number": "22228",
+    "company_name": "Calisson d'Aix",
+    "activite_principale": "8230Z",
+    "location_id": "1",
+    "creation_date": "2021-11-19 09:40:25",
+}
+
+company_attributes_dict_3 = {
+    "company_id": "db45785",
+    "company_registration_number": "462136723",
+    "company_subregistration_number": "41237",
+    "company_name": "Distributeurs Auto de Bretagne",
+    "activite_principale": "5320Z",
     "location_id": "2",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": "2023-03-15 14:46:12",
 }
 
 client_attributes_dict_1 = {
@@ -70,7 +93,7 @@ client_attributes_dict_1 = {
     "telephone": "0611223344",
     "company_id": "1",
     "commercial_contact": "2",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": "2023-06-15 18:00:00",
 }
 
 client_attributes_dict_2 = {
@@ -83,7 +106,7 @@ client_attributes_dict_2 = {
     "telephone": "0655228844",
     "company_id": "1",
     "commercial_contact": "2",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": "2023-06-15 18:00:00",
 }
 
 commercial_collaborator_attributes_dict_1 = {
@@ -91,7 +114,7 @@ commercial_collaborator_attributes_dict_1 = {
     "username": "dummy bigtooth",
     "department_id": "1",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50",
+    "creation_date": "2023-07-02 10:50",
 }
 
 commercial_collaborator_attributes_dict_2 = {
@@ -99,7 +122,7 @@ commercial_collaborator_attributes_dict_2 = {
     "username": "dummy bigfoot",
     "department_id": "1",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50",
+    "creation_date": "2023-07-10 10:50",
 }
 
 gestion_collaborator_attributes_dict_1 = {
@@ -107,7 +130,7 @@ gestion_collaborator_attributes_dict_1 = {
     "username": "dustin river",
     "department_id": "2",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50",
+    "creation_date": "2023-07-13 10:44",
 }
 
 gestion_collaborator_attributes_dict_2 = {
@@ -115,7 +138,7 @@ gestion_collaborator_attributes_dict_2 = {
     "username": "myriam lake",
     "department_id": "2",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50",
+    "creation_date": "2023-06-27 10:32",
 }
 
 support_collaborator_attributes_dict_1 = {
@@ -123,7 +146,7 @@ support_collaborator_attributes_dict_1 = {
     "username": "william summerland",
     "department_id": "3",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50",
+    "creation_date": "2023-06-15 14:25",
 }
 
 support_collaborator_attributes_dict_2 = {
@@ -131,7 +154,7 @@ support_collaborator_attributes_dict_2 = {
     "username": "marianne dupin",
     "department_id": "3",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50",
+    "creation_date": "2023-06-12 08:32",
 }
 
 contract_attributes_dict_1 = {
@@ -141,7 +164,7 @@ contract_attributes_dict_1 = {
     "status": "unsigned",
     "client_id": "1",
     "collaborator_id": "1",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": "2023-06-15 15:04:25",
 }
 
 contract_attributes_dict_2 = {
@@ -151,7 +174,7 @@ contract_attributes_dict_2 = {
     "status": "signed",
     "client_id": "1",
     "collaborator_id": "2",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": "2023-06-15 11:35:12",
 }
 
 event_attributes_dict_1 = {
@@ -329,18 +352,30 @@ def test_add_location_view_with_support_profile(
         result = ConsoleClientForCreate(db_name).add_location(custom_dict)
 
 
-@pytest.mark.parametrize(
-    "custom_dict", [company_attributes_dict_1, company_attributes_dict_2]
-)
-def test_add_company_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
+def test_add_company_id_1_view_with_commercial_profile_with_valid_company(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     """
     Vérifier si un membre du service commercial peut ajouter une entreprise.
     """
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForCreate(db_name).add_company(custom_dict)
+        result = ConsoleClientForCreate(db_name).add_company(company_attributes_dict_1)
+        assert isinstance(result, int)
+        assert result > 0
+    except Exception as error:
+        print(error)
+
+
+def test_add_company_id_3_view_with_commercial_profile_with_valid_company(
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+):
+    """
+    Vérifier si un membre du service commercial peut ajouter une entreprise.
+    """
+    try:
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_company(company_attributes_dict_3)
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
