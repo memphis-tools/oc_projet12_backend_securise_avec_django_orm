@@ -477,6 +477,7 @@ class Location(Base, ModelMixin):
     location_id = Column(String(120), nullable=False, unique=True)
     adresse = Column(String(150), nullable=True)
     complement_adresse = Column(String(75), nullable=True)
+    cedex = Column(Integer, nullable=True, default=None)
     code_postal = Column(Integer, nullable=False)
     ville = Column(String(100), nullable=False)
     pays = Column(String(100), nullable=True, default="France")
@@ -491,6 +492,7 @@ class Location(Base, ModelMixin):
         descriptors += f",(location_id|{self.location_id})"
         descriptors += f",(adresse|{self.adresse})"
         descriptors += f",(complement_adresse|{self.complement_adresse})"
+        descriptors += f",(cedex|{self.cedex})"
         descriptors += f",(code_postal|{self.code_postal})"
         descriptors += f",(ville|{self.ville})"
         descriptors += f",(pays|{self.pays})"
@@ -507,6 +509,7 @@ class Location(Base, ModelMixin):
             "location_id": self.location_id,
             "adresse": self.adresse,
             "complement_adresse": self.complement_adresse,
+            "cedex": self.cedex,
             "code_postal": self.code_postal,
             "ville": self.ville,
             "pays": self.pays,
@@ -518,6 +521,7 @@ class Location(Base, ModelMixin):
         return [
             "adresse",
             "complement_adresse",
+            "cedex",
             "code_postal",
             "ville",
             "pays",
