@@ -207,7 +207,7 @@ def test_delete_location_view_with_commercial_profile_when_location_not_referenc
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
-        dummy_locations_list = ["PL24250"]
+        dummy_locations_list = ["llb44430"]
         for location in dummy_locations_list:
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
