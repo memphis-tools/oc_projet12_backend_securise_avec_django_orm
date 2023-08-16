@@ -13,7 +13,7 @@ def get_infos_data(file_basename):
     return csv_list
 
 
-def display_info_data_one_column(element):
+def display_info_data_large_column(element):
     items = get_infos_data(element)
     items.sort()
     popup = Tk()
@@ -27,7 +27,7 @@ def display_info_data_one_column(element):
     popup.mainloop()
 
 
-def display_info_data_two_column(element):
+def display_info_data_thin_column(element):
     items = get_infos_data(element)
     items.sort()
     popup = Tk()
@@ -35,7 +35,7 @@ def display_info_data_two_column(element):
     popup.title("TYPES VOIES ATTENDUS")
     text = Text(popup, background= "cyan", font=("consolas", 10))
     for item in items:
-        text.insert(INSERT, f"{item}:{item[1]}\n")
+        text.insert(INSERT, f"{item}\n")
         text.pack()
     Button(popup, text="fermer", command=popup.destroy).place(relx=0.5, rely=1.0, anchor=S)
     popup.mainloop()

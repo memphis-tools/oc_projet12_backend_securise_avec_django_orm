@@ -15,7 +15,7 @@ def get_metiers():
     Description: commande dédiée à récupérer les métiers attendus pour un client.
     """
     try:
-        infos_data_controller.display_info_data_one_column("metiers")
+        infos_data_controller.display_info_data_large_column("metiers")
     except Exception as error:
         print(f"[bold red]Problème avec le fichier[/bold red]: {error}")
 
@@ -26,6 +26,6 @@ def get_types_voies():
     Description: commande dédiée à récupérer les types de voirs attendus pour une adresse.
     """
     try:
-        infos_data_controller.display_info_data_two_column("types_voies")
+        infos_data_controller.display_info_data_thin_column("types_voies")
     except Exception as error:
         print(f"[bold red]Problème avec le fichier[/bold red]: {error}")
