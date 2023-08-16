@@ -12,10 +12,47 @@ from rich.prompt import Prompt
 
 try:
     from src.controllers import infos_data_controller
+    from src.datas.make_external_api_call_for_town_based_on_zip_code import get_town_name_from_insee_open_api
+    from src.settings import settings
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from controllers import infos_data_controller
+    from datas.make_external_api_call_for_town_based_on_zip_code import get_town_name_from_insee_open_api
+    from settings import settings
+    from utils import utils
     from validators.data_syntax.fr import validators
+
+
+def display_help(key, item, value):
+    """
+    Description:
+    Appelée par fullfill_form(...).
+    On isole cette fonctionnalité dédiée à proposer des valeurs à saisir.
+    La présentation est içi une popup de Tkinter.
+    """
+    if key == "complement_adresse":
+        if item == "?" or item == "help":
+            infos_data_controller.display_info_data_thin_window(
+                "types_voies"
+            )
+            item = Prompt.ask(f"{value}: ")
+    elif key == "employee_role":
+        if item == "?" or item == "help":
+            infos_data_controller.display_info_data_medium_window("metiers")
+            item = Prompt.ask(f"{value}: ")
+    return item
+
+
+def search_and_submit_a_town_name(code_postal):
+    """
+    Description:
+    Si la variable "settings.INTERNET_CONNECTION" est True alors on interroge une API externe.
+    Içi on appel l'API ouverte 'api-adresse.data.gouv.fr'.
+    A partir du code postal saisi on propose de retenir le nom de ville trouvé.
+    Si ville trouvée alors on connait le nom et on peut retenir le pays comme étant la France (par exemple).
+    """
+    town_name = get_town_name_from_insee_open_api(code_postal)
+    return town_name
 
 
 def fullfill_form(custom_dict, expected_attributes_dict):
@@ -23,20 +60,19 @@ def fullfill_form(custom_dict, expected_attributes_dict):
         for key, value in expected_attributes_dict.items():
             if key not in custom_dict.keys():
                 item = Prompt.ask(f"{value}: ")
-                if key == "complement_adresse":
-                    if item == "?" or item == "help":
-                        infos_data_controller.display_info_data_thin_column(
-                            "types_voies"
-                        )
-                        item = Prompt.ask(f"{value}: ")
-                elif key == "employee_role":
-                    if item == "?" or item == "help":
-                        infos_data_controller.display_info_data_thin_column("metiers")
-                        item = Prompt.ask(f"{value}: ")
+                if key in ["complement_adresse", "employee_role"]:
+                    item = display_help(key, item, value)
+                if key == "code_postal":
+                    pays = ""
+                    ville = search_and_submit_a_town_name(item)
+                    print(f"SIR YOU ARE FULLFILLING ville == {ville}")
+                    if ville and ville is not None:
+                        print(f"API externe a renvoyé {ville} pour le code postal {item}.")
+                        print(f"Pays fixé à '{settings.DEFAULT_COUNTRY}'")
+                        custom_dict["ville"] = ville
+                        custom_dict["pays"] = f"{settings.DEFAULT_COUNTRY}"
                 if item.strip() != "":
                     try:
-                        # validators module is used, dynamically: on déclare pour respect du flake8
-                        validators.is_adresse_valid("adresse")
                         eval(f"validators.is_{key}_valid")(item)
                         custom_dict[key] = item
                     except Exception:
@@ -383,3 +419,9 @@ def submit_a_event_create_form(custom_dict={}):
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
+
+
+def respect_flake8():
+    # validators module is used, dynamically: on déclare pour respect du flake8
+    validators.is_adresse_valid("adresse")
+    return None

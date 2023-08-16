@@ -131,10 +131,11 @@ class ConsoleClientForCreate:
             location_lookup = self.app_view.get_locations_view().get_location(
                 location_id
             )
-            return location_lookup.id
-        except Exception as error:
-            print("Pas de localité avec cet id.")
-            return False
+            if isinstance(location_lookup.id, int):
+                raise exceptions.LocationCustomIdAlReadyExists()
+        except AttributeError:
+            print(f"Pas de localité avec cet id. Nouvel id: {location_id}")
+            return location_id
 
     def ask_for_a_role_id(self):
         role_id = forms.submit_a_collaborator_role_get_form()
@@ -443,8 +444,6 @@ class ConsoleClientForCreate:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 location_id = self.ask_for_a_location_id()
-                if location_id:
-                    raise exceptions.LocationCustomIdAlReadyExists()
                 location_attributes_dict = forms.submit_a_location_create_form(
                     location_id
                 )
@@ -454,12 +453,12 @@ class ConsoleClientForCreate:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.LocationCustomIdAlReadyExists:
-            print("[bold red]Erreur.[/bold red] Id existe déjà")
-            raise exceptions.InsufficientPrivilegeException()
+            print("[bold red]Erreur[/bold red] Id existe déjà")
+            raise exceptions.LocationCustomIdAlReadyExists()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
             print(
-                "[bold red]Erreur.[/bold red] Vos données ne respecte pas le format attendu."
+                "[bold red]Erreur[/bold red] Vos données ne respecte pas le format attendu."
             )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)

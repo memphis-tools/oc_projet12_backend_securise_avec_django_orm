@@ -13,8 +13,12 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 ADMIN_LOGIN = os.environ.get("ADMIN_LOGIN")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
+# interrupteur dédié à engager ou non une recherche auprès d'API externes.
+INTERNET_CONNECTION = True
+
 # variables diverses
 APP_FIGLET_TITLE = "EPIC EVENTS"
+DEFAULT_COUNTRY = "France"
 DEFAULT_CURRENCY = ("euro", "€")
 TRANSLATED_MONTHS = [
     ("janvier", "Jan"),
