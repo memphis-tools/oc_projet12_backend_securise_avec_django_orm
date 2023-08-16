@@ -1,181 +1,181 @@
-abréviation,complet
-ACH,Ancien Chemin
-AER,Aérodrome
-AGL,Agglomération
-AIRE,Aire
-ALL,Allée
-ANGL,Angle
-ARC,Arcade
-ART,Ancienne Route
-AUT,Autoroute
-AV,Avenue
-BASE,Base
-BD,Boulevard
-BER,Berge
-BORD,Bord
-BRE,Barrière
-BRG,Bourg
-BRTL,Bretelle
-BSN,Bassin
-CAE,Carriera
-CALL,Calle
-CAMI,Camin
-CAMP,Camp
-CAN,Canal
-CAR,Carrefour
-CARE,Carrière
-CASR,Caserne
-CC,Chemin Communal
-CD,Chemin Départemental
-CF,Chemin Forestier
-CHA,Chasse
-CHE,Chemin
-CHEM,Cheminement
-CHL,Chalet
-CHP,Champ
-CHS,Chaussée
-CHT,Château
-CHV,Chemin Vicinal
-CITE,Cité
-CIVE,Coursive
-CLOS,Clos
-CLR,Couloir
-COIN,Coin
-COL,Col
-COR,Corniche
-CORO,Coron
-COTE,Côte
-COUR,Cour
-CPG,Camping
-CR,Chemin Rural
-CRS,Cours
-CRX,Croix
-CTR,Contour
-CTRE,Centre
-DARS,Darse
-DEVI,Déviation
-DIG,Digue
-DOM,Domaine
-DRA,Draille
-DSC,Descente
-ECA,Écart
-ECL,Écluse
-EMBR,Embranchement
-ENC,Enclos
-ENV,Enclave
-ESC,Escalier
-ESP,Esplanade
-ESPA,Espace
-ETNG,Étang
-FD,Fond
-FG,Faubourg
-FON,Fontaine
-FORT,Fort
-FOS,Fossé
-FRM,Ferme
-GAL,Galerie
-GARE,Gare
-GBD,Grand Boulevard
-GPL,Grand Place
-GR,Grande Rue
-HAB,Habitation
-HAM,Hameau
-HLE,Halle
-HLG,Halage
-HLM,HLM
-ILE,Île
-ILOT,Ilot
-IMP,Impasse
-JARD,Jardin
-JTE,Jetée
-LAC,Lac
-LEVE,Levée
-LICE,Lices
-LIGN,Ligne
-LOT,Lotissement
-MAIL,Mail
-MAIS,Maison
-MAR,Marché
-MAS,Mas
-MRN,Marina
-MTE,Montée
-NTE,Nouvelle Route
-PAE,Petite Avenue
-PARC,Parc
-PAS,Passage
-PASS,Passe
-PCH,Petit Chemin
-PHAR,Phare
-PIST,Piste
-PKG,Parking
-PL,Place
-PLA,Placa
-PLAG,Plage
-PLAN,Plan
-PLCI,Placis
-PLE,Passerelle
-PLN,Plaine
-PLT,Plateau
-PNT,Pointe
-PONT,Pont
-PORQ,Portique
-PORT,Port
-POST,Poste
-POT,Poterne
-PROM,Promenade
-PRT,Petite Route
-PRV,Parvis
-PTA,Petite Allée
-PTE,Porte
-PTR,Petite Rue
-PTTE,Placette
-QUA,Quartier
-QUAI,Quai
-RAC,Raccourci
-REM,Rempart
-RES,Résidence
-RIVE,Rive
-RLE,Ruelle
-ROC,Rocade
-RPE,Rampe
-RPT,Rond-Point
-RTD,Rotonde
-RTE,Route
-RUE,Rue
-RUET,Ruette
-RUIS,Ruisseau
-RULT,Ruellette
-RVE,Ravine
-SAS,Sas
-SEN,Sentier
-SQ,Square
-STDE,Stade
-TOUR,Tour
-TPL,Terre-plein
-TRA,Traverse
-TRAB,Traboule
-TRN,Terrain
-TRT,Tertre
-TSSE,Terrasse
-TUN,Tunnel
-VAL,Val
-VALL,Vallon
-VC,Voie Communale
-VCHE,Vieux Chemin
-VEN,Venelle
-VGE,Village
-VIA,Via
-VIAD,Viaduc
-VIL,Ville
-VLA,Villa
-VOIE,Voie
-VOIR,Voirie
-VOUT,Voute
-VOY,Voyeul
-VTE,Vieille Route
-ZA,ZA
-ZAC,ZAC
-ZAD,ZAD
-ZI,ZI
-ZONE,Zone
-ZUP,ZUP
+intitulé
+Ancien Chemin
+Aérodrome
+Agglomération
+Aire
+Allée
+Angle
+Arcade
+Ancienne Route
+Autoroute
+Avenue
+Base
+Boulevard
+Berge
+Bord
+Barrière
+Bourg
+Bretelle
+Bassin
+Carriera
+Calle
+Camin
+Camp
+Canal
+Carrefour
+Carrière
+Caserne
+Chemin Communal
+Chemin Départemental
+Chemin Forestier
+Chasse
+Chemin
+Cheminement
+Chalet
+Champ
+Chaussée
+Château
+Chemin Vicinal
+Cité
+Coursive
+Clos
+Couloir
+Coin
+Col
+Corniche
+Coron
+Côte
+Cour
+Camping
+Chemin Rural
+Cours
+Croix
+Contour
+Centre
+Darse
+Déviation
+Digue
+Domaine
+Draille
+Descente
+Écart
+Écluse
+Embranchement
+Enclos
+Enclave
+Escalier
+Esplanade
+Espace
+Étang
+Fond
+Faubourg
+Fontaine
+Fort
+Fossé
+Ferme
+Galerie
+Gare
+Grand Boulevard
+Grand Place
+Grande Rue
+Habitation
+Hameau
+Halle
+Halage
+HLM
+Île
+Ilot
+Impasse
+Jardin
+Jetée
+Lac
+Levée
+Lices
+Ligne
+Lotissement
+Mail
+Maison
+Marché
+Mas
+Marina
+Montée
+Nouvelle Route
+Petite Avenue
+Parc
+Passage
+Passe
+Petit Chemin
+Phare
+Piste
+Parking
+Place
+Placa
+Plage
+Plan
+Placis
+Passerelle
+Plaine
+Plateau
+Pointe
+Pont
+Portique
+Port
+Poste
+Poterne
+Promenade
+Petit Route
+Parvis
+Petite Allée
+Porte
+PetiteRue
+Placette
+Quartier
+Quai
+Raccourci
+Rempart
+Résidence
+Rive
+Ruelle
+Rocade
+Rampe
+Rond-Point
+Rotonde
+Route
+Rue
+Ruette
+Ruisseau
+Ruellette
+Ravine
+Sas
+Sentier
+Square
+Stade
+Tour
+Terre-plein
+Traverse
+Traboule
+Terrain
+Tertre
+Terrasse
+Tunnel
+Val
+Vallon
+Voie Communale
+Vieux Chemin
+Venelle
+Village
+Via
+Viaduc
+Ville
+Villa
+Voie
+Voirie
+Voute
+Voyeul
+Vieille Route
+ZA
+ZAC
+ZAD
+ZI
+Zone
+ZUP

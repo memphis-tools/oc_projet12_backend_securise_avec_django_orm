@@ -92,12 +92,25 @@ def is_company_subregistration_number_valid(company_subregistration_number):
     return re.match(pattern, company_subregistration_number).group()
 
 
+def is_complement_word_foreseen(complement_words):
+    valid_complement_list = infos_data_controller.get_infos_data("types_voies")
+    for word in complement_words:
+        if word in valid_complement_list:
+            return True
+    return False
+
+
 def is_complement_adresse_valid(complement_adresse):
     """
     Description: Controler le complément adresse saisis.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r'\w{,75}$')
+    if complement_adresse == '""' or complement_adresse == "''":
+        return complement_adresse
+    pattern = re.compile(r'[\w ]{,75}$')
+    complement_words = complement_adresse.split(" ")
+    if not is_complement_word_foreseen(complement_words):
+        return False
     return re.match(pattern, complement_adresse).group()
 
 
