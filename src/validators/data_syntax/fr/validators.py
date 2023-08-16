@@ -16,7 +16,7 @@ def is_adresse_valid(adresse):
     Description: Controler l'adresse saisis.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"[\w ]{,150}$")
+    pattern = re.compile(r"[\w ']{,150}$")
     return re.match(pattern, adresse).group()
 
 
@@ -71,7 +71,7 @@ def is_company_name_valid(company_name):
     Description: Controler le nom d'entreprise saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,130})$")
+    pattern = re.compile(r"([\w ']{,130})$")
     return re.match(pattern, company_name).group()
 
 
@@ -108,7 +108,7 @@ def is_complement_adresse_valid(complement_adresse):
     """
     if complement_adresse == '""' or complement_adresse == "''":
         return complement_adresse
-    pattern = re.compile(r"[\w ]{,75}$")
+    pattern = re.compile(r"[\w' ]{,75}$")
     complement_words = complement_adresse.split(" ")
     if not is_complement_word_foreseen(complement_words):
         return False
@@ -120,7 +120,7 @@ def is_contract_id_valid(contract_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,120})$")
+    pattern = re.compile(r"([\w ']{,120})$")
     return re.match(pattern, contract_id).group()
 
 
@@ -138,7 +138,7 @@ def is_department_id_valid(department_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,120})$")
+    pattern = re.compile(r"([\w ']{,120})$")
     return re.match(pattern, department_id).group()
 
 
@@ -193,7 +193,7 @@ def is_first_name_valid(first_name):
     Description: Controler le prénom saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,150})$")
+    pattern = re.compile(r"([\w ']{,150})$")
     return re.match(pattern, first_name).group()
 
 
@@ -213,7 +213,7 @@ def is_last_name_valid(first_name):
     Description: Controler le nom saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,75})$")
+    pattern = re.compile(r"([\w ']{,75})$")
     return re.match(pattern, first_name).group()
 
 
@@ -222,7 +222,7 @@ def is_location_id_valid(location_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,120})$")
+    pattern = re.compile(r"([\w ']{,120})$")
     return re.match(pattern, location_id).group()
 
 
@@ -231,7 +231,7 @@ def is_notes_valid(notes):
     Description: Controler les notes saisis (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,2500})$")
+    pattern = re.compile(r"([\w ' \"]{,2500})$")
     return re.match(pattern, notes).group()
 
 
@@ -240,7 +240,7 @@ def is_pays_valid(pays):
     Description: Controler le pays saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,100})$")
+    pattern = re.compile(r"([\w ']{,100})$")
     return re.match(pattern, pays).group()
 
 
@@ -269,7 +269,7 @@ def is_role_id_valid(role_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,120})$")
+    pattern = re.compile(r"([\w ' ]{,120})$")
     return re.match(pattern, role_id).group()
 
 
@@ -296,7 +296,7 @@ def is_title_valid(title):
     Description: Controler le titre saisi.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"\w {,125}$")
+    pattern = re.compile(r"\w ' {,125}$")
     return re.match(pattern, title).group()
 
 
@@ -314,5 +314,5 @@ def is_ville_valid(ville):
     Description: Controler la ville saisie.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"\w{,100}$")
+    pattern = re.compile(r"[\w' ]{,100}$")
     return re.match(pattern, ville).group()
