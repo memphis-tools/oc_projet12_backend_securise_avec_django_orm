@@ -62,7 +62,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
             return self.update_app_view.get_clients_view().update_client(current_user_collaborator_id, user_service, custom_partial_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToClient:
@@ -74,7 +74,7 @@ class ConsoleClientForUpdate:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
 
     @authentication_permission_decorator
@@ -89,19 +89,19 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
+            return self.update_app_view.get_collaborators_view().update_collaborator(
+                custom_partial_dict
+            )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.update_app_view.get_collaborators_view().update_collaborator(
-            custom_partial_dict
-        )
 
     @authentication_permission_decorator
     def update_collaborator_password(self, old_password="", new_password=""):
@@ -153,19 +153,19 @@ class ConsoleClientForUpdate:
         try:
             if "company" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
+            return self.update_app_view.get_companies_view().update_company(
+                custom_partial_dict
+            )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.update_app_view.get_companies_view().update_company(
-            custom_partial_dict
-        )
 
     @authentication_permission_decorator
     def update_contract(self, custom_partial_dict=""):
@@ -183,7 +183,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
             return self.update_app_view.get_contracts_view().update_contract(current_user_collaborator_id, user_service,custom_partial_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
@@ -194,7 +194,7 @@ class ConsoleClientForUpdate:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
 
     @authentication_permission_decorator
@@ -209,19 +209,19 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator_department" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
+            return self.update_app_view.get_departments_view().update_department(
+                custom_partial_dict
+            )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.update_app_view.get_departments_view().update_department(
-            custom_partial_dict
-        )
 
     @authentication_permission_decorator
     def update_event(self, custom_partial_dict=""):
@@ -239,19 +239,22 @@ class ConsoleClientForUpdate:
             # un membre du service commercial n'a accès qu'en lecture seule
             if "event" not in allowed_crud_tables or user_service.lower() == "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
+            # dans le cas où d'un collaborateur du serivce gestion, il modifie seulement s'il est assigné.
+            return self.update_app_view.get_events_view().update_event(current_user_collaborator_id, user_service, custom_partial_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
+            sys.exit(0)
+        except exceptions.SupportCollaboratorIsNotAssignedToEvent:
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas le collaborateur support associé à l'évènement.")
+            raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-
-        # dans le cas où d'un collaborateur du serivce gestion, il modifie seulement s'il est assigné.
-        return self.update_app_view.get_events_view().update_event(current_user_collaborator_id, user_service, custom_partial_dict)
 
     @authentication_permission_decorator
     def update_location(self, custom_partial_dict=""):
@@ -265,19 +268,19 @@ class ConsoleClientForUpdate:
         try:
             if "location" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
+            return self.update_app_view.get_locations_view().update_location(
+                custom_partial_dict
+            )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.update_app_view.get_locations_view().update_location(
-            custom_partial_dict
-        )
 
     @authentication_permission_decorator
     def update_role(self, custom_partial_dict=""):
@@ -291,14 +294,14 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator_role" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
+            return self.update_app_view.get_roles_view().update_role(custom_partial_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.update_app_view.get_roles_view().update_role(custom_partial_dict)

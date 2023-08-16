@@ -212,7 +212,6 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-
         return location.get_dict()
 
     def update_role(self, session, role_dict):
