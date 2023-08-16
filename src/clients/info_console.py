@@ -4,13 +4,17 @@ Description: console dédiée aux commandes infos
 from rich import print
 
 try:
-    from src.controllers.infos_update_password_controller import display_info_password_policy
+    from src.controllers.infos_update_password_controller import (
+        display_info_password_policy,
+    )
     from src.settings import settings
     from src.utils.utils import authentication_permission_decorator
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
 except ModuleNotFoundError:
-    from controllers.infos_update_password_controller import display_info_password_policy
+    from controllers.infos_update_password_controller import (
+        display_info_password_policy,
+    )
     from settings import settings
     from utils.utils import authentication_permission_decorator, display_banner
     from views.views import AppViews
@@ -39,4 +43,6 @@ class InformationConsoleClient:
         try:
             display_info_password_policy()
         except Exception as error:
-            print(f"[bold red]Erreur lors de l'accès à la politique de mot de passe.[/bold red] Absence de jeton.")
+            print(
+                "[bold red]Erreur[/bold red] Absence de jeton."
+            )

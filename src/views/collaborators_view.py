@@ -2,13 +2,12 @@
 vue collaborateurs
 """
 from rich.console import Console
+
 try:
     from src.utils import utils
-    from src.settings import settings
     from src.validators import update_data_validators
 except ModuleNotFoundError:
     from utils import utils
-    from settings import settings
     from validators import update_data_validators
 
 
@@ -32,9 +31,13 @@ class CollaboratorsView:
         console = Console()
         if len(user_query_filters_args) > 0:
             try:
-                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Collaborator")
+                db_model_queryset = self.db_controller.get_filtered_models(
+                    self.session, user_query_filters_args[0], "Collaborator"
+                )
                 if len(db_model_queryset) > 0:
-                    table = utils.set_a_click_table_from_data("utilisateurs", db_model_queryset)
+                    table = utils.set_a_click_table_from_data(
+                        "utilisateurs", db_model_queryset
+                    )
                     console.print(table)
                     print("Aucuns autres utilisateurs")
                 else:
@@ -45,7 +48,9 @@ class CollaboratorsView:
         else:
             db_model_queryset = self.db_controller.get_collaborators(self.session)
             if len(db_model_queryset) > 0:
-                table = utils.set_a_click_table_from_data("utilisateurs", db_model_queryset)
+                table = utils.set_a_click_table_from_data(
+                    "utilisateurs", db_model_queryset
+                )
                 console.print(table)
                 print("Aucun autres utilisateurs")
             else:
@@ -84,7 +89,9 @@ class CollaboratorsView:
         """
         return self.db_controller.update_collaborator(self.session, custom_dict)
 
-    def update_collaborator_password(self, user_registration_number, old_password, new_password):
+    def update_collaborator_password(
+        self, user_registration_number, old_password, new_password
+    ):
         """
         Description:
         Dédiée à mettre à jour le mot de passe d'un collaborateur.
@@ -94,20 +101,17 @@ class CollaboratorsView:
         - new_password: chaine de caractères, le nouveau mot de passe de l'utilisateur /du collaborateur.
         """
         conn = utils.get_a_database_connection(
-            user_name=user_registration_number,
-            user_pwd=old_password
+            user_name=user_registration_number, user_pwd=old_password
         )
         return self.db_controller.update_collaborator_password(
-            conn,
-            user_registration_number,
-            new_password
+            conn, user_registration_number, new_password
         )
 
     def old_collaborator_password_is_valid(
         self,
         user_registration_number,
         old_password,
-        ):
+    ):
         """
         Description:
         Dédiée à vérifier le mot de passe courant d'un collaborateur de l'entreprise.

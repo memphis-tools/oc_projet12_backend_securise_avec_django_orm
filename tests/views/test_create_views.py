@@ -89,7 +89,7 @@ commercial_collaborator_attributes_dict_1 = {
     "username": "dummy bigtooth",
     "department_id": "1",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50"
+    "creation_date": "2023-05-15 10:50",
 }
 
 commercial_collaborator_attributes_dict_2 = {
@@ -97,7 +97,7 @@ commercial_collaborator_attributes_dict_2 = {
     "username": "dummy bigfoot",
     "department_id": "1",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50"
+    "creation_date": "2023-05-15 10:50",
 }
 
 gestion_collaborator_attributes_dict_1 = {
@@ -105,7 +105,7 @@ gestion_collaborator_attributes_dict_1 = {
     "username": "dustin river",
     "department_id": "2",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50"
+    "creation_date": "2023-05-15 10:50",
 }
 
 gestion_collaborator_attributes_dict_2 = {
@@ -113,7 +113,7 @@ gestion_collaborator_attributes_dict_2 = {
     "username": "myriam lake",
     "department_id": "2",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50"
+    "creation_date": "2023-05-15 10:50",
 }
 
 support_collaborator_attributes_dict_1 = {
@@ -121,7 +121,7 @@ support_collaborator_attributes_dict_1 = {
     "username": "william summerland",
     "department_id": "3",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50"
+    "creation_date": "2023-05-15 10:50",
 }
 
 support_collaborator_attributes_dict_2 = {
@@ -129,7 +129,7 @@ support_collaborator_attributes_dict_2 = {
     "username": "marianne dupin",
     "department_id": "3",
     "role_id": "2",
-    "creation_date": "2023-05-15 10:50"
+    "creation_date": "2023-05-15 10:50",
 }
 
 contract_attributes_dict_1 = {
@@ -180,13 +180,29 @@ event_attributes_dict_2 = {
     "creation_date": "2023-07-15 22:00:00",
 }
 
-department_attributes_dict_1 = {"department_id": "design", "name": "oc12_design", "creation_date": "2023-07-15 22:00:00"}
+dpmt_attributes_dict_1 = {
+    "department_id": "design",
+    "name": "oc12_design",
+    "creation_date": "2023-07-15 22:00:00",
+}
 
-department_attributes_dict_2 = {"department_id": "logist", "name": "oc12_logistic", "creation_date": "2023-07-15 22:00:00"}
+dpmt_attributes_dict_2 = {
+    "department_id": "logist",
+    "name": "oc12_logistic",
+    "creation_date": "2023-07-15 22:00:00",
+}
 
-role_attributes_dict_1 = {"role_id": "sec", "name": "SECRETARY", "creation_date": "2023-07-15 22:00:00"}
+role_attributes_dict_1 = {
+    "role_id": "sec",
+    "name": "SECRETARY",
+    "creation_date": "2023-07-15 22:00:00",
+}
 
-role_attributes_dict_2 = {"role_id": "driv", "name": "DRIVER", "creation_date": "2023-07-15 22:00:00"}
+role_attributes_dict_2 = {
+    "role_id": "driv",
+    "name": "DRIVER",
+    "creation_date": "2023-07-15 22:00:00",
+}
 
 
 @pytest.mark.parametrize(
@@ -194,7 +210,7 @@ role_attributes_dict_2 = {"role_id": "driv", "name": "DRIVER", "creation_date": 
     [
         commercial_collaborator_attributes_dict_1,
         gestion_collaborator_attributes_dict_2,
-        support_collaborator_attributes_dict_1
+        support_collaborator_attributes_dict_1,
     ],
 )
 def test_add_collaborator_view_with_commercial_profile(
@@ -213,7 +229,7 @@ def test_add_collaborator_view_with_commercial_profile(
     [
         commercial_collaborator_attributes_dict_1,
         gestion_collaborator_attributes_dict_2,
-        support_collaborator_attributes_dict_1
+        support_collaborator_attributes_dict_1,
     ],
 )
 def test_add_collaborator_view_with_support_profile(
@@ -235,7 +251,7 @@ def test_add_collaborator_view_with_support_profile(
         gestion_collaborator_attributes_dict_1,
         gestion_collaborator_attributes_dict_2,
         support_collaborator_attributes_dict_1,
-        support_collaborator_attributes_dict_2
+        support_collaborator_attributes_dict_2,
     ],
 )
 def test_add_collaborator_view_with_gestion_profile(
@@ -261,7 +277,9 @@ def test_add_valid_location_view_with_commercial_profile(
     """
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForCreate(db_name).add_location(location_attributes_dict_1)
+        result = ConsoleClientForCreate(db_name).add_location(
+            location_attributes_dict_1
+        )
         assert isinstance(result, int)
         assert result > 0
     except Exception as error:
@@ -276,7 +294,9 @@ def test_add_unvalid_location_view_with_commercial_profile(
     """
     with pytest.raises(exceptions.SuppliedDataNotMatchModel):
         db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForCreate(db_name).add_location(location_attributes_dict_2)
+        result = ConsoleClientForCreate(db_name).add_location(
+            location_attributes_dict_2
+        )
 
 
 @pytest.mark.parametrize(
@@ -482,7 +502,7 @@ def test_add_role_view_with_gestion_profile(
 
 
 @pytest.mark.parametrize(
-    "custom_dict", [department_attributes_dict_1, department_attributes_dict_2]
+    "custom_dict", [dpmt_attributes_dict_1, dpmt_attributes_dict_2]
 )
 def test_add_department_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
@@ -500,7 +520,7 @@ def test_add_department_view_with_gestion_profile(
 
 
 @pytest.mark.parametrize(
-    "custom_dict", [department_attributes_dict_1, department_attributes_dict_2]
+    "custom_dict", [dpmt_attributes_dict_1, dpmt_attributes_dict_2]
 )
 def test_add_department_view_with_commercial_profile(
     get_runner, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict

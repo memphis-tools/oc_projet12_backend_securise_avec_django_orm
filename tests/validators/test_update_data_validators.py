@@ -2,6 +2,7 @@
 test des validateurs qui controlent les mises à jour de données
 """
 import pytest
+
 try:
     from src.validators import update_data_validators
 except ModuleNotFoundError:
@@ -17,7 +18,7 @@ def test_new_collaborator_password_is_valid_with_valid_new_password():
     assert ret is True
 
 
-@pytest.mark.parametrize('new_password', ("123", "azerty", "azerty123"))
+@pytest.mark.parametrize("new_password", ("123", "azerty", "azerty123"))
 def test_new_collaborator_password_is_valid_with_unvalid_new_password(new_password):
     """
     Description:

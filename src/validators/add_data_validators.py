@@ -30,7 +30,13 @@ def add_client_data_is_valid(data) -> bool:
 
 
 def add_collaborator_data_is_valid(data) -> bool:
-    expected_keys = ["creation_date", "registration_number", "username", "department_id", "role_id"]
+    expected_keys = [
+        "creation_date",
+        "registration_number",
+        "username",
+        "department_id",
+        "role_id",
+    ]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b
 

@@ -52,13 +52,15 @@ class Collaborator_Department(Base):
     department_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
-    collaborator = relationship("Collaborator", back_populates="department", passive_deletes='all')
+    collaborator = relationship(
+        "Collaborator", back_populates="department", passive_deletes="all"
+    )
 
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(department_id|{self.department_id})'
-        descriptors += f',(name|{self.name})'
+        descriptors += f",(department_id|{self.department_id})"
+        descriptors += f",(name|{self.name})"
         descriptors += "]"
         return descriptors
 
@@ -91,13 +93,15 @@ class Collaborator_Role(Base):
     role_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
-    collaborator = relationship("Collaborator", back_populates="role", passive_deletes='all')
+    collaborator = relationship(
+        "Collaborator", back_populates="role", passive_deletes="all"
+    )
 
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(role_id|{self.role_id})'
-        descriptors += f',(name|{self.name})'
+        descriptors += f",(role_id|{self.role_id})"
+        descriptors += f",(name|{self.name})"
         descriptors += "]"
         return descriptors
 
@@ -133,18 +137,24 @@ class Collaborator(Base):
     role_id = Column(Integer, ForeignKey("collaborator_role.id"), default=2)
     department = relationship("Collaborator_Department", back_populates="collaborator")
     role = relationship("Collaborator_Role", back_populates="collaborator")
-    client = relationship("Client", back_populates="collaborator", passive_deletes='all')
-    contract = relationship("Contract", back_populates="collaborator", passive_deletes='all')
+    client = relationship(
+        "Client", back_populates="collaborator", passive_deletes="all"
+    )
+    contract = relationship(
+        "Contract", back_populates="collaborator", passive_deletes="all"
+    )
     event = relationship("Event", back_populates="collaborator")
-    creation_date = Column(DateTime(), nullable=False, default=utils.get_today_fulldate())
+    creation_date = Column(
+        DateTime(), nullable=False, default=utils.get_today_fulldate()
+    )
 
     def __str__(self):
         descriptors = "["
-        descriptors += f'(creation_date|{self.creation_date})'
-        descriptors += f',(user_id|{self.registration_number})'
-        descriptors += f',(username|{self.username})'
-        descriptors += f',(department_id|{self.department_id})'
-        descriptors += f',(role|{self.role_id})'
+        descriptors += f"(creation_date|{self.creation_date})"
+        descriptors += f",(user_id|{self.registration_number})"
+        descriptors += f",(username|{self.username})"
+        descriptors += f",(department_id|{self.department_id})"
+        descriptors += f",(role|{self.role_id})"
         descriptors += "]"
         return descriptors
 
@@ -178,23 +188,31 @@ class Company(Base):
 
     __tablename__ = "company"
     id = Column(Integer, primary_key=True)
-    company_id = Column(String(120), nullable=False, unique=True,)
+    company_id = Column(
+        String(120),
+        nullable=False,
+        unique=True,
+    )
     company_name = Column(String(130), nullable=False)
     company_registration_number = Column(String(100), nullable=False)
     company_subregistration_number = Column(String(50), nullable=False)
     location_id = Column(Integer, ForeignKey("location.id"))
-    client = relationship("Client", back_populates="company", passive_deletes='all')
-    location = relationship("Location", back_populates="company", passive_deletes='all')
+    client = relationship("Client", back_populates="company", passive_deletes="all")
+    location = relationship("Location", back_populates="company", passive_deletes="all")
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
 
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(company_id|{self.company_id})'
-        descriptors += f',(company_name|{self.company_name})'
-        descriptors += f',(company_registration_number|{self.company_registration_number})'
-        descriptors += f',(company_subregistration_number|{self.company_subregistration_number})'
-        descriptors += f',(location_id|{self.location.location_id})'
+        descriptors += f",(company_id|{self.company_id})"
+        descriptors += f",(company_name|{self.company_name})"
+        descriptors += (
+            f",(company_registration_number|{self.company_registration_number})"
+        )
+        descriptors += (
+            f",(company_subregistration_number|{self.company_subregistration_number})"
+        )
+        descriptors += f",(location_id|{self.location.location_id})"
         descriptors += "]"
         return descriptors
 
@@ -248,25 +266,27 @@ class Client(Base):
     last_update_date = Column(Date(), nullable=False, default=utils.get_today_date())
     commercial_contact = Column(Integer, ForeignKey("collaborator.id"))
     # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer un client si référencée par un collaborateur
-    collaborator = relationship("Collaborator", back_populates="client", passive_deletes='all')
+    collaborator = relationship(
+        "Collaborator", back_populates="client", passive_deletes="all"
+    )
     # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer un client si référencée par une entreprise
-    company = relationship("Company", back_populates="client", passive_deletes='all')
+    company = relationship("Company", back_populates="client", passive_deletes="all")
     # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer un client si référencée par un contrat
-    contract = relationship("Contract", back_populates="client", passive_deletes='all')
+    contract = relationship("Contract", back_populates="client", passive_deletes="all")
     event = relationship("Event", back_populates="client")
 
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(client_id|{self.client_id})'
-        descriptors += f',(civility|{self.civility})'
-        descriptors += f',(first_name|{self.first_name})'
-        descriptors += f',(last_name|{self.last_name})'
-        descriptors += f',(employee_role|{self.employee_role})'
-        descriptors += f',(email|{self.email})'
-        descriptors += f',(telephone|{self.telephone})'
-        descriptors += f',(company_id|{self.company.company_id})'
-        descriptors += f',(commercial_contact|{self.collaborator.registration_number})'
+        descriptors += f",(client_id|{self.client_id})"
+        descriptors += f",(civility|{self.civility})"
+        descriptors += f",(first_name|{self.first_name})"
+        descriptors += f",(last_name|{self.last_name})"
+        descriptors += f",(employee_role|{self.employee_role})"
+        descriptors += f",(email|{self.email})"
+        descriptors += f",(telephone|{self.telephone})"
+        descriptors += f",(company_id|{self.company.company_id})"
+        descriptors += f",(commercial_contact|{self.collaborator.registration_number})"
         descriptors += "]"
         return descriptors
 
@@ -319,20 +339,22 @@ class Contract(Base):
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     status = Column(ChoiceType(STATUS), default="unsigned")
     client_id = Column(Integer, ForeignKey("client.id"))
-    client = relationship("Client", back_populates="contract", passive_deletes='all')
+    client = relationship("Client", back_populates="contract", passive_deletes="all")
     collaborator_id = Column(Integer, ForeignKey("collaborator.id"))
-    collaborator = relationship("Collaborator", back_populates="contract", passive_deletes='all')
-    event = relationship("Event", back_populates="contract", passive_deletes='all')
+    collaborator = relationship(
+        "Collaborator", back_populates="contract", passive_deletes="all"
+    )
+    event = relationship("Event", back_populates="contract", passive_deletes="all")
 
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(contract_id|{self.contract_id})'
-        descriptors += f',(client_id|{self.client.client_id})'
-        descriptors += f',(collaborator_id|{self.collaborator.registration_number})'
-        descriptors += f',(status|{self.status})'
-        descriptors += f',(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})'
-        descriptors += f',(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})'
+        descriptors += f",(contract_id|{self.contract_id})"
+        descriptors += f",(client_id|{self.client.client_id})"
+        descriptors += f",(collaborator_id|{self.collaborator.registration_number})"
+        descriptors += f",(status|{self.status})"
+        descriptors += f",(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
+        descriptors += f",(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
         descriptors += "]"
         return descriptors
 
@@ -346,7 +368,6 @@ class Contract(Base):
             "contract_id": self.contract_id,
             "full_amount_to_pay": self.full_amount_to_pay,
             "remain_amount_to_pay": self.remain_amount_to_pay,
-            "creation_date": self.creation_date.strftime("%d-%m-%Y"),
             "status": f"{self.status}",
             "client_id": self.client_id,
             "collaborator_id": self.collaborator_id,
@@ -376,18 +397,14 @@ class Event(Base):
     event_id = Column(String(120), nullable=False, unique=True)
     title = Column(String(125), nullable=False)
     contract_id = Column(Integer, ForeignKey("contract.id"))
-    contract = relationship("Contract", back_populates="event", passive_deletes='all')
+    contract = relationship("Contract", back_populates="event", passive_deletes="all")
     client_id = Column(Integer, ForeignKey("client.id"))
-    client = relationship("Client", back_populates="event", passive_deletes='all')
-    collaborator_id = Column(Integer,ForeignKey("collaborator.id"), nullable=True)
+    client = relationship("Client", back_populates="event", passive_deletes="all")
+    collaborator_id = Column(Integer, ForeignKey("collaborator.id"), nullable=True)
     collaborator = relationship("Collaborator", back_populates="event")
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
-    event_start_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
-    event_end_date = Column(
-        DateTime(timezone=False), default=datetime.now()
-    )
+    event_start_date = Column(DateTime(timezone=False), default=datetime.now())
+    event_end_date = Column(DateTime(timezone=False), default=datetime.now())
     location_id = Column(Integer, ForeignKey("location.id"))
     location = relationship("Location", back_populates="event")
     attendees = Column(Integer, nullable=False)
@@ -396,16 +413,22 @@ class Event(Base):
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(event_id|{self.event_id})'
-        descriptors += f',(title|{self.title})'
-        descriptors += f',(contract_id|{self.contract.contract_id})'
-        descriptors += f',(client_id|{self.client.client_id})'
-        descriptors += f',(collaborator_id|{self.collaborator.registration_number})' if self.collaborator_id!=None else f',(collaborator_id|Aucun)'
-        descriptors += f',(event_start_date|{self.event_start_date.strftime("%d-%m-%Y")})'
+        descriptors += f",(event_id|{self.event_id})"
+        descriptors += f",(title|{self.title})"
+        descriptors += f",(contract_id|{self.contract.contract_id})"
+        descriptors += f",(client_id|{self.client.client_id})"
+        descriptors += (
+            f",(collaborator_id|{self.collaborator.registration_number})"
+            if self.collaborator_id is not None
+            else ",(collaborator_id|Aucun)"
+        )
+        descriptors += (
+            f',(event_start_date|{self.event_start_date.strftime("%d-%m-%Y")})'
+        )
         descriptors += f',(event_end_date|{self.event_end_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(location_id|{self.location.location_id})'
-        descriptors += f',(attendees|{self.attendees})'
-        descriptors += f',(notes|{self.notes})'
+        descriptors += f",(location_id|{self.location.location_id})"
+        descriptors += f",(attendees|{self.attendees})"
+        descriptors += f",(notes|{self.notes})"
         descriptors += "]"
         return descriptors
 
@@ -459,18 +482,18 @@ class Location(Base, ModelMixin):
     pays = Column(String(100), nullable=True, default="France")
     event = relationship("Event", back_populates="location")
     # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer une localité si référencée par une entreprise
-    company = relationship("Company", back_populates="location", passive_deletes='all')
+    company = relationship("Company", back_populates="location", passive_deletes="all")
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
 
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(location_id|{self.location_id})'
-        descriptors += f',(adresse|{self.adresse})'
-        descriptors += f',(complement_adresse|{self.complement_adresse})'
-        descriptors += f',(code_postal|{self.code_postal})'
-        descriptors += f',(ville|{self.ville})'
-        descriptors += f',(pays|{self.pays})'
+        descriptors += f",(location_id|{self.location_id})"
+        descriptors += f",(adresse|{self.adresse})"
+        descriptors += f",(complement_adresse|{self.complement_adresse})"
+        descriptors += f",(code_postal|{self.code_postal})"
+        descriptors += f",(ville|{self.ville})"
+        descriptors += f",(pays|{self.pays})"
         descriptors += "]"
         return descriptors
 

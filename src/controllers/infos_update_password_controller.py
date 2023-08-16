@@ -1,5 +1,5 @@
-import csv
 from rich import print
+
 try:
     from src.settings import settings
     from src.utils.utils import display_banner
@@ -9,6 +9,7 @@ except ModuleNotFoundError:
 
 
 def display_info_password_policy():
+    display_banner()
     directives = settings.NEW_PASSWORD_POLICY
     title = "[bold #F7E987]POLITIQUE DES MOTS DE PASSE[/bold #F7E987]"
     print(title)

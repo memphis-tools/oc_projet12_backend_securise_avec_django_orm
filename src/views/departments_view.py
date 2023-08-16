@@ -2,6 +2,7 @@
 vue departments
 """
 from rich.console import Console
+
 try:
     from src.utils import utils
 except ModuleNotFoundError:
@@ -27,9 +28,13 @@ class DepartmentsView:
         console = Console()
         if len(user_query_filters_args) > 0:
             try:
-                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Collaborator_Department")
+                db_model_queryset = self.db_controller.get_filtered_models(
+                    self.session, user_query_filters_args[0], "Collaborator_Department"
+                )
                 if len(db_model_queryset) > 0:
-                    table = utils.set_a_click_table_from_data("services /départements", db_model_queryset)
+                    table = utils.set_a_click_table_from_data(
+                        "services /départements", db_model_queryset
+                    )
                     console.print(table)
                     print("Aucuns autres services")
                 else:
@@ -40,7 +45,9 @@ class DepartmentsView:
         else:
             db_model_queryset = self.db_controller.get_departments(self.session)
             if len(db_model_queryset) > 0:
-                table = utils.set_a_click_table_from_data("services /départements", db_model_queryset)
+                table = utils.set_a_click_table_from_data(
+                    "services /départements", db_model_queryset
+                )
                 console.print(table)
                 print("Aucun autres services")
             else:

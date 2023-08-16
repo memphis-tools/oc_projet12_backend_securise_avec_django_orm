@@ -2,6 +2,7 @@
 Un controleur avec toutes méthodes pour ajouter des données.
 """
 from sqlalchemy import text
+
 try:
     from src.exceptions import exceptions
     from src.settings import settings
@@ -39,12 +40,16 @@ class DatabaseCreateController:
             role = collaborator.registration_number
             password = settings.DEFAULT_NEW_COLLABORATOR_PASSWORD
             department_id = collaborator.department_id
-            sql = text(f"""SELECT name FROM collaborator_department WHERE id = {department_id}""")
+            sql = text(
+                f"""SELECT name FROM collaborator_department WHERE id = {department_id}"""
+            )
             result = session.execute(sql).first()
             department = str(result[0]).lower()
 
             if department == "oc12_gestion":
-                sql = text(f"""CREATE ROLE {role} CREATEROLE LOGIN PASSWORD '{password}'""")
+                sql = text(
+                    f"""CREATE ROLE {role} CREATEROLE LOGIN PASSWORD '{password}'"""
+                )
                 session.execute(sql)
             else:
                 sql = text(f"""CREATE ROLE {role} LOGIN PASSWORD '{password}'""")

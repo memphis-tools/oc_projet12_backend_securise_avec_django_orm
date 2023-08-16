@@ -1,7 +1,7 @@
 """
 Un controleur avec toutes méthodes pour mettre à jour des données.
 """
-from sqlalchemy import text
+
 try:
     from src.exceptions import exceptions
     from src.models import models
@@ -17,7 +17,9 @@ class DatabaseUpdateController:
     Description: Toutes les méthodes pour mettre à jour des données.
     """
 
-    def update_client(self, session, current_user_collaborator_id, user_service, client_dict):
+    def update_client(
+        self, session, current_user_collaborator_id, user_service, client_dict
+    ):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un client.
         Requête de la base de données et renvoie True si réussie..
@@ -50,22 +52,30 @@ class DatabaseUpdateController:
             .filter_by(registration_number=collaborator_id)
             .first()
         )
-        keys_to_explore = models.Collaborator.metadata.tables["collaborator"].columns.keys()
+        keys_to_explore = models.Collaborator.metadata.tables[
+            "collaborator"
+        ].columns.keys()
         department_id = collaborator.department_id
-        current_department_name = utils.get_department_name_from_id(session, department_id)
+        current_department_name = utils.get_department_name_from_id(
+            session, department_id
+        )
         try:
             for key in keys_to_explore:
                 if key in collaborator_dict.keys():
                     if key == "department":
                         asked_departement = collaborator_dict["department"]
-                        new_department_id = utils.get_department_id_from_name(session, asked_departement)
-                        new_department_name = utils.get_department_name_from_id(session, new_department_id)
+                        new_department_id = utils.get_department_id_from_name(
+                            session, asked_departement
+                        )
+                        new_department_name = utils.get_department_name_from_id(
+                            session, new_department_id
+                        )
                         setattr(collaborator, key, new_department_id)
                         utils.update_grant_for_collaborator(
                             session,
                             collaborator_id,
                             current_department_name,
-                            new_department_name
+                            new_department_name,
                         )
                     else:
                         setattr(collaborator, key, collaborator_dict[key])
@@ -76,7 +86,9 @@ class DatabaseUpdateController:
 
         return collaborator.get_dict()
 
-    def update_collaborator_password(self, conn, user_registration_number, new_password):
+    def update_collaborator_password(
+        self, conn, user_registration_number, new_password
+    ):
         """
         Description:
         Dédiée à mettre à jour le mot de passe d'un collaborateur.
@@ -102,7 +114,7 @@ class DatabaseUpdateController:
         """
         company_id = company_dict.pop("company_id")
         company = session.query(models.Company).filter_by(company_id=company_id).first()
-        companies =  session.query(models.Company).all()
+        companies = session.query(models.Company).all()
         keys_to_explore = models.Company.metadata.tables["company"].columns.keys()
 
         try:
@@ -116,7 +128,9 @@ class DatabaseUpdateController:
 
         return company.get_dict()
 
-    def update_contract(self, session, current_user_collaborator_id, user_service, contract_dict):
+    def update_contract(
+        self, session, current_user_collaborator_id, user_service, contract_dict
+    ):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un contrat.
         Requête de la base de données et renvoie True si réussie..
@@ -168,7 +182,9 @@ class DatabaseUpdateController:
 
         return department.get_dict()
 
-    def update_event(self, session, current_user_collaborator_id, user_service, event_dict):
+    def update_event(
+        self, session, current_user_collaborator_id, user_service, event_dict
+    ):
         """
         Description: Fonction dédiée à servir la vue lors de la mise à jour d'un évènement.
         Requête de la base de données et renvoie True si réussie..
@@ -220,7 +236,9 @@ class DatabaseUpdateController:
         Requête de la base de données et renvoie True si réussie..
         """
         role_id = role_dict.pop("role_id")
-        role = session.query(models.Collaborator_Role).filter_by(role_id=role_id).first()
+        role = (
+            session.query(models.Collaborator_Role).filter_by(role_id=role_id).first()
+        )
         keys_to_explore = models.Collaborator_Role.metadata.tables[
             "collaborator_role"
         ].columns.keys()

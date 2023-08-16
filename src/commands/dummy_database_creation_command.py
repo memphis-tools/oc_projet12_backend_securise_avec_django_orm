@@ -8,6 +8,7 @@ except ModuleNotFoundError:
     from settings import settings
     from utils import utils
 
+
 def dummy_database_creation(db_name="projet12"):
     """
     Description:
@@ -108,7 +109,9 @@ def dummy_database_creation(db_name="projet12"):
     ]:
         try:
             if user[1] == "oc12_gestion":
-                sql = f"""CREATE ROLE {user[0]} CREATEROLE LOGIN PASSWORD '{password}'"""
+                sql = (
+                    f"""CREATE ROLE {user[0]} CREATEROLE LOGIN PASSWORD '{password}'"""
+                )
                 cursor.execute(sql)
             else:
                 sql = f"""CREATE ROLE {user[0]} LOGIN PASSWORD '{password}'"""
@@ -116,31 +119,38 @@ def dummy_database_creation(db_name="projet12"):
             sql = f"""GRANT {user[1]} TO {user[0]}"""
             cursor.execute(sql)
             conn.commit()
-        except:
+        except Exception:
             continue
 
     # 2 localisations en exemple pour 2 entreprises
     sql = """
-    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
-    VALUES('p22240', '9 avenue de la bonbonière', '2 Bourg de la cambrousse', '22240', 'Plurien', 'France', '2022-01-02 09:35:14')
+    INSERT INTO location
+    (location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    VALUES
+    ('p22240', '9 av Jean Moulin', '2 Bourg de la cambrousse', '22240', 'Plurien', 'France', '2022-01-02 09:35:14')
     """
     cursor.execute(sql)
     sql = """
-    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
-    VALUES('llb44430', 'Place de la Bretagne', 'Grand Boulevard', '44430', 'Le Loroux-Bottereau', 'France', '2019-07-09 14:08:10')
+    INSERT INTO location
+    (location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    VALUES
+    ('llb44430', 'Place de Bretagne', '', '44430', 'Le Loroux-Bottereau', 'France', '2019-07-09 14:08:10')
     """
     cursor.execute(sql)
 
     # 2 entreprises en exemple
     sql = """
     INSERT INTO company
-    (company_id, company_name, company_registration_number, company_subregistration_number, location_id, creation_date)
-    VALUES ('CSLLC12345', 'Cool Startup LLC', '777222888', '12345', '1', '2023-08-02 09:35:14')
+    (company_id, company_name, company_registration_number,
+     company_subregistration_number, location_id, creation_date)
+    VALUES
+    ('CSLLC12345', 'Cool Startup LLC', '777222888', '12345', '1', '2023-08-02 09:35:14')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO company
-    (company_id, company_name, company_registration_number, company_subregistration_number, location_id, creation_date)
+    (company_id, company_name, company_registration_number,
+     company_subregistration_number, location_id, creation_date)
     VALUES ('NFEPG12345', 'Nantes Free Escape Games', '865333888', '44888', '2', '2019-07-09 14:10:20')
     """
     cursor.execute(sql)
@@ -148,20 +158,27 @@ def dummy_database_creation(db_name="projet12"):
     # 2 clients en exemples
     sql = """
     INSERT INTO client
-    (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact, creation_date)
-    VALUES('mkc111', 'MR', 'Kevin', 'Casey', 'Attaché de Presse', 'kevin@startup.io', '067812345678', '1', '2', '2021-12-25 19:40:06')
+    (client_id, civility, first_name, last_name, employee_role, email,
+     telephone, company_id, commercial_contact, creation_date)
+    VALUES
+    ('mkc111', 'MR', 'Kevin', 'Casey', 'Assistant',
+    'kevin@startup.io', '067812345678', '1', '2', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO client
-    (client_id, civility, first_name, last_name, employee_role, email, telephone, company_id, commercial_contact, creation_date)
-    VALUES('axs40', 'MLE', 'Alexia', 'Strak', 'Agent administratif', 'a.strak@startup.io', '067812345678', '2', '2', '2020-10-15 16:12:20')
+    (client_id, civility, first_name, last_name, employee_role, email,
+     telephone, company_id, commercial_contact, creation_date)
+    VALUES
+    ('axs40', 'MLE', 'Alexia', 'Strak', 'Assistante',
+     'a.strak@startup.io', '067812345678', '2', '2', '2020-10-15 16:12:20')
     """
     cursor.execute(sql)
 
     # 3 contrats en exemples
     sql = """
-    INSERT INTO contract(contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
+    INSERT INTO contract
+    (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
     VALUES('kc555', '999.99', '999.99', 'unsigned', '1', '1', '2023-06-02 09:35:25')
     """
     cursor.execute(sql)
@@ -181,12 +198,14 @@ def dummy_database_creation(db_name="projet12"):
     # 2 localisations en exemple pour 2 évènement
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
-    VALUES('csb41120', '53 Rue du Château', 'Petite Avenue', '41120', 'Candé-sur-Beuvron', 'France', '2023-08-02 09:35:14')
+    VALUES
+    ('csb41120', '53 Rue du Château', 'Petite Avenue', '41120', 'Candé-sur-Beuvron', 'France', '2023-08-02 09:35:14')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
-    VALUES('ggg56110', '20 Rue de Carhaix', 'Résidence Le Coquelicot', '56110', 'Gourin', 'France', '2023-08-02 09:35:14')
+    VALUES
+    ('ggg56110', '20 Rue de Carhaix', 'Résidence Le Coquelicot', '56110', 'Gourin', 'France', '2023-08-02 09:35:14')
     """
     cursor.execute(sql)
 

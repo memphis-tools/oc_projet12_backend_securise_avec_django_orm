@@ -18,6 +18,7 @@ class ConsoleClientForRead:
     """
     Description: la classe dédiée à l'usage d'un client en mode console.
     """
+
     def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
@@ -38,7 +39,9 @@ class ConsoleClientForRead:
         """
         Description: vue dédiée à obtenir les utilisateurs /collaborateurs de l'entreprise.
         """
-        return self.app_view.get_collaborators_view().get_collaborators(user_query_filters_args)
+        return self.app_view.get_collaborators_view().get_collaborators(
+            user_query_filters_args
+        )
 
     @authentication_permission_decorator
     def get_companies(self, user_query_filters_args=""):
@@ -59,7 +62,9 @@ class ConsoleClientForRead:
         """
         Description: vue dédiée à obtenir les départements /services de l'entreprise.
         """
-        return self.app_view.get_departments_view().get_departments(user_query_filters_args)
+        return self.app_view.get_departments_view().get_departments(
+            user_query_filters_args
+        )
 
     @authentication_permission_decorator
     def get_events(self, user_query_filters_args=""):

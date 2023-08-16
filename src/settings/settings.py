@@ -36,7 +36,21 @@ DEFAULT_NEW_PASSWORD_MAX_LENGTH = 30
 DEFAULT_NEW_PASSWORD_MIN_DIGITS = 1
 DEFAULT_NEW_PASSWORD_MIN_SPECIAL_CHAR = 1
 ALLOWED_SPECIALCHARS_IN_PASSWORD = ["@", "?", "!", "%", "$", "^", "+"]
-FORBIDDEN_SPECIALCHARS_IN_PASSWORD = [" ", ",", "`", "|", "/", "\\", "{", "}", "[", "]", "*", ":", ";"]
+FORBIDDEN_SPECIALCHARS_IN_PASSWORD = [
+    " ",
+    ",",
+    "`",
+    "|",
+    "/",
+    "\\",
+    "{",
+    "}",
+    "[",
+    "]",
+    "*",
+    ":",
+    ";",
+]
 NEW_PASSWORD_POLICY = [
     "DEFAULT_NEW_COLLABORATOR_PASSWORD",
     "DEFAULT_NEW_PASSWORD_MIN_LENGTH",
@@ -56,7 +70,7 @@ OC12_GESTION_CRUD_TABLES = [
     "collaborator_department",
     "collaborator_role",
     "contract",
-    "event"
+    "event",
 ]
 OC12_GESTION_PWD = os.environ.get("OC12_GESTION_PWD")
 

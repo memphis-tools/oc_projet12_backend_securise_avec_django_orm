@@ -3,6 +3,7 @@ Description: Toutes les commandes pour obtenir des infos sur les formats ou donn
 """
 import click
 from rich import print
+
 try:
     from src.controllers import infos_data_controller
 except ModuleNotFoundError:

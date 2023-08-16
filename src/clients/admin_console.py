@@ -24,7 +24,7 @@ class AdminConsoleClient:
         self.app_view = AuthenticationView(
             user_login=f"{settings.ADMIN_LOGIN}",
             user_pwd=f"{settings.ADMIN_PASSWORD}",
-            db_name=db_name
+            db_name=db_name,
         )
         self.jwt_view = JwtView(self.app_view)
 

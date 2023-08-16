@@ -8,12 +8,10 @@ from termcolor import colored, cprint
 try:
     from src.clients.update_console import ConsoleClientForUpdate
     from src.exceptions import exceptions
-    from src.settings import settings
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from clients.update_console import ConsoleClientForUpdate
     from exceptions import exceptions
-    from settings import settings
     from validators.data_syntax.fr import validators
 
 
@@ -25,8 +23,9 @@ def display_option(options):
 def check_if_partial_dict_valid(partial_dict):
     for key, value in partial_dict.items():
         try:
+            validators.is_adresse_valid("adresse lambda")
             eval(f"validators.is_{key}_valid")(value)
-        except:
+        except Exception:
             print(f"[bold red]{value}[/bold red] not valid for {key}")
             break
     return True
@@ -59,7 +58,11 @@ def update_client(client_id, args):
         for arg in args:
             k, v = arg.split("=")
             if k == "company_id":
-                expected_company = ConsoleClientForUpdate(custom_id="").app_view.get_companies_view().get_company(v)
+                expected_company = (
+                    ConsoleClientForUpdate(custom_id="")
+                    .app_view.get_companies_view()
+                    .get_company(v)
+                )
                 expected_company_id = expected_company.get_dict()["id"]
                 client_dict[k] = str(expected_company_id)
             else:
@@ -130,7 +133,7 @@ def update_collaborator_password():
         if console_client.update_collaborator_password():
             print("[bold green]Votre mot de passe est mis à jour.[/bold green]")
     except exceptions.NewPasswordIsNotValidException:
-        print(f"[bold red]Nouveau mot de passe invalide[/bold red]: {error}")
+        print("[bold red]Erreur[/bold red] Nouveau mot de passe invalide")
     except Exception as error:
         print(f"[bold red]Missing token[/bold red]: {error}")
 
@@ -159,7 +162,11 @@ def update_company(company_id, args):
         for arg in args:
             k, v = arg.split("=")
             if k == "location_id":
-                expected_location = ConsoleClientForUpdate().app_view.get_locations_view().get_location(v)
+                expected_location = (
+                    ConsoleClientForUpdate()
+                    .app_view.get_locations_view()
+                    .get_location(v)
+                )
                 expected_location_id = expected_location.get_dict()["id"]
                 company_dict[k] = str(expected_location_id)
             else:
@@ -203,11 +210,17 @@ def update_contract(contract_id, args):
         for arg in args:
             k, v = arg.split("=")
             if k == "client_id":
-                expected_client = ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
+                expected_client = (
+                    ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
+                )
                 expected_client_id = expected_client.get_dict()["id"]
                 contract_dict[k] = str(expected_client_id)
             elif k == "collaborator_id":
-                expected_collaborator = ConsoleClientForUpdate().app_view.get_collaborators_view().get_collaborator(v)
+                expected_collaborator = (
+                    ConsoleClientForUpdate()
+                    .app_view.get_collaborators_view()
+                    .get_collaborator(v)
+                )
                 expected_collaborator_id = expected_collaborator.get_dict()["id"]
                 contract_dict[k] = str(expected_collaborator_id)
             else:
@@ -290,19 +303,33 @@ def update_event(event_id, args):
         for arg in args:
             k, v = arg.split("=")
             if k == "client_id":
-                expected_client = ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
+                expected_client = (
+                    ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
+                )
                 expected_client_id = expected_client.get_dict()["id"]
                 event_dict[k] = str(expected_client_id)
             elif k == "collaborator_id":
-                expected_collaborator = ConsoleClientForUpdate().app_view.get_collaborators_view().get_collaborator(v)
+                expected_collaborator = (
+                    ConsoleClientForUpdate()
+                    .app_view.get_collaborators_view()
+                    .get_collaborator(v)
+                )
                 expected_collaborator_id = expected_collaborator.get_dict()["id"]
                 event_dict[k] = str(expected_collaborator_id)
             elif k == "contract_id":
-                expected_contract = ConsoleClientForUpdate().app_view.get_contracts_view().get_contract(v)
+                expected_contract = (
+                    ConsoleClientForUpdate()
+                    .app_view.get_contracts_view()
+                    .get_contract(v)
+                )
                 expected_contract_id = expected_contract.get_dict()["id"]
                 event_dict[k] = str(expected_contract_id)
             elif k == "location_id":
-                expected_location = ConsoleClientForUpdate().app_view.get_locations_view().get_location(v)
+                expected_location = (
+                    ConsoleClientForUpdate()
+                    .app_view.get_locations_view()
+                    .get_location(v)
+                )
                 expected_location_id = expected_location.get_dict()["id"]
                 event_dict[k] = str(expected_location_id)
             else:

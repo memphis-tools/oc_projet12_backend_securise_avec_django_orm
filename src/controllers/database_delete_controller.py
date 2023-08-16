@@ -92,7 +92,9 @@ class DatabaseDeleteController:
         """
         try:
             department = (
-                session.query(models.Collaborator_Department).filter_by(id=int(department_id)).first()
+                session.query(models.Collaborator_Department)
+                .filter_by(id=int(department_id))
+                .first()
             )
             session.delete(department)
             session.commit()

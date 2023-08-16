@@ -1,10 +1,7 @@
 """
 Description: Toutes les commandes de lecture seule (de visualisation, "GET", etc)
 """
-import re
 import click
-import json
-from functools import wraps
 from rich import print
 
 try:
@@ -27,6 +24,7 @@ class ApplicationHelpFormatter(click.HelpFormatter):
 
     def write(self, text):
         print(f"{text}")
+
 
 click.Context.formatter_class = ApplicationHelpFormatter
 
@@ -79,7 +77,6 @@ def get_companies(args):
     """
     user_query_filters_args = args
     try:
-        print("LETS GO SIR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
         console_client = ConsoleClientForRead()
         console_client.get_companies(user_query_filters_args)
     except Exception as error:
@@ -99,7 +96,7 @@ def get_contracts(args):
     En l'absence d'arguments, l'ensemble des contrats est renvoyé.
 
     [bold cyan]Arguments possibles:[/bold cyan]
-    [bright_white]status[/bright_white]: on filtre les contrats payés ou non. Valeurs possibles: signed, unsigned, canceled
+    [bright_white]status[/bright_white]: filtre pour statut. Valeurs possibles: signed, unsigned, canceled
     [bright_white]full_amount_to_pay[/bright_white]: on filtre par montant à payer.
     [bright_white]remain_amount_to_pay[/bright_white]: on filtre par montant restant à payer.
     [bright_white]creation_date[/bright_white]: on filtre par date de création.

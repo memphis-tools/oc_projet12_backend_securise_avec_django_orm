@@ -57,7 +57,7 @@ class ConsoleClientForCreate:
             client_lookup = self.app_view.get_clients_view().get_client(client_id)
             return client_lookup.id
         except Exception as error:
-            print(f"Pas de client avec cet id.")
+            print("Pas de client avec cet id.")
             return False
 
     def ask_for_a_contract_id(self):
@@ -73,7 +73,7 @@ class ConsoleClientForCreate:
             )
             return contract_lookup.id
         except Exception as error:
-            print(f"Pas de contrat avec cet id.")
+            print("Pas de contrat avec cet id.")
             return False
 
     def ask_for_a_company_id(self):
@@ -87,7 +87,7 @@ class ConsoleClientForCreate:
             company_lookup = self.app_view.get_companies_view().get_company(company_id)
             return company_lookup.id
         except Exception as error:
-            print(f"Pas d'entreprise avec cet id.")
+            print("Pas d'entreprise avec cet id.")
             return False
 
     def ask_for_a_department_id(self):
@@ -103,7 +103,7 @@ class ConsoleClientForCreate:
             )
             return department_lookup.id
         except Exception as error:
-            print(f"Pas de service /département avec cet id.")
+            print("Pas de service /département avec cet id.")
             return False
 
     def ask_for_a_event_id(self):
@@ -117,7 +117,7 @@ class ConsoleClientForCreate:
             event_lookup = self.app_view.get_events_view().get_event(event_id)
             return event_lookup.id
         except Exception as error:
-            print(f"Pas d'évènement avec cet id.")
+            print("Pas d'évènement avec cet id.")
             return False
 
     def ask_for_a_location_id(self):
@@ -133,7 +133,7 @@ class ConsoleClientForCreate:
             )
             return location_lookup.id
         except Exception as error:
-            print(f"Pas de localité avec cet id.")
+            print("Pas de localité avec cet id.")
             return False
 
     def ask_for_a_role_id(self):
@@ -147,7 +147,7 @@ class ConsoleClientForCreate:
             role_lookup = self.app_view.get_roles_view().get_role(role_id)
             return role_lookup.id
         except Exception:
-            print(f"Pas de role avec cet id.")
+            print("Pas de role avec cet id.")
             return False
 
     @utils.authentication_permission_decorator
@@ -164,9 +164,13 @@ class ConsoleClientForCreate:
         user_service = str(decoded_token["department"]).upper()
         registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        user_id = utils.get_user_id_from_registration_number(self.app_view.session, registration_number)
+        user_id = utils.get_user_id_from_registration_number(
+            self.app_view.session, registration_number
+        )
         try:
-            if "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
+            if (
+                "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if client_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(client_attributes_dict)
@@ -189,10 +193,8 @@ class ConsoleClientForCreate:
                 client_attributes_dict = forms.submit_a_client_create_form()
                 client_attributes_dict["company_id"] = company_id
                 client_attributes_dict["commercial_contact"] = user_id
-                client_id = (
-                    self.create_app_view.get_clients_view().add_client(
-                        models.Client(**client_attributes_dict)
-                    )
+                client_id = self.create_app_view.get_clients_view().add_client(
+                    models.Client(**client_attributes_dict)
                 )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
@@ -209,7 +211,9 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         collaborator = ""
         try:
-            if "collaborator" not in allowed_crud_tables or user_service.lower() != "oc12_gestion":
+            if (
+                "collaborator" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if collaborator_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(collaborator_attributes_dict)
@@ -244,7 +248,9 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         company = ""
         try:
-            if "company" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
+            if (
+                "company" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if company_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(company_attributes_dict)
@@ -259,7 +265,9 @@ class ConsoleClientForCreate:
                 company_location_id = self.ask_for_a_location_id()
                 if not company_location_id:
                     company_location_id = self.add_location()
-                company_attributes_dict = forms.submit_a_company_create_form(company_location_id=company_location_id)
+                company_attributes_dict = forms.submit_a_company_create_form(
+                    company_location_id=company_location_id
+                )
                 company = models.Company(**company_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
@@ -281,7 +289,9 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract = ""
         try:
-            if "contract" not in allowed_crud_tables or user_service.lower() != "oc12_gestion":
+            if (
+                "contract" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if contract_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(contract_attributes_dict)
@@ -315,7 +325,9 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         department = ""
         try:
-            if "collaborator_department" not in allowed_crud_tables or user_service.lower() != "oc12_gestion":
+            if (
+                "collaborator_department" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if department_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(department_attributes_dict)
@@ -323,14 +335,18 @@ class ConsoleClientForCreate:
                     department_attributes_dict
                 )
                 if b1 and b2:
-                    department = models.Collaborator_Department(**department_attributes_dict)
+                    department = models.Collaborator_Department(
+                        **department_attributes_dict
+                    )
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 department_attributes_dict = (
                     forms.submit_a_collaborator_department_create_form()
                 )
-                department = models.Collaborator_Department(**department_attributes_dict)
+                department = models.Collaborator_Department(
+                    **department_attributes_dict
+                )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
@@ -351,9 +367,13 @@ class ConsoleClientForCreate:
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event = ""
-        user_id = utils.get_user_id_from_registration_number(self.app_view.session, registration_number)
+        user_id = utils.get_user_id_from_registration_number(
+            self.app_view.session, registration_number
+        )
         try:
-            if "event" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
+            if (
+                "event" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if event_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(event_attributes_dict)
@@ -364,7 +384,9 @@ class ConsoleClientForCreate:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 contract_id_asked = self.ask_for_a_contract_id()
-                contract_id = utils.get_contract_id_from_contract_custom_id(self.app_view.session, contract_id_asked)
+                contract_id = utils.get_contract_id_from_contract_custom_id(
+                    self.app_view.session, contract_id_asked
+                )
                 if not contract_id:
                     raise exceptions.ContractNotFoundWithContractId()
                 event_attributes_dict = forms.submit_a_event_create_form()
@@ -378,11 +400,15 @@ class ConsoleClientForCreate:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
-            print("[bold red]Erreur[/bold red] Contrat non trouvé avec le contract_id fourni.")
+            print(
+                "[bold red]Erreur[/bold red] Contrat non trouvé avec le contract_id fourni."
+            )
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            print("[bold red]Erreur[/bold red] Vous n'avez pas signé le contrat dédié à l'évènement")
+            print(
+                "[bold red]Erreur[/bold red] Vous n'avez pas signé le contrat dédié à l'évènement"
+            )
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except Exception as error:
@@ -399,14 +425,18 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location = ""
         try:
-            if "location" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
+            if (
+                "location" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if location_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(location_attributes_dict)
                 b2 = add_data_validators.add_location_data_is_valid(
                     location_attributes_dict
                 )
-                b3 = validators.is_complement_adresse_valid(location_attributes_dict["complement_adresse"])
+                b3 = validators.is_complement_adresse_valid(
+                    location_attributes_dict["complement_adresse"]
+                )
                 if b1 and b2 and b3:
                     location = models.Location(**location_attributes_dict)
                 else:
@@ -415,7 +445,9 @@ class ConsoleClientForCreate:
                 location_id = self.ask_for_a_location_id()
                 if location_id:
                     raise exceptions.LocationCustomIdAlReadyExists()
-                location_attributes_dict = forms.submit_a_location_create_form(location_id)
+                location_attributes_dict = forms.submit_a_location_create_form(
+                    location_id
+                )
                 location = models.Location(**location_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
@@ -426,7 +458,9 @@ class ConsoleClientForCreate:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            print("[bold red]Erreur.[/bold red] Vos données ne respecte pas le format attendu.")
+            print(
+                "[bold red]Erreur.[/bold red] Vos données ne respecte pas le format attendu."
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception as error:
@@ -445,7 +479,9 @@ class ConsoleClientForCreate:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         role = ""
         try:
-            if "collaborator_role" not in allowed_crud_tables or user_service.lower() != "oc12_gestion":
+            if (
+                "collaborator_role" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if role_attributes_dict != "":
                 b1 = add_data_validators.data_is_dict(role_attributes_dict)
