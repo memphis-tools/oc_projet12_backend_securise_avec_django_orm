@@ -196,6 +196,8 @@ class Company(Base):
     company_name = Column(String(130), nullable=False)
     company_registration_number = Column(String(100), nullable=False)
     company_subregistration_number = Column(String(50), nullable=False)
+    # code activité à adapter, doe APE de préférence, mais on s'adapate aux anciennes nomenclatures0
+    activite_principale = Column(String(15), nullable=True)
     location_id = Column(Integer, ForeignKey("location.id"))
     client = relationship("Client", back_populates="company", passive_deletes="all")
     location = relationship("Location", back_populates="company", passive_deletes="all")
@@ -206,6 +208,7 @@ class Company(Base):
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
         descriptors += f",(company_id|{self.company_id})"
         descriptors += f",(company_name|{self.company_name})"
+        descriptors += f",(activite_principale|{self.activite_principale})"
         descriptors += (
             f",(company_registration_number|{self.company_registration_number})"
         )
@@ -225,6 +228,7 @@ class Company(Base):
             "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "company_id": self.company_id,
             "company_name": self.company_name,
+            "activite_principale": self.activite_principale,
             "company_registration_number": self.company_registration_number,
             "company_subregistration_number": self.company_subregistration_number,
             "location_id": self.location_id,
@@ -235,6 +239,7 @@ class Company(Base):
     def _get_keys():
         return [
             "company_name",
+            "activite_principale",
             "company_registration_number",
             "company_subregistration_number",
             "location_id",

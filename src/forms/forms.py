@@ -160,9 +160,10 @@ def submit_a_company_create_form(company_location_id, custom_dict={}):
     if custom_dict == {}:
         expected_attributes_dict = {
             "company_id": "id entreprise (chaine libre)",
-            "company_name": "nom entreprise",
             "company_registration_number": "siren",
             "company_subregistration_number": "nic",
+            "company_name": "nom entreprise",
+            "activite_principale": "activité principale (code APE etc)"
         }
         print("[bold blue][COMPANY CREATION][/bold blue]")
         try:
