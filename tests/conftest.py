@@ -83,6 +83,24 @@ def get_valid_decoded_token_for_a_support_collaborator(mocker):
 
 
 @pytest.fixture
+def get_valid_decoded_token_for_a_support_collaborator_with_id_5(mocker):
+    expiration = datetime.utcnow() + timedelta(minutes=1)
+    dummy_payload_data = {
+        "registration_number": "ae123456789",
+        "username": "Aliénor Vichum",
+        "department": "oc12_support",
+        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}',
+    }
+    mocker.patch(
+        "controllers.jwt_controller.JwtController.get_decoded_token",
+        return_value=dummy_payload_data,
+    )
+    mocker.patch.object(JwtController, "does_a_valid_token_exist", return_value=True)
+    mocker.patch.object(JwtView, "get_decoded_token", return_value=dummy_payload_data)
+    return dummy_payload_data
+
+
+@pytest.fixture
 def get_valid_decoded_token_for_a_support_collaborator_with_id_7(mocker):
     expiration = datetime.utcnow() + timedelta(minutes=1)
     dummy_payload_data = {

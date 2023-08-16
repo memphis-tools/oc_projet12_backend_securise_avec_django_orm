@@ -42,7 +42,7 @@ client_partial_dict_4 = {
 }
 
 collaborator_partial_dict = {
-    "registration_number": "rr123456789",
+    "registration_number": "ad123456789",
     "username": "marianne de lagraine",
 }
 
@@ -81,7 +81,7 @@ contract_partial_dict4 = {
 }
 
 location_partial_dict = {
-    "location_id": "CAL13540",
+    "location_id": "p22240",
     "complement_adresse": "allée de la patissière",
 }
 
@@ -259,7 +259,7 @@ def test_update_event_view_with_gestion_profile(
 
 
 def test_update_event_view_with_support_profile_when_collaborator_is_assigned(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator, dummy_event_partial_data_2
+    get_runner, get_valid_decoded_token_for_a_support_collaborator_with_id_5, dummy_event_partial_data_2
 ):
     """
     Description:
