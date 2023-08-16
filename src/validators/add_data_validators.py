@@ -45,9 +45,10 @@ def add_company_data_is_valid(data) -> bool:
     expected_keys = [
         "creation_date",
         "company_id",
-        "company_name",
         "company_registration_number",
         "company_subregistration_number",
+        "company_name",
+        "activite_principale",
         "location_id",
     ]
     b = bool(len(data) == len(expected_keys))
