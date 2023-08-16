@@ -122,12 +122,12 @@ def dummy_database_creation(db_name="projet12"):
     # 2 localisations en exemple pour 2 entreprises
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
-    VALUES('p22240', '9 avenue de la bonbonière', '', '22240', 'Plurien', 'France', '2022-01-02 09:35:14')
+    VALUES('p22240', '9 avenue de la bonbonière', '2 Bourg de la cambrousse', '22240', 'Plurien', 'France', '2022-01-02 09:35:14')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
-    VALUES('llb44430', 'Place de la Bretagne', '', '44430', 'Le Loroux-Bottereau', 'France', '2019-07-09 14:08:10')
+    VALUES('llb44430', 'Place de la Bretagne', 'Grand Boulevard', '44430', 'Le Loroux-Bottereau', 'France', '2019-07-09 14:08:10')
     """
     cursor.execute(sql)
 
@@ -181,12 +181,12 @@ def dummy_database_creation(db_name="projet12"):
     # 2 localisations en exemple pour 2 évènement
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
-    VALUES('csb41120', '53 Rue du Château', '', '41120', 'Candé-sur-Beuvron', 'France', '2023-08-02 09:35:14')
+    VALUES('csb41120', '53 Rue du Château', 'Petite Avenue', '41120', 'Candé-sur-Beuvron', 'France', '2023-08-02 09:35:14')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
-    VALUES('ggg56110', '20 Rue de Carhaix', '', '56110', 'Gourin', 'France', '2023-08-02 09:35:14')
+    VALUES('ggg56110', '20 Rue de Carhaix', 'Résidence Le Coquelicot', '56110', 'Gourin', 'France', '2023-08-02 09:35:14')
     """
     cursor.execute(sql)
 

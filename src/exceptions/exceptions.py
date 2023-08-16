@@ -7,6 +7,10 @@ class InsufficientPrivilegeException(Exception):
     pass
 
 
+class LocationCustomIdAlReadyExists(Exception):
+    pass
+
+
 class MissingUpdateParamException(Exception):
     pass
 

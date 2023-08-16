@@ -1,5 +1,8 @@
 """
-Classe dédiée aux mises à jour des modèles. Utilisée pour le dialogue avec l'utilisateur de l'application.
+Classe dédiée à la création de modèles. Utilisée pour le dialogue avec l'utilisateur de l'application.
+Noter que les formulaires vont appeler les validateurs ('src/validators/data_syntax/fr/validators.py').
+Dans les formulaires on parcourt les attributs à renseigner et on recherche dynamiquement le validateur:
+eval(f"validators.is_{key}_valid")(item)
 """
 import sys
 from datetime import datetime
@@ -7,9 +10,43 @@ import maskpass
 from rich import print
 from rich.prompt import Prompt
 try:
+    from src.controllers import infos_data_controller
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
+    from controllers import infos_data_controller
     from validators.data_syntax.fr import validators
+
+
+def fullfill_form(custom_dict, expected_attributes_dict):
+    while not len(custom_dict) == len(expected_attributes_dict):
+        for key, value in expected_attributes_dict.items():
+            if key not in custom_dict.keys():
+                item = Prompt.ask(f"{value}: ")
+                if key == "complement_adresse":
+                    if item == "?" or item == "help":
+                        infos_data_controller.display_info_data_thin_column("types_voies")
+                        item = Prompt.ask(f"{value}: ")
+                elif key == "employee_role":
+                    if item == "?" or item == "help":
+                        infos_data_controller.display_info_data_thin_column("metiers")
+                        item = Prompt.ask(f"{value}: ")
+                if item.strip() != "":
+                    try:
+                        eval(f"validators.is_{key}_valid")(item)
+                        custom_dict[key] = item
+                    except:
+                        print(f"[bold red]Erreur {item}[/bold red] Valeur inattendue pour {key}")
+                        break
+                else:
+                    info_user_1 = f"Valeur attendue pour {key}."
+                    info_user_2 = "Saisir '' ou \"\" si rien à renseigner (certains seront obligatoires)."
+                    info_user_3 = "Obtenir liste valeurs possibles: ? ou help"
+                    if key == "complement_adresse" or key == "employee_role":
+                        print(f"[bold red]Erreur[/bold red] {info_user_1} {info_user_2}\n{info_user_3}")
+                    else:
+                        print(f"[bold red]Erreur[/bold red] {info_user_1} {info_user_2}")
+                    break
+    return custom_dict
 
 
 def submit_a_location_get_form(custom_id=""):
@@ -27,12 +64,12 @@ def submit_a_location_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_location_create_form(custom_dict={}):
+def submit_a_location_create_form(location_id, custom_dict={}):
     """
     Description: Fonction dédiée à créer une localité. A la fois pour une entreprise ou un évènement.
     """
     if custom_dict == {}:
-        location_expected_attributes_dict = {
+        expected_attributes_dict = {
             "location_id": "id (chaine libre)",
             "adresse": "adresse",
             "complement_adresse": "complement_adresse",
@@ -42,17 +79,10 @@ def submit_a_location_create_form(custom_dict={}):
         }
         print("[bold blue][LOCATION CREATION][/bold blue]")
         try:
-            while not len(custom_dict) == len(location_expected_attributes_dict):
-                for key, value in location_expected_attributes_dict.items():
-                    if key not in custom_dict.keys():
-                        item = Prompt.ask(f"{value}: ")
-                        if item.strip() != "":
-                            try:
-                                eval(f"validators.is_{key}_valid")(item)
-                                custom_dict[key] = item
-                            except:
-                                print(f"[bold red]{item}[/bold red] not valid for {key}")
-                                continue
+            if location_id:
+                custom_dict["location_id"] = location_id
+            while not len(custom_dict) == len(expected_attributes_dict):
+                fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print("[bold red][LOCATION CREATION][/bold red] Creation aborted")
             sys.exit(0)
@@ -81,7 +111,7 @@ def submit_a_company_create_form(company_location_id, custom_dict={}):
     Noter qu'un attribut location_id est attendu pour respecter le modèle.
     """
     if custom_dict == {}:
-        company_expected_attributes_dict = {
+        expected_attributes_dict = {
             "company_id": "id entreprise (chaine libre)",
             "company_name": "nom entreprise",
             "company_registration_number": "siren",
@@ -89,17 +119,8 @@ def submit_a_company_create_form(company_location_id, custom_dict={}):
         }
         print("[bold blue][COMPANY CREATION][/bold blue]")
         try:
-            while not len(custom_dict) == len(company_expected_attributes_dict):
-                for key, value in company_expected_attributes_dict.items():
-                    if key not in custom_dict.keys():
-                        item = Prompt.ask(f"{value}: ")
-                        if item.strip() != "":
-                            try:
-                                eval(f"validators.is_{key}_valid")(item)
-                                custom_dict[key] = item
-                            except:
-                                print(f"[bold red]{item}[/bold red] not valid for {key}")
-                                continue
+            while not len(custom_dict) == len(expected_attributes_dict):
+                fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print("[bold red][COMPANY CREATION][/bold red] Creation aborted")
             sys.exit(0)
@@ -129,7 +150,7 @@ def submit_a_client_create_form(custom_dict={}):
     Noter qu'un attribut company_id est attendu pour respecter le modèle.
     """
     if custom_dict == {}:
-        client_expected_attributes_dict = {
+        expected_attributes_dict = {
             "client_id": "id (chaine libre)",
             "civility": "civilité",
             "first_name": "prénom",
@@ -140,21 +161,13 @@ def submit_a_client_create_form(custom_dict={}):
         }
         print("[bold blue][CLIENT CREATION][/bold blue]")
         try:
-            while not len(custom_dict) == len(client_expected_attributes_dict):
-                for key, value in client_expected_attributes_dict.items():
-                    if key not in custom_dict.keys():
-                        item = Prompt.ask(f"{value}: ")
-                        if item.strip() != "":
-                            try:
-                                eval(f"validators.is_{key}_valid")(item)
-                                custom_dict[key] = item
-                            except:
-                                print(f"[bold red]{item}[/bold red] not valid for {key}")
-                                continue
+            while not len(custom_dict) == len(expected_attributes_dict):
+                fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print("[bold red][CLIENT CREATION][/bold red] Creation aborted")
             sys.exit(0)
-    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    if "creation_date" not in custom_dict.keys():
+        custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -178,7 +191,7 @@ def submit_a_collaborator_create_form(custom_dict={}):
     Noter que 2 clefs étrangères 'department id' et 'role id' sont attendues.
     """
     if custom_dict == {}:
-        collaborator_expected_attributes_dict = {
+        expected_attributes_dict = {
             "registration_number": "matricule employé",
             "username": "nom utilisateur",
             "department": "service (OC12_COMMERCIAL, OC12_GESTION, OC12_SUPPORT)",
@@ -186,18 +199,13 @@ def submit_a_collaborator_create_form(custom_dict={}):
         }
         print("[bold blue][COLLABORATOR CREATION][/bold blue]")
         try:
-            for key, value in collaborator_expected_attributes_dict.items():
-                item = Prompt.ask(f"{value}: ")
-                try:
-                    eval(f"validators.is_{key}_valid")(item)
-                    custom_dict[key] = item
-                except:
-                    print(f"[bold red]{item}[/bold red] not valid for {key}")
-                    continue
+            while not len(custom_dict) == len(expected_attributes_dict):
+                fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print("[bold red][COLLABORATOR CREATION][/bold red] Creation aborted")
             sys.exit(0)
-    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    if "creation_date" not in custom_dict.keys():
+        custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -220,26 +228,21 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
     Description: Fonction dédiée à créer un nouveau rôle pour un collaborateur de l'entreprise.
     """
     if custom_dict == {}:
-        collaborator_role_expected_attributes_dict = {
+        expected_attributes_dict = {
             "role_id": "role (chaine libre)",
             "name": "name (MANAGER, EMPLOYEE, etc)",
         }
         print("[bold blue][COLLABORATOR ROLE CREATION][/bold blue]")
         try:
-            for key, value in collaborator_role_expected_attributes_dict.items():
-                item = Prompt.ask(f"{value}: ")
-                try:
-                    eval(f"validators.is_{key}_valid")(item)
-                    custom_dict[key] = item
-                except:
-                    print(f"[bold red]{item}[/bold red] not valid for {key}")
-                    continue
+            while not len(custom_dict) == len(expected_attributes_dict):
+                fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print(
                 "[bold red][COLLABORATOR ROLE CREATION][/bold red] Creation aborted"
             )
             sys.exit(0)
-    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    if "creation_date" not in custom_dict.keys():
+        custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -262,26 +265,21 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
     Description: Fonction dédiée à créer un nouveau service /département de l'entreprise.
     """
     if custom_dict == {}:
-        collaborator_department_expected_attributes_dict = {
+        expected_attributes_dict = {
             "department_id": "id service (chaine de caractères libre)",
             "department": "service (examples: OC12_COMMERCIAL, OC12_GESTION, ...)",
         }
         print("[bold blue][COLLABORATOR DEPARTMENT CREATION][/bold blue]")
         try:
-            for key, value in collaborator_department_expected_attributes_dict.items():
-                item = Prompt.ask(f"{value}: ")
-                try:
-                    eval(f"validators.is_{key}_valid")(item)
-                    custom_dict[key] = item
-                except:
-                    print(f"[bold red]{item}[/bold red] not valid for {key}")
-                    continue
+            while not len(custom_dict) == len(expected_attributes_dict):
+                fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print(
                 "[bold red][COLLABORATOR DEPARTMENT CREATION][/bold red] Creation aborted"
             )
             sys.exit(0)
-    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    if "creation_date" not in custom_dict.keys():
+        custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -320,7 +318,7 @@ def submit_a_contract_create_form(custom_dict={}):
     Noter que 2 clefs étrangères 'client id' et 'collaborator id' sont attendues.
     """
     if custom_dict == {}:
-        contract_expected_attributes_dict = {
+        expected_attributes_dict = {
             "contract_id": "id",
             "full_amount_to_pay": "total à payer",
             "remain_amount_to_pay": "total restant à payer",
@@ -328,23 +326,13 @@ def submit_a_contract_create_form(custom_dict={}):
         }
         print("[bold blue][CONTRACT CREATION][/bold blue]")
         try:
-            for key, value in contract_expected_attributes_dict.items():
-                item = Prompt.ask(f"{value}: ")
-                if key == "status":
-                    if item == "oui":
-                        item = True
-                    else:
-                        item = False
-                try:
-                    eval(f"validators.is_{key}_valid")(item)
-                    custom_dict[key] = item
-                except:
-                    print(f"[bold red]{item}[/bold red] not valid for {key}")
-                    continue
+            while not len(custom_dict) == len(expected_attributes_dict):
+                fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print("[bold green][CONTRACT CREATION][/bold green] Creation aborted")
             sys.exit(0)
-    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    if "creation_date" not in custom_dict.keys():
+        custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 
@@ -368,8 +356,7 @@ def submit_a_event_create_form(custom_dict={}):
     Noter que 4 clefs étrangères 'contract id', 'client id', 'collaborator id', et 'location id' sont attendues.
     """
     if custom_dict == {}:
-        event_expected_attributes_dict = {
-
+        expected_attributes_dict = {
             "event_id": "id",
             "title": "titre",
             "attendees": "public max attendu",
@@ -379,16 +366,11 @@ def submit_a_event_create_form(custom_dict={}):
         }
         print("[bold blue][EVENT CREATION][/bold blue]")
         try:
-            for key, value in event_expected_attributes_dict.items():
-                item = Prompt.ask(f"{value}: ")
-                try:
-                    eval(f"validators.is_{key}_valid")(item)
-                    custom_dict[key] = item
-                except:
-                    print(f"[bold red]{item}[/bold red] not valid for {key}")
-                    continue
+            while not len(custom_dict) == len(expected_attributes_dict):
+                fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print("[bold green][EVENT CREATION][/bold green] Creation aborted")
             sys.exit(0)
-    custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    if "creation_date" not in custom_dict.keys():
+        custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict

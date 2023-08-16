@@ -15,6 +15,7 @@ try:
     from src.settings import settings
     from src.utils import utils
     from src.validators import add_data_validators
+    from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from exceptions import exceptions
     from forms import forms
@@ -25,6 +26,7 @@ except ModuleNotFoundError:
     from settings import settings
     from utils import utils
     from validators import add_data_validators
+    from validators.data_syntax.fr import validators
 
 
 class ConsoleClientForCreate:
@@ -53,9 +55,9 @@ class ConsoleClientForCreate:
         try:
             # on propose de rechercher le client
             client_lookup = self.app_view.get_clients_view().get_client(client_id)
-            return client_lookup.get_dict()
+            return client_lookup.id
         except Exception as error:
-            print(f"No such client sir: {error}")
+            print(f"Pas de client avec cet id.")
             return False
 
     def ask_for_a_contract_id(self):
@@ -71,7 +73,7 @@ class ConsoleClientForCreate:
             )
             return contract_lookup.id
         except Exception as error:
-            print(f"No such contract sir: {error}")
+            print(f"Pas de contrat avec cet id.")
             return False
 
     def ask_for_a_company_id(self):
@@ -85,7 +87,7 @@ class ConsoleClientForCreate:
             company_lookup = self.app_view.get_companies_view().get_company(company_id)
             return company_lookup.id
         except Exception as error:
-            print(f"No such company sir: {error}")
+            print(f"Pas d'entreprise avec cet id.")
             return False
 
     def ask_for_a_department_id(self):
@@ -99,9 +101,9 @@ class ConsoleClientForCreate:
             department_lookup = self.app_view.get_departments_view().get_department(
                 department_id
             )
-            return department_lookup.get_dict()
+            return department_lookup.id
         except Exception as error:
-            print(f"No such department sir: {error}")
+            print(f"Pas de service /département avec cet id.")
             return False
 
     def ask_for_a_event_id(self):
@@ -113,9 +115,9 @@ class ConsoleClientForCreate:
         try:
             # on propose de rechercher l'évènement
             event_lookup = self.app_view.get_events_view().get_event(event_id)
-            return event_lookup.get_dict()
+            return event_lookup.id
         except Exception as error:
-            print(f"No such event sir: {error}")
+            print(f"Pas d'évènement avec cet id.")
             return False
 
     def ask_for_a_location_id(self):
@@ -131,7 +133,7 @@ class ConsoleClientForCreate:
             )
             return location_lookup.id
         except Exception as error:
-            print(f"No such location sir: {error}")
+            print(f"Pas de localité avec cet id.")
             return False
 
     def ask_for_a_role_id(self):
@@ -143,9 +145,9 @@ class ConsoleClientForCreate:
         try:
             # on propose de rechercher le role
             role_lookup = self.app_view.get_roles_view().get_role(role_id)
-            return role_lookup.get_dict()
-        except Exception as error:
-            print(f"No such role sir: {error}")
+            return role_lookup.id
+        except Exception:
+            print(f"Pas de role avec cet id.")
             return False
 
     @utils.authentication_permission_decorator
@@ -193,7 +195,7 @@ class ConsoleClientForCreate:
                     )
                 )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
         return client_id
 
@@ -222,11 +224,11 @@ class ConsoleClientForCreate:
                 collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
                 collaborator = models.Collaborator(**collaborator_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
         return self.create_app_view.get_collaborators_view().add_collaborator(
             collaborator
@@ -260,11 +262,11 @@ class ConsoleClientForCreate:
                 company_attributes_dict = forms.submit_a_company_create_form(company_location_id=company_location_id)
                 company = models.Company(**company_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
         company.creation_date = datetime.now()
         return self.create_app_view.get_companies_view().add_company(company)
@@ -294,11 +296,11 @@ class ConsoleClientForCreate:
                 contract_attributes_dict = forms.submit_a_contract_create_form()
                 contract = models.Contract(**contract_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
         contract.creation_date = datetime.now()
         return self.create_app_view.get_contracts_view().add_contract(contract)
@@ -330,11 +332,11 @@ class ConsoleClientForCreate:
                 )
                 department = models.Collaborator_Department(**department_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
         department.creation_date = datetime.now()
         return self.create_app_view.get_departments_view().add_department(department)
@@ -372,7 +374,7 @@ class ConsoleClientForCreate:
             event.creation_date = datetime.now()
             return self.create_app_view.get_events_view().add_event(user_id, event)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
@@ -384,7 +386,7 @@ class ConsoleClientForCreate:
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -404,19 +406,31 @@ class ConsoleClientForCreate:
                 b2 = add_data_validators.add_location_data_is_valid(
                     location_attributes_dict
                 )
-                if b1 and b2:
+                b3 = validators.is_complement_adresse_valid(location_attributes_dict["complement_adresse"])
+                if b1 and b2 and b3:
                     location = models.Location(**location_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                location_attributes_dict = forms.submit_a_location_create_form()
+                location_id = self.ask_for_a_location_id()
+                if location_id:
+                    raise exceptions.LocationCustomIdAlReadyExists()
+                location_attributes_dict = forms.submit_a_location_create_form(location_id)
                 location = models.Location(**location_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.LocationCustomIdAlReadyExists:
+            print("[bold red]Erreur.[/bold red] Id existe déjà")
+            raise exceptions.InsufficientPrivilegeException()
+            sys.exit(0)
+        except exceptions.SuppliedDataNotMatchModel:
+            print("[bold red]Erreur.[/bold red] Vos données ne respecte pas le format attendu.")
+            raise exceptions.SuppliedDataNotMatchModel()
+            sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
         location.creation_date = datetime.now()
         return self.create_app_view.get_locations_view().add_location(location)
@@ -444,11 +458,11 @@ class ConsoleClientForCreate:
                 role_attributes_dict = forms.submit_a_collaborator_role_create_form()
                 role = models.Collaborator_Role(**role_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
         role.creation_date = datetime.now()
         return self.create_app_view.get_roles_view().add_role(role)
