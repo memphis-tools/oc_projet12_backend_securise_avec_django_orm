@@ -2,6 +2,7 @@ import sys
 import re
 import subprocess
 import psycopg
+from datetime import date, datetime
 from sqlalchemy import text
 from rich import print
 from rich.table import Table
@@ -222,11 +223,50 @@ def get_user_id_from_registration_number(session, registration_number):
 def get_contract_id_from_contract_custom_id(session, contract_id):
     """
     Description:
-    Récupérer l'id en bdd de l'utilisateur ayant le custom id du modèle, en argument.
+    Récupérer l'id en bdd de du contrat ayant le custom id du modèle, en argument.
     Paramètres:
     - contract_id: chaine libre de caractères, le custom id du contrat
     """
     sql = text(f"""SELECT id FROM contract WHERE contract_id='{contract_id}'""")
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
+
+
+def get_department_id_from_department_custom_id(session, department_id):
+    """
+    Description:
+    Récupérer l'id en bdd de du contrat ayant le custom id du modèle, en argument.
+    Paramètres:
+    - department_id: chaine libre de caractères, le custom id du contrat
+    """
+    sql = text(f"""SELECT id FROM collaborator_department WHERE department_id='{department_id}'""")
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
+
+
+def get_location_id_from_location_custom_id(session, location_id):
+    """
+    Description:
+    Récupérer l'id en bdd de la localité ayant le custom id du modèle, en argument.
+    Paramètres:
+    - contract_id: chaine libre de caractères, le custom id du contrat
+    """
+    sql = text(f"""SELECT id FROM contract WHERE location_id='{location_id}'""")
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
+
+
+def get_role_id_from_role_custom_id(session, role_id):
+    """
+    Description:
+    Récupérer l'id en bdd de du contrat ayant le custom id du modèle, en argument.
+    Paramètres:
+    - role_id: chaine libre de caractères, le custom id du contrat
+    """
+    sql = text(f"""SELECT id FROM collaborator_role WHERE role_id='{role_id}'""")
     result = session.execute(sql).first()
     id = str(result[0]).lower()
     return id
@@ -317,3 +357,19 @@ def display_postgresql_controls():
         print(f"[START CONTROL] error: {error}")
 
     return True
+
+def get_today_date():
+    """
+    Description: on permet le formatage type '18 avril 2021' du cahier des charges pour les Clients.
+    """
+    today = date.today()
+    returned_date = f"{today.day}-{settings.TRANSLATED_MONTHS[today.month-1][1]}-{today.year}"
+    return returned_date
+
+
+def get_today_fulldate():
+    """
+    Description: on permet le formatage type '18 avril 2021 15:32:20'.
+    """
+    today = datetime.now()
+    return today.strftime("%Y-%m:%d %H:%M:%S")
