@@ -11,7 +11,7 @@ try:
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings
-    from src.utils.utils import authentication_permission_decorator, display_banner
+    from src.utils import utils
 except ModuleNotFoundError:
     from exceptions import exceptions
     from forms import forms
@@ -19,7 +19,7 @@ except ModuleNotFoundError:
     from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings
-    from utils.utils import authentication_permission_decorator, display_banner
+    from utils import utils
 
 
 class ConsoleClientForDelete:
@@ -31,7 +31,7 @@ class ConsoleClientForDelete:
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        display_banner()
+        utils.display_banner()
         self.app_view = AppViews(db_name)
         self.delete_app_view = DeleteAppViews(db_name)
         self.jwt_view = JwtView(self.app_view)
@@ -184,7 +184,7 @@ class ConsoleClientForDelete:
             print(f"No such role sir: {error}")
             return False
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def delete_client(self, client_custom_id=""):
         # rechercher le id de l'utilisateur courant
         # obtenir le token décodé (et valide)
@@ -205,18 +205,21 @@ class ConsoleClientForDelete:
                 client_id = self.ask_for_a_client_id(client_custom_id)["id"]
             else:
                 client_id = self.ask_for_a_client_id()["id"]
+            return self.delete_app_view.get_clients_view().delete_client(client_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
+        except exceptions.ForeignKeyDependyException:
+            print("[bold red]Erreur[/bold red] Client rattaché à contrat existant.")
+            raise exceptions.ForeignKeyDependyException("")
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.delete_app_view.get_clients_view().delete_client(client_id)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def delete_collaborator(self, collaborator_custom_id=""):
         """
         Description: vue dédiée à enregistrer un nouvel utilisateur /collaborateur de l'entreprise.
@@ -234,21 +237,24 @@ class ConsoleClientForDelete:
                 )
             else:
                 collaborator_id = self.ask_for_a_collaborator_id()
+            return self.delete_app_view.get_collaborators_view().delete_collaborator(
+                collaborator_id
+            )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.ForeignKeyDependyException:
+            print("[bold red]Erreur[/bold red] Collaborateur rattaché à client existant.")
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.delete_app_view.get_collaborators_view().delete_collaborator(
-            collaborator_id
-        )
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def delete_company(self, company_custom_id=""):
         """
         Description: vue dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
@@ -264,19 +270,22 @@ class ConsoleClientForDelete:
                 company_id = self.ask_for_a_company_id(company_custom_id)["id"]
             else:
                 company_id = self.ask_for_a_company_id()["id"]
+            return self.delete_app_view.get_companies_view().delete_company(company_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.ForeignKeyDependyException:
+            print("[bold red]Erreur[/bold red] Entreprise rattaché à client existant.")
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.delete_app_view.get_companies_view().delete_company(company_id)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def delete_contract(self, contract_custom_id=""):
         """
         Description: vue dédiée à enregistrer un contrat pour l'entreprise.
@@ -292,19 +301,22 @@ class ConsoleClientForDelete:
                 contract_id = self.ask_for_a_contract_id(contract_custom_id)["id"]
             else:
                 contract_id = self.ask_for_a_contract_id()["id"]
+            return self.delete_app_view.get_contracts_view().delete_contract(contract_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.ForeignKeyDependyException:
+            print("[bold red]Erreur[/bold red] Contrat rattaché à un évènement existant.")
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print(f"[bold red]Id non trouvé.[/bold red] {error}")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.delete_app_view.get_contracts_view().delete_contract(contract_id)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def delete_department(self, department_custom_id=""):
         """
         Description: vue dédiée à enregistrer un nouveau départements /services de l'entreprise.
@@ -317,24 +329,28 @@ class ConsoleClientForDelete:
             if "collaborator_department" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if department_custom_id != "":
-                department_id = self.ask_for_a_department_id(department_custom_id)["id"]
+                department_id = utils.get_department_id_from_department_custom_id(self.app_view.session, department_custom_id)
             else:
                 department_id = self.ask_for_a_department_id()["id"]
+
+            return self.delete_app_view.get_departments_view().delete_department(
+                department_id
+            )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.ForeignKeyDependyException:
+            print("[bold red]Erreur[/bold red] Département /service rattaché à un collaborateur existant.")
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.delete_app_view.get_departments_view().delete_department(
-            department_id
-        )
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def delete_event(self, event_custom_id=""):
         """
         Description: vue dédiée à enregistrer un évènement de l'entreprise.
@@ -350,19 +366,19 @@ class ConsoleClientForDelete:
                 event_id = self.ask_for_a_event_id(event_custom_id)["id"]
             else:
                 event_id = self.ask_for_a_event_id()["id"]
+            return self.delete_app_view.get_events_view().delete_event(event_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.delete_app_view.get_events_view().delete_event(event_id)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def delete_location(self, location_custom_id=""):
         """
         Description: vue dédiée à enregistrer une localité.
@@ -378,19 +394,22 @@ class ConsoleClientForDelete:
                 location_id = self.ask_for_a_location_id(location_custom_id)["id"]
             else:
                 location_id = self.ask_for_a_location_id()["id"]
+            return self.delete_app_view.get_locations_view().delete_location(location_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.ForeignKeyDependyException:
+            print("[bold red]Erreur[/bold red] Localité rattachée à une entreprise existante.")
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.delete_app_view.get_locations_view().delete_location(location_id)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def delete_role(self, role_custom_id=""):
         """
         Description: vue dédiée à enregistrer un nouveau rôle pour les collaborateurs de l'entreprise.
@@ -406,14 +425,17 @@ class ConsoleClientForDelete:
                 role_id = self.ask_for_a_role_id(role_custom_id)["id"]
             else:
                 role_id = self.ask_for_a_role_id()["id"]
+            return self.delete_app_view.get_roles_view().delete_role(role_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]You are not authorized.[/bold red]")
+            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.ForeignKeyDependyException:
+            print("[bold red]Erreur[/bold red] Rôle rattaché à un collaborateur existant.")
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
             sys.exit(0)
         except Exception as error:
-            print(f"[ERROR SIR]: {error}")
+            print(f"[bold red]Erreur application[/bold red] {error}")
             sys.exit(0)
-        return self.delete_app_view.get_roles_view().delete_role(role_id)
