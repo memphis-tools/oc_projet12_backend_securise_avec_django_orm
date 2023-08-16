@@ -1,22 +1,14 @@
 import pytest
 from datetime import datetime, timedelta
 from click.testing import CliRunner
-import subprocess
+
 try:
-    from src.clients.admin_console import AdminConsoleClient
-    from src.commands import init_commands
     from src.controllers.jwt_controller import JwtController
-    from src.models import models
     from src.settings import settings
-    from src.utils import utils
     from src.views.jwt_view import JwtView
 except ModuleNotFoundError:
-    from clients.admin_console import AdminConsoleClient
-    from commands import init_commands
     from controllers.jwt_controller import JwtController
-    from models import models
     from settings import settings
-    from src.utils import utils
     from views.jwt_view import JwtView
 
 
@@ -140,7 +132,7 @@ def get_unvalid_decoded_token(mocker):
     return dummy_payload_data
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_client_data(request):
     client = {
         "creation_date": "2023-07-14 09:05:10",
@@ -157,7 +149,7 @@ def dummy_client_data(request):
     return client
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_collaborator_data(request):
     collaborator = {
         "creation_date": "2023-07-14 09:05:10",
@@ -169,27 +161,27 @@ def dummy_collaborator_data(request):
     return collaborator
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_collaborator_department_data(request):
     collaborator_department = {
         "creation_date": "2023-07-14 09:05:10",
         "department_id": "design",
-        "name": "oc12_design"
+        "name": "oc12_design",
     }
     return collaborator_department
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_collaborator_role_data(request):
     collaborator_role = {
         "creation_date": "2023-07-14 09:05:10",
         "role_id": "sec",
-        "name": "SECRETARY"
+        "name": "SECRETARY",
     }
     return collaborator_role
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_company_data(request):
     company = {
         "creation_date": "2023-07-14 09:05:10",
@@ -202,7 +194,7 @@ def dummy_company_data(request):
     return company
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_contract_data(request):
     contract = {
         "creation_date": "2023-07-14 09:05:10",
@@ -216,7 +208,7 @@ def dummy_contract_data(request):
     return contract
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_event_data(request):
     event = {
         "creation_date": "2023-07-14 09:05:10",
@@ -234,16 +226,13 @@ def dummy_event_data(request):
     return event
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_event_partial_data_1(request):
-    event_partial_dict = {
-        "event_id": "hob2023",
-        "collaborator_id": 5
-    }
+    event_partial_dict = {"event_id": "hob2023", "collaborator_id": 5}
     return event_partial_dict
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_event_partial_data_2(request):
     event_partial_dict = {
         "event_id": "hob2023",
@@ -253,7 +242,7 @@ def dummy_event_partial_data_2(request):
     return event_partial_dict
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_event_partial_data_3(request):
     event_partial_dict = {
         "event_id": "geg2021",
@@ -263,7 +252,7 @@ def dummy_event_partial_data_3(request):
     return event_partial_dict
 
 
-@pytest.fixture(scope="session", autouse = True)
+@pytest.fixture(scope="session", autouse=True)
 def dummy_location_data(request):
     location = {
         "creation_date": "2023-07-14 09:05:10",

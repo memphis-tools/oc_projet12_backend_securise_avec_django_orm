@@ -74,7 +74,9 @@ def init_application():
                 f"[bold red][START CONTROL][/bold red] Can not drop user {database}, he does not exist"
             )
         except KeyboardInterrupt:
-            print("[bold green][START CONTROL][/bold green] Application startup aborted")
+            print(
+                "[bold green][START CONTROL][/bold green] Application startup aborted"
+            )
             sys.exit(0)
 
     try:
@@ -114,7 +116,9 @@ def init_application():
                 f"[bold green][START CONTROL][/bold green] database '{database}' already exists"
             )
         except KeyboardInterrupt:
-            print("[bold green][START CONTROL][/bold green] Application startup aborted")
+            print(
+                "[bold green][START CONTROL][/bold green] Application startup aborted"
+            )
             sys.exit(0)
 
         try:
@@ -129,7 +133,9 @@ def init_application():
                 f"[bold red][START CONTROL][/bold red] Can not ALTER {database} owner"
             )
         except KeyboardInterrupt:
-            print("[bold green][START CONTROL][/bold green] Application startup aborted")
+            print(
+                "[bold green][START CONTROL][/bold green] Application startup aborted"
+            )
             sys.exit(0)
 
     admin_console_client = AdminConsoleClient()
@@ -140,8 +146,12 @@ def init_application():
     admin_console_client = AdminConsoleClient(db_name=f"{settings.TEST_DATABASE_NAME}")
     admin_console_client.reset_db(db_name=f"{settings.TEST_DATABASE_NAME}")
     admin_console_client.init_db(db_name=f"{settings.TEST_DATABASE_NAME}")
-    admin_console_client.database_postinstall_tasks(db_name=f"{settings.TEST_DATABASE_NAME}")
-    admin_console_client.database_postinstall_alter_tables(db_name=f"{settings.TEST_DATABASE_NAME}")
+    admin_console_client.database_postinstall_tasks(
+        db_name=f"{settings.TEST_DATABASE_NAME}"
+    )
+    admin_console_client.database_postinstall_alter_tables(
+        db_name=f"{settings.TEST_DATABASE_NAME}"
+    )
 
     # On peuple la base de données avec des données quelconques, pour le POC, en développement
     dummy_database_creation(db_name=f"{settings.TEST_DATABASE_NAME}")

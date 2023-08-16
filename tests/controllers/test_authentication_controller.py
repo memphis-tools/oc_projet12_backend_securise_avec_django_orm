@@ -6,12 +6,11 @@ import os
 import jwt
 import pytest
 from datetime import datetime, timedelta
+
 try:
     from src.controllers.jwt_controller import JwtController
-    from src.settings import settings
 except ModuleNotFoundError:
     from controllers.jwt_controller import JwtController
-    from settings import settings
 
 
 dummy_token_data = {
@@ -20,6 +19,7 @@ dummy_token_data = {
     "department": "oc12_commercial",
     "expiration": f"{datetime.utcnow() + timedelta(hours=12)}",
 }
+
 
 def test_get_token():
     """

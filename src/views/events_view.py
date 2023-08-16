@@ -2,10 +2,12 @@
 vue évènements
 """
 from rich.console import Console
+
 try:
     from src.utils import utils
 except ModuleNotFoundError:
     from utils import utils
+
 
 class EventsView:
     """
@@ -26,9 +28,13 @@ class EventsView:
         console = Console()
         if len(user_query_filters_args) > 0:
             try:
-                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Event")
+                db_model_queryset = self.db_controller.get_filtered_models(
+                    self.session, user_query_filters_args[0], "Event"
+                )
                 if len(db_model_queryset) > 0:
-                    table = utils.set_a_click_table_from_data("events", db_model_queryset)
+                    table = utils.set_a_click_table_from_data(
+                        "events", db_model_queryset
+                    )
                     console.print(table)
                     print("Aucuns autres évènements")
                 else:
@@ -61,7 +67,9 @@ class EventsView:
         Parameters:
         - event: une instance du modèle de classe Event.
         """
-        return self.db_controller.add_event(self.session, current_user_collaborator_id, event)
+        return self.db_controller.add_event(
+            self.session, current_user_collaborator_id, event
+        )
 
     def delete_event(self, event_id):
         """
@@ -79,4 +87,6 @@ class EventsView:
         - user_service: chaine de caractère, le nom du service de l'utilisateur courant (exemple: oc12_commercial)
         - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
-        return self.db_controller.update_event(self.session, current_user_collaborator_id, user_service, custom_dict)
+        return self.db_controller.update_event(
+            self.session, current_user_collaborator_id, user_service, custom_dict
+        )

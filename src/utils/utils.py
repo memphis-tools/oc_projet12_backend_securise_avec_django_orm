@@ -42,22 +42,26 @@ def set_a_click_table_from_data(title: str, objects_queryset):
     Paramètres:
     - title: chaine de caractères
     - objects_queryset: une liste, de taille 1, avec 1 string dedans.
-        C'est le résultat de la requête à la base de données, chaque modèle métier est traduit /représenté par sa mth __str__
+        C'est le résultat de la requête à la base de données.
+        Chaque modèle métier est traduit /représenté par sa mth __str__
         La méthode est une pseudo représentation d'une liste avec des pseudo ensembles (attribut|valeur)
         Le queryset est donc une liste avec autant de listes incluses que de résultat trouvé
         exemple:
         [['(creation_date|12-08-2023),(contract_id|kc555),('client_id', 'Kevin Casey'),], [...]']
-        C'est une pseudo représentation de ce qu'on souhaite. On va transformer chaque résultat en une liste de tuple:
+        C'est une pseudo représentation de ce qu'on souhaite.
+        On va transformer chaque résultat en une liste de tuple:
         [[('creation_date', '12-08-2023'),('contract_id', 'kc555'),('client_id', 'Kevin Casey')], [...]]
     """
     rebuilt_queryset = []
     for result_object in objects_queryset:
         splited_data_list = []
         # result_object: nous permet d'atteindre la string dans la liste
-        # str(result_object).split(","): la string est vue comme de type "Métier" (exemple Contrat), on force le cast en str
+        # str(result_object).split(","):
+        # la string est vue comme de type "Métier" (exemple Contrat), on force le cast en str
         for temp_attribute in str(result_object).split(","):
             # on parcourt chaque élement qui est de type str: '(creation_date|12-08-2023)'
-            # on fait un slice pour retirer les parenthèses, on modifie "|" par une ",", on retire espace vide en début de string
+            # on fait un slice pour retirer les parenthèses, on modifie "|" par une ",",
+            # on retire espace vide en début de string
             temp_attribute = temp_attribute[1:-1].replace("|", ",").lstrip()
             # on obtient un elément de type str: creation_date,12-08-2023
             # on l'éclate en une liste qu'on cast en tuple
@@ -65,19 +69,24 @@ def set_a_click_table_from_data(title: str, objects_queryset):
             # on ajoute à la liste splited_data_list un tuple: ('creation_date', '12-08-2023')
             splited_data_list.append(tuple_attribute)
         rebuilt_queryset.append(splited_data_list)
-    # on obtient (pour chaque résultat): ['(creation_date: 12-08-2023)','(contract_id: kc555)','(client_id: Kevin Casey)',]
+    # on obtient (pour chaque résultat):
+    # ['(creation_date: 12-08-2023)','(contract_id: kc555)','(client_id: Kevin Casey)',]
 
     headers = []
-    [headers.append(attr_tuple[0].replace("(","")) for attr_tuple in splited_data_list]
+    [headers.append(attr_tuple[0].replace("(", "")) for attr_tuple in splited_data_list]
     table = Table(title=title, style="blue", show_lines=True)
     for header in headers:
         if "date" in header:
-            table.add_column(header.replace('_', ' '), justify="center", style="cyan", no_wrap=True)
+            table.add_column(
+                header.replace("_", " "), justify="center", style="cyan", no_wrap=True
+            )
         else:
-            table.add_column(header.replace('_', ' '), justify="left", style="cyan", no_wrap=False)
+            table.add_column(
+                header.replace("_", " "), justify="left", style="cyan", no_wrap=False
+            )
     for result in rebuilt_queryset:
         values = []
-        [values.append(attr_tuple[1].replace(")","")) for attr_tuple in result]
+        [values.append(attr_tuple[1].replace(")", "")) for attr_tuple in result]
         table.add_row(*values)
     return table
 
@@ -88,30 +97,27 @@ def make_a_user_query_as_a_list(splited_args):
     Fonction dédiée à déconstruire les arguments de filtres données par l'utilisateur.
     Elle est seulement utilisée par la fonction "get_filtered_contracts".
     """
-    LOGICAL_OPERATORS_TAB_DICT = {
-        "et": "AND",
-        "ou": "OR"
-    }
+    LOGICAL_OPERATORS_TAB_DICT = {"et": "AND", "ou": "OR"}
     user_query_as_a_list = []
     for arg in splited_args:
         arg_to_list = []
-        if '=' in arg and not any(['<' in arg, '>' in arg]):
-            arg_to_list = re.split('=', f"{arg}")
-            arg_to_list.append('=')
-        elif '>' in arg and '=' in arg:
+        if "=" in arg and not any(["<" in arg, ">" in arg]):
+            arg_to_list = re.split("=", f"{arg}")
+            arg_to_list.append("=")
+        elif ">" in arg and "=" in arg:
             operator_index = arg.index("=")
             arg_to_list.append(arg[0:operator_index])
-            arg_to_list.append(arg[operator_index+2:len(arg)+1])
+            arg_to_list.append(arg[operator_index + 2: len(arg) + 1])
             arg_to_list.append(">=")
-        elif '>' in arg:
-            arg_to_list = re.split('>', f"{arg}")
-            arg_to_list.append('>')
-        elif '<' in arg and '=' in arg:
-            arg_to_list = re.split('<=', f"{arg}")
-            arg_to_list.append('<=')
-        elif '<' in arg:
-            arg_to_list = re.split('<', f"{arg}")
-            arg_to_list.append('<')
+        elif ">" in arg:
+            arg_to_list = re.split(">", f"{arg}")
+            arg_to_list.append(">")
+        elif "<" in arg and "=" in arg:
+            arg_to_list = re.split("<=", f"{arg}")
+            arg_to_list.append("<=")
+        elif "<" in arg:
+            arg_to_list = re.split("<", f"{arg}")
+            arg_to_list.append("<")
         elif arg in LOGICAL_OPERATORS_TAB_DICT:
             arg_to_list.append(LOGICAL_OPERATORS_TAB_DICT[arg])
         arg_tuple = tuple(arg_to_list)
@@ -132,9 +138,13 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model):
     filter_to_apply_rebuilt_query = ""
     try:
         # on va retirer tous les espaces possibles autour des opérateurs
-        pattern_for_space_around_comparison_ops = re.compile(r'( *=> *| *<= *)')
-        striped_operators = re.search(pattern_for_space_around_comparison_ops, user_query_filters_args)
-        user_query_filters_args = user_query_filters_args.replace(striped_operators.group(), striped_operators.group().strip())
+        pattern_for_space_around_comparison_ops = re.compile(r"( *=> *| *<= *)")
+        striped_operators = re.search(
+            pattern_for_space_around_comparison_ops, user_query_filters_args
+        )
+        user_query_filters_args = user_query_filters_args.replace(
+            striped_operators.group(), striped_operators.group().strip()
+        )
     except AttributeError:
         # pas d'espace autour des opérateurs, on ne fait rien
         pass
@@ -149,13 +159,15 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model):
     for subquery_tuple in user_query_as_a_list:
         if len(subquery_tuple) > 1:
             item_key, item_value, item_operator = subquery_tuple
-            if item_key == 'creation_date':
+            if item_key == "creation_date":
                 str_date = item_value.split("-")
                 item_value = str_date[2] + "-" + str_date[1] + "-" + str_date[0]
             # filtered_db_model: Contract, Collaborator_Role, Client etc
             # Le nom doit être celui de la table (__tablename__) du modèle.
             # exemple: si filtered_db_model=='Contract' on aura 'contract.creation_date' en requête
-            filter_to_apply_rebuilt_query += f"({filtered_db_model}.{item_key}{item_operator}'{item_value}')"
+            filter_to_apply_rebuilt_query += (
+                f"({filtered_db_model}.{item_key}{item_operator}'{item_value}')"
+            )
         else:
             filter_to_apply_rebuilt_query += f" {subquery_tuple[0]} "
     return filter_to_apply_rebuilt_query
@@ -185,7 +197,9 @@ def check_password_hash_from_input(db_user_password, password):
     return check_password_hash(db_user_password, password)
 
 
-def get_a_database_connection(user_name="", user_pwd="", db_name=f"{settings.DATABASE_NAME}"):
+def get_a_database_connection(
+    user_name="", user_pwd="", db_name=f"{settings.DATABASE_NAME}"
+):
     """
     Description:
     Dédiée à obtenir un curseur pour interragir avec le SGBD.
@@ -214,7 +228,9 @@ def get_user_id_from_registration_number(session, registration_number):
     Paramètres:
     - registration_number: chaine libre de caractères, le matricule de l'employé
     """
-    sql = text(f"""SELECT id FROM collaborator WHERE registration_number='{registration_number}'""")
+    sql = text(
+        f"""SELECT id FROM collaborator WHERE registration_number='{registration_number}'"""
+    )
     result = session.execute(sql).first()
     id = str(result[0]).lower()
     return id
@@ -240,7 +256,9 @@ def get_department_id_from_department_custom_id(session, department_id):
     Paramètres:
     - department_id: chaine libre de caractères, le custom id du contrat
     """
-    sql = text(f"""SELECT id FROM collaborator_department WHERE department_id='{department_id}'""")
+    sql = text(
+        f"""SELECT id FROM collaborator_department WHERE department_id='{department_id}'"""
+    )
     result = session.execute(sql).first()
     id = str(result[0]).lower()
     return id
@@ -282,7 +300,9 @@ def get_department_name_from_id(session, department_id):
     - session: une session ouverte sur la base de données
     - department_id: entier, clef primaire d'un service /department
     """
-    sql = text(f"""SELECT name FROM collaborator_department WHERE id = '{department_id}'""")
+    sql = text(
+        f"""SELECT name FROM collaborator_department WHERE id = '{department_id}'"""
+    )
     result = session.execute(sql).first()
     department_name = str(result[0]).lower()
     return department_name
@@ -297,13 +317,17 @@ def get_department_id_from_name(session, department_name):
     - session: une session ouverte sur la base de données
     - department_name: chaine de caractères qui doit être un service existant
     """
-    sql = text(f"""SELECT id FROM collaborator_department WHERE name='{department_name}'""")
+    sql = text(
+        f"""SELECT id FROM collaborator_department WHERE name='{department_name}'"""
+    )
     result = session.execute(sql).first()
     department_id = str(result[0]).lower()
     return department_id
 
 
-def update_grant_for_collaborator(session, registration_number, current_department_name, new_department_name):
+def update_grant_for_collaborator(
+    session, registration_number, current_department_name, new_department_name
+):
     """
     Description:
     Sert lors de la mise à jour du service d'un collaborateur.
@@ -358,12 +382,15 @@ def display_postgresql_controls():
 
     return True
 
+
 def get_today_date():
     """
     Description: on permet le formatage type '18 avril 2021' du cahier des charges pour les Clients.
     """
     today = date.today()
-    returned_date = f"{today.day}-{settings.TRANSLATED_MONTHS[today.month-1][1]}-{today.year}"
+    returned_date = (
+        f"{today.day}-{settings.TRANSLATED_MONTHS[today.month-1][1]}-{today.year}"
+    )
     return returned_date
 
 

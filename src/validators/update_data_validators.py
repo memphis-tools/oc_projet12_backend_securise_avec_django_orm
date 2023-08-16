@@ -3,6 +3,7 @@ La console en mode update doit en outre permettre la mise à jour du mot de pass
 """
 import re
 import psycopg
+
 try:
     from src.exceptions import exceptions
     from src.settings import settings
@@ -14,9 +15,9 @@ except ModuleNotFoundError:
 
 
 def old_collaborator_password_is_valid(
-        user_registration_number,
-        old_password,
-    ) -> bool:
+    user_registration_number,
+    old_password,
+) -> bool:
     """
     Description:
     Un validateur pour vérifier si le mot de passe fourni est celui connu en base.
@@ -27,8 +28,7 @@ def old_collaborator_password_is_valid(
     """
     try:
         conn = utils.get_a_database_connection(
-            user_name=user_registration_number,
-            user_pwd=old_password
+            user_name=user_registration_number, user_pwd=old_password
         )
         conn.close()
         return True
@@ -48,7 +48,7 @@ def new_collaborator_password_is_valid(new_password):
     b2 = bool(len(new_password) < settings.DEFAULT_NEW_PASSWORD_MAX_LENGTH)
 
     min_digits = settings.DEFAULT_NEW_PASSWORD_MIN_DIGITS
-    pattern = re.compile(rf'.*(\d{{{min_digits}}}).*')
+    pattern = re.compile(rf".*(\d{{{min_digits}}}).*")
     b3 = bool(re.match(pattern, new_password))
 
     min_specialchars = settings.DEFAULT_NEW_PASSWORD_MIN_SPECIAL_CHAR

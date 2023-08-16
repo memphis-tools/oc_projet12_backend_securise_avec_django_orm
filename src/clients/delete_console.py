@@ -51,7 +51,9 @@ class ConsoleClientForDelete:
             client_id = custom_id
         try:
             # on propose de rechercher le client
-            client_lookup = self.app_view.get_clients_view().get_client(client_id=client_id)
+            client_lookup = self.app_view.get_clients_view().get_client(
+                client_id=client_id
+            )
             return client_lookup.get_dict()
         except Exception as error:
             print(f"No such client sir: {error}")
@@ -88,7 +90,9 @@ class ConsoleClientForDelete:
         try:
             # on propose de rechercher le collaborateur
             collaborator_lookup = (
-                self.app_view.get_collaborators_view().get_collaborator(registration_number)
+                self.app_view.get_collaborators_view().get_collaborator(
+                    registration_number
+                )
             )
 
             return collaborator_lookup.id
@@ -107,7 +111,9 @@ class ConsoleClientForDelete:
             company_id = custom_id
         try:
             # on propose de rechercher l'entreprise
-            company_lookup = self.app_view.get_companies_view().get_company(company_id=company_id)
+            company_lookup = self.app_view.get_companies_view().get_company(
+                company_id=company_id
+            )
             return company_lookup.get_dict()
         except Exception as error:
             print(f"No such company sir: {error}")
@@ -199,7 +205,9 @@ class ConsoleClientForDelete:
         user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         try:
-            if "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
+            if (
+                "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             if client_custom_id != "":
                 client_id = self.ask_for_a_client_id(client_custom_id)["id"]
@@ -232,9 +240,7 @@ class ConsoleClientForDelete:
             if "collaborator" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if collaborator_custom_id != "":
-                collaborator_id = self.ask_for_a_collaborator_id(
-                    collaborator_custom_id
-                )
+                collaborator_id = self.ask_for_a_collaborator_id(collaborator_custom_id)
             else:
                 collaborator_id = self.ask_for_a_collaborator_id()
             return self.delete_app_view.get_collaborators_view().delete_collaborator(
@@ -245,7 +251,9 @@ class ConsoleClientForDelete:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print("[bold red]Erreur[/bold red] Collaborateur rattaché à client existant.")
+            print(
+                "[bold red]Erreur[/bold red] Collaborateur rattaché à client existant."
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -301,13 +309,17 @@ class ConsoleClientForDelete:
                 contract_id = self.ask_for_a_contract_id(contract_custom_id)["id"]
             else:
                 contract_id = self.ask_for_a_contract_id()["id"]
-            return self.delete_app_view.get_contracts_view().delete_contract(contract_id)
+            return self.delete_app_view.get_contracts_view().delete_contract(
+                contract_id
+            )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print("[bold red]Erreur[/bold red] Contrat rattaché à un évènement existant.")
+            print(
+                "[bold red]Erreur[/bold red] Contrat rattaché à un évènement existant."
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print(f"[bold red]Id non trouvé.[/bold red] {error}")
@@ -329,7 +341,9 @@ class ConsoleClientForDelete:
             if "collaborator_department" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if department_custom_id != "":
-                department_id = utils.get_department_id_from_department_custom_id(self.app_view.session, department_custom_id)
+                department_id = utils.get_department_id_from_department_custom_id(
+                    self.app_view.session, department_custom_id
+                )
             else:
                 department_id = self.ask_for_a_department_id()["id"]
 
@@ -341,7 +355,9 @@ class ConsoleClientForDelete:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print("[bold red]Erreur[/bold red] Département /service rattaché à un collaborateur existant.")
+            print(
+                "[bold red]Erreur[/bold red] Département /service rattaché à un collaborateur existant."
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -394,13 +410,17 @@ class ConsoleClientForDelete:
                 location_id = self.ask_for_a_location_id(location_custom_id)["id"]
             else:
                 location_id = self.ask_for_a_location_id()["id"]
-            return self.delete_app_view.get_locations_view().delete_location(location_id)
+            return self.delete_app_view.get_locations_view().delete_location(
+                location_id
+            )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print("[bold red]Erreur[/bold red] Localité rattachée à une entreprise existante.")
+            print(
+                "[bold red]Erreur[/bold red] Localité rattachée à une entreprise existante."
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")
@@ -431,7 +451,9 @@ class ConsoleClientForDelete:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print("[bold red]Erreur[/bold red] Rôle rattaché à un collaborateur existant.")
+            print(
+                "[bold red]Erreur[/bold red] Rôle rattaché à un collaborateur existant."
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
             print("[bold red]Id non trouvé.[/bold red]")

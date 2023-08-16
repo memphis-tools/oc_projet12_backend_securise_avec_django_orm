@@ -2,6 +2,7 @@
 vue entreprises
 """
 from rich.console import Console
+
 try:
     from src.utils import utils
 except ModuleNotFoundError:
@@ -27,9 +28,13 @@ class CompaniesView:
         console = Console()
         if len(user_query_filters_args) > 0:
             try:
-                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Company")
+                db_model_queryset = self.db_controller.get_filtered_models(
+                    self.session, user_query_filters_args[0], "Company"
+                )
                 if len(db_model_queryset) > 0:
-                    table = utils.set_a_click_table_from_data("entreprises", db_model_queryset)
+                    table = utils.set_a_click_table_from_data(
+                        "entreprises", db_model_queryset
+                    )
                     console.print(table)
                     print("Aucunes autres entreprises")
                 else:
@@ -40,7 +45,9 @@ class CompaniesView:
         else:
             db_model_queryset = self.db_controller.get_companies(self.session)
             if len(db_model_queryset) > 0:
-                table = utils.set_a_click_table_from_data("entreprises", db_model_queryset)
+                table = utils.set_a_click_table_from_data(
+                    "entreprises", db_model_queryset
+                )
                 console.print(table)
                 print("Aucunes autres entreprises")
             else:

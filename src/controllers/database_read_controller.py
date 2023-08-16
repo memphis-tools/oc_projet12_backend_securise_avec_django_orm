@@ -1,8 +1,8 @@
 """
 Un controleur avec toutes méthodes GET.
 """
-import re
-from sqlalchemy import and_, or_, not_, text
+from sqlalchemy import text
+
 try:
     from src.models import models
     from src.utils import utils
@@ -25,9 +25,12 @@ class DatabaseReadController:
         Paramètre:
         - user_query_filters_args: chaine de caractère avec 1 ou plusieurs filtres.
             Exemple pour contrats: "status=signed et remain_amount_to_pay =>0"
-        - filtered_db_model: chaine caractères qui nomme un modèle métier, Collaborator, Collaborator_Role, Client, Contract, etc
+        - filtered_db_model: chaine caractères qui nomme un modèle métier, soit
+            Collaborator, Collaborator_Role, Client, Contract, etc
         """
-        filter_to_apply_rebuilt_query = utils.rebuild_filter_query(user_query_filters_args, filtered_db_model)
+        filter_to_apply_rebuilt_query = utils.rebuild_filter_query(
+            user_query_filters_args, filtered_db_model
+        )
         try:
             db_model_queryset = (
                 session.query(eval(f"models.{filtered_db_model}"))
@@ -36,18 +39,16 @@ class DatabaseReadController:
                 # .join(models.Collaborator, models.Event.collaborator_id == models.Collaborator.registration_number)
                 # .join(models.Contract, models.Event.contract_id == models.Contract.contract_id)
                 # .join(models.Location, models.Event.location_id == models.Location.location_id)
-                .filter(text(filter_to_apply_rebuilt_query))
-                .all()
+                .filter(text(filter_to_apply_rebuilt_query)).all()
             )
             return db_model_queryset
         except Exception as error:
             print(f"Requête en échec: {error}")
 
-
     def get_client(self, session, client_id):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête d'un client.
+                Méthode dédiée à servir la vue lors d'une requête d'un client.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Client.
         Paramètres:
         - client_id: c'est le custom id (chaine libre)
@@ -64,7 +65,7 @@ class DatabaseReadController:
     def get_clients(self, session):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête des clients de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête des clients de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Client.
         """
         db_collaborators_clients = session.query(models.Client).all()
@@ -99,8 +100,12 @@ class DatabaseReadController:
         """
         try:
             db_collaborator_queryset = (
-                session.query(models.Collaborator.username, models.Collaborator_Department.name)
-                .filter(models.Collaborator.department_id == models.Collaborator_Department.id)
+                session.query(
+                    models.Collaborator.username, models.Collaborator_Department.name
+                )
+                .filter(
+                    models.Collaborator.department_id == models.Collaborator_Department.id
+                )
                 .filter_by(registration_number=registration_number)
                 .first()
             )
@@ -111,7 +116,7 @@ class DatabaseReadController:
     def get_collaborators(self, session):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête des utilisateurs de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête des utilisateurs de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator.
         """
         db_collaborators = session.query(models.Collaborator).all()
@@ -121,13 +126,12 @@ class DatabaseReadController:
     def get_company(self, session, company_id):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête d'une entreprise cliente.
+                Méthode dédiée à servir la vue lors d'une requête d'une entreprise cliente.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Company.
         """
         try:
             db_company_queryset = (
-                session.query(models.Company)
-                .filter_by(company_id=company_id).first()
+                session.query(models.Company).filter_by(company_id=company_id).first()
             )
 
             return db_company_queryset
@@ -137,7 +141,7 @@ class DatabaseReadController:
     def get_companies(self, session):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête des entreprises clientes de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête des entreprises clientes de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Company.
         """
         db_companies = session.query(models.Company).all()
@@ -146,7 +150,7 @@ class DatabaseReadController:
     def get_contract(self, session, contract_id):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête d'un contrat de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête d'un contrat de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Contract.
         Paramètres:
         - contract_id: c'est le custom id (chaine libre)
@@ -165,7 +169,7 @@ class DatabaseReadController:
     def get_contracts(self, session):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête des contrats de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête des contrats de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Contract.
         """
         db_collaborators_contracts = session.query(models.Contract).all()
@@ -174,7 +178,7 @@ class DatabaseReadController:
     def get_department(self, session, department_id):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête d'un département /service de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête d'un département /service de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator_Department.
         Paramètres:
         - department_id: c'est le custom id (chaine libre)
@@ -193,17 +197,19 @@ class DatabaseReadController:
     def get_departments(self, session):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête des départements /services de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête des départements /services de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator_Department.
         """
-        db_collaborators_department = session.query(models.Collaborator_Department).all()
+        db_collaborators_department = session.query(
+            models.Collaborator_Department
+        ).all()
 
         return db_collaborators_department
 
     def get_event(self, session, event_id):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête d'un évènement de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête d'un évènement de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Event.
         Paramètres:
         - event_id: c'est le custom id (chaine libre)
@@ -220,7 +226,7 @@ class DatabaseReadController:
     def get_events(self, session):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête des évènements de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête des évènements de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Event.
         """
         db_collaborators_events = session.query(models.Event).all()
@@ -230,7 +236,7 @@ class DatabaseReadController:
     def get_location(self, session, location_id):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête d'une localité (entreprise ou évènement).
+                Méthode dédiée à servir la vue lors d'une requête d'une localité (entreprise ou évènement).
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Location.
         Paramètres:
         - location_id: chaine de caractères (ce n'est pas l'id integer pour la clef primaire).
@@ -249,7 +255,7 @@ class DatabaseReadController:
     def get_locations(self, session):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête des localisations des évènements.
+                Méthode dédiée à servir la vue lors d'une requête des localisations des évènements.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Location.
         """
         db_collaborators_locations = session.query(models.Location).all()
@@ -259,14 +265,16 @@ class DatabaseReadController:
     def get_role(self, session, role_id):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête d'un rôles du personnel de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête d'un rôles du personnel de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator_Role.
         Paramètres:
         - role_id: c'est le custom id (chaine libre)
         """
         try:
             db_collaborators_role = (
-                session.query(models.Collaborator_Role).filter_by(role_id=role_id).first()
+                session.query(models.Collaborator_Role)
+                .filter_by(role_id=role_id)
+                .first()
             )
 
             return db_collaborators_role
@@ -276,7 +284,7 @@ class DatabaseReadController:
     def get_roles(self, session):
         """
         Description:
-		Méthode dédiée à servir la vue lors d'une requête des rôles du personnel de l'entreprise.
+                Méthode dédiée à servir la vue lors d'une requête des rôles du personnel de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator_Role.
         """
         db_collaborators_role = session.query(models.Collaborator_Role).all()

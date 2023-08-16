@@ -2,7 +2,6 @@
 Description: Client en mode console, dédié aux mises à jour.
 """
 import sys
-import psycopg
 from rich import print
 
 try:
@@ -54,19 +53,25 @@ class ConsoleClientForUpdate:
         client_id = ""
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
+        r_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        current_user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, r_number)}"
         try:
-            if "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial":
+            if (
+                "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_clients_view().update_client(current_user_collaborator_id, user_service, custom_partial_dict)
+            return self.update_app_view.get_clients_view().update_client(
+                user_collaborator_id, user_service, custom_partial_dict
+            )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-            print("[bold red]Accès non autorisé.[/bold red] Vous n'êtes pas le contact commercial du client; mise à jour non autorisée.")
+            print(
+                "[bold red]Erreur[/bold red] Vous n'êtes pas le commercial du client; mise à jour non autorisée."
+            )
             raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
             sys.exit(0)
         except TypeError as error:
@@ -110,36 +115,44 @@ class ConsoleClientForUpdate:
         Dédiée à mettre à jour le mot de passe d'un collaborateur de l'entreprise.
         """
         if old_password == "" and new_password == "":
-            old_password, new_password = forms.submit_a_collaborator_new_password_get_form()
+            (
+                old_password,
+                new_password,
+            ) = forms.submit_a_collaborator_new_password_get_form()
         decoded_token = self.jwt_view.get_decoded_token()
         user_registration_number = str(decoded_token["registration_number"])
         if old_password == "" or new_password == "":
             print("[bold red]Mot(s) de passe non saisi(s).[/bold red]")
             raise exceptions.MissingUpdateParamException()
         try:
-            if not bool(self.update_app_view.get_collaborators_view().old_collaborator_password_is_valid(
-                user_registration_number,
-                old_password
-            )):
+            if not bool(
+                self.update_app_view.get_collaborators_view().old_collaborator_password_is_valid(
+                    user_registration_number, old_password
+                )
+            ):
                 raise exceptions.OldPasswordNotValidException
-            self.update_app_view.get_collaborators_view().new_collaborator_password_is_valid(new_password)
+            self.update_app_view.get_collaborators_view().new_collaborator_password_is_valid(
+                new_password
+            )
 
         except exceptions.OldPasswordNotValidException:
             print("[bold red]Mot de passe erroné.[/bold red]")
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectMinSpecialCharsException:
             print(
-                "[bold red]Nouveau mot de passe ne respecte pas le nombre mininum de caractères spéciaux.[/bold red]"
+                "[bold red]Erreur[/bold red] Mot de passe ne respecte pas le nombre min de caractères spéciaux."
             )
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectForbiddenSpecialCharsException:
-            print("[bold red]Nouveau mot de passe possède des caractères spéciaux interdits.[/bold red]")
-            sys.exit(0)
-        return self.update_app_view.get_collaborators_view().update_collaborator_password(
-            user_registration_number,
-            old_password,
-            new_password
+            print(
+                "[bold red]Nouveau mot de passe possède des caractères spéciaux interdits.[/bold red]"
             )
+            sys.exit(0)
+        return (
+            self.update_app_view.get_collaborators_view().update_collaborator_password(
+                user_registration_number, old_password, new_password
+            )
+        )
 
     @authentication_permission_decorator
     def update_company(self, custom_partial_dict=""):
@@ -173,21 +186,25 @@ class ConsoleClientForUpdate:
         Description: vue dédiée à mettre à jour un contrat pour l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
-        registration_number = str(decoded_token["registration_number"])
+        r_number = str(decoded_token["registration_number"])
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract_id = ""
-        current_user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, r_number)}"
         try:
             if "contract" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_contracts_view().update_contract(current_user_collaborator_id, user_service,custom_partial_dict)
+            return self.update_app_view.get_contracts_view().update_contract(
+                user_collaborator_id, user_service, custom_partial_dict
+            )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            print("[bold red]Accès non autorisé.[/bold red] Vous n'êtes pas le commercial du contrat; mise à jour non autorisée.")
+            print(
+                "[bold red]Erreur[/bold red] Vous n'êtes pas le commercial du contrat; mise à jour non autorisée."
+            )
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except TypeError as error:
@@ -230,23 +247,29 @@ class ConsoleClientForUpdate:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"]).lower()
+        r_number = str(decoded_token["registration_number"]).lower()
         username = str(decoded_token["username"]).lower()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event_id = ""
-        current_user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, r_number)}"
         try:
             # un membre du service commercial n'a accès qu'en lecture seule
-            if "event" not in allowed_crud_tables or user_service.lower() == "oc12_commercial":
+            if (
+                "event" not in allowed_crud_tables or user_service.lower() == "oc12_commercial"
+            ):
                 raise exceptions.InsufficientPrivilegeException()
             # dans le cas où d'un collaborateur du serivce gestion, il modifie seulement s'il est assigné.
-            return self.update_app_view.get_events_view().update_event(current_user_collaborator_id, user_service, custom_partial_dict)
+            return self.update_app_view.get_events_view().update_event(
+                user_collaborator_id, user_service, custom_partial_dict
+            )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas le collaborateur support associé à l'évènement.")
+            print(
+                "[bold red]Erreur[/bold red] Vous n'êtes pas le collaborateur support associé à l'évènement."
+            )
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except TypeError as error:
@@ -294,7 +317,9 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator_role" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_roles_view().update_role(custom_partial_dict)
+            return self.update_app_view.get_roles_view().update_role(
+                custom_partial_dict
+            )
         except exceptions.InsufficientPrivilegeException:
             print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()

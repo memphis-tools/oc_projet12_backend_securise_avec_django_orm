@@ -2,6 +2,7 @@
 vue clients
 """
 from rich.console import Console
+
 try:
     from src.utils import utils
 except ModuleNotFoundError:
@@ -27,9 +28,13 @@ class ClientsView:
         console = Console()
         if len(user_query_filters_args) > 0:
             try:
-                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Client")
+                db_model_queryset = self.db_controller.get_filtered_models(
+                    self.session, user_query_filters_args[0], "Client"
+                )
                 if len(db_model_queryset) > 0:
-                    table = utils.set_a_click_table_from_data("clients", db_model_queryset)
+                    table = utils.set_a_click_table_from_data(
+                        "clients", db_model_queryset
+                    )
                     console.print(table)
                     print("Aucun autres clients")
                 else:
@@ -77,4 +82,6 @@ class ClientsView:
          - user_service: chaine de caractère, le nom du service de l'utilisateur courant (exemple: oc12_commercial)
          - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
-        return self.db_controller.update_client(self.session, current_user_collaborator_id, user_service, custom_dict)
+        return self.db_controller.update_client(
+            self.session, current_user_collaborator_id, user_service, custom_dict
+        )

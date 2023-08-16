@@ -45,7 +45,9 @@ def test_get_collaborators(
 ):
     app_view = AppViews()
     db_initializer = DatabaseInitializerController()
-    clients_view = CollaboratorsView(app_view.db_controller, db_initializer, app_view.session)
+    clients_view = CollaboratorsView(
+        app_view.db_controller, db_initializer, app_view.session
+    )
     database_get_controller = DatabaseReadController()
     result = database_get_controller.get_collaborators(app_view.session)
     assert isinstance(result, list)

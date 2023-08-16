@@ -22,7 +22,13 @@ class DatabaseInitializerController:
     Toutes autres opérations que "lecture seule, GET, etc" imposeront à l'utilisateur de saisir son mot de passe.
     """
 
-    def return_engine_and_session(self, user_login="", user_pwd="", decoded_token="", db_name=f"{settings.DATABASE_NAME}"):
+    def return_engine_and_session(
+        self,
+        user_login="",
+        user_pwd="",
+        decoded_token="",
+        db_name=f"{settings.DATABASE_NAME}",
+    ):
         """
         Description: connexion à la base de données et renvoie le moteur dédié à initialiser les tables.
         Renvoie aussi de la session qui sera utilisée par la vue AppViews.
@@ -49,9 +55,16 @@ class DatabaseInitializerController:
         session = session_maker()
         return (engine, session)
 
-    def return_session(self, user_login="", user_pwd="", decoded_token="", db_name=f"{settings.DATABASE_NAME}"):
+    def return_session(
+        self,
+        user_login="",
+        user_pwd="",
+        decoded_token="",
+        db_name=f"{settings.DATABASE_NAME}",
+    ):
         """
-        Description: connexion à la base de données et renvoie une fabrique session qui sera utilisée par la vue AppViews.
+        Description:
+        Connexion à la base de données et renvoie une fabrique session qui sera utilisée par la vue AppViews.
         """
         try:
             if decoded_token == "":
@@ -123,7 +136,6 @@ class DatabaseInitializerController:
             sql = f"""DROP ROLE IF EXISTS {role}"""
             cursor.execute(sql)
 
-
     def reset_db(self, engine, db_name="projet12"):
         """
         Description: Dédié à aider au développement. On détruit les tables de la base de données.
@@ -141,7 +153,7 @@ class DatabaseInitializerController:
             "collaborator",
             "collaborator_department",
             "collaborator_role",
-            "location"
+            "location",
         ]
         for table in tables_list:
             try:
@@ -177,7 +189,9 @@ class DatabaseInitializerController:
         conn.commit()
         conn.close()
 
-    def database_postinstall_task_for_test_db(self, db_name=f"{settings.TEST_DATABASE_NAME}"):
+    def database_postinstall_task_for_test_db(
+        self, db_name=f"{settings.TEST_DATABASE_NAME}"
+    ):
         """
         Description:
         Sur la base de test on va maintenir un employé lambda "aa123456789" du service oc12_commercial.
@@ -218,7 +232,9 @@ class DatabaseInitializerController:
         sql = f"""ALTER USER {settings.ADMIN_LOGIN} WITH PASSWORD '{settings.ADMIN_PASSWORD}'"""
         cursor.execute(sql)
 
-        sql = f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
+        sql = (
+            f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
+        )
         cursor.execute(sql)
 
         for role in [
@@ -226,7 +242,6 @@ class DatabaseInitializerController:
             ("oc12_gestion", f"{settings.OC12_GESTION_PWD}"),
             ("oc12_support", f"{settings.OC12_SUPPORT_PWD}"),
         ]:
-
             # le privilège CREATEROLE ne sera pas hérité par défaut
             try:
                 if role[0] == "oc12_gestion":
@@ -264,9 +279,9 @@ class DatabaseInitializerController:
             cursor.execute(sql)
             sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_commercial"""
             cursor.execute(sql)
-        sql = f"""GRANT UPDATE ON contract TO oc12_commercial"""
+        sql = """GRANT UPDATE ON contract TO oc12_commercial"""
         cursor.execute(sql)
-        sql = f"""GRANT UPDATE ON event TO oc12_commercial"""
+        sql = """GRANT UPDATE ON event TO oc12_commercial"""
         cursor.execute(sql)
 
         oc12_gestion_allowed_tables = [

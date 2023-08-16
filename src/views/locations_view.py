@@ -2,6 +2,7 @@
 vue localisations
 """
 from rich.console import Console
+
 try:
     from src.utils import utils
 except ModuleNotFoundError:
@@ -27,7 +28,9 @@ class LocationsView:
         console = Console()
         if len(user_query_filters_args) > 0:
             try:
-                db_model_queryset = self.db_controller.get_filtered_models(self.session, user_query_filters_args[0], "Location")
+                db_model_queryset = self.db_controller.get_filtered_models(
+                    self.session, user_query_filters_args[0], "Location"
+                )
                 if len(db_model_queryset) > 0:
                     table = utils.set_a_click_table_from_data("lieu", db_model_queryset)
                     console.print(table)

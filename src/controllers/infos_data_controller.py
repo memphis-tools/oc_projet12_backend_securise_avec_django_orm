@@ -19,11 +19,13 @@ def display_info_data_medium_window(element):
     popup = Tk()
     popup.geometry("550x500")
     popup.title("METIERS ATTENDUS POUR CLIENTS")
-    text = Text(popup, background= "cyan", font=("consolas", 10))
+    text = Text(popup, background="cyan", font=("consolas", 10))
     for item in items:
         text.insert(INSERT, f"{item}\n")
         text.pack()
-    Button(popup, text="fermer", command=popup.destroy).place(relx=0.5, rely=1.0, anchor=S)
+    Button(popup, text="fermer", command=popup.destroy).place(
+        relx=0.5, rely=1.0, anchor=S
+    )
     popup.mainloop()
 
 
@@ -33,9 +35,11 @@ def display_info_data_thin_window(element):
     popup = Tk()
     popup.geometry("350x500")
     popup.title("TYPES VOIES ATTENDUS")
-    text = Text(popup, background= "cyan", font=("consolas", 10))
+    text = Text(popup, background="cyan", font=("consolas", 10))
     for item in items:
         text.insert(INSERT, f"{item}\n")
         text.pack()
-    Button(popup, text="fermer", command=popup.destroy).place(relx=0.5, rely=1.0, anchor=S)
+    Button(popup, text="fermer", command=popup.destroy).place(
+        relx=0.5, rely=1.0, anchor=S
+    )
     popup.mainloop()

@@ -9,6 +9,7 @@ from datetime import datetime
 import maskpass
 from rich import print
 from rich.prompt import Prompt
+
 try:
     from src.controllers import infos_data_controller
     from src.validators.data_syntax.fr import validators
@@ -24,7 +25,9 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                 item = Prompt.ask(f"{value}: ")
                 if key == "complement_adresse":
                     if item == "?" or item == "help":
-                        infos_data_controller.display_info_data_thin_column("types_voies")
+                        infos_data_controller.display_info_data_thin_column(
+                            "types_voies"
+                        )
                         item = Prompt.ask(f"{value}: ")
                 elif key == "employee_role":
                     if item == "?" or item == "help":
@@ -32,19 +35,27 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                         item = Prompt.ask(f"{value}: ")
                 if item.strip() != "":
                     try:
+                        # validators module is used, dynamically: on déclare pour respect du flake8
+                        validators.is_adresse_valid("adresse")
                         eval(f"validators.is_{key}_valid")(item)
                         custom_dict[key] = item
-                    except:
-                        print(f"[bold red]Erreur {item}[/bold red] Valeur inattendue pour {key}")
+                    except Exception:
+                        print(
+                            f"[bold red]Erreur {item}[/bold red] Valeur inattendue pour {key}"
+                        )
                         break
                 else:
                     info_user_1 = f"Valeur attendue pour {key}."
                     info_user_2 = "Saisir '' ou \"\" si rien à renseigner (certains seront obligatoires)."
                     info_user_3 = "Obtenir liste valeurs possibles: ? ou help"
                     if key == "complement_adresse" or key == "employee_role":
-                        print(f"[bold red]Erreur[/bold red] {info_user_1} {info_user_2}\n{info_user_3}")
+                        print(
+                            f"[bold red]Erreur[/bold red] {info_user_1} {info_user_2}\n{info_user_3}"
+                        )
                     else:
-                        print(f"[bold red]Erreur[/bold red] {info_user_1} {info_user_2}")
+                        print(
+                            f"[bold red]Erreur[/bold red] {info_user_1} {info_user_2}"
+                        )
                     break
     return custom_dict
 
@@ -237,9 +248,7 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            print(
-                "[bold red][COLLABORATOR ROLE CREATION][/bold red] Creation aborted"
-            )
+            print("[bold red][COLLABORATOR ROLE CREATION][/bold red] Creation aborted")
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'

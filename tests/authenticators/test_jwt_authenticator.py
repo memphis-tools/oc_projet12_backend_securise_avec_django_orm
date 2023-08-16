@@ -34,7 +34,9 @@ def test_get_token_with_unvalid_credentials(db_name=f"{settings.TEST_DATABASE_NA
         assert "Collaborator or Department not found" in f"{Exception}"
 
 
-def test_get_token_with_valid_credentials(get_runner, db_name=f"{settings.TEST_DATABASE_NAME}"):
+def test_get_token_with_valid_credentials(
+    get_runner, db_name=f"{settings.TEST_DATABASE_NAME}"
+):
     """
     Description:
     Pour obtenir un token l'utilisateur doit fournir un "registration_number" valide.
