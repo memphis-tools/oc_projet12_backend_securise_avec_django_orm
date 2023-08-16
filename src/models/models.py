@@ -33,23 +33,6 @@ def get_base():
     return Base
 
 
-def get_today_date():
-    """
-    Description: on permet le formatage type '18 avril 2021' du cahier des charges pour les Clients.
-    """
-    today = date.today()
-    returned_date = f"{today.day}-{settings.TRANSLATED_MONTHS[today.month-1][1]}-{today.year}"
-    return returned_date
-
-
-def get_today_fulldate():
-    """
-    Description: on permet le formatage type '18 avril 2021 15:32:20'.
-    """
-    today = datetime.now()
-    return today.strftime("%Y-%m:%d %H:%M:%S")
-
-
 class ModelMixin:
     def get_id(self):
         return self.id
@@ -69,7 +52,7 @@ class Collaborator_Department(Base):
     department_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
-    collaborator = relationship("Collaborator", back_populates="department")
+    collaborator = relationship("Collaborator", back_populates="department", passive_deletes='all')
 
     def __str__(self):
         descriptors = "["
@@ -108,7 +91,7 @@ class Collaborator_Role(Base):
     role_id = Column(String(120), nullable=False, unique=True)
     name = Column(String(50), nullable=False, unique=True)
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
-    collaborator = relationship("Collaborator", back_populates="role")
+    collaborator = relationship("Collaborator", back_populates="role", passive_deletes='all')
 
     def __str__(self):
         descriptors = "["
@@ -150,10 +133,10 @@ class Collaborator(Base):
     role_id = Column(Integer, ForeignKey("collaborator_role.id"), default=2)
     department = relationship("Collaborator_Department", back_populates="collaborator")
     role = relationship("Collaborator_Role", back_populates="collaborator")
-    client = relationship("Client", back_populates="collaborator")
-    contract = relationship("Contract", back_populates="collaborator")
+    client = relationship("Client", back_populates="collaborator", passive_deletes='all')
+    contract = relationship("Contract", back_populates="collaborator", passive_deletes='all')
     event = relationship("Event", back_populates="collaborator")
-    creation_date = Column(DateTime(), nullable=False, default=get_today_fulldate())
+    creation_date = Column(DateTime(), nullable=False, default=utils.get_today_fulldate())
 
     def __str__(self):
         descriptors = "["
@@ -195,12 +178,13 @@ class Company(Base):
 
     __tablename__ = "company"
     id = Column(Integer, primary_key=True)
-    company_id = Column(String(120), nullable=False, unique=True)
+    company_id = Column(String(120), nullable=False, unique=True,)
     company_name = Column(String(130), nullable=False)
     company_registration_number = Column(String(100), nullable=False)
     company_subregistration_number = Column(String(50), nullable=False)
     location_id = Column(Integer, ForeignKey("location.id"))
-    client = relationship("Client", back_populates="company")
+    client = relationship("Client", back_populates="company", passive_deletes='all')
+    location = relationship("Location", back_populates="company", passive_deletes='all')
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
 
     def __str__(self):
@@ -210,7 +194,7 @@ class Company(Base):
         descriptors += f',(company_name|{self.company_name})'
         descriptors += f',(company_registration_number|{self.company_registration_number})'
         descriptors += f',(company_subregistration_number|{self.company_subregistration_number})'
-        descriptors += f',(location_id|{self.location_id})'
+        descriptors += f',(location_id|{self.location.location_id})'
         descriptors += "]"
         return descriptors
 
@@ -261,11 +245,14 @@ class Client(Base):
     telephone = Column(String(60), nullable=True)
     company_id = Column(Integer, ForeignKey("company.id"))
     creation_date = Column(Date(), nullable=False, default=date.today())
-    last_update_date = Column(Date(), nullable=False, default=get_today_date())
+    last_update_date = Column(Date(), nullable=False, default=utils.get_today_date())
     commercial_contact = Column(Integer, ForeignKey("collaborator.id"))
-    collaborator = relationship("Collaborator", back_populates="client")
-    company = relationship("Company", back_populates="client")
-    contract = relationship("Contract", back_populates="client")
+    # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer un client si référencée par un collaborateur
+    collaborator = relationship("Collaborator", back_populates="client", passive_deletes='all')
+    # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer un client si référencée par une entreprise
+    company = relationship("Company", back_populates="client", passive_deletes='all')
+    # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer un client si référencée par un contrat
+    contract = relationship("Contract", back_populates="client", passive_deletes='all')
     event = relationship("Event", back_populates="client")
 
     def __str__(self):
@@ -332,10 +319,10 @@ class Contract(Base):
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     status = Column(ChoiceType(STATUS), default="unsigned")
     client_id = Column(Integer, ForeignKey("client.id"))
-    client = relationship("Client", back_populates="contract")
+    client = relationship("Client", back_populates="contract", passive_deletes='all')
     collaborator_id = Column(Integer, ForeignKey("collaborator.id"))
-    collaborator = relationship("Collaborator", back_populates="contract")
-    event = relationship("Event", back_populates="contract")
+    collaborator = relationship("Collaborator", back_populates="contract", passive_deletes='all')
+    event = relationship("Event", back_populates="contract", passive_deletes='all')
 
     def __str__(self):
         descriptors = "["
@@ -389,9 +376,9 @@ class Event(Base):
     event_id = Column(String(120), nullable=False, unique=True)
     title = Column(String(125), nullable=False)
     contract_id = Column(Integer, ForeignKey("contract.id"))
-    contract = relationship("Contract", back_populates="event")
+    contract = relationship("Contract", back_populates="event", passive_deletes='all')
     client_id = Column(Integer, ForeignKey("client.id"))
-    client = relationship("Client", back_populates="event")
+    client = relationship("Client", back_populates="event", passive_deletes='all')
     collaborator_id = Column(Integer,ForeignKey("collaborator.id"), nullable=True)
     collaborator = relationship("Collaborator", back_populates="event")
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
@@ -471,6 +458,8 @@ class Location(Base, ModelMixin):
     ville = Column(String(100), nullable=False)
     pays = Column(String(100), nullable=True, default="France")
     event = relationship("Event", back_populates="location")
+    # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer une localité si référencée par une entreprise
+    company = relationship("Company", back_populates="location", passive_deletes='all')
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
 
     def __str__(self):
