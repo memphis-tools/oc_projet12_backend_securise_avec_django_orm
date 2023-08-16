@@ -42,6 +42,12 @@ client_partial_dict_4 = {
     "company_id": "CSLLC12345",
 }
 
+client_partial_dict_5 = {
+    "client_id": "mkc111",
+    "civility": "MR",
+    "company_id": "CSLLC12345",
+}
+
 collaborator_partial_dict = {
     "registration_number": "ad123456789",
     "username": "marianne de lagraine",
@@ -143,10 +149,10 @@ def test_update_client_view_with_valid_company_with_commercial_profile_unassgine
     Un commercial ne peut modifier un client que s'il est son commercial assigné.
     Exception 'CommercialCollaboratorIsNotAssignedToClient' levée le cas échéant.
     """
-    args_to_convert = client_partial_dict_4
+    args_to_convert = client_partial_dict_5
     custom_id = args_to_convert["client_id"]
     db_name = settings.TEST_DATABASE_NAME
-    company_id = client_partial_dict_4["company_id"]
+    company_id = client_partial_dict_5["company_id"]
     expected_company = (
         ConsoleClientForUpdate(custom_id=custom_id, db_name=db_name)
         .app_view.get_companies_view()
