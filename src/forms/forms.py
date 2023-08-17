@@ -377,6 +377,10 @@ def submit_a_contract_create_form(custom_dict={}):
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
+                if float(custom_dict["remain_amount_to_pay"]) > float(custom_dict["full_amount_to_pay"]):
+                    custom_dict.pop("remain_amount_to_pay")
+                    custom_dict["remain_amount_to_pay"] = None
+                    print("[bold red]Erreur[/bold red] Pas de remboursement possible en création de contrat.")
         except KeyboardInterrupt:
             print("[bold red]Création contrat[/bold red] Creation aborted")
             sys.exit(0)
