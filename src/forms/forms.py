@@ -60,6 +60,7 @@ def fullfill_form(custom_dict, expected_attributes_dict):
         for key, value in expected_attributes_dict.items():
             if key not in custom_dict.keys():
                 item = Prompt.ask(f"{value}: ")
+                # 2 cas spécifiques avec popup prévue
                 if key in ["complement_adresse", "employee_role"]:
                     item = display_help(key, item, value)
                 if key == "code_postal":
@@ -71,8 +72,10 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                         print(f"Pays fixé à '{settings.DEFAULT_COUNTRY}'")
                         custom_dict["ville"] = ville
                         custom_dict["pays"] = f"{settings.DEFAULT_COUNTRY}"
+                # vérifier si quelque chose a été saisi
                 if item.strip() != "":
                     try:
+                        # si quelque chose a été saisi on vérifie si ça respecte la /les valeur(s) attendue(s).
                         eval(f"validators.is_{key}_valid")(item)
                         custom_dict[key] = item
                     except Exception:
@@ -124,14 +127,14 @@ def submit_a_location_create_form(location_id, custom_dict={}):
             "ville": "ville",
             "pays": "pays",
         }
-        print("[bold blue][LOCATION CREATION][/bold blue]")
+        print("[bold blue]Création localité[/bold blue]")
         try:
             if location_id:
                 custom_dict["location_id"] = location_id
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            print("[bold red][LOCATION CREATION][/bold red] Creation aborted")
+            print("[bold red]Création localité[/bold red] Creation aborted")
             sys.exit(0)
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
@@ -165,12 +168,12 @@ def submit_a_company_create_form(company_location_id, custom_dict={}):
             "company_name": "nom entreprise",
             "activite_principale": "activité principale (code APE etc)"
         }
-        print("[bold blue][COMPANY CREATION][/bold blue]")
+        print("[bold blue]Création entreprise[/bold blue]")
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            print("[bold red][COMPANY CREATION][/bold red] Creation aborted")
+            print("[bold red]Création entreprise[/bold red] Creation aborted")
             sys.exit(0)
     custom_dict["location_id"] = company_location_id
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -207,12 +210,12 @@ def submit_a_client_create_form(custom_dict={}):
             "email": "email",
             "telephone": "telephone",
         }
-        print("[bold blue][CLIENT CREATION][/bold blue]")
+        print("[bold blue]Création client[/bold blue]")
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            print("[bold red][CLIENT CREATION][/bold red] Creation aborted")
+            print("[bold red]Création client[/bold red] Creation aborted")
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -245,12 +248,12 @@ def submit_a_collaborator_create_form(custom_dict={}):
             "department": "service (OC12_COMMERCIAL, OC12_GESTION, OC12_SUPPORT)",
             "role": "role (MANAGER, EMPLOYEE)",
         }
-        print("[bold blue][COLLABORATOR CREATION][/bold blue]")
+        print("[bold blue]Création collaborateur[/bold blue]")
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            print("[bold red][COLLABORATOR CREATION][/bold red] Creation aborted")
+            print("[bold red]Création collaborateur[/bold red] Creation aborted")
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -280,12 +283,12 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
             "role_id": "role (chaine libre)",
             "name": "name (MANAGER, EMPLOYEE, etc)",
         }
-        print("[bold blue][COLLABORATOR ROLE CREATION][/bold blue]")
+        print("[bold blue]Création role collaborateur[/bold blue]")
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            print("[bold red][COLLABORATOR ROLE CREATION][/bold red] Creation aborted")
+            print("[bold red]Création role collaborateur[/bold red] Creation aborted")
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -315,13 +318,13 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
             "department_id": "id service (chaine de caractères libre)",
             "department": "service (examples: OC12_COMMERCIAL, OC12_GESTION, ...)",
         }
-        print("[bold blue][COLLABORATOR DEPARTMENT CREATION][/bold blue]")
+        print("[bold blue]Création service /departement collaborateur[/bold blue]")
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
             print(
-                "[bold red][COLLABORATOR DEPARTMENT CREATION][/bold red] Creation aborted"
+                "[bold red]Création service /departement collaborateur[/bold red] Creation aborted"
             )
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
@@ -370,12 +373,12 @@ def submit_a_contract_create_form(custom_dict={}):
             "remain_amount_to_pay": "total restant à payer",
             "status": "signé /conclu ('oui' ou 'non')",
         }
-        print("[bold blue][CONTRACT CREATION][/bold blue]")
+        print("[bold blue]Création contrat[/bold blue]")
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            print("[bold green][CONTRACT CREATION][/bold green] Creation aborted")
+            print("[bold red]Création contrat[/bold red] Creation aborted")
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -410,12 +413,12 @@ def submit_a_event_create_form(custom_dict={}):
             "event_start_date": "date début (format: 2023-04-12 15:00:00)",
             "event_end_date": "date début (format: 2023-04-15 22:00:00)",
         }
-        print("[bold blue][EVENT CREATION][/bold blue]")
+        print("[bold blue]Création évènement[/bold blue]")
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            print("[bold green][EVENT CREATION][/bold green] Creation aborted")
+            print("[bold red]Création évènement[/bold red] Creation aborted")
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
