@@ -47,11 +47,8 @@
       - 1 collaborator belongs to 1 service /department
       - 1 company depends on an existing location
       - 1 contract depends on an existing company and existing collaborator
-<<<<<<< Updated upstream
-=======
       - Any instance model comes with a(n implicit) creation date
       - Any instance model can be filtered as soon as user allowed to query.
->>>>>>> Stashed changes
       etc
 
 ---
