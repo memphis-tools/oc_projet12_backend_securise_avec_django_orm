@@ -44,11 +44,13 @@
     Furthermore you may be restricted by the native application rules, at any time.
     Most of them should be intuitive (by the Foreign keys dependencies).
     From now you may consider, for example:
-      - 1 collaborator belongs to 1 service /department
-      - 1 company depends on an existing location
-      - 1 contract depends on an existing company and existing collaborator
-      - Any instance model comes with a(n implicit) creation date
+      - To query application you need a JWT token exported in your PATH.
+      - To obtain a JWT token you will use command 'oc12_token' as precise through 'oc12_help'.
+      - 1 collaborator belongs to 1 service /department.
+      - 1 company depends on an existing location.
+      - 1 contract depends on an existing company and existing collaborator.
       - Any instance model can be filtered as soon as user allowed to query.
+      - Any instance model comes with a(n implicit) creation date.
       etc
 
 ---
@@ -111,7 +113,11 @@
 
      `oc12_init_application`
 
+     *: POC = Proof Of Concept
+
   5. Start using the application
+
+      Notice application had been run on a Linux operating system. Some commands will relied on it.
 
       First you will need a token access. Valid duration period is set through the settings.py file.
 
