@@ -58,13 +58,13 @@ def dummy_database_creation(db_name="projet12"):
     # 2 membres de l'équipe COMMERCIAL, dont 1 nommé dans les exemples du cahier des charges
     sql = """
         INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
-        VALUES('aa123456789', 'donald duck', '1', '1', '2022-08-03 12:35:23')
+        VALUES('aa123456789', 'donald duck', '1', '1', '2022-08-03:35:23')
     """
     cursor.execute(sql)
 
     sql = """
         INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
-        VALUES('ab123456789', 'Bill Boquet', '1', '2', '2022-08-03 12:35:58')
+        VALUES('ab123456789', 'Bill Boquet', '1', '2', '2022-08-03 08:35:58')
     """
     cursor.execute(sql)
 
