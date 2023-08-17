@@ -4,6 +4,7 @@ Description: console dédiée aux commandes infos
 from rich import print
 
 try:
+    from src.controllers import infos_data_controller
     from src.controllers.infos_update_password_controller import (
         display_info_password_policy,
     )
@@ -12,6 +13,7 @@ try:
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
 except ModuleNotFoundError:
+    from controllers import infos_data_controller
     from controllers.infos_update_password_controller import (
         display_info_password_policy,
     )
@@ -38,7 +40,7 @@ class InformationConsoleClient:
     def display_info_password_policy(self):
         """
         Description:
-        Retourner la politique de mot de passe
+        Retourner la politique de mot de passe.
         """
         try:
             display_info_password_policy()
@@ -46,3 +48,20 @@ class InformationConsoleClient:
             print(
                 "[bold red]Erreur[/bold red] Absence de jeton."
             )
+
+    @authentication_permission_decorator
+    def display_info_data_medium_window_for_metiers(self):
+        """
+        Description:
+        Ouvrir la popup dédiée.
+        """
+        infos_data_controller.display_info_data_medium_window("metiers")
+
+
+    @authentication_permission_decorator
+    def display_info_data_medium_window_for_complement_adresse(self):
+        """
+        Description:
+        Ouvrir la popup dédiée.
+        """
+        infos_data_controller.display_info_data_thin_window("types_voies")
