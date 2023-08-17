@@ -35,24 +35,9 @@
 |oc12_token| obtenir un jeton d'accès|
 |oc12_logout| se déconnecter de l'application|
 |oc12_clients| obtenir les clients de l'entreprise|
-|oc12_contracts --help| obtenir de l'aide sur la commande oc12_contracts|
-|oc12_contracts "status=signed et remain_amount_to_pay =>0"| un exemple d'usage de l'aide pour la commande.|
 |(...)||
 
     Notice: all commands can be prefixed too by "poetry run". Example: "poetry run get_clients" etc.
-
-    Furthermore you may be restricted by the native application rules, at any time.
-    Most of them should be intuitive (by the Foreign keys dependencies).
-    From now you may consider, for example:
-      - 1 collaborator belongs to 1 service /department
-      - 1 company depends on an existing location
-      - 1 contract depends on an existing company and existing collaborator
-<<<<<<< Updated upstream
-=======
-      - Any instance model comes with a(n implicit) creation date
-      - Any instance model can be filtered as soon as user allowed to query.
->>>>>>> Stashed changes
-      etc
 
 ---
 
@@ -120,19 +105,15 @@
 
       `oc12_token`
 
-      If your authentication succeeded you will have a JWT token print into terminal.
+      If your authentication succeeded you will have a JWT token print into terminal. You have to source it in your PATH (be sure to copy/paste a full single line)
 
-      You have to source it in your PATH (be sure to copy/paste a full single line). **Example**:
-
-        `export OC_12_JWT='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCZzzzZZZzzz'`
+      example: `export OC_12_JWT='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCZzzzZZZzzz'`
 
       Then you should be able to use the application. Use `oc12_help` to learn about possible commands.
 
-      Notice that as a Developer perspective you should also: `export OC_12_ENV="DEV" `
-
   6. Optional
 
-      Run tests and check cover stats. Run tests and check cover stats.
+      Run tests and check cover stats. Run tests and check cover stats. First, **be sure to have unset "OC_12_JWT" from your path**.
 
       `python -m coverage run -m pytest -v`
 
