@@ -119,7 +119,9 @@
 
       Notice application had been run on a Linux operating system. Some commands will relied on it.
 
-      First you will need a token access. Valid duration period is set through the settings.py file.
+      First deactivate any input into history: `set -o history` (this will apply for the terminal session duration).
+
+      Then you will need a token access. Valid duration period is set through the settings.py file.
 
       `oc12_token`
 
@@ -131,7 +133,10 @@
 
       Then you should be able to use the application. Use `oc12_help` to learn about possible commands.
 
-      Notice that as a Developer perspective you should also: `export OC_12_ENV="DEV" `
+      Notice that as a Developer perspective you should also: `export OC_12_ENV="DEV"`
+
+      Finally, in a Linux running context, you can retrieve commands in history by running:
+      `set -o history`
 
   6. Optional
 
