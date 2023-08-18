@@ -37,7 +37,7 @@ class DatabaseUpdateController:
 
         if int(current_user_collaborator_id) != int(client.commercial_contact):
             raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
-
+        client.last_update_date = utils.get_today_date()
         session.commit()
         return client.get_dict()
 
