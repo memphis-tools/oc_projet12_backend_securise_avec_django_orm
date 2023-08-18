@@ -33,7 +33,7 @@ except ModuleNotFoundError:
 
 def test_get_clients(get_valid_decoded_token_for_a_commercial_collaborator):
     result = JwtController().does_a_valid_token_exist()
-    app_view = AppViews()
+    app_view = AppViews(db_name="test_projet12")
     clients_view = ClientsView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
     result = database_get_controller.get_clients(app_view.session)
@@ -43,7 +43,7 @@ def test_get_clients(get_valid_decoded_token_for_a_commercial_collaborator):
 def test_get_collaborators(
     mocker, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    app_view = AppViews()
+    app_view = AppViews(db_name="test_projet12")
     db_initializer = DatabaseInitializerController()
     clients_view = CollaboratorsView(
         app_view.db_controller, db_initializer, app_view.session
@@ -54,7 +54,7 @@ def test_get_collaborators(
 
 
 def test_get_contracts(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
-    app_view = AppViews()
+    app_view = AppViews(db_name="test_projet12")
     clients_view = ContractsView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
     result = database_get_controller.get_contracts(app_view.session)
@@ -62,7 +62,7 @@ def test_get_contracts(mocker, get_valid_decoded_token_for_a_commercial_collabor
 
 
 def test_get_events(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
-    app_view = AppViews()
+    app_view = AppViews(db_name="test_projet12")
     clients_view = EventsView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
     result = database_get_controller.get_events(app_view.session)
@@ -70,7 +70,7 @@ def test_get_events(mocker, get_valid_decoded_token_for_a_commercial_collaborato
 
 
 def test_get_locations(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
-    app_view = AppViews()
+    app_view = AppViews(db_name="test_projet12")
     clients_view = LocationsView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
     result = database_get_controller.get_locations(app_view.session)
@@ -78,7 +78,7 @@ def test_get_locations(mocker, get_valid_decoded_token_for_a_commercial_collabor
 
 
 def test_get_roles(mocker, get_valid_decoded_token_for_a_commercial_collaborator):
-    app_view = AppViews()
+    app_view = AppViews(db_name="test_projet12")
     clients_view = RolesView(app_view.db_controller, app_view.session)
     database_get_controller = DatabaseReadController()
     result = database_get_controller.get_roles(app_view.session)
