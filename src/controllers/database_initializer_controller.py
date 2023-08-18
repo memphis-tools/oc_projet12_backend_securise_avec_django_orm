@@ -21,7 +21,7 @@ class DatabaseInitializerController:
     Pour accéder à cette classe, il a été contrôlé la présence d'un JWT token valide (dans le PATH utilisateur).
     Toutes autres opérations que "lecture seule, GET, etc" imposeront à l'utilisateur de saisir son mot de passe.
     """
-    db_name = utils.set_dev_database_as_default()
+    db_name = utils.set_database_to_get_based_on_user_path()
     def return_engine_and_session(
         self,
         user_login="",
@@ -68,7 +68,7 @@ class DatabaseInitializerController:
         Connexion à la base de données et renvoie une fabrique session qui sera utilisée par la vue AppViews.
         """
         try:
-            db_name = utils.set_dev_database_as_default(db_name)
+            db_name = utils.set_database_to_get_based_on_user_path(db_name)
             if decoded_token == "":
                 # l'utilisateur demande un token, c'est sa "connexion" initiale à l'application
                 user_login = user_login

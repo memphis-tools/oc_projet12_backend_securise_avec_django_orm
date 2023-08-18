@@ -26,17 +26,25 @@ except ModuleNotFoundError:
 APP_DICT = language_bridge.LanguageBridge()
 
 
-def set_dev_database_as_default(db_name):
-    if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
-        db_name = f"{settings.DEV_DATABASE_NAME}"
+def set_database_to_get_based_on_user_path(db_name=""):
+    try:
+        if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
+            db_name = f"{settings.DEV_DATABASE_NAME}"
+        elif os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "TEST":
+            db_name = f"{settings.TEST_DATABASE_NAME}"
+    except KeyError:
+        pass
     return db_name
 
 
 def recall_which_running_env_in_use():
-    if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
-        return "DEV"
-    elif os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "TEST":
-        return "TEST"
+    try:
+        if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
+            return "DEV"
+        elif os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "TEST":
+            return "TEST"
+    except KeyError:
+        pass
     return "PROD"
 
 
@@ -228,7 +236,7 @@ def get_a_database_connection(
     Description:
     Dédiée à obtenir un curseur pour interragir avec le SGBD.
     """
-    db_name = set_dev_database_as_default(db_name)
+    db_name = set_database_to_get_based_on_user_path(db_name)
     if user_name != "" and user_pwd != "":
         user = user_name
         password = user_pwd
