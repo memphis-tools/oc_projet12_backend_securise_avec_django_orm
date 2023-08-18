@@ -138,7 +138,9 @@ def init_application():
         print(f"Database {database} ",end="")
         printer.print_message("info", APP_DICT.get_appli_dictionnary()['DATABASE_UPDATING'])
         if database == "projet12":
+            print("INIT_COMMANDS ASK INIT OF DB PROD SIR")
             admin_console_client = AdminConsoleClient()
+            admin_console_client.reset_db(db_name=f"{database}")
             admin_console_client.init_db()
             utils.display_postgresql_controls()
             admin_console_client.database_postinstall_tasks()
@@ -149,6 +151,7 @@ def init_application():
                 admin_console_client.reset_db(db_name=f"{database}")
             except Exception:
                 pass
+            print("INIT_COMMANDS, ok we init this DB too: {database}")
             admin_console_client.init_db(db_name=f"{database}")
             admin_console_client.database_postinstall_tasks(
                 db_name=f"{database}"

@@ -32,6 +32,8 @@ def set_database_to_get_based_on_user_path(db_name=""):
             db_name = f"{settings.DEV_DATABASE_NAME}"
         elif os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "TEST":
             db_name = f"{settings.TEST_DATABASE_NAME}"
+        else:
+            db_name = f"{settings.DATABASE_NAME}"
     except KeyError:
         pass
     return db_name

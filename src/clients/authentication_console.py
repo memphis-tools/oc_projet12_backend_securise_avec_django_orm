@@ -12,6 +12,7 @@ try:
     from src.printers import printer
     from src.languages import language_bridge
     from src.views.authentication_view import AuthenticationView
+    from src.views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings
     from src.utils import utils
@@ -20,6 +21,7 @@ except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
     from views.authentication_view import AuthenticationView
+    from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings
     from utils import utils
@@ -49,17 +51,21 @@ class AuthenticationConsoleClient:
         except Exception:
             printer.print_message("error", self.app_dict.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
-    @utils.authentication_permission_decorator
+    # @utils.authentication_permission_decorator
     @staticmethod
-    def logout(self):
+    def logout():
         """
         Description:
         Dédiée à se désauthentifier sur l'application.
         """
-        self.jwt_view.logout()
-        printer.print_message("success", self.app_dict.get_appli_dictionnary()['LOGOUT_PROMPT_MESSAGE'])
+        app_dict = language_bridge.LanguageBridge()
+        db_name = utils.set_database_to_get_based_on_user_path(db_name=f"{settings.DATABASE_NAME}")
+        app_view = AppViews(db_name=db_name)
+        jwt_view = JwtView(app_view)
+        jwt_view.logout()
+        printer.print_message("success", app_dict.get_appli_dictionnary()['LOGOUT_PROMPT_MESSAGE'])
         for i in range(4):
             to_prompt = f"LOGOUT_PROMPT_INFO_{i+1}"
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()[to_prompt])
+            printer.print_message("info", app_dict.get_appli_dictionnary()[to_prompt])
             i += 1
         sys.exit(0)
