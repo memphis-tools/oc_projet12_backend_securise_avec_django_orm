@@ -4,9 +4,11 @@ Un controleur avec toutes méthodes pour ajouter des données.
 from sqlalchemy import text
 
 try:
+    from src.printers import printer
     from src.exceptions import exceptions
     from src.settings import settings
 except ModuleNotFoundError:
+    from printers import printer
     from exceptions import exceptions
     from settings import settings
 
@@ -26,8 +28,8 @@ class DatabaseCreateController:
             session.commit()
 
             return client.id
-        except Exception as error:
-            print(f"Error while adding: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
 
     def add_collaborator(self, session, collaborator):
         """
@@ -61,9 +63,8 @@ class DatabaseCreateController:
             session.commit()
 
             return collaborator.id
-        except Exception as error:
-            print("ERROR SIR: ")
-            print(f"Error while adding: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
 
     def add_company(self, session, company):
         """
@@ -75,8 +76,8 @@ class DatabaseCreateController:
             session.commit()
 
             return company.id
-        except Exception as error:
-            print(f"Error while adding: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
 
     def add_contract(self, session, contract):
         """
@@ -88,8 +89,8 @@ class DatabaseCreateController:
             session.commit()
 
             return contract.id
-        except Exception as error:
-            print(f"Error while adding: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
 
     def add_department(self, session, department):
         """
@@ -100,8 +101,8 @@ class DatabaseCreateController:
             session.add(department)
             session.commit()
             return department.id
-        except Exception as error:
-            print(f"Error while adding: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
 
     def add_event(self, session, current_user_collaborator_id, event):
         """
@@ -115,8 +116,8 @@ class DatabaseCreateController:
             session.add(event)
             session.commit()
             return event.id
-        except Exception as error:
-            print(f"Error while adding: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
 
     def add_location(self, session, location):
         """
@@ -128,8 +129,8 @@ class DatabaseCreateController:
             session.commit()
 
             return location.id
-        except Exception as error:
-            print(f"Error while adding: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
 
     def add_role(self, session, role):
         """
@@ -141,5 +142,5 @@ class DatabaseCreateController:
             session.commit()
 
             return role.id
-        except Exception as error:
-            print(f"Error while adding: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])

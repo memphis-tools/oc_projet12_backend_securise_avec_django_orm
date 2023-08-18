@@ -4,8 +4,10 @@ vue clients
 from rich.console import Console
 
 try:
+    from src.printers import printer
     from src.utils import utils
 except ModuleNotFoundError:
+    from printers import printer
     from utils import utils
 
 
@@ -36,20 +38,20 @@ class ClientsView:
                         "clients", db_model_queryset
                     )
                     console.print(table)
-                    print("Aucun autres clients")
+                    printer.print_message("info", self.app_dict.get_appli_dictionnary()['NO_MORE_CLIENT'])
                 else:
-                    print("Aucun client trouvé")
+                    printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
             except Exception as error:
-                print(f"Echec de la requête: {error}")
+                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
                 raise Exception()
         else:
             db_model_queryset = self.db_controller.get_clients(self.session)
             if len(db_model_queryset) > 0:
                 table = utils.set_a_click_table_from_data("clients", db_model_queryset)
                 console.print(table)
-                print("Aucun autres clients")
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['NO_MORE_CLIENT'])
             else:
-                print("Aucun client trouvé")
+                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
         return self.db_controller.get_clients(self.session)
 
     def get_client(self, client_id):
