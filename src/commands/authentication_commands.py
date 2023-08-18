@@ -25,5 +25,4 @@ def logout():
     """
     Description: commande dédiée à se déconnecter à l'application.
     """
-    authentication_client = AuthenticationConsoleClient()
-    print(authentication_client.logout())
+    AuthenticationConsoleClient.logout()

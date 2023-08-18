@@ -98,15 +98,15 @@ DATABASE_PORT = "5432"
 # variables dédiées à définir l'envionnement d'exécution
 PATH_APPLICATION_ENV_NAME = "OC_12_ENV"
 PATH_APPLICATION_JWT_NAME = "OC_12_JWT"
-if os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "TEST":
-    JWT_UNIT_DURATION = "seconds"
-    JWT_DURATION = 1
-elif os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "DEV":
-    JWT_UNIT_DURATION = "seconds"
-    JWT_DURATION = 3600
-elif os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "PROD":
-    JWT_UNIT_DURATION = "hours"
-    JWT_DURATION = 24
+JWT_UNIT_DURATION = "hours"
+JWT_DURATION = 24
+if "PATH_APPLICATION_ENV_NAME" in os.environ:
+    if os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "TEST":
+        JWT_UNIT_DURATION = "seconds"
+        JWT_DURATION = 1
+    elif os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "DEV":
+        JWT_UNIT_DURATION = "seconds"
+        JWT_DURATION = 3600
 
 HASH_ALGORITHM = "HS256"
 

@@ -42,6 +42,8 @@ class AuthenticationView:
         """
         Description: Dédié à aider au développement. On détruit et recrée les tables de la base de données.
         """
+        print(f"AuthenticationView:init_db, db_name == {db_name}")
+        print(f"AuthenticationView:init_db, self.engine == {self.engine}")
         self.db_initializer.init_db(self.engine)
 
     def reset_db(self, db_name=f"{settings.DATABASE_NAME}"):

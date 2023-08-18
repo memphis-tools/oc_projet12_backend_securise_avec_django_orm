@@ -41,7 +41,12 @@ class AdminConsoleClient:
         Description:
         Dédiée à supprimer et recréer les tables de la base de données, à vide.
         """
-        self.app_view.init_db()
+        app_view = AuthenticationView(
+            user_login=f"{settings.ADMIN_LOGIN}",
+            user_pwd=f"{settings.ADMIN_PASSWORD}",
+            db_name=db_name,
+        )
+        app_view.init_db(db_name=db_name)
 
     def reset_db(self, db_name=f"{settings.DATABASE_NAME}"):
         """

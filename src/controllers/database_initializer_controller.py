@@ -92,7 +92,8 @@ class DatabaseInitializerController:
 
     def init_db(self, engine):
         """
-        Description: Dédié à aider au développement. On détruit et (re)crée les tables de la base de données.
+        Description:
+        Dédiée à aider au développement. On détruit et (re)crée les tables de la base de données.
         """
         base = models.get_base()
         base.metadata.drop_all(engine)
@@ -143,54 +144,55 @@ class DatabaseInitializerController:
         Description:
         Dédié à aider au développement. On détruit les tables de la base de données.
         """
-        base = models.get_base()
-        base.metadata.drop_all(engine)
-        conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
-        )
-        cursor = conn.cursor()
-        tables_list = [
-            "contract",
-            "event",
-            "client",
-            "collaborator",
-            "collaborator_department",
-            "collaborator_role",
-            "location",
-        ]
-        for table in tables_list:
-            try:
-                sql = f"""TRUNCATE TABLE {table} CASCADE"""
-                cursor.execute(sql)
-            except Exception:
-                continue
-        if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
-            # on va conserver le collaborateur aa123456789 pour le module de test test_jwt_authenticator
-            for role in [
-                "ab123456789",
-                "ac123456789",
-                "ad123456789",
-                "ae123456789",
-                "af123456789",
-                "ag123456789",
-            ]:
+        for db_name in settings.DATABASE_TO_CREATE:
+            base = models.get_base()
+            base.metadata.drop_all(engine)
+            conn = utils.get_a_database_connection(
+                f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
+            )
+            cursor = conn.cursor()
+            tables_list = [
+                "contract",
+                "event",
+                "client",
+                "collaborator",
+                "collaborator_department",
+                "collaborator_role",
+                "location",
+            ]
+            for table in tables_list:
                 try:
-                    sql = f"""REVOKE ALL ON ALL TABLES IN SCHEMA public FROM {role}"""
-                    cursor.execute(sql)
-                    sql = f"""DROP ROLE IF EXISTS {role}"""
-                    cursor.execute(sql)
-                    sql = f"""DELETE FROM collaborator WHERE name={role}"""
+                    sql = f"""TRUNCATE TABLE {table} CASCADE"""
                     cursor.execute(sql)
                 except Exception:
                     continue
-        try:
-            self.drop_more_roles_for_reset_db()
-            self.truncate_tables_index_for_reset_db(cursor)
-        except Exception:
-            pass
+            if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
+                # on va conserver le collaborateur aa123456789 pour le module de test test_jwt_authenticator
+                for role in [
+                    "ab123456789",
+                    "ac123456789",
+                    "ad123456789",
+                    "ae123456789",
+                    "af123456789",
+                    "ag123456789",
+                ]:
+                    try:
+                        sql = f"""REVOKE ALL ON ALL TABLES IN SCHEMA public FROM {role}"""
+                        cursor.execute(sql)
+                        sql = f"""DROP ROLE IF EXISTS {role}"""
+                        cursor.execute(sql)
+                        sql = f"""DELETE FROM collaborator WHERE name={role}"""
+                        cursor.execute(sql)
+                    except Exception:
+                        continue
+            try:
+                self.drop_more_roles_for_reset_db()
+                self.truncate_tables_index_for_reset_db(cursor)
+            except Exception:
+                pass
 
-        conn.commit()
-        conn.close()
+            conn.commit()
+            conn.close()
 
     def database_postinstall_task_for_test_db(
         self, db_name=f"{settings.TEST_DATABASE_NAME}"
@@ -200,23 +202,25 @@ class DatabaseInitializerController:
         Sur la base de test on va maintenir un employé lambda "aa123456789" du service oc12_commercial.
         Ca permet de conserver l'éxécution des tests du module test_jwt_authenticator.py avant ceux des vues.
         """
-        conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
-        )
-        cursor = conn.cursor()
-        dummy_registration_number = "aa123456789"
-        sql = f"""
-            CREATE ROLE {dummy_registration_number}
-            LOGIN PASSWORD '{settings.DEFAULT_NEW_COLLABORATOR_PASSWORD}'
-        """
-        try:
-            cursor.execute(sql)
-        except psycopg.errors.DuplicateObject:
-            pass
-        sql = f"""GRANT oc12_commercial TO {dummy_registration_number}"""
-        cursor.execute(sql)
-        conn.commit()
-        conn.close()
+        for db_name in settings.DATABASE_TO_CREATE:
+            if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
+                conn = utils.get_a_database_connection(
+                    f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
+                )
+                cursor = conn.cursor()
+                dummy_registration_number = "aa123456789"
+                sql = f"""
+                    CREATE ROLE {dummy_registration_number}
+                    LOGIN PASSWORD '{settings.DEFAULT_NEW_COLLABORATOR_PASSWORD}'
+                """
+                try:
+                    cursor.execute(sql)
+                except psycopg.errors.DuplicateObject:
+                    pass
+                sql = f"""GRANT oc12_commercial TO {dummy_registration_number}"""
+                cursor.execute(sql)
+                conn.commit()
+                conn.close()
 
     def database_postinstall_tasks(self, db_name="projet12"):
         """
@@ -227,15 +231,16 @@ class DatabaseInitializerController:
             f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
         )
         cursor = conn.cursor()
-        dummy_registration_number = "aa123456789"
-
-        sql = f"""ALTER DATABASE {db_name} OWNER TO {settings.ADMIN_LOGIN}"""
-        cursor.execute(sql)
-
-        sql = f"""ALTER USER {settings.ADMIN_LOGIN} WITH PASSWORD '{settings.ADMIN_PASSWORD}'"""
-        cursor.execute(sql)
-
         for db_name in settings.DATABASE_TO_CREATE:
+            if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
+                dummy_registration_number = "aa123456789"
+
+            sql = f"""ALTER DATABASE {db_name} OWNER TO {settings.ADMIN_LOGIN}"""
+            cursor.execute(sql)
+
+            sql = f"""ALTER USER {settings.ADMIN_LOGIN} WITH PASSWORD '{settings.ADMIN_PASSWORD}'"""
+            cursor.execute(sql)
+
             sql = (
                 f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
             )
