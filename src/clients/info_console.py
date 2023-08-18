@@ -1,24 +1,29 @@
 """
-Description: console dédiée aux commandes infos
+Description:
+Console dédiée aux commandes infos
 """
 from rich import print
 
 try:
+    from src.languages import language_bridge
+    from src.printers import printer
     from src.controllers import infos_data_controller
     from src.controllers.infos_update_password_controller import (
         display_info_password_policy,
     )
     from src.settings import settings
-    from src.utils.utils import authentication_permission_decorator
+    from src.utils import utils
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
 except ModuleNotFoundError:
+    from languages import language_bridge
+    from printers import printer
     from controllers import infos_data_controller
     from controllers.infos_update_password_controller import (
         display_info_password_policy,
     )
     from settings import settings
-    from utils.utils import authentication_permission_decorator, display_banner
+    from utils import utils
     from views.views import AppViews
     from views.jwt_view import JwtView
 
@@ -30,13 +35,15 @@ class InformationConsoleClient:
 
     def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
-        Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
+        Description:
+        On instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        display_banner()
+        db_name = utils.set_dev_database_as_default(db_name)
+        self.app_dict = language_bridge.LanguageBridge()
         self.app_view = AppViews(db_name)
         self.jwt_view = JwtView(self.app_view)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def display_info_password_policy(self):
         """
         Description:
@@ -45,11 +52,9 @@ class InformationConsoleClient:
         try:
             display_info_password_policy()
         except Exception as error:
-            print(
-                "[bold red]Erreur[/bold red] Absence de jeton."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def display_info_data_medium_window_for_metiers(self):
         """
         Description:
@@ -58,7 +63,7 @@ class InformationConsoleClient:
         infos_data_controller.display_info_data_medium_window("metiers")
 
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def display_info_data_medium_window_for_complement_adresse(self):
         """
         Description:

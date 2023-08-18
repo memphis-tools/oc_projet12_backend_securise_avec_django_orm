@@ -1,5 +1,6 @@
 """
-Description: console dédiée aux seules opérations de login et logout
+Description:
+Console dédiée aux seules opérations de login et logout
 """
 import sys
 import maskpass
@@ -7,49 +8,59 @@ from rich import print
 from rich.prompt import Prompt
 
 try:
+    from src.exceptions import exceptions
+    from src.printers import printer
+    from src.languages import language_bridge
     from src.views.authentication_view import AuthenticationView
     from src.views.jwt_view import JwtView
     from src.settings import settings
-    from src.utils.utils import authentication_permission_decorator
+    from src.utils import utils
 except ModuleNotFoundError:
+    from exceptions import exceptions
+    from printers import printer
+    from languages import language_bridge
     from views.authentication_view import AuthenticationView
     from views.jwt_view import JwtView
     from settings import settings
-    from utils.utils import authentication_permission_decorator, display_banner
+    from utils import utils
 
 
 class AuthenticationConsoleClient:
     """
-    Description: la classe dédiée à l'usage d'un client en mode console.
+    Description:
+    Dédiée à l'usage d'un client en mode console.
     """
 
     def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
-        Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
+        Description:
+        On instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        display_banner()
+        db_name = utils.set_dev_database_as_default(db_name)
+        self.app_dict = language_bridge.LanguageBridge()
+        utils.display_banner()
         try:
             registration_number = Prompt.ask("Matricule employé: ")
             password = maskpass.askpass(prompt="Mot de passe: ")
             self.app_view = AuthenticationView(registration_number, password, db_name)
             self.jwt_view = JwtView(self.app_view)
             return self.jwt_view.get_token(registration_number)
-        except Exception as error:
-            print(f"[bold red]Wrong credentials[/bold red] {error}")
+        except exceptions.AuthenticationCredentialsFailed:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INVALID_CREDENTIALS_ERROR'])
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
+    @staticmethod
     def logout(self):
         """
-        Description: vue dédiée à se désauthentifier sur l'application.
+        Description:
+        Dédiée à se désauthentifier sur l'application.
         """
         self.jwt_view.logout()
-        print("[bold green]See you soon[/bold green]")
-        print(
-            f"""
-            [cyan]
-            Notice your token access has a {settings.JWT_DURATION} {settings.JWT_UNIT_DURATION} validity period.
-            You can unset the {settings.PATH_APPLICATION_JWT_NAME} variable from your path if you want.
-            [/cyan]
-            """
-        )
+        printer.print_message("success", self.app_dict.get_appli_dictionnary()['LOGOUT_PROMPT_MESSAGE'])
+        for i in range(4):
+            to_prompt = f"LOGOUT_PROMPT_INFO_{i+1}"
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()[to_prompt])
+            i += 1
         sys.exit(0)

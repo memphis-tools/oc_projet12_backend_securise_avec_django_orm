@@ -1,10 +1,13 @@
 """
-Description: Client en mode console, dédié aux mises à jour pour suppression.
+Description:
+Client en mode console, dédié aux mises à jour pour suppression.
 """
 import sys
 from rich import print
 
 try:
+    from src.languages import language_bridge
+    from src.printers import printer
     from src.exceptions import exceptions
     from src.forms import forms
     from src.views.delete_views import DeleteAppViews
@@ -13,6 +16,8 @@ try:
     from src.settings import settings
     from src.utils import utils
 except ModuleNotFoundError:
+    from languages import language_bridge
+    from printers import printer
     from exceptions import exceptions
     from forms import forms
     from views.delete_views import DeleteAppViews
@@ -29,8 +34,11 @@ class ConsoleClientForDelete:
 
     def __init__(self, custom_id="", db_name=f"{settings.DATABASE_NAME}"):
         """
-        Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
+        Description:
+        On instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
+        db_name = utils.set_dev_database_as_default(db_name)
+        self.app_dict = language_bridge.LanguageBridge()
         utils.display_banner()
         self.app_view = AppViews(db_name)
         self.delete_app_view = DeleteAppViews(db_name)
@@ -40,11 +48,20 @@ class ConsoleClientForDelete:
         settings.APP_FIGLET_TITLE
 
     def ask_for_a_client_id(self, custom_id=""):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         client_id = ""
         if custom_id == "":
             client_id = forms.submit_a_client_get_form()
-            if client_id == "":
-                print("Pas d'id client saisi")
+            try:
+                if client_id == "":
+                    raise exceptions.CustomIdEmptyException()
+            except exceptions.CustomIdEmptyException:
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
                 return False
             client_lookup = None
         else:
@@ -55,15 +72,24 @@ class ConsoleClientForDelete:
                 client_id=client_id
             )
             return client_lookup.get_dict()
-        except Exception as error:
-            print(f"No such client sir: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_contract_id(self, custom_id=""):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         if custom_id == "":
             contract_id = forms.submit_a_contract_get_form()
-            if contract_id == "":
-                print("Pas d'id contrat saisi")
+            try:
+                if contract_id == "":
+                    raise exceptions.CustomIdEmptyException()
+            except exceptions.CustomIdEmptyException:
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
                 return False
             contract_lookup = None
         else:
@@ -74,15 +100,24 @@ class ConsoleClientForDelete:
                 contract_id=contract_id
             )
             return contract_lookup.get_dict()
-        except Exception as error:
-            print(f"No such contract sir: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_collaborator_id(self, custom_id=""):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         if custom_id == "":
             registration_number = forms.submit_a_collaborator_get_form()
-            if registration_number == "":
-                print("Pas d'id collaborateur saisi")
+            try:
+                if registration_number == "":
+                    raise exceptions.CustomIdEmptyException()
+            except exceptions.CustomIdEmptyException:
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
                 return False
             collaborator_lookup = None
         else:
@@ -96,15 +131,24 @@ class ConsoleClientForDelete:
             )
 
             return collaborator_lookup.id
-        except Exception as error:
-            print(f"No such collaborator sir: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_company_id(self, custom_id=""):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         if custom_id == "":
             company_id = forms.submit_a_company_get_form()
-            if company_id == "":
-                print("Pas d'id entreprise saisi")
+            try:
+                if company_id == "":
+                    raise exceptions.CustomIdEmptyException()
+            except exceptions.CustomIdEmptyException:
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
                 return False
             company_lookup = None
         else:
@@ -115,15 +159,24 @@ class ConsoleClientForDelete:
                 company_id=company_id
             )
             return company_lookup.get_dict()
-        except Exception as error:
-            print(f"No such company sir: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_department_id(self, custom_id=""):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         if custom_id == "":
             department_id = forms.submit_a_collaborator_department_get_form()
-            if department_id == "":
-                print("Pas d'id département /service saisi")
+            try:
+                if department_id == "":
+                    raise exceptions.CustomIdEmptyException()
+            except exceptions.CustomIdEmptyException:
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
                 return False
             department_lookup = None
         else:
@@ -134,15 +187,24 @@ class ConsoleClientForDelete:
                 department_id=department_id
             )
             return department_lookup.get_dict()
-        except Exception as error:
-            print(f"No such department sir: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_event_id(self, custom_id=""):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         if custom_id == "":
             event_id = forms.submit_a_event_get_form()
-            if event_id == "":
-                print("Pas d'id évènement saisi")
+            try:
+                if event_id == "":
+                    raise exceptions.CustomIdEmptyException()
+            except exceptions.CustomIdEmptyException:
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
                 return False
             event_lookup = None
         else:
@@ -151,15 +213,24 @@ class ConsoleClientForDelete:
             # on propose de rechercher l'évènement
             event_lookup = self.app_view.get_events_view().get_event(event_id=event_id)
             return event_lookup.get_dict()
-        except Exception as error:
-            print(f"No such event sir: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_location_id(self, custom_id=""):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         if custom_id == "":
             location_id = forms.submit_a_location_get_form()
-            if location_id == "":
-                print("Pas d'id localité saisi")
+            try:
+                if location_id == "":
+                    raise exceptions.CustomIdEmptyException()
+            except exceptions.CustomIdEmptyException:
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
                 return False
             location_lookup = None
         else:
@@ -170,14 +241,23 @@ class ConsoleClientForDelete:
                 location_id=location_id
             )
             return location_lookup.get_dict()
-        except Exception as error:
+        except Exception:
             return False
 
     def ask_for_a_role_id(self, custom_id=""):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         if custom_id == "":
             role_id = forms.submit_a_collaborator_role_get_form()
-            if role_id == "":
-                print("Pas d'id role saisi")
+            try:
+                if role_id == "":
+                    raise exceptions.CustomIdEmptyException()
+            except exceptions.CustomIdEmptyException:
+                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
                 return False
             role_lookup = None
         else:
@@ -186,8 +266,8 @@ class ConsoleClientForDelete:
             # on propose de rechercher le role
             role_lookup = self.app_view.get_roles_view().get_role(role_id=role_id)
             return role_lookup.get_dict()
-        except Exception as error:
-            print(f"No such role sir: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     @utils.authentication_permission_decorator
@@ -215,16 +295,16 @@ class ConsoleClientForDelete:
                 client_id = self.ask_for_a_client_id()["id"]
             return self.delete_app_view.get_clients_view().delete_client(client_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
         except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print("[bold red]Erreur[/bold red] Client rattaché à contrat existant.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CLIENT_RATTACHED_TO_CONTRACT'])
             raise exceptions.ForeignKeyDependyException("")
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -247,19 +327,17 @@ class ConsoleClientForDelete:
                 collaborator_id
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print(
-                "[bold red]Erreur[/bold red] Collaborateur rattaché à client existant."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CLIENT_RATTACHED_TO_COLLABORATOR'])
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -280,17 +358,17 @@ class ConsoleClientForDelete:
                 company_id = self.ask_for_a_company_id()["id"]
             return self.delete_app_view.get_companies_view().delete_company(company_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print("[bold red]Erreur[/bold red] Entreprise rattaché à client existant.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['COMPANY_RATTACHED_TO_CLIENT'])
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -313,19 +391,17 @@ class ConsoleClientForDelete:
                 contract_id
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print(
-                "[bold red]Erreur[/bold red] Contrat rattaché à un évènement existant."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CONTRACT_RATTACHED_TO_EVENT'])
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            print(f"[bold red]Id non trouvé.[/bold red] {error}")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -351,19 +427,17 @@ class ConsoleClientForDelete:
                 department_id
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print(
-                "[bold red]Erreur[/bold red] Département /service rattaché à un collaborateur existant."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DEPARTMENT_RATTACHED_TO_COLLABORATOR'])
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -384,14 +458,14 @@ class ConsoleClientForDelete:
                 event_id = self.ask_for_a_event_id()["id"]
             return self.delete_app_view.get_events_view().delete_event(event_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -414,19 +488,17 @@ class ConsoleClientForDelete:
                 location_id
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print(
-                "[bold red]Erreur[/bold red] Localité rattachée à une entreprise existante."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['LOCATION_RATTACHED_TO_COMPANY'])
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -447,17 +519,15 @@ class ConsoleClientForDelete:
                 role_id = self.ask_for_a_role_id()["id"]
             return self.delete_app_view.get_roles_view().delete_role(role_id)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            print(
-                "[bold red]Erreur[/bold red] Rôle rattaché à un collaborateur existant."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['ROLE_RATTACHED_TO_COLLABORATOR'])
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)

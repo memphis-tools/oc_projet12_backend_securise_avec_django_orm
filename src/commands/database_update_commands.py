@@ -1,18 +1,26 @@
 """
-Description: Toutes les commandes qui permettent les suppressions
+Description:
+Toutes les commandes qui permettent les mises à jour
 """
 import click
 from rich import print
 from termcolor import colored, cprint
 
 try:
+    from src.printers import printer
+    from src.languages import language_bridge
     from src.clients.update_console import ConsoleClientForUpdate
     from src.exceptions import exceptions
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
+    from printers import printer
+    from languages import language_bridge
     from clients.update_console import ConsoleClientForUpdate
     from exceptions import exceptions
     from validators.data_syntax.fr import validators
+
+
+APP_DICT = language_bridge.LanguageBridge()
 
 
 def display_option(options):
@@ -26,7 +34,7 @@ def check_if_partial_dict_valid(partial_dict):
             validators.is_adresse_valid("adresse lambda")
             eval(f"validators.is_{key}_valid")(value)
         except Exception:
-            print(f"[bold red]{value}[/bold red] not valid for {key}")
+            printer.print_message("error", APP_DICT.get_appli_dictionnary()['VALUE_UNEXPECTED'])
             break
     return True
 
@@ -40,7 +48,8 @@ def check_if_partial_dict_valid(partial_dict):
 )
 def update_client(client_id, args):
     """
-    Description: commande dédiée à mettre à jour un client de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
+    Description:
+	Dédiée à mettre à jour un client de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
     civility: expected 'MR, MME, MLE, AUTRE'\n
     first_name\n
     last_name\n
@@ -74,14 +83,17 @@ def update_client(client_id, args):
         console_client_return = ConsoleClientForUpdate().update_client(client_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print("[bold red]Aucuns arguments fournis[/bold red]")
-    except exceptions.ForeignKeyDependyException as error:
-        print(f"[bold red]Client utilisé[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+    except exceptions.ForeignKeyDependyException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP'])
     except NameError as error:
-        print(f"[bold red]Entreprise non trouvée avec id[/bold red]: {error}")
-        print("[bold red]Entreprise non trouvée avec id[/bold red]")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+    except exceptions.CommercialCollaboratorIsNotAssignedToClient:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
@@ -94,7 +106,7 @@ def update_client(client_id, args):
 def update_collaborator(registration_number, args):
     """
     Description:
-    Commande dédiée à mettre à jour un collaborateur de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
+	Dédiée à mettre à jour un collaborateur de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
     username\n
     department\n
     role\n
@@ -115,27 +127,31 @@ def update_collaborator(registration_number, args):
         )
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print("[bold red]Aucuns arguments fournis[/bold red]")
-    except exceptions.ForeignKeyDependyException as error:
-        print(f"[bold red]Collaborateur utilisé[/bold red]: {error}")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+    except exceptions.ForeignKeyDependyException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_COLLABORATOR_CAN_NOT_BE_DROP'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
 def update_collaborator_password():
     """
     Description:
-    Commande dédiée à mettre à jour le mot de passe d'un collaborateur de l'entreprise.
+	Dédiée à mettre à jour le mot de passe d'un collaborateur de l'entreprise.
     """
     try:
         console_client = ConsoleClientForUpdate()
         if console_client.update_collaborator_password():
-            print("[bold green]Votre mot de passe est mis à jour.[/bold green]")
+            printer.print_message("success", APP_DICT.get_appli_dictionnary()['PASSWORD_UPDATED'])
     except exceptions.NewPasswordIsNotValidException:
-        print("[bold red]Erreur[/bold red] Nouveau mot de passe invalide")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['NEW_PASSWORD_INVALID'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
@@ -148,7 +164,7 @@ def update_collaborator_password():
 def update_company(company_id, args):
     """
     Description:
-    Commande dédiée à mettre à jour une entreprise avec 1 ou plusieurs options ci-dessous:\n
+	Dédiée à mettre à jour une entreprise avec 1 ou plusieurs options ci-dessous:\n
     company_name\n
     company_registration_number\n
     company_subregistration_number\n
@@ -177,11 +193,13 @@ def update_company(company_id, args):
         console_client_return = ConsoleClientForUpdate().update_company(company_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print("[bold red]Aucuns arguments fournis[/bold red]")
-    except exceptions.ForeignKeyDependyException as error:
-        print(f"[bold red]Entreprise utilisée[/bold red]: {error}")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+    except exceptions.ForeignKeyDependyException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_COMPANY_CAN_NOT_BE_DROP'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
@@ -194,7 +212,7 @@ def update_company(company_id, args):
 def update_contract(contract_id, args):
     """
     Description:
-    Commande dédiée à mettre à jour un contrat de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
+	Dédiée à mettre à jour un contrat de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
     full_amount_to_pay\n
     remain_amount_to_pay\n
     creation_date\n
@@ -231,11 +249,15 @@ def update_contract(contract_id, args):
         console_client_return = ConsoleClientForUpdate().update_contract(contract_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print("[bold red]Aucuns arguments fournis[/bold red]")
-    except exceptions.ForeignKeyDependyException as error:
-        print(f"[bold red]Contrat utilisé[/bold red]: {error}")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+    except exceptions.ForeignKeyDependyException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_CONTRACT_CAN_NOT_BE_DROP'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except exceptions.CommercialCollaboratorIsNotAssignedToContract:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
@@ -248,7 +270,7 @@ def update_contract(contract_id, args):
 def update_department(department_id, args):
     """
     Description:
-    Commande dédiée à mettre à jour un département /service de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
+	Dédiée à mettre à jour un département /service de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
     name\n
     Exemple usage:
     'oc12_update_department --department_id zz94 name="La boucle sur yvette"
@@ -267,11 +289,13 @@ def update_department(department_id, args):
         )
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print("[bold red]Aucuns arguments fournis[/bold red]")
-    except exceptions.ForeignKeyDependyException as error:
-        print(f"[bold red]Service utilisé[/bold red]: {error}")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except exceptions.ForeignKeyDependyException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_DEPARTMENT_CAN_NOT_BE_DROP'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
@@ -284,7 +308,7 @@ def update_department(department_id, args):
 def update_event(event_id, args):
     """
     Description:
-    Commande dédiée à mettre à jour un évènement avec 1 ou plusieurs options ci-dessous:\n
+	Dédiée à mettre à jour un évènement avec 1 ou plusieurs options ci-dessous:\n
     title\n
     contract_id: expected is custom id you set (free chars string)\n
     client_id: expected is custom id you set (free chars string)\n
@@ -340,11 +364,13 @@ def update_event(event_id, args):
         console_client_return = ConsoleClientForUpdate().update_event(event_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print("[bold red]Aucuns arguments fournis[/bold red]")
-    except exceptions.ForeignKeyDependyException as error:
-        print(f"[bold red]Evenement utilisé[/bold red]: {error}")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except exceptions.ForeignKeyDependyException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_EVENT_CAN_NOT_BE_DROP'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
@@ -357,7 +383,7 @@ def update_event(event_id, args):
 def update_location(location_id, args):
     """
     Description:
-    Commande dédiée à mettre à jour une localité avec 1 ou plusieurs options ci-dessous:\n
+	Dédiée à mettre à jour une localité avec 1 ou plusieurs options ci-dessous:\n
     adresse\n
     complement_adresse\n
     code_postal\n
@@ -378,11 +404,13 @@ def update_location(location_id, args):
         console_client_return = ConsoleClientForUpdate().update_location(location_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print("[bold red]Aucuns arguments fournis[/bold red]")
-    except exceptions.ForeignKeyDependyException as error:
-        print("[bold red]Locatité utilisée[/bold red]: {error}")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except exceptions.ForeignKeyDependyException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_LOCATION_CAN_NOT_BE_DROP'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
@@ -395,8 +423,11 @@ def update_location(location_id, args):
 def update_role(role_id, args):
     """
     Description:
-    Commande dédiée à mettre à jour un roles pour les collaborateurs de l'entreprise
+	Dédiée à mettre à jour un roles pour les collaborateurs de l'entreprise
     avec 1 ou plusieurs options ci-dessous:\n
+    name\n
+    Exemple usage:
+    'oc12_update_department --role_id driv name="OC12_DRIVER"
     """
     role_dict = {}
     try:
@@ -410,8 +441,10 @@ def update_role(role_id, args):
         console_client_return = ConsoleClientForUpdate().update_role(role_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        print("[bold red]Aucuns arguments fournis[/bold red]")
-    except exceptions.ForeignKeyDependyException as error:
-        print(f"[bold red]Role utilisé[/bold red]: {error}")
-    except Exception as error:
-        print(f"[bold red]Missing token[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+    except exceptions.InsufficientPrivilegeException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+    except exceptions.ForeignKeyDependyException:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_ROLE_CAN_NOT_BE_DROP'])
+    except Exception:
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])

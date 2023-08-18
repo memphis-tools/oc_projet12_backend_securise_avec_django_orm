@@ -4,9 +4,11 @@ Un controleur avec toutes méthodes GET.
 from sqlalchemy import text
 
 try:
+    from src.exceptions import exceptions
     from src.models import models
     from src.utils import utils
 except ModuleNotFoundError:
+    from exceptions import exceptions
     from models import models
     from utils import utils
 
@@ -48,7 +50,7 @@ class DatabaseReadController:
     def get_client(self, session, client_id):
         """
         Description:
-                Méthode dédiée à servir la vue lors d'une requête d'un client.
+        Méthode dédiée à servir la vue lors d'une requête d'un client.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Client.
         Paramètres:
         - client_id: c'est le custom id (chaine libre)
@@ -111,7 +113,7 @@ class DatabaseReadController:
             )
             return db_collaborator_queryset
         except Exception as error:
-            print(f"Collaborator or Department not found: {error}")
+            raise exceptions.AuthenticationCredentialsFailed()
 
     def get_collaborators(self, session):
         """

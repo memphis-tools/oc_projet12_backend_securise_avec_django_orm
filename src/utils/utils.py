@@ -1,3 +1,4 @@
+import os
 import sys
 import re
 import subprocess
@@ -13,9 +14,30 @@ from termcolor import colored, cprint
 from werkzeug.security import generate_password_hash, check_password_hash
 
 try:
+    from src.printers import printer
+    from src.languages import language_bridge
     from src.settings import settings
 except ModuleNotFoundError:
+    from printers import printer
+    from languages import language_bridge
     from settings import settings
+
+
+APP_DICT = language_bridge.LanguageBridge()
+
+
+def set_dev_database_as_default(db_name):
+    if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
+        db_name = f"{settings.DEV_DATABASE_NAME}"
+    return db_name
+
+
+def recall_which_running_env_in_use():
+    if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
+        return "DEV"
+    elif os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "TEST":
+        return "TEST"
+    return "PROD"
 
 
 def authentication_permission_decorator(func):
@@ -24,13 +46,14 @@ def authentication_permission_decorator(func):
         try:
             if args[0].jwt_view.does_a_valid_token_exist():
                 return func(*args, **kwargs)
-            print("[bold red]Access forbidden without valid token[/bold red]")
+
+            printer.print_message("error", APP_DICT.get_appli_dictionnary()['INVALID_TOKEN_ERROR'])
             sys.exit(0)
         except jwt.exceptions.InvalidSignatureError:
-            print("[bold red]Access forbidden without valid token[/bold red]")
+            printer.print_message("error", APP_DICT.get_appli_dictionnary()['INVALID_TOKEN_ERROR'])
             sys.exit(0)
         except KeyError:
-            print("[bold red]Access forbidden without valid token[/bold red]")
+            printer.print_message("error", APP_DICT.get_appli_dictionnary()['INVALID_TOKEN_ERROR'])
             sys.exit(0)
 
     return check_user_token
@@ -177,7 +200,8 @@ def display_banner():
     """
     Description: Afficher la bannière.
     """
-    text = f"{settings.APP_FIGLET_TITLE}"
+    running_env = recall_which_running_env_in_use()
+    text = f"{settings.APP_FIGLET_TITLE} - {running_env} ENVIRONMENT"
     cprint(colored(pyfiglet.figlet_format(text, font="digital", width=100), "cyan"))
 
 
@@ -204,6 +228,7 @@ def get_a_database_connection(
     Description:
     Dédiée à obtenir un curseur pour interragir avec le SGBD.
     """
+    db_name = set_dev_database_as_default(db_name)
     if user_name != "" and user_pwd != "":
         user = user_name
         password = user_pwd
@@ -366,17 +391,15 @@ def display_postgresql_controls():
             capture_output=True,
         )
         if execution_code.returncode == 0:
-            print(
-                "[bold green][START CONTROL][/bold green] service postgresql is active"
-            )
+            printer.print_message("success", APP_DICT.get_appli_dictionnary()['POSTGRESQL_SERVICE_RUNNING'])
         else:
             raise subprocess.CalledProcessError()
     except subprocess.CalledProcessError as error:
-        print(f"[bold red] error:[/bold red] {error}")
+        printer.print_message("success", APP_DICT.get_appli_dictionnary()['POSTGRESQL_SERVICE_ERROR'])
 
     try:
         subprocess.run(["id", "postgres"], shell=True, check=True, capture_output=True)
-        print("[bold green][START CONTROL][/bold green] user postgres exists")
+        printer.print_message("success", APP_DICT.get_appli_dictionnary()['POSTGRESQL_USER_POSTGRES_EXISTS'])
     except subprocess.CalledProcessError as error:
         print(f"[START CONTROL] error: {error}")
 

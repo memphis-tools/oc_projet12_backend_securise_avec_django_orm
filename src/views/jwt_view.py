@@ -1,29 +1,40 @@
 """
+Description:
 On fournit une vue dédiée à controler l'authentification et une autre qui permet d'atteindre les modèles.
 """
 from rich import print
 
 try:
+    from src.exceptions import exceptions
     from src.controllers.jwt_controller import JwtController
+    from src.languages import language_bridge
+    from src.printers import printer
 except ModuleNotFoundError:
+    from exceptions import exceptions
     from controllers.jwt_controller import JwtController
+    from languages import language_bridge
+    from printers import printer
 
 
 class JwtView:
     """
-    Description: une classe dédiée à servir la vue sur l'authentification.
+    Description:
+    Classe dédiée à servir la vue sur l'authentification.
     """
 
     def __init__(self, AppView):
         """
-        Description: vue dédiée à instancier la base de données et retourner un controleur.
+        Description:
+        Vue dédiée à instancier la base de données et retourner un controleur.
         """
+        self.app_dict = language_bridge.LanguageBridge()
         self.jwt_controller = JwtController()
         self.app_view = AppView
 
     def get_token(self, registration_number):
         """
-        Description: vue dédiée à obtenir un token, nécessaire pour s'authentifier sur l'application.
+        Description:
+        Fonction dédiée à obtenir un token, nécessaire pour s'authentifier sur l'application.
         """
         try:
             (
@@ -36,13 +47,14 @@ class JwtView:
             r_number = registration_number
             u_name = collaborator_username
             department = collaborator_department_name
-            information = "[bold cyan]Add the following in your path and run any commands (try oc12_help)[/bold cyan]:"
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['TOKEN_INFO_IN_TERMINAL_OUTPUT_1'])
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['TOKEN_INFO_IN_TERMINAL_OUTPUT_2'])
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['TOKEN_INFO_IN_TERMINAL_OUTPUT_3'])
             to_do = f"OC_12_JWT='{self.jwt_controller.get_token(r_number, u_name, department)}'"
-            print(information)
             print(to_do)
             return
-        except Exception:
-            raise Exception()
+        except exceptions.AuthenticationCredentialsFailed:
+            raise exceptions.AuthenticationCredentialsFailed()
 
     def does_a_valid_token_exist(self):
         """

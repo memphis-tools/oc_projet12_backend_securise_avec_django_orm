@@ -1,11 +1,14 @@
 """
-Description: Client en mode console, dédié aux mises à jour (ajout, modification, suppression).
+Description:
+Client en mode console, dédié aux mises à jour (ajout, modification, suppression).
 """
 import sys
 from datetime import datetime
 from rich import print
 
 try:
+    from src.languages import language_bridge
+    from src.printers import printer
     from src.exceptions import exceptions
     from src.forms import forms
     from src.models import models
@@ -17,6 +20,8 @@ try:
     from src.validators import add_data_validators
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
+    from languages import language_bridge
+    from printers import printer
     from exceptions import exceptions
     from forms import forms
     from models import models
@@ -36,8 +41,11 @@ class ConsoleClientForCreate:
 
     def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
-        Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
+        Description:
+        On instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
+        db_name = utils.set_dev_database_as_default(db_name)
+        self.app_dict = language_bridge.LanguageBridge()
         utils.display_banner()
         self.app_view = AppViews(db_name)
         self.create_app_view = CreateAppViews(db_name)
@@ -47,23 +55,41 @@ class ConsoleClientForCreate:
         settings.APP_FIGLET_TITLE
 
     def ask_for_a_client_id(self):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         client_id = forms.submit_a_client_get_form()
-        if client_id == "":
-            print("Pas d'id client saisi")
+        try:
+            if client_id == "":
+                raise exceptions.CustomIdEmptyException()
+        except exceptions.CustomIdEmptyException:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
             return False
         client_lookup = None
         try:
             # on propose de rechercher le client
             client_lookup = self.app_view.get_clients_view().get_client(client_id)
             return client_lookup.id
-        except Exception as error:
-            print("Pas de client avec cet id.")
+        except AttributeError:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_contract_id(self):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         contract_id = forms.submit_a_contract_get_form()
-        if contract_id == "":
-            print("Pas d'id contrat saisi")
+        try:
+            if contract_id == "":
+                raise exceptions.CustomIdEmptyException()
+        except exceptions.CustomIdEmptyException:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
             return False
         contract_lookup = None
         try:
@@ -72,28 +98,46 @@ class ConsoleClientForCreate:
                 contract_id
             )
             return contract_lookup.id
-        except Exception as error:
-            print("Pas de contrat avec cet id.")
+        except AttributeError:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_company_id(self):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         company_id = forms.submit_a_company_get_form()
-        if company_id == "":
-            print("Pas d'id entreprise saisi")
+        try:
+            if company_id == "":
+                raise exceptions.CustomIdEmptyException()
+        except exceptions.CustomIdEmptyException:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
             return False
         company_lookup = None
         try:
             # on propose de rechercher l'entreprise
             company_lookup = self.app_view.get_companies_view().get_company(company_id)
             return company_lookup.id
-        except Exception as error:
-            print("Pas d'entreprise avec cet id.")
+        except AttributeError:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_department_id(self):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         department_id = forms.submit_a_collaborator_department_get_form()
-        if department_id == "":
-            print("Pas d'id département /service saisi")
+        try:
+            if department_id == "":
+                raise exceptions.CustomIdEmptyException()
+        except exceptions.CustomIdEmptyException:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
             return False
         department_lookup = None
         try:
@@ -102,28 +146,46 @@ class ConsoleClientForCreate:
                 department_id
             )
             return department_lookup.id
-        except Exception as error:
-            print("Pas de service /département avec cet id.")
+        except AttributeError:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_event_id(self):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         event_id = forms.submit_a_event_get_form()
-        if event_id == "":
-            print("Pas d'id évènement saisi")
+        try:
+            if event_id == "":
+                raise exceptions.CustomIdEmptyException()
+        except exceptions.CustomIdEmptyException:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
             return False
         event_lookup = None
         try:
             # on propose de rechercher l'évènement
             event_lookup = self.app_view.get_events_view().get_event(event_id)
             return event_lookup.id
-        except Exception as error:
-            print("Pas d'évènement avec cet id.")
+        except AttributeError as error:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     def ask_for_a_location_id(self):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         location_id = forms.submit_a_location_get_form()
-        if location_id == "":
-            print("Pas d'id localité saisi")
+        try:
+            if location_id == "":
+                raise exceptions.CustomIdEmptyException()
+        except exceptions.CustomIdEmptyException:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
             return False
         location_lookup = None
         try:
@@ -134,21 +196,30 @@ class ConsoleClientForCreate:
             if isinstance(location_lookup.id, int):
                 raise exceptions.LocationCustomIdAlReadyExists()
         except AttributeError:
-            print(f"Pas de localité avec cet id. Nouvel id: {location_id}")
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return location_id
 
     def ask_for_a_role_id(self):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
+        Si aucun résultat, on lève une exception CustomIdEmptyException.
+        """
         role_id = forms.submit_a_collaborator_role_get_form()
-        if role_id == "":
-            print("Pas d'id role saisi")
+        try:
+            if role_id == "":
+                raise exceptions.CustomIdEmptyException()
+        except exceptions.CustomIdEmptyException:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
             return False
         role_lookup = None
         try:
             # on propose de rechercher le role
             role_lookup = self.app_view.get_roles_view().get_role(role_id)
             return role_lookup.id
-        except Exception:
-            print("Pas de role avec cet id.")
+        except AttributeError:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             return False
 
     @utils.authentication_permission_decorator
@@ -198,8 +269,12 @@ class ConsoleClientForCreate:
                     models.Client(**client_attributes_dict)
                 )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
+        except exceptions.SuppliedDataNotMatchModel:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            raise exceptions.SuppliedDataNotMatchModel()
+            sys.exit(0)
         return client_id
 
     @utils.authentication_permission_decorator
@@ -229,11 +304,16 @@ class ConsoleClientForCreate:
                 collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
                 collaborator = models.Collaborator(**collaborator_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            raise exceptions.ApplicationErrorException()
+            sys.exit(0)
+        except exceptions.SuppliedDataNotMatchModel:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         return self.create_app_view.get_collaborators_view().add_collaborator(
             collaborator
@@ -271,11 +351,16 @@ class ConsoleClientForCreate:
                 )
                 company = models.Company(**company_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except exceptions.SuppliedDataNotMatchModel:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            raise exceptions.SuppliedDataNotMatchModel()
+            sys.exit(0)
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            raise exceptions.ApplicationErrorException()
             sys.exit(0)
         company.creation_date = datetime.now()
         return self.create_app_view.get_companies_view().add_company(company)
@@ -307,11 +392,16 @@ class ConsoleClientForCreate:
                 contract_attributes_dict = forms.submit_a_contract_create_form()
                 contract = models.Contract(**contract_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except exceptions.SuppliedDataNotMatchModel:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            raise exceptions.SuppliedDataNotMatchModel()
+            sys.exit(0)
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            raise exceptions.ApplicationErrorException()
             sys.exit(0)
         contract.creation_date = datetime.now()
         return self.create_app_view.get_contracts_view().add_contract(contract)
@@ -349,11 +439,16 @@ class ConsoleClientForCreate:
                     **department_attributes_dict
                 )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except exceptions.SuppliedDataNotMatchModel:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            raise exceptions.SuppliedDataNotMatchModel()
+            sys.exit(0)
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            raise exceptions.ApplicationErrorException()
             sys.exit(0)
         department.creation_date = datetime.now()
         return self.create_app_view.get_departments_view().add_department(department)
@@ -397,23 +492,24 @@ class ConsoleClientForCreate:
             event.creation_date = datetime.now()
             return self.create_app_view.get_events_view().add_event(user_id, event)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
-            print(
-                "[bold red]Erreur[/bold red] Contrat non trouvé avec le contract_id fourni."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            print(
-                "[bold red]Erreur[/bold red] Vous n'avez pas signé le contrat dédié à l'évènement"
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT'])
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except exceptions.SuppliedDataNotMatchModel:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            raise exceptions.SuppliedDataNotMatchModel()
+            sys.exit(0)
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            raise exceptions.ApplicationErrorException()
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -449,21 +545,20 @@ class ConsoleClientForCreate:
                 )
                 location = models.Location(**location_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.LocationCustomIdAlReadyExists:
-            print("[bold red]Erreur[/bold red] Id existe déjà")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_ALREADY_EXISTS_'])
             raise exceptions.LocationCustomIdAlReadyExists()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            print(
-                "[bold red]Erreur[/bold red] Vos données ne respecte pas le format attendu."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            raise exceptions.ApplicationErrorException()
             sys.exit(0)
         location.creation_date = datetime.now()
         return self.create_app_view.get_locations_view().add_location(location)
@@ -493,11 +588,16 @@ class ConsoleClientForCreate:
                 role_attributes_dict = forms.submit_a_collaborator_role_create_form()
                 role = models.Collaborator_Role(**role_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except exceptions.SuppliedDataNotMatchModel:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            raise exceptions.SuppliedDataNotMatchModel()
+            sys.exit(0)
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            raise exceptions.ApplicationErrorException()
             sys.exit(0)
         role.creation_date = datetime.now()
         return self.create_app_view.get_roles_view().add_role(role)
