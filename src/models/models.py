@@ -202,13 +202,16 @@ class Company(Base):
     client = relationship("Client", back_populates="company", passive_deletes="all")
     location = relationship("Location", back_populates="company", passive_deletes="all")
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
-
+    date_debut_activite = Column(DateTime(), nullable=False, default=datetime.now())
+    tranche_effectif_salarie = Column(Integer, nullable=False, default=-10)
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f",(activite_principale|{self.activite_principale})"
+        descriptors += f'(date_debut_activite|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f'(tranche_effectif_salarie|{self.tranche_effectif_salarie})'
         descriptors += f",(company_id|{self.company_id})"
         descriptors += f",(company_name|{self.company_name})"
-        descriptors += f",(activite_principale|{self.activite_principale})"
         descriptors += (
             f",(company_registration_number|{self.company_registration_number})"
         )
@@ -226,9 +229,11 @@ class Company(Base):
         company_dict = {
             "id": self.id,
             "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
+            "activite_principale": self.activite_principale,
+            "date_debut_activite": self.date_debut_activite.strftime("%d-%m-%Y %H:%M"),
+            "tranche_effectif_salarie": self.tranche_effectif_salarie,
             "company_id": self.company_id,
             "company_name": self.company_name,
-            "activite_principale": self.activite_principale,
             "company_registration_number": self.company_registration_number,
             "company_subregistration_number": self.company_subregistration_number,
             "location_id": self.location_id,
@@ -240,6 +245,8 @@ class Company(Base):
         return [
             "company_name",
             "activite_principale",
+            "date_debut_activite",
+            "tranche_effectif_salarie",
             "company_registration_number",
             "company_subregistration_number",
             "location_id",
