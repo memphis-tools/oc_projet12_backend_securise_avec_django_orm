@@ -4,10 +4,12 @@ vue collaborateurs
 from rich.console import Console
 
 try:
+    from src.languages import language_bridge
     from src.printers import printer
     from src.utils import utils
     from src.validators import update_data_validators
 except ModuleNotFoundError:
+    from languages import language_bridge
     from printers import printer
     from utils import utils
     from validators import update_data_validators
@@ -22,6 +24,7 @@ class CollaboratorsView:
         """
         Description: vue dédiée à instancier avec les paramètres transmis par l'AppView
         """
+        self.app_dict = language_bridge.LanguageBridge()
         self.db_controller = db_controller
         self.db_initializer = db_initializer
         self.session = session

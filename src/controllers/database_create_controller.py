@@ -4,10 +4,12 @@ Un controleur avec toutes méthodes pour ajouter des données.
 from sqlalchemy import text
 
 try:
+    from src.languages import language_bridge
     from src.printers import printer
     from src.exceptions import exceptions
     from src.settings import settings
 except ModuleNotFoundError:
+    from languages import language_bridge
     from printers import printer
     from exceptions import exceptions
     from settings import settings
@@ -17,6 +19,8 @@ class DatabaseCreateController:
     """
     Description: Toutes les méthodes pour ajouter des données.
     """
+    def __init__(self):
+        self.app_dict = language_bridge.LanguageBridge()
 
     def add_client(self, session, client):
         """
