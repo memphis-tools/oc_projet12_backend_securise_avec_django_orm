@@ -147,17 +147,17 @@ def dummy_database_creation(db_name="projet12"):
     # 2 entreprises en exemple
     sql = """
     INSERT INTO company
-    (company_id, company_name, company_registration_number,
-     company_subregistration_number, location_id, creation_date)
+    (company_id, company_name, tranche_effectif_salarie, company_registration_number,
+     company_subregistration_number, location_id, creation_date, date_debut_activite)
     VALUES
-    ('CSLLC12345', 'Cool Startup LLC', '777222888', '12345', '1', '2023-08-03 08:35:14')
+    ('CSLLC12345', 'Cool Startup LLC', '+50', '777222888', '12345', '1', '2023-08-03 08:35:14', '2023-02-14 15:34:58')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO company
-    (company_id, company_name, company_registration_number,
-     company_subregistration_number, location_id, creation_date)
-    VALUES ('NFEPG12345', 'Nantes Free Escape Games', '865333888', '44888', '2', '2019-07-09 14:10:20')
+    (company_id, company_name, tranche_effectif_salarie, company_registration_number,
+     company_subregistration_number, location_id, creation_date, date_debut_activite)
+    VALUES ('NFEPG12345', 'Nantes Free Escape Games', '-10', '865333888', '44888', '2', '2019-07-09 14:10:20', '2019-03-25 10:24:08')
     """
     cursor.execute(sql)
 
