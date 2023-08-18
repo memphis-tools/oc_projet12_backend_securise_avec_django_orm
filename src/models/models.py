@@ -494,6 +494,7 @@ class Location(Base, ModelMixin):
     cedex = Column(Integer, nullable=True, default=None)
     code_postal = Column(Integer, nullable=False)
     ville = Column(String(100), nullable=False)
+    region = Column(String(75), nullable=False)
     pays = Column(String(100), nullable=True, default="France")
     event = relationship("Event", back_populates="location")
     # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer une localité si référencée par une entreprise
@@ -509,6 +510,7 @@ class Location(Base, ModelMixin):
         descriptors += f",(cedex|{self.cedex})"
         descriptors += f",(code_postal|{self.code_postal})"
         descriptors += f",(ville|{self.ville})"
+        descriptors += f",(region|{self.region})"
         descriptors += f",(pays|{self.pays})"
         descriptors += "]"
         return descriptors
@@ -526,6 +528,7 @@ class Location(Base, ModelMixin):
             "cedex": self.cedex,
             "code_postal": self.code_postal,
             "ville": self.ville,
+            "region": self.region,
             "pays": self.pays,
         }
         return location_dict
@@ -538,5 +541,6 @@ class Location(Base, ModelMixin):
             "cedex",
             "code_postal",
             "ville",
+            "region",
             "pays",
         ]
