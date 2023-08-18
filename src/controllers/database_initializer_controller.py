@@ -21,13 +21,13 @@ class DatabaseInitializerController:
     Pour accéder à cette classe, il a été contrôlé la présence d'un JWT token valide (dans le PATH utilisateur).
     Toutes autres opérations que "lecture seule, GET, etc" imposeront à l'utilisateur de saisir son mot de passe.
     """
-    db_name = utils.set_dev_database_as_default(f"{settings.DATABASE_NAME}")
+    db_name = utils.set_dev_database_as_default()
     def return_engine_and_session(
         self,
         user_login="",
         user_pwd="",
         decoded_token="",
-        db_name=f"{settings.DATABASE_NAME}",
+        db_name=db_name,
     ):
         """
         Description:
@@ -130,7 +130,7 @@ class DatabaseInitializerController:
             f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name="projet12"
         )
         cursor = conn.cursor()
-        for role in ["oc12_gestion", "oc12_support"]:
+        for role in ["aa123456789", "oc12_commercial", "oc12_gestion", "oc12_support"]:
             sql = f"""REASSIGN OWNED BY {role} TO postgres"""
             cursor.execute(sql)
             sql = f"""DROP OWNED BY {role}"""
@@ -140,7 +140,8 @@ class DatabaseInitializerController:
 
     def reset_db(self, engine, db_name="projet12"):
         """
-        Description: Dédié à aider au développement. On détruit les tables de la base de données.
+        Description:
+        Dédié à aider au développement. On détruit les tables de la base de données.
         """
         base = models.get_base()
         base.metadata.drop_all(engine)
@@ -163,7 +164,7 @@ class DatabaseInitializerController:
                 cursor.execute(sql)
             except Exception:
                 continue
-        if db_name == f"{settings.TEST_DATABASE_NAME}":
+        if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
             # on va conserver le collaborateur aa123456789 pour le module de test test_jwt_authenticator
             for role in [
                 "ab123456789",
@@ -182,8 +183,8 @@ class DatabaseInitializerController:
                     cursor.execute(sql)
                 except Exception:
                     continue
-        self.drop_more_roles_for_reset_db()
         try:
+            self.drop_more_roles_for_reset_db()
             self.truncate_tables_index_for_reset_db(cursor)
         except Exception:
             pass
@@ -234,10 +235,11 @@ class DatabaseInitializerController:
         sql = f"""ALTER USER {settings.ADMIN_LOGIN} WITH PASSWORD '{settings.ADMIN_PASSWORD}'"""
         cursor.execute(sql)
 
-        sql = (
-            f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
-        )
-        cursor.execute(sql)
+        for db_name in settings.DATABASE_TO_CREATE:
+            sql = (
+                f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
+            )
+            cursor.execute(sql)
 
         for role in [
             ("oc12_commercial", f"{settings.OC12_COMMERCIAL_PWD}"),
@@ -254,8 +256,9 @@ class DatabaseInitializerController:
                     cursor.execute(sql)
             except Exception:
                 pass
-            sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
-            cursor.execute(sql)
+            for db_name in settings.DATABASE_TO_CREATE:
+                sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
+                cursor.execute(sql)
             for model in [
                 "client",
                 "collaborator",
@@ -306,7 +309,8 @@ class DatabaseInitializerController:
             sql = f"""GRANT USAGE ON SEQUENCE event_id_seq TO {service}"""
             cursor.execute(sql)
 
-        self.database_postinstall_task_for_test_db()
+        self.database_postinstall_task_for_test_db(f"{settings.TEST_DATABASE_NAME}")
+        self.database_postinstall_task_for_test_db(f"{settings.DEV_DATABASE_NAME}")
 
         conn.commit()
         conn.close()
