@@ -68,15 +68,15 @@ def init_application():
 
         try:
             subprocess.run(
-                [f"sudo -u postgres dropuser {database}"],
+                [f"sudo -u postgres dropuser {settings.ADMIN_LOGIN}"],
                 shell=True,
                 check=True,
                 capture_output=True,
             )
-            print(f"Database {database} ",end="")
+            print(f"Database {database} {settings.ADMIN_LOGIN} ",end="")
             printer.print_message("success", APP_DICT.get_appli_dictionnary()['COLLABORATOR_DROPPED_SUCCESS'])
         except subprocess.CalledProcessError:
-            print(f"Database {database} ",end="")
+            print(f"Database {database} {settings.ADMIN_LOGIN} ",end="")
             printer.print_message("error", APP_DICT.get_appli_dictionnary()['COLLABORATOR_DROPPED_FAILURE'])
         except KeyboardInterrupt:
             printer.print_message("info", APP_DICT.get_appli_dictionnary()['INIT_ABORTED'])
@@ -123,31 +123,39 @@ def init_application():
 
         try:
             os.system(
-                "sudo su -c 'psql -c \"ALTER DATABASE projet12 OWNER TO admin\"' postgres"
+                f"sudo su -c 'psql -c \"ALTER DATABASE {database} OWNER TO admin\"' postgres"
             )
-            print(f"Database {database}{settings.ADMIN_LOGIN} ",end="")
+            print(f"Database {database} {settings.ADMIN_LOGIN} ",end="")
             printer.print_message("success", APP_DICT.get_appli_dictionnary()['DATABASE_OWNER_UPDATE_SUCCESS'])
         except subprocess.CalledProcessError:
-            print(f"Database {database}{settings.ADMIN_LOGIN} ",end="")
+            print(f"Database {database} {settings.ADMIN_LOGIN} ",end="")
             printer.print_message("error", APP_DICT.get_appli_dictionnary()['DATABASE_OWNER_UPDATE_FAILURE'])
         except KeyboardInterrupt:
             printer.print_message("info", APP_DICT.get_appli_dictionnary()['INIT_ABORTED'])
             sys.exit(0)
 
-    admin_console_client = AdminConsoleClient()
-    admin_console_client.init_db()
-    utils.display_postgresql_controls()
-    admin_console_client.database_postinstall_tasks()
-    admin_console_client.database_postinstall_alter_tables()
-    admin_console_client = AdminConsoleClient(db_name=f"{settings.TEST_DATABASE_NAME}")
-    admin_console_client.reset_db(db_name=f"{settings.TEST_DATABASE_NAME}")
-    admin_console_client.init_db(db_name=f"{settings.TEST_DATABASE_NAME}")
-    admin_console_client.database_postinstall_tasks(
-        db_name=f"{settings.TEST_DATABASE_NAME}"
-    )
-    admin_console_client.database_postinstall_alter_tables(
-        db_name=f"{settings.TEST_DATABASE_NAME}"
-    )
+    for database in settings.DATABASE_TO_CREATE:
+        print(f"Database {database} ",end="")
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['DATABASE_UPDATING'])
+        if database == "projet12":
+            admin_console_client = AdminConsoleClient()
+            admin_console_client.init_db()
+            utils.display_postgresql_controls()
+            admin_console_client.database_postinstall_tasks()
+            admin_console_client.database_postinstall_alter_tables()
+        else:
+            admin_console_client = AdminConsoleClient(db_name=f"{database}")
+            try:
+                admin_console_client.reset_db(db_name=f"{database}")
+            except Exception:
+                pass
+            admin_console_client.init_db(db_name=f"{database}")
+            admin_console_client.database_postinstall_tasks(
+                db_name=f"{database}"
+            )
+            admin_console_client.database_postinstall_alter_tables(
+                db_name=f"{database}"
+            )
 
-    # On peuple la base de données avec des données quelconques, pour le POC, en développement
-    dummy_database_creation(db_name=f"{settings.TEST_DATABASE_NAME}")
+            # On peuple la base de données avec des données quelconques, pour le POC, en développement
+            dummy_database_creation(db_name=f"{database}")
