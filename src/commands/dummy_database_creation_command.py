@@ -131,16 +131,16 @@ def dummy_database_creation(db_name="projet12"):
     # 2 localisations en exemple pour 2 entreprises
     sql = """
     INSERT INTO location
-    (location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    (location_id, adresse, complement_adresse, code_postal, ville, region, pays, creation_date)
     VALUES
-    ('p22240', '9 av Jean Moulin', '2 Bourg de la reine', '22240', 'Plurien', 'France', '2022-01-03 08:35:14')
+    ('p22240', '9 av Jean Moulin', '2 Bourg de la reine', '22240', 'Plurien', 'Bretagne', 'France', '2022-01-03 08:35:14')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO location
-    (location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    (location_id, adresse, complement_adresse, code_postal, ville, region, pays, creation_date)
     VALUES
-    ('llb44430', 'Place de Bretagne', '', '44430', 'Le Loroux-Bottereau', 'France', '2019-07-09 14:08:10')
+    ('llb44430', 'Place de Bretagne', '', '44430', 'Le Loroux-Bottereau', 'Pays de la Loire', 'France', '2019-07-09 14:08:10')
     """
     cursor.execute(sql)
 
@@ -203,15 +203,15 @@ def dummy_database_creation(db_name="projet12"):
 
     # 2 localisations en exemple pour 2 évènement
     sql = """
-    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, region, pays, creation_date)
     VALUES
-    ('csb41120', '53 av. Bobet', 'Petite Avenue', '41120', 'Candé-sur-Beuvron', 'France', '2023-08-03 08:35:14')
+    ('csb41120', '53 av. Bobet', 'Petite Avenue', '41120', 'Candé-sur-Beuvron', 'Centre-Val de Loire', 'France', '2023-08-03 08:35:14')
     """
     cursor.execute(sql)
     sql = """
-    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, pays, creation_date)
+    INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, region, pays, creation_date)
     VALUES
-    ('ggg56110', '20 Rue de Carhaix', 'Résidence Coquelicot', '56110', 'Gourin', 'France', '2023-08-03 08:35:14')
+    ('ggg56110', '20 Rue de Carhaix', 'Résidence Coquelicot', '56110', 'Gourin', 'Bretagne', 'France', '2023-08-03 08:35:14')
     """
     cursor.execute(sql)
 
