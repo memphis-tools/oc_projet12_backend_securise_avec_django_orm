@@ -44,7 +44,7 @@ class ConsoleClientForCreate:
         Description:
         On instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        db_name = utils.set_dev_database_as_default(db_name)
+        db_name = utils.set_database_to_get_based_on_user_path(db_name)
         self.app_dict = language_bridge.LanguageBridge()
         utils.display_banner()
         self.app_view = AppViews(db_name)
