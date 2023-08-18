@@ -1,40 +1,47 @@
 """
-Description: Client en mode console
+Description:
+Client en mode console, pour la lecture de données.
 """
-
 try:
+    from src.languages import language_bridge
+    from src.printers import printer
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings
-    from src.utils.utils import authentication_permission_decorator, display_banner
+    from src.utils import utils
 except ModuleNotFoundError:
+    from languages import language_bridge
+    from printers import printer
     from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings
-    from utils.utils import authentication_permission_decorator, display_banner
+    from utils import utils
 
 
 class ConsoleClientForRead:
     """
-    Description: la classe dédiée à l'usage d'un client en mode console.
+    Description:
+    Classe dédiée à l'usage d'un client en mode console.
     """
 
     def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        display_banner()
+        db_name = utils.set_dev_database_as_default(db_name)
+        self.app_dict = language_bridge.LanguageBridge()
+        utils.display_banner()
         self.app_view = AppViews(db_name)
         self.jwt_view = JwtView(self.app_view)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def get_clients(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les clients de l'entreprise.
         """
         return self.app_view.get_clients_view().get_clients(user_query_filters_args)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def get_collaborators(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les utilisateurs /collaborateurs de l'entreprise.
@@ -43,21 +50,21 @@ class ConsoleClientForRead:
             user_query_filters_args
         )
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def get_companies(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les entreprises clientes.
         """
         return self.app_view.get_companies_view().get_companies(user_query_filters_args)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def get_contracts(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les contrats de l'entreprise.
         """
         return self.app_view.get_contracts_view().get_contracts(user_query_filters_args)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def get_departments(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les départements /services de l'entreprise.
@@ -66,21 +73,21 @@ class ConsoleClientForRead:
             user_query_filters_args
         )
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def get_events(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les évènements de l'entreprise.
         """
         return self.app_view.get_events_view().get_events(user_query_filters_args)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def get_locations(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les localisations des évènements de l'entreprise.
         """
         return self.app_view.get_locations_view().get_locations(user_query_filters_args)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def get_roles(self, user_query_filters_args=""):
         """
         Description: vue dédiée à obtenir les rôles prévus pour les collaborateurs de l'entreprise.

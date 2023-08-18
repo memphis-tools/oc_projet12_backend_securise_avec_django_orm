@@ -1,5 +1,7 @@
 """
+Description:
 Fichier de variables diverses dédiées à l'authentification et à adresser le SGBD.
+Dédiées à l'administrateur de l'application.
 """
 
 import os
@@ -15,10 +17,14 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 
 # interrupteur dédié à engager ou non une recherche auprès d'API externes.
 INTERNET_CONNECTION = True
+LOG_COLLECT_ACTIVATED = True
+# on propose un log collector: "local", ou au nom de l'appli choisie, exemple "betterstack"
+LOG_COLLECTOR = "betterstack"
 
 # variables diverses
 APP_FIGLET_TITLE = "EPIC EVENTS"
 DEFAULT_COUNTRY = "France"
+DEFAULT_COUNTRY_SHORT = "fr"
 DEFAULT_CURRENCY = ("euro", "€")
 TRANSLATED_MONTHS = [
     ("janvier", "Jan"),
@@ -84,7 +90,7 @@ OC12_SUPPORT_PWD = os.environ.get("OC12_SUPPORT_PWD")
 # variables dédiées pour définir la base de données à joindre
 DATABASE_TO_CREATE = ["projet12", "test_projet12"]
 DATABASE_HOST = "127.0.0.1"
-DATABASE_NAME = "test_projet12"
+DATABASE_NAME = "projet12"
 DEV_DATABASE_NAME = "test_projet12"
 TEST_DATABASE_NAME = "test_projet12"
 DATABASE_PORT = "5432"
@@ -101,4 +107,18 @@ elif os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "DEV":
 elif os.environ[f"{PATH_APPLICATION_ENV_NAME}"] == "PROD":
     JWT_UNIT_DURATION = "hours"
     JWT_DURATION = 24
+
 HASH_ALGORITHM = "HS256"
+
+
+def get_settings_referenced_in_languages_files():
+    settings_for_template_list = [
+        {
+            "JWT_DURATION": JWT_DURATION,
+            "JWT_UNIT_DURATION": JWT_UNIT_DURATION,
+            "PATH_APPLICATION_ENV_NAME": PATH_APPLICATION_ENV_NAME,
+            "PATH_APPLICATION_JWT_NAME": PATH_APPLICATION_JWT_NAME,
+        }
+    ]
+
+    return settings_for_template_list

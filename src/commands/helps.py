@@ -7,18 +7,26 @@ import click
 from rich import print
 
 try:
+    from src.printers import printer
+    from src.languages import language_bridge
     from src.utils.utils import display_banner
 except ModuleNotFoundError:
+    from printers import printer
+    from languages import language_bridge
     from utils.utils import display_banner
+
+
+APP_DICT = language_bridge.LanguageBridge()
 
 
 @click.command
 def help():
     """
-    Description: bla bla bla
+    Description:
+    Dédiée à introduire aux fonctions d'usage.
     """
     display_banner()
-    print("[bold cyan][HELP MENU][/bold cyan]", end="")
+    printer.print_message("error", APP_DICT.get_appli_dictionnary()['HELP_MENU_TITLE'])
 
     basic_pos_commands = """
 oc12_init_application: [green](ré)initialiser l'application (admin only)[/green]

@@ -9,15 +9,22 @@ import click
 from rich import print
 
 try:
+    from src.printers import printer
+    from src.languages import language_bridge
     from src.clients.admin_console import AdminConsoleClient
     from src.commands.dummy_database_creation_command import dummy_database_creation
     from src.settings import settings
     from src.utils import utils
 except ModuleNotFoundError:
+    from printers import printer
+    from languages import language_bridge
     from clients.admin_console import AdminConsoleClient
     from commands.dummy_database_creation_command import dummy_database_creation
     from settings import settings
     from utils import utils
+
+
+APP_DICT = language_bridge.LanguageBridge()
 
 
 @click.command
@@ -27,18 +34,19 @@ def init_application():
     Commande dédiée à (ré)initialiser la base de données, en vue de pouvoir utiliser l'application.
     """
 
+    app_dict = language_bridge.LanguageBridge()
+    # On génère le fichier de messages dans le langage attendu par l'administrateur
+    app_dict.generate_env_messages()
+
     utils.display_banner()
-    print(
-        "[bold blue][START CONTROL][/bold blue] First supply the application admin password."
-    )
+    printer.print_message("info", APP_DICT.get_appli_dictionnary()['ASK_FOR_ADMIN_PASSWORD'])
     print("Admin - ", end="")
     admin_pwd = maskpass.askpass()
     if not admin_pwd == f"{settings.ADMIN_PASSWORD}":
-        raise Exception("[bold red]Wrong credentials[/bold red]")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INVALID_ADMIN_CREDENTIALS_ERROR'])
+        sys.exit(0)
 
-    print(
-        "[bold blue][START CONTROL][/bold blue] Next you may have to type your password to run sudo commands"
-    )
+    printer.print_message("info", APP_DICT.get_appli_dictionnary()['ASK_FOR_SUDO_PASSWORD'])
 
     for database in settings.DATABASE_TO_CREATE:
         try:
@@ -48,15 +56,14 @@ def init_application():
                 check=True,
                 capture_output=True,
             )
-            print(
-                f"[bold green][START CONTROL][/bold green] Database {database} droped"
-            )
+
+            print(f"Database {database} ",end="")
+            printer.print_message("success", APP_DICT.get_appli_dictionnary()['DATABASE_DROPPED_SUCCESS'])
         except subprocess.CalledProcessError:
-            print(
-                f"[bold red][START CONTROL][/bold red] Can not drop database {database}, it does not exist"
-            )
+            print(f"Database {database} ",end="")
+            printer.print_message("error", APP_DICT.get_appli_dictionnary()['DATABASE_DROPPED_FAILURE'])
         except KeyboardInterrupt:
-            print("[bold green][START CONTROL][/bold green] Launch application aborted")
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['INIT_ABORTED'])
             sys.exit(0)
 
         try:
@@ -66,17 +73,13 @@ def init_application():
                 check=True,
                 capture_output=True,
             )
-            print(
-                f"[bold green][START CONTROL][/bold green] Collaborator {database} droped"
-            )
+            print(f"Database {database} ",end="")
+            printer.print_message("success", APP_DICT.get_appli_dictionnary()['COLLABORATOR_DROPPED_SUCCESS'])
         except subprocess.CalledProcessError:
-            print(
-                f"[bold red][START CONTROL][/bold red] Can not drop user {database}, he does not exist"
-            )
+            print(f"Database {database} ",end="")
+            printer.print_message("error", APP_DICT.get_appli_dictionnary()['COLLABORATOR_DROPPED_FAILURE'])
         except KeyboardInterrupt:
-            print(
-                "[bold green][START CONTROL][/bold green] Application startup aborted"
-            )
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['INIT_ABORTED'])
             sys.exit(0)
 
     try:
@@ -96,11 +99,10 @@ def init_application():
             capture_output=True,
         )
     except subprocess.CalledProcessError:
-        print(
-            f"[bold green][START CONTROL][/bold green] user '{settings.ADMIN_LOGIN}' already exists"
-        )
+        print(f"Database {database} {settings.ADMIN_LOGIN} ",end="")
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['USER_ALREADY_EXIST'])
     except KeyboardInterrupt:
-        print("[bold green][START CONTROL][/bold green] Application startup aborted")
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['INIT_ABORTED'])
         sys.exit(0)
 
     for database in settings.DATABASE_TO_CREATE:
@@ -112,30 +114,24 @@ def init_application():
                 capture_output=True,
             )
         except subprocess.CalledProcessError:
-            print(
-                f"[bold green][START CONTROL][/bold green] database '{database}' already exists"
-            )
+            print(f"Database {database} {settings.ADMIN_LOGIN} ",end="")
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['DATABASE_ALREADY_EXIST'])
+
         except KeyboardInterrupt:
-            print(
-                "[bold green][START CONTROL][/bold green] Application startup aborted"
-            )
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['INIT_ABORTED'])
             sys.exit(0)
 
         try:
             os.system(
                 "sudo su -c 'psql -c \"ALTER DATABASE projet12 OWNER TO admin\"' postgres"
             )
-            print(
-                f"[bold green][START CONTROL][/bold green] {database} owner is now {settings.ADMIN_LOGIN}"
-            )
+            print(f"Database {database}{settings.ADMIN_LOGIN} ",end="")
+            printer.print_message("success", APP_DICT.get_appli_dictionnary()['DATABASE_OWNER_UPDATE_SUCCESS'])
         except subprocess.CalledProcessError:
-            print(
-                f"[bold red][START CONTROL][/bold red] Can not ALTER {database} owner"
-            )
+            print(f"Database {database}{settings.ADMIN_LOGIN} ",end="")
+            printer.print_message("error", APP_DICT.get_appli_dictionnary()['DATABASE_OWNER_UPDATE_FAILURE'])
         except KeyboardInterrupt:
-            print(
-                "[bold green][START CONTROL][/bold green] Application startup aborted"
-            )
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['INIT_ABORTED'])
             sys.exit(0)
 
     admin_console_client = AdminConsoleClient()

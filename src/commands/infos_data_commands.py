@@ -1,41 +1,47 @@
 """
-Description: Toutes les commandes pour obtenir des infos sur les formats ou donnés attendues.
+Description:
+Toutes les commandes pour obtenir des infos sur les formats ou données attendues.
 """
 import click
 from rich import print
 try:
+    from src.printers import printer
+    from src.languages import language_bridge
     from src.clients.info_console import InformationConsoleClient
 except ModuleNotFoundError:
+    from printers import printer
+    from languages import language_bridge
     from clients.info_console import InformationConsoleClient
+
+
+APP_DICT = language_bridge.LanguageBridge()
 
 
 @click.command
 def get_metiers():
     """
-    Description: commande dédiée à récupérer les métiers attendus pour un client.
+    Description:
+	Dédiée à récupérer les métiers attendus pour un client.
     """
     try:
         console_client = InformationConsoleClient()
         console_client.display_info_data_medium_window_for_metiers()
     except FileNotFoundError as error:
-        print(f"[bold red]Problème avec le fichier[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_FILE'])
     except Exception:
-        print(
-            "[bold red]Erreur[/bold red] Absence de jeton. Executer 'oc12_token' pour en obtenir un."
-        )
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
 
 
 @click.command
 def get_types_voies():
     """
-    Description: commande dédiée à récupérer les types de voirs attendus pour une adresse.
+    Description:
+	Dédiée à récupérer les types de voirs attendus pour une adresse.
     """
     try:
         console_client = InformationConsoleClient()
         console_client.display_info_data_medium_window_for_complement_adresse()
     except FileNotFoundError as error:
-        print(f"[bold red]Problème avec le fichier[/bold red]: {error}")
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_FILE'])
     except Exception:
-        print(
-            "[bold red]Erreur[/bold red] Absence de jeton. Executer 'oc12_token' pour en obtenir un."
-        )
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])

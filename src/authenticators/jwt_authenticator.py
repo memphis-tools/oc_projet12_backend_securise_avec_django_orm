@@ -26,7 +26,8 @@ class JwtAuthenticator:
 
     def get_decoded_token(self):
         """
-        Description: Dédiée à servir le token en clair (s'il a pu être décodé avec la clef secrète).
+        Description:
+        Dédiée à servir le token en clair (s'il a pu être décodé avec la clef secrète).
         """
         token = os.environ[f"{settings.PATH_APPLICATION_JWT_NAME}"]
         decoded_token = jwt.decode(
@@ -39,7 +40,8 @@ class JwtAuthenticator:
     @staticmethod
     def is_authenticated():
         """
-        Description: Méthode statique pour vérifeir la présence d'un jeton dans le path.
+        Description:
+        Méthode statique pour vérifeir la présence d'un jeton dans le path.
         """
         if f"{settings.PATH_APPLICATION_JWT_NAME}" in os.environ:
             return True
@@ -47,7 +49,8 @@ class JwtAuthenticator:
 
     def get_token(self):
         """
-        Description: Dédiée à confectionner un jeton d'accès pour l'utilisateur.
+        Description:
+        Dédiée à confectionner un jeton d'accès pour l'utilisateur.
         """
 
         now = datetime.now()
@@ -69,16 +72,18 @@ class JwtAuthenticator:
 
     def login(self):
         """
-        Description: sert d'alias, pour obtention du token.
+        Description:
+        Sert d'alias, pour obtention du token.
         """
         self.get_token()
         return True
 
     def logout(self):
         """
-        Description: Dédiée à représenter une déconnexion de l'application.
+        Description:
+        Dédiée à représenter une déconnexion de l'application.
         Rappel, le jeton d'accès est dans le path "principal /parent".
-        On ne pourra pas unset la variable du path.
+        n ne pourra pas unset la variable du path depuis un processus enfant.
         """
         if f"{settings.PATH_APPLICATION_JWT_NAME}" in os.environ:
             del os.environ[f"{settings.PATH_APPLICATION_JWT_NAME}"]

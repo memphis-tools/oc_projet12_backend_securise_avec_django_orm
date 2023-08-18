@@ -1,4 +1,5 @@
 """
+Description:
 On fournit uniquement dédiée à une connexion initiale et direct de/par l'utilisateur.
 """
 try:
@@ -7,12 +8,14 @@ try:
     )
     from src.controllers.database_read_controller import DatabaseReadController
     from src.settings import settings
+    from src.utils import utils
 except ModuleNotFoundError:
     from controllers.database_initializer_controller import (
         DatabaseInitializerController,
     )
     from controllers.database_read_controller import DatabaseReadController
     from settings import settings
+    from utils import utils
 
 
 class AuthenticationView:
@@ -28,6 +31,7 @@ class AuthenticationView:
         Le "ROLE" aura un mot de passe prévu par défaut.
         Toutes les opérations autres que "lecture, GET, etc" imposeront à l'utilisateur de saisir son mot de passe.
         """
+        db_name = utils.set_dev_database_as_default(db_name)
         self.db_controller = DatabaseReadController()
         self.db_initializer = DatabaseInitializerController()
         self.engine, self.session = self.db_initializer.return_engine_and_session(
@@ -44,6 +48,7 @@ class AuthenticationView:
         """
         Description: Dédié à aider au développement. On détruit les tables de la base de données.
         """
+        db_name = utils.set_dev_database_as_default(db_name)
         self.db_initializer.reset_db(self.engine, db_name=db_name)
 
     def database_postinstall_tasks(self, db_name=f"{settings.DATABASE_NAME}"):
@@ -51,6 +56,7 @@ class AuthenticationView:
         Description:
         Dédiée à mettre à jour les tables de la base de données après initialisation de l'application.
         """
+        db_name = utils.set_dev_database_as_default(db_name)
         self.db_initializer.database_postinstall_tasks(db_name=db_name)
 
     def database_postinstall_alter_tables(self, db_name=f"{settings.DATABASE_NAME}"):
@@ -58,4 +64,5 @@ class AuthenticationView:
         Description:
         Dédiée à forcer la mise à jour de valeurs par défaut de tables.
         """
+        db_name = utils.set_dev_database_as_default(db_name)
         self.db_initializer.database_postinstall_alter_tables(db_name=db_name)

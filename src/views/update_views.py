@@ -17,6 +17,7 @@ try:
     from src.views.locations_view import LocationsView
     from src.views.roles_view import RolesView
     from src.settings import settings
+    from src.utils import utils
 except ModuleNotFoundError:
     from controllers.database_initializer_controller import (
         DatabaseInitializerController,
@@ -32,17 +33,21 @@ except ModuleNotFoundError:
     from views.locations_view import LocationsView
     from views.roles_view import RolesView
     from settings import settings
+    from utils import utils
 
 
 class UpdateAppViews:
     """
-    Description: une classe dédiée à servir les vues de l'application dans le cas d'une mise à jour.
+    Description:
+    Classe dédiée à servir les vues de l'application dans le cas d'une mise à jour.
     """
 
     def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
         """
-        Description: vue dédiée à instancier la base de données et retourner un controleur pour la mise à jour.
+        Description:
+        Vue dédiée à instancier la base de données et retourner un controleur pour la mise à jour.
         """
+        db_name = utils.set_dev_database_as_default(db_name)
         self.db_controller = DatabaseUpdateController()
         self.db_initializer = DatabaseInitializerController()
         self.jwt_view = JwtView(self)

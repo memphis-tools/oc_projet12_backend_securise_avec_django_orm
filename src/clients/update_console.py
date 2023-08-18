@@ -1,26 +1,29 @@
 """
-Description: Client en mode console, dédié aux mises à jour.
+Description:
+Client en mode console, dédié aux mises à jour.
 """
 import sys
 from rich import print
 
 try:
+    from src.languages import language_bridge
+    from src.printers import printer
     from src.exceptions import exceptions
     from src.forms import forms
     from src.views.update_views import UpdateAppViews
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings
-    from src.utils.utils import authentication_permission_decorator, display_banner
     from src.utils import utils
 except ModuleNotFoundError:
+    from languages import language_bridge
+    from printers import printer
     from exceptions import exceptions
     from forms import forms
     from views.update_views import UpdateAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings
-    from utils.utils import authentication_permission_decorator, display_banner
     from utils import utils
 
 
@@ -33,7 +36,9 @@ class ConsoleClientForUpdate:
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        display_banner()
+        db_name = utils.set_dev_database_as_default(db_name)
+        self.app_dict = language_bridge.LanguageBridge()
+        utils.display_banner()
         self.app_view = AppViews(db_name)
         self.update_app_view = UpdateAppViews(db_name)
         self.jwt_view = JwtView(self.app_view)
@@ -41,7 +46,7 @@ class ConsoleClientForUpdate:
         # déclaration faite pour éviter une erreur dans le rapport flake8.
         settings.APP_FIGLET_TITLE
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_client(self, custom_partial_dict, db_name=f"{settings.DATABASE_NAME}"):
         # rechercher le id de l'utilisateur courant
         # obtenir le token décodé (et valide)
@@ -65,24 +70,18 @@ class ConsoleClientForUpdate:
                 user_collaborator_id, user_service, custom_partial_dict
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
-            sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-            print(
-                "[bold red]Erreur[/bold red] Vous n'êtes pas le commercial du client; mise à jour non autorisée."
-            )
             raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
-            sys.exit(0)
-        except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+        except TypeError:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_collaborator(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un utilisateur /collaborateur de l'entreprise.
@@ -98,17 +97,15 @@ class ConsoleClientForUpdate:
                 custom_partial_dict
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
+        except TypeError:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
-            sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_collaborator_password(self, old_password="", new_password=""):
         """
         Description:
@@ -122,7 +119,7 @@ class ConsoleClientForUpdate:
         decoded_token = self.jwt_view.get_decoded_token()
         user_registration_number = str(decoded_token["registration_number"])
         if old_password == "" or new_password == "":
-            print("[bold red]Mot(s) de passe non saisi(s).[/bold red]")
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['MISSING_PASSWORD'])
             raise exceptions.MissingUpdateParamException()
         try:
             if not bool(
@@ -136,17 +133,13 @@ class ConsoleClientForUpdate:
             )
 
         except exceptions.OldPasswordNotValidException:
-            print("[bold red]Mot de passe erroné.[/bold red]")
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['OLD_PASSWORD_NOT_MATCH'])
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectMinSpecialCharsException:
-            print(
-                "[bold red]Erreur[/bold red] Mot de passe ne respecte pas le nombre min de caractères spéciaux."
-            )
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['NEW_PASSWORD_NOT_MATCH_SPECIAL_CHARS'])
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectForbiddenSpecialCharsException:
-            print(
-                "[bold red]Nouveau mot de passe possède des caractères spéciaux interdits.[/bold red]"
-            )
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['NEW_PASSWORD_NOT_MATCH_FORBIDEN_CHARS'])
             sys.exit(0)
         return (
             self.update_app_view.get_collaborators_view().update_collaborator_password(
@@ -154,7 +147,7 @@ class ConsoleClientForUpdate:
             )
         )
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_company(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour une entreprise sans client, mais avec une localité nécessaire.
@@ -170,17 +163,15 @@ class ConsoleClientForUpdate:
                 custom_partial_dict
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
+        except TypeError:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
-            sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_contract(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un contrat pour l'entreprise.
@@ -198,23 +189,17 @@ class ConsoleClientForUpdate:
                 user_collaborator_id, user_service, custom_partial_dict
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
-            sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            print(
-                "[bold red]Erreur[/bold red] Vous n'êtes pas le commercial du contrat; mise à jour non autorisée."
-            )
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
+        except TypeError:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
-            sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_department(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un département /service de l'entreprise.
@@ -230,17 +215,15 @@ class ConsoleClientForUpdate:
                 custom_partial_dict
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
+        except TypeError:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
-            sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_event(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un évènement de l'entreprise.
@@ -263,23 +246,19 @@ class ConsoleClientForUpdate:
                 user_collaborator_id, user_service, custom_partial_dict
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
-            sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            print(
-                "[bold red]Erreur[/bold red] Vous n'êtes pas le collaborateur support associé à l'évènement."
-            )
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT'])
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
-        except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
+        except TypeError:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_location(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour une localité.
@@ -295,17 +274,15 @@ class ConsoleClientForUpdate:
                 custom_partial_dict
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
+        except TypeError:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
-            sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
 
-    @authentication_permission_decorator
+    @utils.authentication_permission_decorator
     def update_role(self, custom_partial_dict=""):
         """
         Description: vue dédiée à mettre à jour un rôle pour les collaborateurs de l'entreprise.
@@ -321,12 +298,10 @@ class ConsoleClientForUpdate:
                 custom_partial_dict
             )
         except exceptions.InsufficientPrivilegeException:
-            print("[bold red]Erreur[/bold red] Vous n'êtes pas autorisé.")
             raise exceptions.InsufficientPrivilegeException()
+        except TypeError:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
             sys.exit(0)
-        except TypeError as error:
-            print("[bold red]Id non trouvé.[/bold red]")
-            sys.exit(0)
-        except Exception as error:
-            print(f"[bold red]Erreur application[/bold red] {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             sys.exit(0)
