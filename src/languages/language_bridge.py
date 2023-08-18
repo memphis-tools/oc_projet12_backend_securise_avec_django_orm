@@ -6,8 +6,10 @@ On laisse la possibilité à l'administrateur de changer la langue par défaut.
 from jinja2 import Environment, FileSystemLoader
 import json
 try:
+    from src.printers import printer
     from src.settings import settings
 except ModuleNotFoundError:
+    from printers import printer
     from settings import settings
 
 
