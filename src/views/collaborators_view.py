@@ -4,9 +4,11 @@ vue collaborateurs
 from rich.console import Console
 
 try:
+    from src.printers import printer
     from src.utils import utils
     from src.validators import update_data_validators
 except ModuleNotFoundError:
+    from printers import printer
     from utils import utils
     from validators import update_data_validators
 
@@ -39,12 +41,11 @@ class CollaboratorsView:
                         "utilisateurs", db_model_queryset
                     )
                     console.print(table)
-                    print("Aucuns autres utilisateurs")
+                    printer.print_message("info", self.app_dict.get_appli_dictionnary()['NO_MORE_COLLABORATOR'])
                 else:
-                    print("Aucun utilisateur trouvé")
+                    printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
             except Exception as error:
-                print(f"Echec de la requête: {error}")
-                raise Exception()
+                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
         else:
             db_model_queryset = self.db_controller.get_collaborators(self.session)
             if len(db_model_queryset) > 0:
@@ -54,7 +55,7 @@ class CollaboratorsView:
                 console.print(table)
                 print("Aucun autres utilisateurs")
             else:
-                print("Aucun utilisateur trouvé")
+                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
         return self.db_controller.get_collaborators(self.session)
 
     def get_collaborator(self, registration_number):

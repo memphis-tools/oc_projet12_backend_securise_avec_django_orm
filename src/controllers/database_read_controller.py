@@ -4,10 +4,12 @@ Un controleur avec toutes méthodes GET.
 from sqlalchemy import text
 
 try:
+    from src.printers import printer
     from src.exceptions import exceptions
     from src.models import models
     from src.utils import utils
 except ModuleNotFoundError:
+    from printers import printer
     from exceptions import exceptions
     from models import models
     from utils import utils
@@ -44,8 +46,8 @@ class DatabaseReadController:
                 .filter(text(filter_to_apply_rebuilt_query)).all()
             )
             return db_model_queryset
-        except Exception as error:
-            print(f"Requête en échec: {error}")
+        except Exception:
+            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
 
     def get_client(self, session, client_id):
         """
@@ -61,8 +63,8 @@ class DatabaseReadController:
             )
 
             return db_client_queryset
-        except Exception as error:
-            print(f"Client not found: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
 
     def get_clients(self, session):
         """
@@ -89,8 +91,8 @@ class DatabaseReadController:
                 .first()
             )
             return db_collaborator_queryset
-        except Exception as error:
-            print(f"Collaborator or Department not found: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
 
     def get_collaborator_join_department(self, session, registration_number):
         """
@@ -112,7 +114,7 @@ class DatabaseReadController:
                 .first()
             )
             return db_collaborator_queryset
-        except Exception as error:
+        except Exception:
             raise exceptions.AuthenticationCredentialsFailed()
 
     def get_collaborators(self, session):
@@ -137,8 +139,8 @@ class DatabaseReadController:
             )
 
             return db_company_queryset
-        except Exception as error:
-            print(f"Company not found: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
 
     def get_companies(self, session):
         """
@@ -165,8 +167,8 @@ class DatabaseReadController:
             )
 
             return db_collaborators_contract
-        except Exception as error:
-            print(f"Contract not found: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
 
     def get_contracts(self, session):
         """
@@ -193,8 +195,8 @@ class DatabaseReadController:
             )
 
             return db_collaborators_department
-        except Exception as error:
-            print(f"Contract not found: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES']))
 
     def get_departments(self, session):
         """
@@ -222,8 +224,8 @@ class DatabaseReadController:
             )
 
             return db_collaborators_event
-        except Exception as error:
-            print(f"Event not found: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
 
     def get_events(self, session):
         """
@@ -251,8 +253,8 @@ class DatabaseReadController:
             )
 
             return db_locations_queryset
-        except Exception as error:
-            print(f"Location not found: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
 
     def get_locations(self, session):
         """
@@ -280,8 +282,8 @@ class DatabaseReadController:
             )
 
             return db_collaborators_role
-        except Exception as error:
-            print(f"Role not found: {error}")
+        except Exception:
+            printer.print_message("info", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
 
     def get_roles(self, session):
         """

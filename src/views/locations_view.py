@@ -4,8 +4,10 @@ vue localisations
 from rich.console import Console
 
 try:
+    from src.printers import printer
     from src.utils import utils
 except ModuleNotFoundError:
+    from printers import printer
     from utils import utils
 
 
@@ -34,12 +36,11 @@ class LocationsView:
                 if len(db_model_queryset) > 0:
                     table = utils.set_a_click_table_from_data("lieu", db_model_queryset)
                     console.print(table)
-                    print("Aucunes autres localités")
+                    printer.print_message("info", self.app_dict.get_appli_dictionnary()['NO_MORE_LOCATION'])
                 else:
-                    print("Aucune localité trouvée")
+                    printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
             except Exception as error:
-                print(f"Echec de la requête: {error}")
-                raise Exception()
+                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
         else:
             db_model_queryset = self.db_controller.get_locations(self.session)
             if len(db_model_queryset) > 0:
@@ -47,7 +48,7 @@ class LocationsView:
                 console.print(table)
                 print("Aucun autres localités")
             else:
-                print("Aucune localité trouvée")
+                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
         return self.db_controller.get_locations(self.session)
 
     def get_location(self, location_id):

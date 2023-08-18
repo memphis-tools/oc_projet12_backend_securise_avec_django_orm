@@ -19,3 +19,4 @@ def display_info_password_policy():
     for directive in directives:
         directive_styled = f"{directive}"
         print(f'{directive_styled}: [white]{eval(f"settings.{directive}")}[/white]')
+        
