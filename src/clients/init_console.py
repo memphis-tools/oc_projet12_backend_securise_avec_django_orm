@@ -58,7 +58,7 @@ class InitAppliConsole:
         Description:
         Méthode appelée depuis 'src/commands/init_commands.py' après instanciation de la classe InitAppliConsole.
         """
-        print("[bold yellow]recherche-entreprises.api.gouv.fr [/bold yellow]", end="")
+        print("External_API [bold yellow]recherche-entreprises.api.gouv.fr [/bold yellow]", end="")
         printer.print_message("info", APP_DICT.get_appli_dictionnary()['API_QUERYING_DATA'])
         try:
             self.generate_companies_file()
@@ -67,7 +67,7 @@ class InitAppliConsole:
         except Exception:
             printer.print_message("error", APP_DICT.get_appli_dictionnary()['API_QUERY_ACCESS_OR_QUERY_FAILED'])
             return False
-        print("[bold yellow]recherche-entreprises.api.gouv.fr [/bold yellow]", end="")
+        print("External_API [bold yellow]recherche-entreprises.api.gouv.fr [/bold yellow]", end="")
         printer.print_message("info", APP_DICT.get_appli_dictionnary()['API_QUERY_ACCESS_OR_QUERY_SUCCEEDED'])
         return True
 
