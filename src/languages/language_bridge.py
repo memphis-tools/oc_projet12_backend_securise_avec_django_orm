@@ -3,6 +3,8 @@ Description:
 On va permettre de spécifier tout message dans une langue choisie.
 On laisse la possibilité à l'administrateur de changer la langue par défaut.
 """
+import os
+from os import path
 from jinja2 import Environment, FileSystemLoader
 import json
 try:
@@ -26,8 +28,15 @@ class LanguageBridge:
     Il n'est crée qu'à l'initialisation de l'appli.
     """
     def __init__(self):
-        with open(FILENAME, mode="r", encoding="utf-8") as fd:
-            self.dictionary = json.loads(fd.read())
+        try:
+            if os.path.isfile(FILENAME) and path.getsize(FILENAME) <= 2:
+                self.generate_env_messages()
+            else:
+                with open(FILENAME, mode="r", encoding="utf-8") as fd:
+                    self.dictionary = json.loads(fd.read())
+        except FileNotFoundError:
+            self.generate_env_messages()
+
 
     def generate_env_messages(self):
         """
