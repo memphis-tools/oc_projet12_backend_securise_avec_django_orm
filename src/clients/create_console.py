@@ -556,7 +556,8 @@ class ConsoleClientForCreate:
             printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
-        except Exception:
+        except Exception as error:
+            print(error)
             printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
             raise exceptions.ApplicationErrorException()
             sys.exit(0)

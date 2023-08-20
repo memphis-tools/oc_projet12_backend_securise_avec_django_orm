@@ -9,17 +9,19 @@ import click
 from rich import print
 
 try:
+    from src.clients import init_console
     from src.printers import printer
     from src.languages import language_bridge
     from src.clients.admin_console import AdminConsoleClient
-    from src.commands.dummy_database_creation_command import dummy_database_creation
+    from src.external_datas.make_dummy_database_creation_command import dummy_database_creation
     from src.settings import settings
     from src.utils import utils
 except ModuleNotFoundError:
+    from clients import init_console
     from printers import printer
     from languages import language_bridge
     from clients.admin_console import AdminConsoleClient
-    from commands.dummy_database_creation_command import dummy_database_creation
+    from external_datas.make_dummy_database_creation_command import dummy_database_creation
     from settings import settings
     from utils import utils
 
@@ -33,10 +35,12 @@ def init_application():
     Description:
     Commande dédiée à (ré)initialiser la base de données, en vue de pouvoir utiliser l'application.
     """
-
     app_dict = language_bridge.LanguageBridge()
     # On génère le fichier de messages dans le langage attendu par l'administrateur
     app_dict.generate_env_messages()
+
+    for db_name in settings.DATABASE_TO_CREATE:
+        client_view_console = init_console.InitAppliConsole(db_name=db_name)
 
     utils.display_banner()
     printer.print_message("info", APP_DICT.get_appli_dictionnary()['ASK_FOR_ADMIN_PASSWORD'])
@@ -138,7 +142,6 @@ def init_application():
         print(f"Database {database} ",end="")
         printer.print_message("info", APP_DICT.get_appli_dictionnary()['DATABASE_UPDATING'])
         if database == "projet12":
-            print("INIT_COMMANDS ASK INIT OF DB PROD SIR")
             admin_console_client = AdminConsoleClient()
             admin_console_client.reset_db(db_name=f"{database}")
             admin_console_client.init_db()
@@ -147,11 +150,7 @@ def init_application():
             admin_console_client.database_postinstall_alter_tables()
         else:
             admin_console_client = AdminConsoleClient(db_name=f"{database}")
-            try:
-                admin_console_client.reset_db(db_name=f"{database}")
-            except Exception:
-                pass
-            print("INIT_COMMANDS, ok we init this DB too: {database}")
+            admin_console_client.reset_db(db_name=f"{database}")
             admin_console_client.init_db(db_name=f"{database}")
             admin_console_client.database_postinstall_tasks(
                 db_name=f"{database}"
@@ -160,5 +159,13 @@ def init_application():
                 db_name=f"{database}"
             )
 
-            # On peuple la base de données avec des données quelconques, pour le POC, en développement
-            dummy_database_creation(db_name=f"{database}")
+    # On peuple la base de données avec des données quelconques, pour le POC, en développement
+    dummy_database_creation(db_name=f"dev_projet12")
+    dummy_database_creation(db_name=f"test_projet12")
+
+    # on insère en base un jeu de données supplémentaires. On interroge des API externes.
+    # le résultat d'une requete à ces API est un fichier .csv
+    # exemple usage fourni, est d'obtenir un fichier 'src/external_datas/csv/french_companies.csv'
+    # Si accès internet désactivé (voir 'settings.INTERNET_CONNECTION') le code recherche le fichier csvfile
+    # Si le fichier existe et n'est pas vide, alors l'insertion s'effectue aussi
+    client_view_console.import_data_from_externals_api()

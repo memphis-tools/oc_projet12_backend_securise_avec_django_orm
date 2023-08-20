@@ -6,24 +6,24 @@ except ModuleNotFoundError:
     from settings import settings
 
 
-def get_town_name_from_insee_open_api(code_postal):
+def get_region_name_from_insee_open_api(region_id_code):
     """
     Description:
     Vérifier si le paramètre settings.INTERNET_CONNECTION est True.
     Si vrai alors interroger l'open API du gouvernement Français.
     """
-    digit_code_postal = int(code_postal)
-    url = "https://api-adresse.data.gouv.fr/search/?"
-    query_string = f"q={digit_code_postal}&limit=2"
-    town_name = ""
+    digit_region_id_code = int(region_id_code)
+    url = settings.FR_COMPANIES_REGION_API_URL
+    query_string = f"q={digit_region_id_code}"
+    region_name = ""
     if settings.INTERNET_CONNECTION:
         headers = {'user-agent': 'curl'}
         response = requests.get(url, query_string, headers=headers)
         try:
-            town_name = response.json()['features'][0]['properties']['name']
+            region_name = response.json()[0]['nom']
         except IndexError:
             pass
         finally:
-            return town_name
+            return region_name
     else:
         return None

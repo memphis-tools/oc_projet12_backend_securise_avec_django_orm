@@ -28,7 +28,6 @@ class AdminConsoleClient:
         Description:
         Instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        db_name = utils.set_database_to_get_based_on_user_path(db_name)
         self.app_view = AuthenticationView(
             user_login=f"{settings.ADMIN_LOGIN}",
             user_pwd=f"{settings.ADMIN_PASSWORD}",
@@ -53,7 +52,6 @@ class AdminConsoleClient:
         Description:
         Dédiée à supprimer les tables de la base de données.
         """
-        db_name = utils.set_database_to_get_based_on_user_path(db_name)
         self.app_view.reset_db(db_name=db_name)
 
     def database_postinstall_tasks(self, db_name=f"{settings.DATABASE_NAME}"):
@@ -61,7 +59,6 @@ class AdminConsoleClient:
         Description:
         Dédiée à mettre à jour les tables de la base de données après initialisation de l'application.
         """
-        db_name = utils.set_database_to_get_based_on_user_path(db_name)
         self.app_view.database_postinstall_tasks(db_name=db_name)
 
     def database_postinstall_alter_tables(self, db_name=f"{settings.DATABASE_NAME}"):
@@ -69,5 +66,4 @@ class AdminConsoleClient:
         Description:
         Dédiée à forcer la mise à jour de valeurs par défaut de tables.
         """
-        db_name = utils.set_database_to_get_based_on_user_path(db_name)
         self.app_view.database_postinstall_alter_tables(db_name=db_name)
