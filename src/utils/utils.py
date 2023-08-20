@@ -248,12 +248,16 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model):
     return filter_to_apply_rebuilt_query
 
 
-def display_banner():
+def display_banner(app_init=False):
     """
-    Description: Afficher la bannière.
+    Description:
+    Afficher la bannière.
     """
-    running_env = recall_which_running_env_in_use()
-    text = f"{settings.APP_FIGLET_TITLE} - {running_env} ENVIRONMENT"
+    if app_init:
+        running_env = "ALL ENVIRONMENTS"
+    else:
+        running_env = f"{recall_which_running_env_in_use()} ENVIRONMENT"
+    text = f"{settings.APP_FIGLET_TITLE} - {running_env} "
     cprint(colored(pyfiglet.figlet_format(text, font="digital", width=100), "cyan"))
 
 
@@ -447,15 +451,17 @@ def display_postgresql_controls():
             capture_output=True,
         )
         if execution_code.returncode == 0:
-            printer.print_message("success", APP_DICT.get_appli_dictionnary()['POSTGRESQL_SERVICE_RUNNING'])
+            print(f"Service {APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_NAME']} ", end="")
+            printer.print_message("success", APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_RUNNING'])
         else:
             raise subprocess.CalledProcessError()
     except subprocess.CalledProcessError as error:
-        printer.print_message("success", APP_DICT.get_appli_dictionnary()['POSTGRESQL_SERVICE_ERROR'])
+        printer.print_message("success", APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_ERROR'])
 
     try:
         subprocess.run(["id", "postgres"], shell=True, check=True, capture_output=True)
-        printer.print_message("success", APP_DICT.get_appli_dictionnary()['POSTGRESQL_USER_POSTGRES_EXISTS'])
+        print(f"Compte {APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_NAME']} ", end="")
+        printer.print_message("success", APP_DICT.get_appli_dictionnary()['SGBD_USER_POSTGRES_EXISTS'])
     except subprocess.CalledProcessError as error:
         print(f"[START CONTROL] error: {error}")
 
