@@ -483,19 +483,21 @@ class Event(Base):
 
 class Location(Base, ModelMixin):
     """
-    Description: table dédiée à désigner /caractériser une localisation.
+    Description:
+    Table dédiée à désigner /caractériser une localisation.
+    Les modèles Company et Event ont besoin d'une localité existante.
     """
-
     __tablename__ = "location"
     id = Column(Integer, primary_key=True)
     location_id = Column(String(120), nullable=False, unique=True)
     adresse = Column(String(150), nullable=True)
     complement_adresse = Column(String(75), nullable=True)
-    cedex = Column(Integer, nullable=True, default=None)
+    cedex = Column(Integer, nullable=True, default=0)
     code_postal = Column(Integer, nullable=False)
     ville = Column(String(100), nullable=False)
     region = Column(String(75), nullable=False)
     pays = Column(String(100), nullable=True, default="France")
+    population = Column(Integer, nullable=True, default=0)
     event = relationship("Event", back_populates="location")
     # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer une localité si référencée par une entreprise
     company = relationship("Company", back_populates="location", passive_deletes="all")
@@ -505,6 +507,7 @@ class Location(Base, ModelMixin):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
         descriptors += f",(location_id|{self.location_id})"
+        descriptors += f",(population|{self.population})"
         descriptors += f",(adresse|{self.adresse})"
         descriptors += f",(complement_adresse|{self.complement_adresse})"
         descriptors += f",(cedex|{self.cedex})"
@@ -523,6 +526,7 @@ class Location(Base, ModelMixin):
             "id": self.id,
             "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
             "location_id": self.location_id,
+            "population": self.population,
             "adresse": self.adresse,
             "complement_adresse": self.complement_adresse,
             "cedex": self.cedex,
@@ -536,6 +540,7 @@ class Location(Base, ModelMixin):
     @staticmethod
     def _get_keys():
         return [
+            "population",
             "adresse",
             "complement_adresse",
             "cedex",
