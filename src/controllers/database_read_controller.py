@@ -120,7 +120,7 @@ class DatabaseReadController:
     def get_collaborators(self, session):
         """
         Description:
-                Méthode dédiée à servir la vue lors d'une requête des utilisateurs de l'entreprise.
+        Méthode dédiée à servir la vue lors d'une requête des utilisateurs de l'entreprise.
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator.
         """
         db_collaborators = session.query(models.Collaborator).all()

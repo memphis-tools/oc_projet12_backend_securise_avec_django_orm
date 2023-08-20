@@ -1,5 +1,7 @@
 {
-  "API_INSEE_ACCESS_FAILED":"Problème lors de la création de l'échantillon",
+  "API_QUERY_ACCESS_OR_QUERY_FAILED":"Problème lors de l'accès à l'API, ou du traitement de la requête.",
+  "API_QUERY_ACCESS_OR_QUERY_SUCCEEDED":"Accès à l'API et traitement de la requête réalisés.",
+  "API_QUERYING_DATA":"Accès à l'API et collecte de l'échantillon.",
   "APPLICATION_ERROR":"Erreur applicative. Echec requête.",
   "ASK_FOR_ADMIN_PASSWORD":"Fournir le mot de passe administrateur de l'application.",
   "ASK_FOR_SUDO_PASSWORD":"Fournir le mot de passe d'un compte avec privilèges étendus.",
@@ -90,6 +92,8 @@
   "POSTGRESQL_SERVICE_ERROR":"Service Postgresql ne semble pas actif.",
   "POSTGRESQL_USER_POSTGRES_EXISTS":"Utilisateur postgres existe.",
   "ROLE_RATTACHED_TO_COLLABORATOR":"Role rattaché à 1 ou plusieurs collaborateurs.",
+  "SETTINGS_INTERNET_CONNECTION_DOWN":"Connection à internet désengagée (voir settings, 'INTERNET_CONNECTION')",
+  "SETTINGS_INTERNET_CONNECTION_DOWN_NO_FILES_TO_PARSE":"Connection à internet désengagée. Pas de fichiers .csv statiques à exploiter.",
   "SUPPLIED_DATA_DO_NOT_MATCH_MODEL":"Vos données ne respecte pas le format attendu.",
   "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT":"Vous n'avez pas signé le contrat dédié à l'évènement",
   "TOKEN_INFO_IN_TERMINAL_OUTPUT_1":"Ajouter ceci à votre PATH et exécuter n'importe quelle commande (penser à oc12_help, et à tabuler)",

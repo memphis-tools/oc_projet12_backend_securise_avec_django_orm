@@ -12,15 +12,22 @@ from rich.prompt import Prompt
 
 try:
     from src.controllers import infos_data_controller
-    from src.datas.make_external_api_call_for_town_based_on_zip_code import get_town_name_from_insee_open_api
+    from src.languages import language_bridge
+    from src.external_datas.make_external_api_call_for_ville_based_on_code_postal import get_town_name_from_insee_open_api
+    from src.printers import printer
     from src.settings import settings
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from controllers import infos_data_controller
-    from datas.make_external_api_call_for_town_based_on_zip_code import get_town_name_from_insee_open_api
+    from languages import language_bridge
+    from external_datas.make_external_api_call_for_ville_based_on_code_postal import get_town_name_from_insee_open_api
+    from printers import printer
     from settings import settings
     from utils import utils
     from validators.data_syntax.fr import validators
+
+
+APP_DICT = language_bridge.LanguageBridge()
 
 
 def display_help(key, item, value):
@@ -51,8 +58,8 @@ def search_and_submit_a_town_name(code_postal):
     A partir du code postal saisi on propose de retenir le nom de ville trouvé.
     Si ville trouvée alors on connait le nom et on peut retenir le pays comme étant la France (par exemple).
     """
-    town_name = get_town_name_from_insee_open_api(code_postal)
-    return town_name
+    town_name, region_name, population = get_town_name_from_insee_open_api(code_postal)
+    return (town_name, region_name, population)
 
 
 def fullfill_form(custom_dict, expected_attributes_dict):
@@ -65,30 +72,31 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                     item = display_help(key, item, value)
                 if key == "code_postal":
                     pays = ""
-                    ville = search_and_submit_a_town_name(item)
+                    ville, region, population = search_and_submit_a_town_name(item)
                     if ville and ville is not None:
-                        print(f"API externe a renvoyé {ville} pour le code postal {item}.")
-                        print(f"Pays fixé à '{settings.DEFAULT_COUNTRY}'")
+                        custom_dict["code_postal"] = item
                         custom_dict["ville"] = ville
+                        custom_dict["region"] = region
                         custom_dict["pays"] = f"{settings.DEFAULT_COUNTRY}"
-                # vérifier si quelque chose a été saisi
-                if item.strip() != "":
-                    try:
-                        # si quelque chose a été saisi on vérifie si ça respecte la /les valeur(s) attendue(s).
-                        eval(f"validators.is_{key}_valid")(item)
-                        custom_dict[key] = item
-                    except Exception:
-                        printer.print_message("error", self.app_dict.get_appli_dictionnary()['UNEXPECTED_VALUE_IN_FORM'])
-                        break
                 else:
-                    if key == "complement_adresse" or key == "employee_role":
-                        printer.print_message("error", self.app_dict.get_appli_dictionnary()['FORM_EXCEPTION'])
-                        printer.print_message("error", self.app_dict.get_appli_dictionnary()['FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD'])
-                        printer.print_message("error", self.app_dict.get_appli_dictionnary()['FORM_GET_MORE_INFO_ABOUT_VALID_VALUES'])
+                    # vérifier si quelque chose a été saisi
+                    if item.strip() != "":
+                        try:
+                            # si quelque chose a été saisi on vérifie si ça respecte la /les valeur(s) attendue(s).
+                            eval(f"validators.is_{key}_valid")(item)
+                            custom_dict[key] = item
+                        except Exception:
+                            printer.print_message("error", APP_DICT.get_appli_dictionnary()['UNEXPECTED_VALUE_IN_FORM'])
+                            break
                     else:
-                        printer.print_message("error", self.app_dict.get_appli_dictionnary()['FORM_EXCEPTION'])
-                        printer.print_message("error", self.app_dict.get_appli_dictionnary()['FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD'])
-                    break
+                        if key == "complement_adresse" or key == "employee_role":
+                            printer.print_message("error", APP_DICT.get_appli_dictionnary()['FORM_EXCEPTION'])
+                            printer.print_message("error", APP_DICT.get_appli_dictionnary()['FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD'])
+                            printer.print_message("error", APP_DICT.get_appli_dictionnary()['FORM_GET_MORE_INFO_ABOUT_VALID_VALUES'])
+                        else:
+                            printer.print_message("error", APP_DICT.get_appli_dictionnary()['FORM_EXCEPTION'])
+                            printer.print_message("error", APP_DICT.get_appli_dictionnary()['FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD'])
+                        break
     return custom_dict
 
 
@@ -98,11 +106,11 @@ def submit_a_location_get_form(custom_id=""):
     On peut en outre ainsi éviter d'avoir à la saisir.
     """
     if custom_id == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_LOCATION'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_LOCATION'])
         try:
             custom_id = Prompt.ask("id localité: ")
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return custom_id
 
@@ -118,16 +126,17 @@ def submit_a_location_create_form(location_id, custom_dict={}):
             "complement_adresse": "complement_adresse",
             "code_postal": "code_postal",
             "ville": "ville",
+            "region": "region",
             "pays": "pays",
         }
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_LOCATION'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_LOCATION'])
         try:
             if location_id:
                 custom_dict["location_id"] = location_id
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATION_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATION_ABORTED'])
             sys.exit(0)
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
@@ -139,11 +148,11 @@ def submit_a_company_get_form(custom_id=""):
     On peut en outre ainsi éviter la saisie d'une localisation, et de l'entreprise.
     """
     if custom_id == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_COMPANY'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_COMPANY'])
         try:
             custom_id = Prompt.ask("id entreprise: ")
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return custom_id
 
@@ -161,12 +170,12 @@ def submit_a_company_create_form(company_location_id, custom_dict={}):
             "company_name": "nom entreprise",
             "activite_principale": "activité principale (code APE etc)"
         }
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_COMPANY'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_COMPANY'])
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATION_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATION_ABORTED'])
             sys.exit(0)
     custom_dict["location_id"] = company_location_id
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -179,11 +188,11 @@ def submit_a_client_get_form(custom_id=""):
     On peut en outre ainsi éviter la saisie d'une localisation, et de l'entreprise.
     """
     if custom_id == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_CLIENT'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_CLIENT'])
         try:
             custom_id = Prompt.ask("id client: ")
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return custom_id
 
@@ -203,12 +212,12 @@ def submit_a_client_create_form(custom_dict={}):
             "email": "email",
             "telephone": "telephone",
         }
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_CLIENT'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_CLIENT'])
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATION_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATION_ABORTED'])
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -220,11 +229,11 @@ def submit_a_collaborator_get_form(custom_id=""):
     Description: Fonction dédiée à permettre à l'utilisateur d'indiquer l'id d'un collaborateur.
     """
     if custom_id == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_COLLABORATOR_ROLE'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_COLLABORATOR_ROLE'])
         try:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_COLLABORATOR'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_COLLABORATOR'])
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return custom_id
 
@@ -241,12 +250,12 @@ def submit_a_collaborator_create_form(custom_dict={}):
             "department": "service (OC12_COMMERCIAL, OC12_GESTION, OC12_SUPPORT)",
             "role": "role (MANAGER, EMPLOYEE)",
         }
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_COLLABORATOR'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_COLLABORATOR'])
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATION_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATION_ABORTED'])
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -258,11 +267,11 @@ def submit_a_collaborator_role_get_form(custom_id=""):
     Description: Fonction dédiée à permettre à l'utilisateur d'indiquer l'id d'un role.
     """
     if custom_id == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_COLLABORATOR_ROLE'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_COLLABORATOR_ROLE'])
         try:
             custom_id = Prompt.ask("id role: ")
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return custom_id
 
@@ -276,12 +285,12 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
             "role_id": "role (chaine libre)",
             "name": "name (MANAGER, EMPLOYEE, etc)",
         }
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_COLLABORATOR_ROLE'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_COLLABORATOR_ROLE'])
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATION_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATION_ABORTED'])
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -293,11 +302,11 @@ def submit_a_collaborator_department_get_form(custom_id=""):
     Description: Fonction dédiée à permettre à l'utilisateur d'indiquer l'id d'un département /service.
     """
     if custom_id == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_COLLABORATOR_DEPARTMENT'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_COLLABORATOR_DEPARTMENT'])
         try:
             custom_id = Prompt.ask("id service/département: ")
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return custom_id
 
@@ -311,12 +320,12 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
             "department_id": "id service (chaine de caractères libre)",
             "department": "service (examples: OC12_COMMERCIAL, OC12_GESTION, ...)",
         }
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_COLLABORATOR_DEPARTMENT'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_COLLABORATOR_DEPARTMENT'])
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATION_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATION_ABORTED'])
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -328,12 +337,12 @@ def submit_a_collaborator_new_password_get_form(old_password="", new_password=""
     Deescription: Fonction dédiée à permettre à l'utilisateur d'indiquer l'id d'un département /service.
     """
     if new_password == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_COLLABORATOR_PASSWORD'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_COLLABORATOR_PASSWORD'])
         try:
             old_password = maskpass.askpass(prompt="Ancien mot de passe: ")
             new_password = maskpass.askpass(prompt="Nouveau mot de passe: ")
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return (old_password, new_password)
 
@@ -343,11 +352,11 @@ def submit_a_contract_get_form(custom_id=""):
     Description: Fonction dédiée à permettre à l'utilisateur d'indiquer l'id d'un contrat.
     """
     if custom_id == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_CONTRACT'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_CONTRACT'])
         try:
             custom_id = Prompt.ask("id contrat: ")
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return custom_id
 
@@ -364,16 +373,16 @@ def submit_a_contract_create_form(custom_dict={}):
             "remain_amount_to_pay": "total restant à payer",
             "status": "signé /conclu ('oui' ou 'non')",
         }
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_CONTRACT'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_CONTRACT'])
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
                 if float(custom_dict["remain_amount_to_pay"]) > float(custom_dict["full_amount_to_pay"]):
                     custom_dict.pop("remain_amount_to_pay")
                     custom_dict["remain_amount_to_pay"] = None
-                    printer.print_message("info", self.app_dict.get_appli_dictionnary()['EXCEPTION_CONTRACT_AMOUNT_TO_PAY'])
+                    printer.print_message("info", APP_DICT.get_appli_dictionnary()['EXCEPTION_CONTRACT_AMOUNT_TO_PAY'])
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATION_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATION_ABORTED'])
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
@@ -385,11 +394,11 @@ def submit_a_event_get_form(custom_id=""):
     Description: Fonction dédiée à permettre à l'utilisateur d'indiquer l'id d'un évènement.
     """
     if custom_id == "":
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_A_EVENT'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_A_EVENT'])
         try:
             custom_id = Prompt.ask("id evènement: ")
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['LOOKUP_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['LOOKUP_ABORTED'])
             sys.exit(0)
     return custom_id
 
@@ -408,12 +417,12 @@ def submit_a_event_create_form(custom_dict={}):
             "event_start_date": "date début (format: 2023-04-12 15:00:00)",
             "event_end_date": "date début (format: 2023-04-15 22:00:00)",
         }
-        printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATE_A_EVENT'])
+        printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATE_A_EVENT'])
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
         except KeyboardInterrupt:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CREATION_ABORTED'])
+            printer.print_message("info", APP_DICT.get_appli_dictionnary()['CREATION_ABORTED'])
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'

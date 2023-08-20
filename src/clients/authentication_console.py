@@ -41,9 +41,10 @@ class AuthenticationConsoleClient:
         self.app_dict = language_bridge.LanguageBridge()
         utils.display_banner()
         try:
+            db_name = utils.set_database_to_get_based_on_user_path(db_name=f"{settings.DATABASE_NAME}")
             registration_number = Prompt.ask("Matricule employé: ")
             password = maskpass.askpass(prompt="Mot de passe: ")
-            self.app_view = AuthenticationView(registration_number, password, db_name)
+            self.app_view = AuthenticationView(registration_number, password, db_name=db_name)
             self.jwt_view = JwtView(self.app_view)
             return self.jwt_view.get_token(registration_number)
         except exceptions.AuthenticationCredentialsFailed:

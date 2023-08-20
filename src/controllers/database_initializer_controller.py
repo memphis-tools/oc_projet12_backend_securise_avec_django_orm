@@ -5,10 +5,12 @@ import urllib.parse
 
 try:
     from src.models import models
+    from src.printers import printer
     from src.settings import settings
     from src.utils import utils
 except ModuleNotFoundError:
     from models import models
+    from printers import printer
     from settings import settings
     from utils import utils
 
@@ -21,19 +23,23 @@ class DatabaseInitializerController:
     Pour accéder à cette classe, il a été contrôlé la présence d'un JWT token valide (dans le PATH utilisateur).
     Toutes autres opérations que "lecture seule, GET, etc" imposeront à l'utilisateur de saisir son mot de passe.
     """
-    db_name = utils.set_database_to_get_based_on_user_path()
+    # db_name = utils.set_database_to_get_based_on_user_path()
+    def __init__(self, db_name):
+        self.db_name = db_name
+
     def return_engine_and_session(
         self,
         user_login="",
         user_pwd="",
         decoded_token="",
-        db_name=db_name,
+        db_name="",
     ):
         """
         Description:
         Connexion à la base de données et renvoie le moteur dédié à initialiser les tables.
         Renvoie aussi de la session qui sera utilisée par la vue AppViews.
         """
+        db_name=self.db_name
         try:
             if decoded_token == "":
                 # l'utilisateur demande un token, c'est sa "connexion" initiale à l'application
@@ -61,7 +67,7 @@ class DatabaseInitializerController:
         user_login="",
         user_pwd="",
         decoded_token="",
-        db_name=f"{settings.DATABASE_NAME}",
+        db_name="",
     ):
         """
         Description:
@@ -261,6 +267,7 @@ class DatabaseInitializerController:
                     cursor.execute(sql)
             except Exception:
                 pass
+
             for db_name in settings.DATABASE_TO_CREATE:
                 sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
                 cursor.execute(sql)
@@ -320,6 +327,7 @@ class DatabaseInitializerController:
         conn.commit()
         conn.close()
         return True
+
 
     def database_postinstall_alter_tables(self, db_name="projet12"):
         """

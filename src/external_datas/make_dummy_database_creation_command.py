@@ -1,4 +1,5 @@
 """
+Description:
 Une fonction pour peupler la base de données avec des données de DEV
 """
 try:
@@ -303,6 +304,5 @@ def dummy_database_creation(db_name="projet12"):
     )
     """
     cursor.execute(sql)
-
     conn.commit()
     conn.close()

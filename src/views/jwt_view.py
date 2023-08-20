@@ -9,12 +9,13 @@ try:
     from src.controllers.jwt_controller import JwtController
     from src.languages import language_bridge
     from src.printers import printer
+    from src.models import models
 except ModuleNotFoundError:
     from exceptions import exceptions
     from controllers.jwt_controller import JwtController
     from languages import language_bridge
     from printers import printer
-
+    from models import models
 
 class JwtView:
     """
@@ -43,7 +44,6 @@ class JwtView:
             ) = self.app_view.db_controller.get_collaborator_join_department(
                 self.app_view.session, registration_number
             )
-
             r_number = registration_number
             u_name = collaborator_username
             department = collaborator_department_name

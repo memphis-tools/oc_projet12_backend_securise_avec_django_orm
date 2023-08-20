@@ -27,6 +27,10 @@ class LocationCustomIdAlReadyExists(Exception):
     pass
 
 
+class MissingApiStaticFileException(Exception):
+    pass
+
+
 class MissingUpdateParamException(Exception):
     pass
 

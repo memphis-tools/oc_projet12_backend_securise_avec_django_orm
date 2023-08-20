@@ -21,6 +21,32 @@ LOG_COLLECT_ACTIVATED = True
 # on propose un log collector: "local", ou au nom de l'appli choisie, exemple "betterstack"
 LOG_COLLECTOR = "betterstack"
 
+# variables dédiées aux imports
+FR_COMPANIES_API_URL = "https://recherche-entreprises.api.gouv.fr/search"
+FR_COMPANIES_DEPARTEMENTS_STRING_LIST = "44,13"
+FR_COMPANIES_API_MAX_PAGE_TO_PARSE = 5
+FR_COMPANIES_API_MAX_COMPANIES_PER_PAGE = 20
+COMPANIES_EXPORT_FILE_PATH = "src/external_datas/csv/french_companies.csv"
+COMPANIES_CSV_HEADERS = [
+    "siren",
+    "siret",
+    "nom_raison_sociale",
+    "activite_principale",
+    "date_debut_activite",
+    "adresse",
+    "complement_adresse",
+    "cedex",
+    "code_postal",
+    "commune",
+    "region",
+    "pays",
+    "tranche_effectif_salarie"
+]
+
+FR_COMPANIES_TOWN_API_URL = "https://geo.api.gouv.fr/communes?"
+
+FR_COMPANIES_REGION_API_URL = "https://geo.api.gouv.fr/regions?"
+
 # variables diverses
 APP_FIGLET_TITLE = "EPIC EVENTS"
 DEFAULT_COUNTRY = "France"
