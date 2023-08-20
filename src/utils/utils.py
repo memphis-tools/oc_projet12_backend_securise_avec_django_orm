@@ -12,6 +12,7 @@ import jwt
 import pyfiglet
 from termcolor import colored, cprint
 from werkzeug.security import generate_password_hash, check_password_hash
+from unidecode import unidecode
 
 try:
     from src.printers import printer
@@ -24,6 +25,47 @@ except ModuleNotFoundError:
 
 
 APP_DICT = language_bridge.LanguageBridge()
+
+
+def set_a_location_custom_id(pays, region, code_postal, nom_raison_sociale):
+    """
+    Description:
+    On constitue un custom id dédiée à une nouvelle localité.
+    Noter qu'on utilise en partie une "raison sociale".
+    Cette méthode est utilisée pour les imports en masse.
+    On interroge une API pour récupérer une liste d'entreprises.
+    Cette liste nous permet de créer des localités puis les entreprises.
+    """
+    r_pays = pays[0:2].lower()
+    r_region = region[0:2].lower()
+    r_code_postal = str(code_postal)[0:5]
+    keywords = nom_raison_sociale.strip(" ")
+    new_rs = ""
+    for any_char in keywords.split():
+        new_rs += any_char[0].lower()
+
+    r_nom_raison_sociale = nom_raison_sociale[0:2].lower()
+    build_custom_id = f"{r_pays}{r_region}{r_code_postal}{new_rs}"
+    if not build_custom_id.isascii():
+        return unidecode(build_custom_id)
+    return build_custom_id
+
+
+def set_a_company_custom_id(nom_raison_sociale, siren, siret, date_debut_activite, ville):
+    r_siren = siret[0:1]
+    r_siret = siret[0:3]
+    r_date_debut_activite = date_debut_activite[2:4]
+    r_ville = ville[0:2]
+    keywords = nom_raison_sociale.strip(" ")
+    new_rs = ""
+    for any_char in keywords.split():
+        new_rs += any_char[0].lower()
+
+    r_nom_raison_sociale = nom_raison_sociale[0:2].lower()
+    build_custom_id = f"{r_siren}{r_siret}{r_date_debut_activite}{r_ville}{new_rs}"
+    if not build_custom_id.isascii():
+        return unidecode(build_custom_id)
+    return build_custom_id
 
 
 def set_database_to_get_based_on_user_path(db_name=""):
@@ -238,6 +280,7 @@ def get_a_database_connection(
     Description:
     Dédiée à obtenir un curseur pour interragir avec le SGBD.
     """
+    # print(f"UTILS sir, get_a_database_connection WORK ON db_name == {db_name}")
     db_name = set_database_to_get_based_on_user_path(db_name)
     if user_name != "" and user_pwd != "":
         user = user_name
@@ -304,12 +347,15 @@ def get_location_id_from_location_custom_id(session, location_id):
     Description:
     Récupérer l'id en bdd de la localité ayant le custom id du modèle, en argument.
     Paramètres:
-    - contract_id: chaine libre de caractères, le custom id du contrat
+    - location_id: chaine libre de caractères, le custom id de la localité
     """
-    sql = text(f"""SELECT id FROM contract WHERE location_id='{location_id}'""")
-    result = session.execute(sql).first()
-    id = str(result[0]).lower()
-    return id
+    try:
+        sql = text(f"""SELECT id FROM location WHERE location_id='{location_id.upper()}'""")
+        result = session.execute(sql).first()
+        id = str(result[0]).lower()
+        return id
+    except TypeError:
+        return None
 
 
 def get_role_id_from_role_custom_id(session, role_id):
