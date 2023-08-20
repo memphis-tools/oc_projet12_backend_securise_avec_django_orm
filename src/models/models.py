@@ -208,8 +208,8 @@ class Company(Base):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
         descriptors += f",(activite_principale|{self.activite_principale})"
-        descriptors += f'(date_debut_activite|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f'(tranche_effectif_salarie|{self.tranche_effectif_salarie})'
+        descriptors += f',(date_debut_activite|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f',(tranche_effectif_salarie|{self.tranche_effectif_salarie})'
         descriptors += f",(company_id|{self.company_id})"
         descriptors += f",(company_name|{self.company_name})"
         descriptors += (
