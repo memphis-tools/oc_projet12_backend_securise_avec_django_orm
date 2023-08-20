@@ -47,6 +47,7 @@ def init_application():
         client_view_console = init_console.InitAppliConsole(db_name=db_name)
 
     utils.display_banner(app_init=True)
+    print("Initialization authentication ", end="")
     printer.print_message("info", APP_DICT.get_appli_dictionnary()['ASK_FOR_ADMIN_PASSWORD'])
     print("Admin - ", end="")
     admin_pwd = maskpass.askpass()
@@ -54,8 +55,10 @@ def init_application():
         printer.print_message("error", APP_DICT.get_appli_dictionnary()['INVALID_ADMIN_CREDENTIALS_ERROR'])
         sys.exit(0)
 
+    print("Initialization authentication ", end="")
     printer.print_message("info", APP_DICT.get_appli_dictionnary()['ASK_FOR_SUDO_PASSWORD'])
 
+    print("Initialization application ", end="")
     printer.print_message("info", APP_DICT.get_appli_dictionnary()['APPLICATION_INITIALISATION'])
     for database in settings.DATABASE_TO_CREATE:
         try:
