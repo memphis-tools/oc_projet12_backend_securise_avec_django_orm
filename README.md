@@ -4,7 +4,7 @@
 ## Projet 12 - Créer un backend sécurisé en utilisant Django ORM
 
 ### Project description
-    Create a console "Customer Relationship Management" application with Python.
+    Create a cli console "Customer Relationship Management" application with Python.
     Context is an event organization dedicated application.
     Company has several departments: commercial, gestion, support.
     Commercial will look for clients. They try to sign contracts for an event.
@@ -15,9 +15,13 @@
 ### Requirements
     Python >= 3.9
     Supply a database scheme.
-    Use an ORM.
+    Use an ORM (SQLALCHEMY).
     Secure authentication with JWT.
-    Supply a Sentry's log monitoring from application usage.
+    Use Click python's package.
+    Supply a Sentry's like log monitoring capability. Grab any of these elements:
+      - all unexpected exceptions
+      - any creation or update for a collaborator
+      - any contract signature
 
 
 ### Competencies assessed
@@ -25,8 +29,7 @@
 
 ---
 
-## How works this project ?
-## How works this project ?
+### How works this project ?
     Any commands you could /should consult with command "oc12_help".
 
 |COMMAND|INFO|
@@ -53,9 +56,15 @@
       - Any instance model comes with a(n implicit) creation date.
       etc
 
+As the application is set to be connected to internet the following API's are used:
+
+- https://recherche-entreprises.api.gouv.fr
+
+- https://geo.api.gouv.fr
+
 ---
 
-## How use this project ?
+### How use this project ?
 
   1. Clone the repository
 
@@ -70,7 +79,6 @@
             SECRET_KEY='MakeYourOwnSecretKey'
             ADMIN_LOGIN='admin'
             ADMIN_PASSWORD='admin'
-            OC_12_ENV='DEV'
             OC12_COMMERCIAL_PWD='MakeItStrong'
             OC12_GESTION_PWD='MakeItSecured'
             OC12_SUPPORT_PWD='MakeItGreat'
@@ -131,9 +139,11 @@
 
         `export OC_12_JWT='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCZzzzZZZzzz'`
 
-      Then you should be able to use the application. Use `oc12_help` to learn about possible commands.
+      Notice that as a Developer perspective:
+        - you must also: `export OC_12_ENV="DEV"`.
+        - if you have something to test you therefore have to : `export OC_12_ENV="TEST"`.
 
-      Notice that as a Developer perspective you should also: `export OC_12_ENV="DEV"`
+      Then you should be able to use the application. Use `oc12_help` to learn about possible commands.
 
       Finally, in a Linux running context, you can retrieve commands in history by running:
       `set -o history`
@@ -149,3 +159,5 @@
       Check flake8:
 
       `poetry run flake8 --format html --htmldir flake8_report`
+
+---
