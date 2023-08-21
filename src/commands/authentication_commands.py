@@ -1,8 +1,8 @@
 """
-Description: Toutes les commandes dédiées à l'authentification
+Description:
+Toutes les commandes dédiées à l'authentification
 """
 import click
-from rich import print
 
 try:
     from src.clients.authentication_console import AuthenticationConsoleClient

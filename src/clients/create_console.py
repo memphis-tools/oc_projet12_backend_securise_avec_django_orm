@@ -36,7 +36,8 @@ except ModuleNotFoundError:
 
 class ConsoleClientForCreate:
     """
-    Description: la classe dédiée à l'usage d'un client en mode console, pour la création /ajout de données.
+    Description:
+    Dédiée à l'usage d'un client en mode console, pour la création /ajout de données.
     """
 
     def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
@@ -66,7 +67,9 @@ class ConsoleClientForCreate:
             if client_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+            printer.print_message(
+                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            )
             return False
         client_lookup = None
         try:
@@ -74,7 +77,10 @@ class ConsoleClientForCreate:
             client_lookup = self.app_view.get_clients_view().get_client(client_id)
             return client_lookup.id
         except AttributeError:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_contract_id(self):
@@ -89,7 +95,9 @@ class ConsoleClientForCreate:
             if contract_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+            printer.print_message(
+                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            )
             return False
         contract_lookup = None
         try:
@@ -99,7 +107,10 @@ class ConsoleClientForCreate:
             )
             return contract_lookup.id
         except AttributeError:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_company_id(self):
@@ -114,7 +125,9 @@ class ConsoleClientForCreate:
             if company_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+            printer.print_message(
+                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            )
             return False
         company_lookup = None
         try:
@@ -122,7 +135,10 @@ class ConsoleClientForCreate:
             company_lookup = self.app_view.get_companies_view().get_company(company_id)
             return company_lookup.id
         except AttributeError:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_department_id(self):
@@ -137,7 +153,9 @@ class ConsoleClientForCreate:
             if department_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+            printer.print_message(
+                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            )
             return False
         department_lookup = None
         try:
@@ -147,7 +165,10 @@ class ConsoleClientForCreate:
             )
             return department_lookup.id
         except AttributeError:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_event_id(self):
@@ -162,7 +183,9 @@ class ConsoleClientForCreate:
             if event_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+            printer.print_message(
+                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            )
             return False
         event_lookup = None
         try:
@@ -170,8 +193,12 @@ class ConsoleClientForCreate:
             event_lookup = self.app_view.get_events_view().get_event(event_id)
             return event_lookup.id
         except AttributeError as error:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
+        return True
 
     def ask_for_a_location_id(self):
         """
@@ -185,7 +212,9 @@ class ConsoleClientForCreate:
             if location_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+            printer.print_message(
+                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            )
             return False
         location_lookup = None
         try:
@@ -196,7 +225,10 @@ class ConsoleClientForCreate:
             if isinstance(location_lookup.id, int):
                 raise exceptions.LocationCustomIdAlReadyExists()
         except AttributeError:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return location_id
 
     def ask_for_a_role_id(self):
@@ -211,7 +243,9 @@ class ConsoleClientForCreate:
             if role_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+            printer.print_message(
+                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            )
             return False
         role_lookup = None
         try:
@@ -219,7 +253,10 @@ class ConsoleClientForCreate:
             role_lookup = self.app_view.get_roles_view().get_role(role_id)
             return role_lookup.id
         except AttributeError:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     @utils.authentication_permission_decorator
@@ -229,7 +266,8 @@ class ConsoleClientForCreate:
         # demander mot de passe à utilisateur en cours
         # controler le mot de passe
         """
-        Description: vue dédiée à créer un client de l'entreprise.
+        Description:
+        Dédiée à créer un client de l'entreprise.
         """
         client_id = ""
         decoded_token = self.jwt_view.get_decoded_token()
@@ -245,11 +283,11 @@ class ConsoleClientForCreate:
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if client_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(client_attributes_dict)
-                b2 = add_data_validators.add_client_data_is_valid(
+                data_is_dict = add_data_validators.data_is_dict(client_attributes_dict)
+                dict_is_valid = add_data_validators.add_client_data_is_valid(
                     client_attributes_dict
                 )
-                if b1 and b2:
+                if data_is_dict and dict_is_valid:
                     client_id = self.create_app_view.get_clients_view().add_client(
                         models.Client(**client_attributes_dict)
                     )
@@ -269,10 +307,20 @@ class ConsoleClientForCreate:
                     models.Client(**client_attributes_dict)
                 )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+                ],
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         return client_id
@@ -280,7 +328,8 @@ class ConsoleClientForCreate:
     @utils.authentication_permission_decorator
     def add_collaborator(self, collaborator_attributes_dict=""):
         """
-        Description: vue dédiée à enregistrer un nouvel utilisateur /collaborateur de l'entreprise.
+        Description:
+        Dédiée à enregistrer un nouvel utilisateur /collaborateur de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -292,11 +341,11 @@ class ConsoleClientForCreate:
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if collaborator_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(collaborator_attributes_dict)
-                b2 = add_data_validators.add_collaborator_data_is_valid(
+                data_is_dict = add_data_validators.data_is_dict(collaborator_attributes_dict)
+                dict_is_valid = add_data_validators.add_collaborator_data_is_valid(
                     collaborator_attributes_dict
                 )
-                if b1 and b2:
+                if data_is_dict and dict_is_valid:
                     collaborator = models.Collaborator(**collaborator_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
@@ -304,15 +353,27 @@ class ConsoleClientForCreate:
                 collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
                 collaborator = models.Collaborator(**collaborator_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+                ],
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         return self.create_app_view.get_collaborators_view().add_collaborator(
@@ -322,7 +383,8 @@ class ConsoleClientForCreate:
     @utils.authentication_permission_decorator
     def add_company(self, company_attributes_dict=""):
         """
-        Description: vue dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
+        Description:
+        Dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -334,11 +396,11 @@ class ConsoleClientForCreate:
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if company_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(company_attributes_dict)
-                b2 = add_data_validators.add_company_data_is_valid(
+                data_is_dict = add_data_validators.data_is_dict(company_attributes_dict)
+                dict_is_valid = add_data_validators.add_company_data_is_valid(
                     company_attributes_dict
                 )
-                if b1 and b2:
+                if data_is_dict and dict_is_valid:
                     company = models.Company(**company_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
@@ -351,15 +413,27 @@ class ConsoleClientForCreate:
                 )
                 company = models.Company(**company_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+                ],
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         company.creation_date = datetime.now()
@@ -368,7 +442,8 @@ class ConsoleClientForCreate:
     @utils.authentication_permission_decorator
     def add_contract(self, contract_attributes_dict=""):
         """
-        Description: vue dédiée à enregistrer un contrat pour l'entreprise.
+        Description:
+        Dédiée à enregistrer un contrat pour l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -380,11 +455,11 @@ class ConsoleClientForCreate:
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if contract_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(contract_attributes_dict)
-                b2 = add_data_validators.add_contract_data_is_valid(
+                data_is_dict = add_data_validators.data_is_dict(contract_attributes_dict)
+                dict_is_valid = add_data_validators.add_contract_data_is_valid(
                     contract_attributes_dict
                 )
-                if b1 and b2:
+                if data_is_dict and dict_is_valid:
                     contract = models.Contract(**contract_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
@@ -392,15 +467,27 @@ class ConsoleClientForCreate:
                 contract_attributes_dict = forms.submit_a_contract_create_form()
                 contract = models.Contract(**contract_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+                ],
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         contract.creation_date = datetime.now()
@@ -409,7 +496,8 @@ class ConsoleClientForCreate:
     @utils.authentication_permission_decorator
     def add_department(self, department_attributes_dict=""):
         """
-        Description: vue dédiée à enregistrer un nouveau départements /services de l'entreprise.
+        Description:
+        Dédiée à enregistrer un nouveau départements /services de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -421,11 +509,11 @@ class ConsoleClientForCreate:
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if department_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(department_attributes_dict)
-                b2 = add_data_validators.add_department_data_is_valid(
+                data_is_dict = add_data_validators.data_is_dict(department_attributes_dict)
+                dict_is_valid = add_data_validators.add_department_data_is_valid(
                     department_attributes_dict
                 )
-                if b1 and b2:
+                if data_is_dict and dict_is_valid:
                     department = models.Collaborator_Department(
                         **department_attributes_dict
                     )
@@ -439,15 +527,27 @@ class ConsoleClientForCreate:
                     **department_attributes_dict
                 )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+                ],
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         department.creation_date = datetime.now()
@@ -456,7 +556,8 @@ class ConsoleClientForCreate:
     @utils.authentication_permission_decorator
     def add_event(self, event_attributes_dict=""):
         """
-        Description: vue dédiée à enregistrer un évènement de l'entreprise.
+        Description:
+        Dédiée à enregistrer un évènement de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         registration_number = str(decoded_token["registration_number"])
@@ -472,9 +573,9 @@ class ConsoleClientForCreate:
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if event_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(event_attributes_dict)
-                b2 = add_data_validators.add_event_data_is_valid(event_attributes_dict)
-                if b1 and b2:
+                data_is_dict = add_data_validators.data_is_dict(event_attributes_dict)
+                dict_is_valid = add_data_validators.add_event_data_is_valid(event_attributes_dict)
+                if data_is_dict and dict_is_valid:
                     event = models.Event(**event_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
@@ -492,30 +593,51 @@ class ConsoleClientForCreate:
             event.creation_date = datetime.now()
             return self.create_app_view.get_events_view().add_event(user_id, event)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+                ],
+            )
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+                ],
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
 
     @utils.authentication_permission_decorator
     def add_location(self, location_attributes_dict=""):
         """
-        Description: vue dédiée à enregistrer une localité.
+        Description:
+        Dédiée à enregistrer une localité.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -527,14 +649,14 @@ class ConsoleClientForCreate:
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if location_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(location_attributes_dict)
-                b2 = add_data_validators.add_location_data_is_valid(
+                data_is_dict = add_data_validators.data_is_dict(location_attributes_dict)
+                dict_is_valid = add_data_validators.add_location_data_is_valid(
                     location_attributes_dict
                 )
                 b3 = validators.is_complement_adresse_valid(
                     location_attributes_dict["complement_adresse"]
                 )
-                if b1 and b2 and b3:
+                if data_is_dict and dict_is_valid and b3:
                     location = models.Location(**location_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
@@ -545,20 +667,35 @@ class ConsoleClientForCreate:
                 )
                 location = models.Location(**location_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.LocationCustomIdAlReadyExists:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_ALREADY_EXISTS_'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_ALREADY_EXISTS_"],
+            )
             raise exceptions.LocationCustomIdAlReadyExists()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+                ],
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception as error:
             print(error)
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         location.creation_date = datetime.now()
@@ -567,7 +704,8 @@ class ConsoleClientForCreate:
     @utils.authentication_permission_decorator
     def add_role(self, role_attributes_dict=""):
         """
-        Description: vue dédiée à enregistrer un nouveau rôle pour les collaborateurs de l'entreprise.
+        Description:
+        Dédiée à enregistrer un nouveau rôle pour les collaborateurs de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -579,9 +717,9 @@ class ConsoleClientForCreate:
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if role_attributes_dict != "":
-                b1 = add_data_validators.data_is_dict(role_attributes_dict)
-                b2 = add_data_validators.add_role_data_is_valid(role_attributes_dict)
-                if b1 and b2:
+                data_is_dict = add_data_validators.data_is_dict(role_attributes_dict)
+                dict_is_valid = add_data_validators.add_role_data_is_valid(role_attributes_dict)
+                if data_is_dict and dict_is_valid:
                     role = models.Collaborator_Role(**role_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
@@ -589,15 +727,27 @@ class ConsoleClientForCreate:
                 role_attributes_dict = forms.submit_a_collaborator_role_create_form()
                 role = models.Collaborator_Role(**role_attributes_dict)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPLIED_DATA_DO_NOT_MATCH_MODEL'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+                ],
+            )
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         role.creation_date = datetime.now()

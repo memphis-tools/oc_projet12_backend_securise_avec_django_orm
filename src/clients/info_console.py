@@ -2,7 +2,6 @@
 Description:
 Console dédiée aux commandes infos
 """
-from rich import print
 
 try:
     from src.languages import language_bridge
@@ -52,7 +51,9 @@ class InformationConsoleClient:
         try:
             display_info_password_policy()
         except Exception as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+            )
 
     @utils.authentication_permission_decorator
     def display_info_data_medium_window_for_metiers(self):
@@ -61,7 +62,6 @@ class InformationConsoleClient:
         Ouvrir la popup dédiée.
         """
         infos_data_controller.display_info_data_medium_window("metiers")
-
 
     @utils.authentication_permission_decorator
     def display_info_data_medium_window_for_complement_adresse(self):

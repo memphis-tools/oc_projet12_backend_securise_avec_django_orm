@@ -1,3 +1,7 @@
+class ApiQueryFailedException(Exception):
+    pass
+
+
 class ApplicationErrorException(Exception):
     pass
 

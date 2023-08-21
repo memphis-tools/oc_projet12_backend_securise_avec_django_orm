@@ -1,4 +1,5 @@
 """
+Description:
 Un controleur avec toutes méthodes pour ajouter des données.
 """
 from sqlalchemy import text
@@ -15,17 +16,25 @@ except ModuleNotFoundError:
     from settings import settings
 
 
+APP_DICT = language_bridge.LanguageBridge()
+
+
 class DatabaseCreateController:
     """
-    Description: Toutes les méthodes pour ajouter des données.
+    Description:
+    Toutes les méthodes pour ajouter des données.
     """
+
     def __init__(self):
-        self.app_dict = language_bridge.LanguageBridge()
+        APP_DICT = language_bridge.LanguageBridge()
 
     def add_client(self, session, client):
         """
-        Description: Fonction dédiée à servir la vue lors de l'ajout d'un client.
+        Description:
+        Fonction dédiée à servir la vue lors de l'ajout d'un client.
         Requête de la base de données et renvoie l'id enregistré.
+        Paramètres:
+        - client: une instance de la classe Client
         """
         try:
             session.add(client)
@@ -33,12 +42,17 @@ class DatabaseCreateController:
 
             return client.id
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            )
 
     def add_collaborator(self, session, collaborator):
         """
-        Description: Fonction dédiée à servir la vue lors de l'ajout d'un collaborateur.
+        Description:
+        Fonction dédiée à servir la vue lors de l'ajout d'un collaborateur.
         Requête de la base de données et renvoie l'id enregistré.
+        Paramètres:
+        - collaborator: une instance de la classe Collaborator
         """
         try:
             session.add(collaborator)
@@ -68,12 +82,17 @@ class DatabaseCreateController:
 
             return collaborator.id
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            )
 
     def add_company(self, session, company):
         """
-        Description: Fonction dédiée à servir la vue lors d'un ajout d'une entreprise.
+        Description:
+        Fonction dédiée à servir la vue lors d'un ajout d'une entreprise.
         Requête de la base de données et renvoie l'id enregistré.
+        Paramètres:
+        - company: une instance de la classe Company
         """
         try:
             session.add(company)
@@ -81,12 +100,17 @@ class DatabaseCreateController:
 
             return company.id
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            )
 
     def add_contract(self, session, contract):
         """
-        Description: Fonction dédiée à servir la vue lors de l'ajout d'un contrat.
+        Description:
+        Fonction dédiée à servir la vue lors de l'ajout d'un contrat.
         Requête de la base de données et renvoie l'id enregistré.
+        Paramètres:
+        - contract: une instance de la classe Contract
         """
         try:
             session.add(contract)
@@ -94,26 +118,38 @@ class DatabaseCreateController:
 
             return contract.id
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            )
 
     def add_department(self, session, department):
         """
-        Description: Fonction dédiée à servir la vue lors de l'ajout d'un department /service pour l'entreprise.
+        Description:
+        Fonction dédiée à servir la vue lors de l'ajout d'un department /service pour l'entreprise.
         Requête de la base de données et renvoie l'id enregistré.
+        Paramètres:
+        - department: une instance de la classe Collaborator_Department
         """
         try:
             session.add(department)
             session.commit()
             return department.id
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            )
 
     def add_event(self, session, current_user_collaborator_id, event):
         """
-        Description: Fonction dédiée à servir la vue lors de l'ajout d'un évènement.
+        Description:
+        Fonction dédiée à servir la vue lors de l'ajout d'un évènement.
         Requête de la base de données et renvoie l'id enregistré.
+        Paramètres:
+        - current_user_collaborator_id: l'id de l'utilisateur courant (pas le custom id)
+        - event: une instance de la classe Event
         """
-        # un collaborateur du service commercial ne peut créerun évènements que pour un contrat crée (signé ou non)
+        # un collaborateur du service commercial ne peut créer un évènements
+        # que pour un contrat qu'il a conclu avec un client (signé ou non)
         if current_user_collaborator_id != event.get_dict()["collaborator_id"]:
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
         try:
@@ -121,12 +157,17 @@ class DatabaseCreateController:
             session.commit()
             return event.id
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            )
 
     def add_location(self, session, location):
         """
-        Description: Fonction dédiée à servir la vue lors d'un ajout d'une localité (entreprise ou évènement).
+        Description:
+        Fonction dédiée à servir la vue lors d'un ajout d'une localité (entreprise ou évènement).
         Requête de la base de données et renvoie l'id enregistré.
+        Paramètres:
+        - location: une instance de la classe Location
         """
         try:
             session.add(location)
@@ -134,12 +175,17 @@ class DatabaseCreateController:
 
             return location.id
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            )
 
     def add_role(self, session, role):
         """
-        Description: Fonction dédiée à servir la vue lors de l'ajout d'un rôle pour collaborateur.
+        Description:
+        Fonction dédiée à servir la vue lors de l'ajout d'un rôle pour collaborateur.
         Requête de la base de données et renvoie l'id enregistré.
+        Paramètres:
+        - role: une instance de la classe Collaborator_Role
         """
         try:
             session.add(role)
@@ -147,4 +193,6 @@ class DatabaseCreateController:
 
             return role.id
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            )

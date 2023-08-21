@@ -40,7 +40,7 @@ COMPANIES_CSV_HEADERS = [
     "commune",
     "region",
     "pays",
-    "tranche_effectif_salarie"
+    "tranche_effectif_salarie",
 ]
 
 FR_COMPANIES_TOWN_API_URL = "https://geo.api.gouv.fr/communes?"
@@ -136,6 +136,7 @@ if "PATH_APPLICATION_ENV_NAME" in os.environ:
         JWT_DURATION = 3600
 
 HASH_ALGORITHM = "HS256"
+
 
 def get_settings_referenced_in_languages_files():
     settings_for_template_list = [

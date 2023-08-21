@@ -2,19 +2,15 @@
 Description:
 Client en mode console dédié à l'administrateur de l'application.
 """
-import os
+
 try:
-    from src.printers import printer
     from src.views.authentication_view import AuthenticationView
     from src.views.jwt_view import JwtView
     from src.settings import settings
-    from src.utils import utils
 except ModuleNotFoundError:
-    from printers import printer
     from views.authentication_view import AuthenticationView
     from views.jwt_view import JwtView
     from settings import settings
-    from utils import utils
 
 
 class AdminConsoleClient:

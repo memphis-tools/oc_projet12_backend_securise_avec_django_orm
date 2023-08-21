@@ -204,12 +204,15 @@ class Company(Base):
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     date_debut_activite = Column(DateTime(), nullable=False, default=datetime.now())
     tranche_effectif_salarie = Column(Integer, nullable=False, default=-10)
+
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
         descriptors += f",(activite_principale|{self.activite_principale})"
-        descriptors += f',(date_debut_activite|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f',(tranche_effectif_salarie|{self.tranche_effectif_salarie})'
+        descriptors += (
+            f',(date_debut_activite|{self.creation_date.strftime("%d-%m-%Y")})'
+        )
+        descriptors += f",(tranche_effectif_salarie|{self.tranche_effectif_salarie})"
         descriptors += f",(company_id|{self.company_id})"
         descriptors += f",(company_name|{self.company_name})"
         descriptors += (
@@ -290,7 +293,9 @@ class Client(Base):
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f'(last_update_date|{self.last_update_date.strftime("%d-%m-%Y")})'
+        descriptors += (
+            f'(last_update_date|{self.last_update_date.strftime("%d-%m-%Y")})'
+        )
         descriptors += f",(client_id|{self.client_id})"
         descriptors += f",(civility|{self.civility})"
         descriptors += f",(first_name|{self.first_name})"
@@ -310,7 +315,6 @@ class Client(Base):
         client_dict = {
             "id": self.id,
             "creation_date": self.creation_date.strftime("%d-%m-%Y"),
-            "last_update_date": self.creation_date.strftime("%d-%m-%Y"),
             "client_id": self.client_id,
             "civility": f"{self.civility}",
             "first_name": self.first_name,
@@ -487,6 +491,7 @@ class Location(Base, ModelMixin):
     Table dédiée à désigner /caractériser une localisation.
     Les modèles Company et Event ont besoin d'une localité existante.
     """
+
     __tablename__ = "location"
     id = Column(Integer, primary_key=True)
     location_id = Column(String(120), nullable=False, unique=True)

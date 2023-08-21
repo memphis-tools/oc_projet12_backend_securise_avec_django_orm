@@ -1,12 +1,11 @@
 import csv
 import requests
 from time import sleep
+
 try:
     from src.settings import settings
-    from src.utils import utils
 except ModuleNotFoundError:
     from settings import settings
-    from utils import utils
 
 
 EXPORT_FILE_PATH = settings.COMPANIES_EXPORT_FILE_PATH
@@ -31,8 +30,10 @@ def generate_companies_file():
                 company["pays"] = "France"
                 adresse = ""
                 try:
-                    adresse = company["siege"]["numero_voie"] + " " + company["siege"]["libelle_voie"]
-                except:
+                    adresse = (
+                        company["siege"]["numero_voie"] + " " + company["siege"]["libelle_voie"]
+                    )
+                except Exception:
                     adresse = company["siege"]["libelle_voie"]
                 # noter la correspondance avec les headers du csv, indiqués en 'settings.COMPANIES_CSV_HEADERS'
                 company_list = [

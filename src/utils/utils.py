@@ -51,7 +51,9 @@ def set_a_location_custom_id(pays, region, code_postal, nom_raison_sociale):
     return build_custom_id
 
 
-def set_a_company_custom_id(nom_raison_sociale, siren, siret, date_debut_activite, ville):
+def set_a_company_custom_id(
+    nom_raison_sociale, siren, siret, date_debut_activite, ville
+):
     r_siren = siret[0:1]
     r_siret = siret[0:3]
     r_date_debut_activite = date_debut_activite[2:4]
@@ -92,7 +94,6 @@ def recall_which_running_env_in_use():
             return "TEST"
     except KeyError:
         pass
-    print(f"recall_which_running_env_in_use DEBUG TIME return 'PROD' ")
     return "PROD"
 
 
@@ -103,13 +104,19 @@ def authentication_permission_decorator(func):
             if args[0].jwt_view.does_a_valid_token_exist():
                 return func(*args, **kwargs)
 
-            printer.print_message("error", APP_DICT.get_appli_dictionnary()['INVALID_TOKEN_ERROR'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["INVALID_TOKEN_ERROR"]
+            )
             sys.exit(0)
         except jwt.exceptions.InvalidSignatureError:
-            printer.print_message("error", APP_DICT.get_appli_dictionnary()['INVALID_TOKEN_ERROR'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["INVALID_TOKEN_ERROR"]
+            )
             sys.exit(0)
         except KeyError:
-            printer.print_message("error", APP_DICT.get_appli_dictionnary()['INVALID_TOKEN_ERROR'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["INVALID_TOKEN_ERROR"]
+            )
             sys.exit(0)
 
     return check_user_token
@@ -357,7 +364,9 @@ def get_location_id_from_location_custom_id(session, location_id):
     - location_id: chaine libre de caractères, le custom id de la localité
     """
     try:
-        sql = text(f"""SELECT id FROM location WHERE location_id='{location_id.upper()}'""")
+        sql = text(
+            f"""SELECT id FROM location WHERE location_id='{location_id.upper()}'"""
+        )
         result = session.execute(sql).first()
         id = str(result[0]).lower()
         return id
@@ -454,17 +463,28 @@ def display_postgresql_controls():
             capture_output=True,
         )
         if execution_code.returncode == 0:
-            print(f"Service {APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_NAME']} ", end="")
-            printer.print_message("success", APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_RUNNING'])
+            print(
+                f"Service {APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_NAME']} ",
+                end="",
+            )
+            printer.print_message(
+                "success", APP_DICT.get_appli_dictionnary()["SGBD_SERVICE_RUNNING"]
+            )
         else:
             raise subprocess.CalledProcessError()
     except subprocess.CalledProcessError as error:
-        printer.print_message("success", APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_ERROR'])
+        printer.print_message(
+            "success", APP_DICT.get_appli_dictionnary()["SGBD_SERVICE_ERROR"]
+        )
 
     try:
         subprocess.run(["id", "postgres"], shell=True, check=True, capture_output=True)
-        print(f"Compte {APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_NAME']} ", end="")
-        printer.print_message("success", APP_DICT.get_appli_dictionnary()['SGBD_USER_POSTGRES_EXISTS'])
+        print(
+            f"Compte {APP_DICT.get_appli_dictionnary()['SGBD_SERVICE_NAME']} ", end=""
+        )
+        printer.print_message(
+            "success", APP_DICT.get_appli_dictionnary()["SGBD_USER_POSTGRES_EXISTS"]
+        )
     except subprocess.CalledProcessError as error:
         print(f"[START CONTROL] error: {error}")
 

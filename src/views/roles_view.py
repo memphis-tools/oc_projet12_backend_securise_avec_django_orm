@@ -41,11 +41,21 @@ class RolesView:
                         "roles dans entreprise", db_model_queryset
                     )
                     console.print(table)
-                    printer.print_message("info", self.app_dict.get_appli_dictionnary()['NO_MORE_ROLE'])
+                    printer.print_message(
+                        "info", self.app_dict.get_appli_dictionnary()["NO_MORE_ROLE"]
+                    )
                 else:
-                    printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
+                    printer.print_message(
+                        "error",
+                        self.app_dict.get_appli_dictionnary()[
+                            "DATABASE_QUERY_NO_MATCHES"
+                        ],
+                    )
             except Exception as error:
-                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+                printer.print_message(
+                    "error",
+                    self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"],
+                )
         else:
             db_model_queryset = self.db_controller.get_roles(self.session)
             if len(db_model_queryset) > 0:
@@ -53,9 +63,14 @@ class RolesView:
                     "roles dans entreprise", db_model_queryset
                 )
                 console.print(table)
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['NO_MORE_ROLE'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["NO_MORE_ROLE"]
+                )
             else:
-                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
+                printer.print_message(
+                    "error",
+                    self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
+                )
         return self.db_controller.get_roles(self.session)
 
     def get_role(self, role_id):

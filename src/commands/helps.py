@@ -26,7 +26,7 @@ def help():
     Dédiée à introduire aux fonctions d'usage.
     """
     display_banner()
-    printer.print_message("error", APP_DICT.get_appli_dictionnary()['HELP_MENU_TITLE'])
+    printer.print_message("error", APP_DICT.get_appli_dictionnary()["HELP_MENU_TITLE"])
 
     basic_pos_commands = """
 oc12_init_application: [green](ré)initialiser l'application (admin only)[/green]

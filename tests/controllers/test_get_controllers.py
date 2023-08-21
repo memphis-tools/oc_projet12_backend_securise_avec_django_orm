@@ -2,7 +2,7 @@
 Description:
 Test de la vue pour joindre les controleurs en mode lecture ("GET").
 """
-import pytest
+
 try:
     from src.settings import settings
     from src.views.clients_view import ClientsView
@@ -33,7 +33,9 @@ except ModuleNotFoundError:
     )
 
 
-def test_get_clients_with_commercial_profile(get_valid_decoded_token_for_a_commercial_collaborator):
+def test_get_clients_with_commercial_profile(
+    get_valid_decoded_token_for_a_commercial_collaborator,
+):
     result = JwtController().does_a_valid_token_exist()
     app_view = AppViews(db_name=f"{settings.TEST_DATABASE_NAME}")
     clients_view = ClientsView(app_view.db_controller, app_view.session)
@@ -42,7 +44,9 @@ def test_get_clients_with_commercial_profile(get_valid_decoded_token_for_a_comme
     assert isinstance(result, list)
 
 
-def test_get_clients_with_commercial_profile(get_valid_decoded_token_for_a_gestion_collaborator):
+def test_get_clients_with_gestion_profile(
+    get_valid_decoded_token_for_a_gestion_collaborator,
+):
     result = JwtController().does_a_valid_token_exist()
     app_view = AppViews(db_name=f"{settings.TEST_DATABASE_NAME}")
     clients_view = ClientsView(app_view.db_controller, app_view.session)
@@ -51,7 +55,9 @@ def test_get_clients_with_commercial_profile(get_valid_decoded_token_for_a_gesti
     assert isinstance(result, list)
 
 
-def test_get_clients_with_commercial_profile(get_valid_decoded_token_for_a_support_collaborator):
+def test_get_clients_with_support_profile(
+    get_valid_decoded_token_for_a_support_collaborator,
+):
     result = JwtController().does_a_valid_token_exist()
     app_view = AppViews(db_name=f"{settings.TEST_DATABASE_NAME}")
     clients_view = ClientsView(app_view.db_controller, app_view.session)
@@ -63,7 +69,7 @@ def test_get_clients_with_commercial_profile(get_valid_decoded_token_for_a_suppo
 def test_get_collaborators(
     mocker, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    db_name=f"{settings.TEST_DATABASE_NAME}"
+    db_name = f"{settings.TEST_DATABASE_NAME}"
     app_view = AppViews(db_name)
     db_initializer = DatabaseInitializerController(db_name)
     clients_view = CollaboratorsView(
