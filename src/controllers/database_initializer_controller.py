@@ -211,7 +211,7 @@ class DatabaseInitializerController:
         for db_name in settings.DATABASE_TO_CREATE:
             if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
                 conn = utils.get_a_database_connection(
-                    f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
+                    f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
                 )
                 cursor = conn.cursor()
                 dummy_registration_number = "aa123456789"
@@ -234,7 +234,7 @@ class DatabaseInitializerController:
         Dédiée à mettre à jour la base de données après une création initiale.
         """
         conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
+            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
         )
         cursor = conn.cursor()
         for db_name in settings.DATABASE_TO_CREATE:
@@ -268,9 +268,9 @@ class DatabaseInitializerController:
             except Exception:
                 pass
 
-            for db_name in settings.DATABASE_TO_CREATE:
-                sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
-                cursor.execute(sql)
+            sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
+            cursor.execute(sql)
+
             for model in [
                 "client",
                 "collaborator",
@@ -335,7 +335,7 @@ class DatabaseInitializerController:
         Dédiée à forcer la mise à jour de valeurs par défaut.
         """
         conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
+            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
         )
         cursor = conn.cursor()
 

@@ -16,7 +16,7 @@ def dummy_database_creation(db_name="projet12"):
     Dédiée à peupler la base de données avec des données fictives
     """
     conn = utils.get_a_database_connection(
-        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
+        f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
     )
     cursor = conn.cursor()
 
@@ -181,60 +181,60 @@ def dummy_database_creation(db_name="projet12"):
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email,
-     telephone, company_id, commercial_contact, creation_date)
+     telephone, company_id, commercial_contact, creation_date, last_update_date)
     VALUES
     ('mkc111', 'MR', 'Kevin', 'Casey', 'Assistant',
-    'kevin@startup.io', '067812345678', '1', '2', '2021-12-25 19:40:06')
+    'kevin@startup.io', '067812345678', '1', '2', '2021-12-25 19:40:06', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email,
-     telephone, company_id, commercial_contact, creation_date)
+     telephone, company_id, commercial_contact, creation_date, last_update_date)
     VALUES
     ('axs40', 'MLE', 'Alexia', 'Strak', 'Assistante',
-     'a.strak@startup.io', '067812345678', '2', '2', '2020-10-15 16:12:20')
+     'a.strak@startup.io', '067812345678', '2', '2', '2020-10-15 16:12:20', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email,
-     telephone, company_id, commercial_contact, creation_date)
+     telephone, company_id, commercial_contact, creation_date, last_update_date)
     VALUES
     ('SRODAP37', 'MR', 'Sammy', 'Rodgers', 'Assistant',
-     'sammy.rodgers@tmmachine.xe', '0615684937', '3', '1', '2020-02-19 12:10:40')
+     'sammy.rodgers@tmmachine.xe', '0615684937', '3', '1', '2020-02-19 12:10:40', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email,
-     telephone, company_id, commercial_contact, creation_date)
+     telephone, company_id, commercial_contact, creation_date, last_update_date)
     VALUES
     ('FJONIC35', 'MR', 'Fred', 'Jones', 'Ingénieur cloud computing',
-     'fred.jones@tmmachine.xe', '0699248635', '3', '2', '2020-02-19 12:10:40')
+     'fred.jones@tmmachine.xe', '0699248635', '3', '2', '2020-02-19 12:10:40', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email,
-     telephone, company_id, commercial_contact, creation_date)
+     telephone, company_id, commercial_contact, creation_date, last_update_date)
     VALUES
     ('DBLATT85', 'MLE', 'Daphné', 'Blake', 'Ingénieur cloud computing',
-     'daphné.blake@tmmachine.xe', '0671426385', '3', '1', '2020-02-19 12:10:40')
+     'daphné.blake@tmmachine.xe', '0671426385', '3', '1', '2020-02-19 12:10:40', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
-    
+
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email,
-     telephone, company_id, commercial_contact, creation_date)
+     telephone, company_id, commercial_contact, creation_date, last_update_date)
     VALUES
     ('VDINPR25', 'MLE', 'Velma', 'Dinkley', 'Présentatrice radio',
-     'velma.dinkley@tmmachine.xe', '0695368525', '3', '2', '2020-02-19 12:10:40')
+     'velma.dinkley@tmmachine.xe', '0695368525', '3', '2', '2020-02-19 12:10:40', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
 
