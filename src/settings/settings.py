@@ -66,6 +66,7 @@ TRANSLATED_MONTHS = [
     ("novembre", "Nov"),
     ("décembre", "Dec"),
 ]
+
 DEFAULT_NEW_COLLABORATOR_PASSWORD = "@pplepie94"
 DEFAULT_NEW_PASSWORD_MIN_LENGTH = 8
 DEFAULT_NEW_PASSWORD_MAX_LENGTH = 30
@@ -135,7 +136,6 @@ if "PATH_APPLICATION_ENV_NAME" in os.environ:
         JWT_DURATION = 3600
 
 HASH_ALGORITHM = "HS256"
-
 
 def get_settings_referenced_in_languages_files():
     settings_for_template_list = [
