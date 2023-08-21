@@ -152,11 +152,11 @@ def init_application():
     for database in settings.DATABASE_TO_CREATE:
         print(f"Database {database} ",end="")
         printer.print_message("info", APP_DICT.get_appli_dictionnary()['DATABASE_UPDATING'])
+        utils.display_postgresql_controls()
         if database == "projet12":
             admin_console_client = AdminConsoleClient()
             admin_console_client.reset_db(db_name=f"{database}")
             admin_console_client.init_db()
-            utils.display_postgresql_controls()
             admin_console_client.database_postinstall_tasks()
             admin_console_client.database_postinstall_alter_tables()
         else:
@@ -171,8 +171,8 @@ def init_application():
             )
 
     # On peuple la base de données avec des données quelconques, pour le POC, en développement
-    dummy_database_creation(db_name=f"dev_projet12")
-    dummy_database_creation(db_name=f"test_projet12")
+    dummy_database_creation(db_name="dev_projet12")
+    dummy_database_creation(db_name="test_projet12")
 
     # on insère en base un jeu de données supplémentaires. On interroge des API externes.
     # le résultat d'une requete à ces API est un fichier .csv
