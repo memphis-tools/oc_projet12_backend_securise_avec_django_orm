@@ -127,11 +127,15 @@ As the application is set to be connected to internet the following API's are us
 
       Notice application had been run on a Linux operating system. Some commands will relied on it.
 
-      First deactivate any input into history: `set -o history` (this will apply for the terminal session duration).
+      First deactivate any input into history: `set -o history` (this will apply for the terminal session duration). This is optional.
 
       Then you will need a token access. Valid duration period is set through the settings.py file.
 
       `oc12_token`
+
+      Without anymore export the only PROD database will be used. Before ask the token, notice that as a Developer perspective:
+        - you must also: `export OC_12_ENV="DEV"`.
+        - if you have something to test you therefore have to : `export OC_12_ENV="TEST"`.
 
       If your authentication succeeded you will have a JWT token print into terminal.
 
@@ -139,13 +143,9 @@ As the application is set to be connected to internet the following API's are us
 
         `export OC_12_JWT='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCZzzzZZZzzz'`
 
-      Notice that as a Developer perspective:
-        - you must also: `export OC_12_ENV="DEV"`.
-        - if you have something to test you therefore have to : `export OC_12_ENV="TEST"`.
-
       Then you should be able to use the application. Use `oc12_help` to learn about possible commands.
 
-      Finally, in a Linux running context, you can retrieve commands in history by running:
+      Finally, in a Linux running context, you can retrieve commands in history by running (this is optional):
       `set -o history`
 
   6. Optional
