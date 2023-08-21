@@ -1,18 +1,28 @@
+"""
+Description:
+Sert à initialiser la base de données, lors de l'initialisation de l'application.
+On met en place les tables types, droits. Peuplement initial des base de dev et de test.
+"""
 import psycopg
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import urllib.parse
 
 try:
+    from src.languages import language_bridge
     from src.models import models
     from src.printers import printer
     from src.settings import settings
     from src.utils import utils
 except ModuleNotFoundError:
+    from languages import language_bridge
     from models import models
     from printers import printer
     from settings import settings
     from utils import utils
+
+
+APP_DICT = language_bridge.LanguageBridge()
 
 
 class DatabaseInitializerController:
@@ -23,6 +33,7 @@ class DatabaseInitializerController:
     Pour accéder à cette classe, il a été contrôlé la présence d'un JWT token valide (dans le PATH utilisateur).
     Toutes autres opérations que "lecture seule, GET, etc" imposeront à l'utilisateur de saisir son mot de passe.
     """
+
     # db_name = utils.set_database_to_get_based_on_user_path()
     def __init__(self, db_name):
         self.db_name = db_name
@@ -39,7 +50,7 @@ class DatabaseInitializerController:
         Connexion à la base de données et renvoie le moteur dédié à initialiser les tables.
         Renvoie aussi de la session qui sera utilisée par la vue AppViews.
         """
-        db_name=self.db_name
+        db_name = self.db_name
         try:
             if decoded_token == "":
                 # l'utilisateur demande un token, c'est sa "connexion" initiale à l'application
@@ -56,7 +67,10 @@ class DatabaseInitializerController:
                 f"postgresql+psycopg://{user_login}:{password_with_specialchars_escape}@localhost/{db_name}"
             )
         except psycopg.OperationalError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['EXCEPTION_DATABASE_CONNECTION'])
+            printer.print_message(
+                "error",
+                APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"],
+            )
 
         session_maker = sessionmaker(engine)
         session = session_maker()
@@ -90,7 +104,10 @@ class DatabaseInitializerController:
                 f"postgresql+psycopg://{user_login}:{password_with_specialchars_escape}@localhost/{db_name}"
             )
         except psycopg.OperationalError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['EXCEPTION_DATABASE_CONNECTION'])
+            printer.print_message(
+                "error",
+                APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"],
+            )
 
         session_maker = sessionmaker(engine)
         session = session_maker()
@@ -172,7 +189,9 @@ class DatabaseInitializerController:
                     cursor.execute(sql)
                 except Exception:
                     continue
-            if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
+            if (
+                db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}"
+            ):
                 # on va conserver le collaborateur aa123456789 pour le module de test test_jwt_authenticator
                 for role in [
                     "ab123456789",
@@ -183,7 +202,9 @@ class DatabaseInitializerController:
                     "ag123456789",
                 ]:
                     try:
-                        sql = f"""REVOKE ALL ON ALL TABLES IN SCHEMA public FROM {role}"""
+                        sql = (
+                            f"""REVOKE ALL ON ALL TABLES IN SCHEMA public FROM {role}"""
+                        )
                         cursor.execute(sql)
                         sql = f"""DROP ROLE IF EXISTS {role}"""
                         cursor.execute(sql)
@@ -209,9 +230,14 @@ class DatabaseInitializerController:
         Ca permet de conserver l'éxécution des tests du module test_jwt_authenticator.py avant ceux des vues.
         """
         for db_name in settings.DATABASE_TO_CREATE:
-            if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
+            if (
+                db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}"
+            ):
                 conn = utils.get_a_database_connection(
-                    f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
+                    f"{settings.ADMIN_LOGIN}",
+                    f"{settings.ADMIN_PASSWORD}",
+                    app_init=True,
+                    db_name=db_name,
                 )
                 cursor = conn.cursor()
                 dummy_registration_number = "aa123456789"
@@ -235,12 +261,17 @@ class DatabaseInitializerController:
         """
         init_db_name = db_name
         conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=init_db_name
+            f"{settings.ADMIN_LOGIN}",
+            f"{settings.ADMIN_PASSWORD}",
+            app_init=True,
+            db_name=init_db_name,
         )
 
         cursor = conn.cursor()
         for db_name in settings.DATABASE_TO_CREATE:
-            if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
+            if (
+                db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}"
+            ):
                 dummy_registration_number = "aa123456789"
 
             sql = f"""ALTER DATABASE {db_name} OWNER TO {settings.ADMIN_LOGIN}"""
@@ -249,9 +280,7 @@ class DatabaseInitializerController:
             sql = f"""ALTER USER {settings.ADMIN_LOGIN} WITH PASSWORD '{settings.ADMIN_PASSWORD}'"""
             cursor.execute(sql)
 
-            sql = (
-                f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
-            )
+            sql = f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
             cursor.execute(sql)
 
         db_name = init_db_name
@@ -271,7 +300,6 @@ class DatabaseInitializerController:
                     cursor.execute(sql)
             except Exception:
                 pass
-
 
             sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
             cursor.execute(sql)
@@ -333,14 +361,16 @@ class DatabaseInitializerController:
         conn.close()
         return True
 
-
     def database_postinstall_alter_tables(self, db_name="projet12"):
         """
         Description:
         Dédiée à forcer la mise à jour de valeurs par défaut.
         """
         conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
+            f"{settings.ADMIN_LOGIN}",
+            f"{settings.ADMIN_PASSWORD}",
+            app_init=True,
+            db_name=db_name,
         )
         cursor = conn.cursor()
 

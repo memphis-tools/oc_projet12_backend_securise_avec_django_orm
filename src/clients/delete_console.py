@@ -3,7 +3,6 @@ Description:
 Client en mode console, dédié aux mises à jour pour suppression.
 """
 import sys
-from rich import print
 
 try:
     from src.languages import language_bridge
@@ -61,7 +60,9 @@ class ConsoleClientForDelete:
                 if client_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                )
                 return False
             client_lookup = None
         else:
@@ -73,7 +74,10 @@ class ConsoleClientForDelete:
             )
             return client_lookup.get_dict()
         except Exception:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_contract_id(self, custom_id=""):
@@ -89,7 +93,9 @@ class ConsoleClientForDelete:
                 if contract_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                )
                 return False
             contract_lookup = None
         else:
@@ -101,7 +107,10 @@ class ConsoleClientForDelete:
             )
             return contract_lookup.get_dict()
         except Exception:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_collaborator_id(self, custom_id=""):
@@ -117,7 +126,9 @@ class ConsoleClientForDelete:
                 if registration_number == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                )
                 return False
             collaborator_lookup = None
         else:
@@ -132,7 +143,10 @@ class ConsoleClientForDelete:
 
             return collaborator_lookup.id
         except Exception:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_company_id(self, custom_id=""):
@@ -148,7 +162,9 @@ class ConsoleClientForDelete:
                 if company_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                )
                 return False
             company_lookup = None
         else:
@@ -160,7 +176,10 @@ class ConsoleClientForDelete:
             )
             return company_lookup.get_dict()
         except Exception:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_department_id(self, custom_id=""):
@@ -176,7 +195,9 @@ class ConsoleClientForDelete:
                 if department_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                )
                 return False
             department_lookup = None
         else:
@@ -188,7 +209,10 @@ class ConsoleClientForDelete:
             )
             return department_lookup.get_dict()
         except Exception:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_event_id(self, custom_id=""):
@@ -204,7 +228,9 @@ class ConsoleClientForDelete:
                 if event_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                )
                 return False
             event_lookup = None
         else:
@@ -214,7 +240,10 @@ class ConsoleClientForDelete:
             event_lookup = self.app_view.get_events_view().get_event(event_id=event_id)
             return event_lookup.get_dict()
         except Exception:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     def ask_for_a_location_id(self, custom_id=""):
@@ -230,7 +259,9 @@ class ConsoleClientForDelete:
                 if location_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                )
                 return False
             location_lookup = None
         else:
@@ -257,7 +288,9 @@ class ConsoleClientForDelete:
                 if role_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message("info", self.app_dict.get_appli_dictionnary()['MISSING_CUSTOM_ID'])
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                )
                 return False
             role_lookup = None
         else:
@@ -267,7 +300,10 @@ class ConsoleClientForDelete:
             role_lookup = self.app_view.get_roles_view().get_role(role_id=role_id)
             return role_lookup.get_dict()
         except Exception:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             return False
 
     @utils.authentication_permission_decorator
@@ -277,7 +313,8 @@ class ConsoleClientForDelete:
         # demander mot de passe à utilisateur en cours
         # controler le mot de passe
         """
-        Description: vue dédiée à supprimer un client de l'entreprise.
+        Description:
+        Dédiée à supprimer un client de l'entreprise.
         """
         client_id = ""
         decoded_token = self.jwt_view.get_decoded_token()
@@ -295,22 +332,36 @@ class ConsoleClientForDelete:
                 client_id = self.ask_for_a_client_id()["id"]
             return self.delete_app_view.get_clients_view().delete_client(client_id)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
         except TypeError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CLIENT_RATTACHED_TO_CONTRACT'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CLIENT_RATTACHED_TO_CONTRACT"],
+            )
             raise exceptions.ForeignKeyDependyException("")
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
     def delete_collaborator(self, collaborator_custom_id=""):
         """
-        Description: vue dédiée à enregistrer un nouvel utilisateur /collaborateur de l'entreprise.
+        Description:
+        Dédiée à enregistrer un nouvel utilisateur /collaborateur de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -327,23 +378,39 @@ class ConsoleClientForDelete:
                 collaborator_id
             )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CLIENT_RATTACHED_TO_COLLABORATOR'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "CLIENT_RATTACHED_TO_COLLABORATOR"
+                ],
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
     def delete_company(self, company_custom_id=""):
         """
-        Description: vue dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
+        Description:
+        Dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -358,23 +425,37 @@ class ConsoleClientForDelete:
                 company_id = self.ask_for_a_company_id()["id"]
             return self.delete_app_view.get_companies_view().delete_company(company_id)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['COMPANY_RATTACHED_TO_CLIENT'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["COMPANY_RATTACHED_TO_CLIENT"],
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
     def delete_contract(self, contract_custom_id=""):
         """
-        Description: vue dédiée à enregistrer un contrat pour l'entreprise.
+        Description:
+        Dédiée à enregistrer un contrat pour l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -391,23 +472,37 @@ class ConsoleClientForDelete:
                 contract_id
             )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CONTRACT_RATTACHED_TO_EVENT'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CONTRACT_RATTACHED_TO_EVENT"],
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
     def delete_department(self, department_custom_id=""):
         """
-        Description: vue dédiée à enregistrer un nouveau départements /services de l'entreprise.
+        Description:
+        Dédiée à enregistrer un nouveau départements /services de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -427,23 +522,39 @@ class ConsoleClientForDelete:
                 department_id
             )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['DEPARTMENT_RATTACHED_TO_COLLABORATOR'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "DEPARTMENT_RATTACHED_TO_COLLABORATOR"
+                ],
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
     def delete_event(self, event_custom_id=""):
         """
-        Description: vue dédiée à enregistrer un évènement de l'entreprise.
+        Description:
+        Dédiée à enregistrer un évènement de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -458,20 +569,31 @@ class ConsoleClientForDelete:
                 event_id = self.ask_for_a_event_id()["id"]
             return self.delete_app_view.get_events_view().delete_event(event_id)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
     def delete_location(self, location_custom_id=""):
         """
-        Description: vue dédiée à enregistrer une localité.
+        Description:
+        Dédiée à enregistrer une localité.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -488,23 +610,37 @@ class ConsoleClientForDelete:
                 location_id
             )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['LOCATION_RATTACHED_TO_COMPANY'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["LOCATION_RATTACHED_TO_COMPANY"],
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
     def delete_role(self, role_custom_id=""):
         """
-        Description: vue dédiée à enregistrer un nouveau rôle pour les collaborateurs de l'entreprise.
+        Description:
+        Dédiée à enregistrer un nouveau rôle pour les collaborateurs de l'entreprise.
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
@@ -519,15 +655,28 @@ class ConsoleClientForDelete:
                 role_id = self.ask_for_a_role_id()["id"]
             return self.delete_app_view.get_roles_view().delete_role(role_id)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
+                ],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['ROLE_RATTACHED_TO_COLLABORATOR'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["ROLE_RATTACHED_TO_COLLABORATOR"],
+            )
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)

@@ -3,7 +3,6 @@ Description:
 Toutes les commandes pour obtenir des infos sur les formats ou données attendues.
 """
 import click
-from rich import print
 try:
     from src.printers import printer
     from src.languages import language_bridge
@@ -21,27 +20,31 @@ APP_DICT = language_bridge.LanguageBridge()
 def get_metiers():
     """
     Description:
-	Dédiée à récupérer les métiers attendus pour un client.
+        Dédiée à récupérer les métiers attendus pour un client.
     """
     try:
         console_client = InformationConsoleClient()
         console_client.display_info_data_medium_window_for_metiers()
     except FileNotFoundError as error:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_FILE'])
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()["MISSING_FILE"])
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
 def get_types_voies():
     """
     Description:
-	Dédiée à récupérer les types de voirs attendus pour une adresse.
+        Dédiée à récupérer les types de voirs attendus pour une adresse.
     """
     try:
         console_client = InformationConsoleClient()
         console_client.display_info_data_medium_window_for_complement_adresse()
     except FileNotFoundError as error:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_FILE'])
+        printer.print_message("error", APP_DICT.get_appli_dictionnary()["MISSING_FILE"])
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )

@@ -5,8 +5,9 @@ On laisse la possibilité à l'administrateur de changer la langue par défaut.
 """
 import os
 from os import path
-from jinja2 import Environment, FileSystemLoader
 import json
+from jinja2 import Environment, FileSystemLoader
+
 try:
     from src.printers import printer
     from src.settings import settings
@@ -15,7 +16,9 @@ except ModuleNotFoundError:
     from settings import settings
 
 
-FILENAME = f"src/languages/{settings.DEFAULT_COUNTRY_SHORT}/application_dictionnary.json"
+FILENAME = (
+    f"src/languages/{settings.DEFAULT_COUNTRY_SHORT}/application_dictionnary.json"
+)
 
 
 class LanguageBridge:
@@ -27,16 +30,16 @@ class LanguageBridge:
     Le fichier généré, par exemple : 'src/languages/fr/application_dictionnary.json'.
     Il n'est crée qu'à l'initialisation de l'appli.
     """
+
     def __init__(self):
         try:
             if os.path.isfile(FILENAME) and path.getsize(FILENAME) <= 2:
                 self.generate_env_messages()
             else:
-                with open(FILENAME, mode="r", encoding="utf-8") as fd:
-                    self.dictionary = json.loads(fd.read())
+                with open(FILENAME, mode="r", encoding="utf-8") as file_descriptor:
+                    self.dictionary = json.loads(file_descriptor.read())
         except FileNotFoundError:
             self.generate_env_messages()
-
 
     def generate_env_messages(self):
         """
@@ -46,13 +49,20 @@ class LanguageBridge:
         try:
             jinja_env = Environment(loader=FileSystemLoader("src/languages/templates/"))
             template = jinja_env.get_template("language.j2")
-            content = template.render(settings.get_settings_referenced_in_languages_files()[0])
-            with open(FILENAME, mode="w", encoding="utf-8") as fd:
-                fd.write(content)
-            with open(FILENAME, mode="r", encoding="utf-8") as fd:
-                self.dictionary = json.loads(fd.read())
+            content = template.render(
+                settings.get_settings_referenced_in_languages_files()[0]
+            )
+            with open(FILENAME, mode="w", encoding="utf-8") as file_descriptor:
+                file_descriptor.write(content)
+            with open(FILENAME, mode="r", encoding="utf-8") as file_descriptor:
+                self.dictionary = json.loads(file_descriptor.read())
         except Exception:
-            printer.print_message("error", 'ENV_MESSAGES_GENERATION_ERROR')
+            printer.print_message("error", "ENV_MESSAGES_GENERATION_ERROR")
 
     def get_appli_dictionnary(self):
+        """
+        Description:
+        Un getter explicite pour obtenir le dictionnaire des messages à indiquer à l'utilisateur.
+        Le dictionnaire a une structure type clef "libellé message", et en valeur, "contenu message".
+        """
         return self.dictionary

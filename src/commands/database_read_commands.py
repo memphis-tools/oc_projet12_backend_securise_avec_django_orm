@@ -46,14 +46,16 @@ click.Context.formatter_class = ApplicationHelpFormatter
 def get_clients(args):
     """
     Description:
-	Dédiée à récupérer les clients de l'entreprise.
+    Dédiée à récupérer les clients de l'entreprise.
     """
     user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
         console_client.get_clients(user_query_filters_args)
-    except Exception as error:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+    except Exception:
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -65,14 +67,16 @@ def get_clients(args):
 def get_collaborators(args):
     """
     Description:
-	Dédiée à récupérer les utilisateurs /collaborateurs de l'entreprise.
+    Dédiée à récupérer les utilisateurs /collaborateurs de l'entreprise.
     """
     user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
         console_client.get_collaborators(user_query_filters_args)
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -84,14 +88,16 @@ def get_collaborators(args):
 def get_companies(args):
     """
     Description:
-	Dédiée à récupérer les entreprises clientes.
+    Dédiée à récupérer les entreprises clientes.
     """
     user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
         console_client.get_companies(user_query_filters_args)
-    except Exception as error:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+    except Exception:
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -104,7 +110,7 @@ def get_contracts(args):
     """
     [bold cyan]Description:[/bold cyan]
 
-	Dédiée à récupérer les contrats de l'entreprise.
+    Dédiée à récupérer les contrats de l'entreprise.
     En l'absence d'arguments, l'ensemble des contrats est renvoyé.
 
     [bold cyan]Arguments:[/bold cyan]
@@ -123,8 +129,10 @@ def get_contracts(args):
     try:
         console_client = ConsoleClientForRead()
         console_client.get_contracts(user_query_filters_args)
-    except Exception as error:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+    except Exception:
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -136,14 +144,16 @@ def get_contracts(args):
 def get_departments(args):
     """
     Description:
-	Dédiée à récupérer les départements /services de l'entreprise.
+    Dédiée à récupérer les départements /services de l'entreprise.
     """
     user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
         console_client.get_departments(user_query_filters_args)
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -156,7 +166,7 @@ def get_events(args):
     """
     [bold cyan]Description:[/bold cyan]
 
-	Dédiée à récupérer les évènements organisés par l'entreprise.
+    Dédiée à récupérer les évènements organisés par l'entreprise.
     En l'absence d'arguments, l'ensemble des contrats est renvoyé.
 
     [bold cyan]Arguments:[/bold cyan]
@@ -177,8 +187,10 @@ def get_events(args):
     try:
         console_client = ConsoleClientForRead()
         console_client.get_events(user_query_filters_args)
-    except Exception as error:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+    except Exception:
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -190,14 +202,16 @@ def get_events(args):
 def get_locations(args):
     """
     Description:
-	Dédiée à récupérer les localisations des évènements.
+    Dédiée à récupérer les localisations des évènements.
     """
     user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
         console_client.get_locations(user_query_filters_args)
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -209,11 +223,13 @@ def get_locations(args):
 def get_roles(args):
     """
     Description:
-	Dédiée à récupérer les roles des utilisateurs /collaborateurs de l'entreprise.
+    Dédiée à récupérer les roles des utilisateurs /collaborateurs de l'entreprise.
     """
     user_query_filters_args = args
     try:
         console_client = ConsoleClientForRead()
         console_client.get_roles(user_query_filters_args)
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )

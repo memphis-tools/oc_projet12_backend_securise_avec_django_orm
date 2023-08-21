@@ -31,4 +31,6 @@ class InitAppViews:
         Description:
         (...)
         """
-        return self.init_controller.read_a_csv_file_and_return_data_as_json(csv_filename)
+        return self.init_controller.read_a_csv_file_and_return_data_as_json(
+            csv_filename
+        )

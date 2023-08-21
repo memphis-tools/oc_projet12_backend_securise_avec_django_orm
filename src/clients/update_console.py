@@ -3,7 +3,6 @@ Description:
 Client en mode console, dédié aux mises à jour.
 """
 import sys
-from rich import print
 
 try:
     from src.languages import language_bridge
@@ -74,11 +73,16 @@ class ConsoleClientForUpdate:
         except exceptions.CommercialCollaboratorIsNotAssignedToClient:
             raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
         except TypeError:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -99,10 +103,15 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -119,7 +128,9 @@ class ConsoleClientForUpdate:
         decoded_token = self.jwt_view.get_decoded_token()
         user_registration_number = str(decoded_token["registration_number"])
         if old_password == "" or new_password == "":
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['MISSING_PASSWORD'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["MISSING_PASSWORD"]
+            )
             raise exceptions.MissingUpdateParamException()
         try:
             if not bool(
@@ -133,13 +144,25 @@ class ConsoleClientForUpdate:
             )
 
         except exceptions.OldPasswordNotValidException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['OLD_PASSWORD_NOT_MATCH'])
+            printer.print_message(
+                "info", self.app_dict.get_appli_dictionnary()["OLD_PASSWORD_NOT_MATCH"]
+            )
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectMinSpecialCharsException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['NEW_PASSWORD_NOT_MATCH_SPECIAL_CHARS'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()[
+                    "NEW_PASSWORD_NOT_MATCH_SPECIAL_CHARS"
+                ],
+            )
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectForbiddenSpecialCharsException:
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['NEW_PASSWORD_NOT_MATCH_FORBIDEN_CHARS'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()[
+                    "NEW_PASSWORD_NOT_MATCH_FORBIDEN_CHARS"
+                ],
+            )
             sys.exit(0)
         return (
             self.update_app_view.get_collaborators_view().update_collaborator_password(
@@ -165,10 +188,15 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -193,10 +221,15 @@ class ConsoleClientForUpdate:
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
         except TypeError:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -217,10 +250,15 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -248,14 +286,24 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()[
+                    "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+                ],
+            )
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except TypeError:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -276,10 +324,15 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -300,8 +353,13 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+            printer.print_message(
+                "error",
+                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
+            )
             sys.exit(0)
         except Exception:
-            printer.print_message("error", self.app_dict.get_appli_dictionnary()['APPLICATION_ERROR'])
+            printer.print_message(
+                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            )
             sys.exit(0)

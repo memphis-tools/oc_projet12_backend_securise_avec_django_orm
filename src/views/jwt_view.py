@@ -9,13 +9,12 @@ try:
     from src.controllers.jwt_controller import JwtController
     from src.languages import language_bridge
     from src.printers import printer
-    from src.models import models
 except ModuleNotFoundError:
     from exceptions import exceptions
     from controllers.jwt_controller import JwtController
     from languages import language_bridge
     from printers import printer
-    from models import models
+
 
 class JwtView:
     """
@@ -47,9 +46,24 @@ class JwtView:
             r_number = registration_number
             u_name = collaborator_username
             department = collaborator_department_name
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['TOKEN_INFO_IN_TERMINAL_OUTPUT_1'])
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['TOKEN_INFO_IN_TERMINAL_OUTPUT_2'])
-            printer.print_message("info", self.app_dict.get_appli_dictionnary()['TOKEN_INFO_IN_TERMINAL_OUTPUT_3'])
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()[
+                    "TOKEN_INFO_IN_TERMINAL_OUTPUT_1"
+                ],
+            )
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()[
+                    "TOKEN_INFO_IN_TERMINAL_OUTPUT_2"
+                ],
+            )
+            printer.print_message(
+                "info",
+                self.app_dict.get_appli_dictionnary()[
+                    "TOKEN_INFO_IN_TERMINAL_OUTPUT_3"
+                ],
+            )
             to_do = f"OC_12_JWT='{self.jwt_controller.get_token(r_number, u_name, department)}'"
             print(to_do)
             return

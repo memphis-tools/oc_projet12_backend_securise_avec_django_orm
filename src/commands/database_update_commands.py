@@ -34,7 +34,9 @@ def check_if_partial_dict_valid(partial_dict):
             validators.is_adresse_valid("adresse lambda")
             eval(f"validators.is_{key}_valid")(value)
         except Exception:
-            printer.print_message("error", APP_DICT.get_appli_dictionnary()['VALUE_UNEXPECTED'])
+            printer.print_message(
+                "error", APP_DICT.get_appli_dictionnary()["VALUE_UNEXPECTED"]
+            )
             break
     return True
 
@@ -49,7 +51,7 @@ def check_if_partial_dict_valid(partial_dict):
 def update_client(client_id, args):
     """
     Description:
-	Dédiée à mettre à jour un client de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
+    Dédiée à mettre à jour un client de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
     civility: expected 'MR, MME, MLE, AUTRE'\n
     first_name\n
     last_name\n
@@ -83,17 +85,34 @@ def update_client(client_id, args):
         console_client_return = ConsoleClientForUpdate().update_client(client_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
+        )
     except exceptions.ForeignKeyDependyException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"],
+        )
     except NameError as error:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['CUSTOM_ID_MATCHES_NOTHING'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+        )
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+            ],
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -106,7 +125,7 @@ def update_client(client_id, args):
 def update_collaborator(registration_number, args):
     """
     Description:
-	Dédiée à mettre à jour un collaborateur de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
+    Dédiée à mettre à jour un collaborateur de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
     username\n
     department\n
     role\n
@@ -127,31 +146,50 @@ def update_collaborator(registration_number, args):
         )
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
+        )
     except exceptions.ForeignKeyDependyException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_COLLABORATOR_CAN_NOT_BE_DROP'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["FOREIGNKEY_COLLABORATOR_CAN_NOT_BE_DROP"],
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
 def update_collaborator_password():
     """
     Description:
-	Dédiée à mettre à jour le mot de passe d'un collaborateur de l'entreprise.
+    Dédiée à mettre à jour le mot de passe d'un collaborateur de l'entreprise.
     """
     try:
         console_client = ConsoleClientForUpdate()
         if console_client.update_collaborator_password():
-            printer.print_message("success", APP_DICT.get_appli_dictionnary()['PASSWORD_UPDATED'])
+            printer.print_message(
+                "success", APP_DICT.get_appli_dictionnary()["PASSWORD_UPDATED"]
+            )
     except exceptions.NewPasswordIsNotValidException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['NEW_PASSWORD_INVALID'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["NEW_PASSWORD_INVALID"]
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -164,7 +202,7 @@ def update_collaborator_password():
 def update_company(company_id, args):
     """
     Description:
-	Dédiée à mettre à jour une entreprise avec 1 ou plusieurs options ci-dessous:\n
+    Dédiée à mettre à jour une entreprise avec 1 ou plusieurs options ci-dessous:\n
     company_name\n
     company_registration_number\n
     company_subregistration_number\n
@@ -193,13 +231,23 @@ def update_company(company_id, args):
         console_client_return = ConsoleClientForUpdate().update_company(company_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
+        )
     except exceptions.ForeignKeyDependyException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_COMPANY_CAN_NOT_BE_DROP'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["FOREIGNKEY_COMPANY_CAN_NOT_BE_DROP"],
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -212,7 +260,7 @@ def update_company(company_id, args):
 def update_contract(contract_id, args):
     """
     Description:
-	Dédiée à mettre à jour un contrat de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
+    Dédiée à mettre à jour un contrat de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
     full_amount_to_pay\n
     remain_amount_to_pay\n
     creation_date\n
@@ -249,15 +297,30 @@ def update_contract(contract_id, args):
         console_client_return = ConsoleClientForUpdate().update_contract(contract_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
+        )
     except exceptions.ForeignKeyDependyException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_CONTRACT_CAN_NOT_BE_DROP'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CONTRACT_CAN_NOT_BE_DROP"],
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ],
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -270,7 +333,7 @@ def update_contract(contract_id, args):
 def update_department(department_id, args):
     """
     Description:
-	Dédiée à mettre à jour un département /service de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
+    Dédiée à mettre à jour un département /service de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
     name\n
     Exemple usage:
     'oc12_update_department --department_id zz94 name="La boucle sur yvette"
@@ -289,13 +352,23 @@ def update_department(department_id, args):
         )
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except exceptions.ForeignKeyDependyException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_DEPARTMENT_CAN_NOT_BE_DROP'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["FOREIGNKEY_DEPARTMENT_CAN_NOT_BE_DROP"],
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -308,7 +381,7 @@ def update_department(department_id, args):
 def update_event(event_id, args):
     """
     Description:
-	Dédiée à mettre à jour un évènement avec 1 ou plusieurs options ci-dessous:\n
+    Dédiée à mettre à jour un évènement avec 1 ou plusieurs options ci-dessous:\n
     title\n
     contract_id: expected is custom id you set (free chars string)\n
     client_id: expected is custom id you set (free chars string)\n
@@ -364,13 +437,23 @@ def update_event(event_id, args):
         console_client_return = ConsoleClientForUpdate().update_event(event_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except exceptions.ForeignKeyDependyException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_EVENT_CAN_NOT_BE_DROP'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["FOREIGNKEY_EVENT_CAN_NOT_BE_DROP"],
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -383,7 +466,7 @@ def update_event(event_id, args):
 def update_location(location_id, args):
     """
     Description:
-	Dédiée à mettre à jour une localité avec 1 ou plusieurs options ci-dessous:\n
+    Dédiée à mettre à jour une localité avec 1 ou plusieurs options ci-dessous:\n
     adresse\n
     complement_adresse\n
     code_postal\n
@@ -404,13 +487,23 @@ def update_location(location_id, args):
         console_client_return = ConsoleClientForUpdate().update_location(location_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except exceptions.ForeignKeyDependyException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_LOCATION_CAN_NOT_BE_DROP'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["FOREIGNKEY_LOCATION_CAN_NOT_BE_DROP"],
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
 
 
 @click.command
@@ -423,7 +516,7 @@ def update_location(location_id, args):
 def update_role(role_id, args):
     """
     Description:
-	Dédiée à mettre à jour un roles pour les collaborateurs de l'entreprise
+    Dédiée à mettre à jour un roles pour les collaborateurs de l'entreprise
     avec 1 ou plusieurs options ci-dessous:\n
     name\n
     Exemple usage:
@@ -441,10 +534,19 @@ def update_role(role_id, args):
         console_client_return = ConsoleClientForUpdate().update_role(role_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_PARAMETER'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
+        )
     except exceptions.InsufficientPrivilegeException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['INSUFFICIENT_PRIVILEGES_EXCEPTION'])
+        printer.print_message(
+            "error",
+            APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
+        )
     except exceptions.ForeignKeyDependyException:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['FOREIGNKEY_ROLE_CAN_NOT_BE_DROP'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["FOREIGNKEY_ROLE_CAN_NOT_BE_DROP"]
+        )
     except Exception:
-        printer.print_message("error", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )

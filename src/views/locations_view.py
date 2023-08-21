@@ -39,11 +39,22 @@ class LocationsView:
                 if len(db_model_queryset) > 0:
                     table = utils.set_a_click_table_from_data("lieu", db_model_queryset)
                     console.print(table)
-                    printer.print_message("info", self.app_dict.get_appli_dictionnary()['NO_MORE_LOCATION'])
+                    printer.print_message(
+                        "info",
+                        self.app_dict.get_appli_dictionnary()["NO_MORE_LOCATION"],
+                    )
                 else:
-                    printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
+                    printer.print_message(
+                        "error",
+                        self.app_dict.get_appli_dictionnary()[
+                            "DATABASE_QUERY_NO_MATCHES"
+                        ],
+                    )
             except Exception as error:
-                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_FAILURE'])
+                printer.print_message(
+                    "error",
+                    self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"],
+                )
         else:
             db_model_queryset = self.db_controller.get_locations(self.session)
             if len(db_model_queryset) > 0:
@@ -51,7 +62,10 @@ class LocationsView:
                 console.print(table)
                 print("Aucun autres localités")
             else:
-                printer.print_message("error", self.app_dict.get_appli_dictionnary()['DATABASE_QUERY_NO_MATCHES'])
+                printer.print_message(
+                    "error",
+                    self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
+                )
         return self.db_controller.get_locations(self.session)
 
     def get_location(self, location_id):

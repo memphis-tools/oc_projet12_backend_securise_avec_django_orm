@@ -8,14 +8,12 @@ try:
     )
     from src.controllers.database_read_controller import DatabaseReadController
     from src.settings import settings
-    from src.utils import utils
 except ModuleNotFoundError:
     from controllers.database_initializer_controller import (
         DatabaseInitializerController,
     )
     from controllers.database_read_controller import DatabaseReadController
     from settings import settings
-    from utils import utils
 
 
 class AuthenticationView:

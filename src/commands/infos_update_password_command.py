@@ -3,7 +3,6 @@ Description:
 Toutes les commandes pour obtenir des infos sur les formats ou donnés attendues.
 """
 import click
-from rich import print
 
 try:
     from src.printers import printer
@@ -28,4 +27,6 @@ def get_password_policy():
         console_client = InformationConsoleClient()
         console_client.display_info_password_policy()
     except Exception as error:
-        printer.print_message("success", APP_DICT.get_appli_dictionnary()['MISSING_TOKEN_ERROR'])
+        printer.print_message(
+            "success", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        )
