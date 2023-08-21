@@ -68,16 +68,19 @@ def set_a_company_custom_id(nom_raison_sociale, siren, siret, date_debut_activit
     return build_custom_id
 
 
-def set_database_to_get_based_on_user_path(db_name=""):
-    try:
-        if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
-            db_name = f"{settings.DEV_DATABASE_NAME}"
-        elif os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "TEST":
-            db_name = f"{settings.TEST_DATABASE_NAME}"
-        else:
-            db_name = f"{settings.DATABASE_NAME}"
-    except KeyError:
-        pass
+def set_database_to_get_based_on_user_path(app_init=False, db_name=""):
+    if not app_init:
+        try:
+            if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
+                db_name = f"{settings.DEV_DATABASE_NAME}"
+            elif os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "TEST":
+                db_name = f"{settings.TEST_DATABASE_NAME}"
+            else:
+                db_name = f"{settings.DATABASE_NAME}"
+        except KeyError as error:
+            pass
+    else:
+        db_name = db_name
     return db_name
 
 
@@ -89,6 +92,7 @@ def recall_which_running_env_in_use():
             return "TEST"
     except KeyError:
         pass
+    print(f"recall_which_running_env_in_use DEBUG TIME return 'PROD' ")
     return "PROD"
 
 
@@ -278,14 +282,13 @@ def check_password_hash_from_input(db_user_password, password):
 
 
 def get_a_database_connection(
-    user_name="", user_pwd="", db_name=f"{settings.DATABASE_NAME}"
+    user_name="", user_pwd="", app_init=False, db_name=f"{settings.DATABASE_NAME}"
 ):
     """
     Description:
     Dédiée à obtenir un curseur pour interragir avec le SGBD.
     """
-    # print(f"UTILS sir, get_a_database_connection WORK ON db_name == {db_name}")
-    db_name = set_database_to_get_based_on_user_path(db_name)
+    db_name = set_database_to_get_based_on_user_path(app_init, db_name)
     if user_name != "" and user_pwd != "":
         user = user_name
         password = user_pwd
