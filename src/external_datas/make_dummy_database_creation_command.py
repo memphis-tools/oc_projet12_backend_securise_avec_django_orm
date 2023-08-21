@@ -129,7 +129,7 @@ def dummy_database_creation(db_name="projet12"):
         except Exception:
             continue
 
-    # 2 localisations en exemple pour 2 entreprises
+    # 3 localisations en exemple pour 3 entreprises
     sql = """
     INSERT INTO location
     (location_id, adresse, complement_adresse, code_postal, ville, region, pays, creation_date)
@@ -145,24 +145,39 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    # 2 entreprises en exemple
+    sql = """
+    INSERT INTO location
+    (location_id, adresse, complement_adresse, code_postal, ville, region, pays, creation_date)
+    VALUES
+    ('PARRV751', 'Place de la Nation', 'Rue du rendez-vous', '75011', 'Paris', 'Ile de France', 'France', '2020-01-19 15:42:30')
+    """
+    cursor.execute(sql)
+
+    # 3 entreprises en exemple
     sql = """
     INSERT INTO company
     (company_id, company_name, tranche_effectif_salarie, company_registration_number,
      company_subregistration_number, location_id, creation_date, date_debut_activite)
     VALUES
-    ('CSLLC12345', 'Cool Startup LLC', '+50', '777222888', '12345', '1', '2023-08-03 08:35:14', '2023-02-14 15:34:58')
+    ('CSLLC12345', 'Cool Startup LLC', '+50', '999222888', '12345', '1', '2023-08-03 08:35:14', '2023-02-14 15:34:58')
     """
     cursor.execute(sql)
     sql = """
     INSERT INTO company
     (company_id, company_name, tranche_effectif_salarie, company_registration_number,
      company_subregistration_number, location_id, creation_date, date_debut_activite)
-    VALUES ('NFEPG12345', 'Nantes Free Escape Games', '-10', '865333888', '44888', '2', '2019-07-09 14:10:20', '2019-03-25 10:24:08')
+    VALUES ('NFEPG12345', 'Nantes Free Escape Games', '-50', '999333888', '44888', '2', '2019-07-09 14:10:20', '2019-03-25 10:24:08')
+    """
+    cursor.execute(sql)
+    sql = """
+    INSERT INTO company
+    (company_id, company_name, tranche_effectif_salarie, company_registration_number,
+     company_subregistration_number, location_id, creation_date, date_debut_activite)
+    VALUES ('SCOU3541', 'The Mystery Machine', '-10', '999686686', '86868', '2', '2021-09-12 10:15:32', '2021-12-25 20:44:03')
     """
     cursor.execute(sql)
 
-    # 2 clients en exemples
+    # 6 clients en exemples
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email,
@@ -172,6 +187,7 @@ def dummy_database_creation(db_name="projet12"):
     'kevin@startup.io', '067812345678', '1', '2', '2021-12-25 19:40:06')
     """
     cursor.execute(sql)
+
     sql = """
     INSERT INTO client
     (client_id, civility, first_name, last_name, employee_role, email,
@@ -182,19 +198,61 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    # 3 contrats en exemples
+    sql = """
+    INSERT INTO client
+    (client_id, civility, first_name, last_name, employee_role, email,
+     telephone, company_id, commercial_contact, creation_date)
+    VALUES
+    ('SRODAP37', 'MR', 'Sammy', 'Rodgers', 'Assistant',
+     'sammy.rodgers@tmmachine.xe', '0615684937', '3', '1', '2020-02-19 12:10:40')
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO client
+    (client_id, civility, first_name, last_name, employee_role, email,
+     telephone, company_id, commercial_contact, creation_date)
+    VALUES
+    ('FJONIC35', 'MR', 'Fred', 'Jones', 'Ingénieur cloud computing',
+     'fred.jones@tmmachine.xe', '0699248635', '3', '2', '2020-02-19 12:10:40')
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO client
+    (client_id, civility, first_name, last_name, employee_role, email,
+     telephone, company_id, commercial_contact, creation_date)
+    VALUES
+    ('DBLATT85', 'MLE', 'Daphné', 'Blake', 'Ingénieur cloud computing',
+     'daphné.blake@tmmachine.xe', '0671426385', '3', '1', '2020-02-19 12:10:40')
+    """
+    cursor.execute(sql)
+    
+    sql = """
+    INSERT INTO client
+    (client_id, civility, first_name, last_name, employee_role, email,
+     telephone, company_id, commercial_contact, creation_date)
+    VALUES
+    ('VDINPR25', 'MLE', 'Velma', 'Dinkley', 'Présentatrice radio',
+     'velma.dinkley@tmmachine.xe', '0695368525', '3', '2', '2020-02-19 12:10:40')
+    """
+    cursor.execute(sql)
+
+    # 7 contrats en exemples
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
     VALUES('kc555', '999.99', '999.99', 'unsigned', '1', '1', '2023-06-03 08:35:25')
     """
     cursor.execute(sql)
+
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
     VALUES('ff555', '444.55', '20.99', 'signed', '1', '2', '2022-01-16 10:40:14')
     """
     cursor.execute(sql)
+
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
@@ -202,7 +260,39 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    # 2 localisations en exemple pour 2 évènement
+    sql = """
+    INSERT INTO contract
+    (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
+    VALUES
+    ('av123', '155.60', '0', 'signed', '3', '1','2020-06-02 10:40:14')
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO contract
+    (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
+    VALUES
+    ('aw231', '255.60', '0', 'signed', '4', '2','2020-06-22 11:40:14')
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO contract
+    (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
+    VALUES
+    ('ax312', '355.60', '0', 'signed', '5', '1','2020-07-12 12:00:00')
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO contract
+    (contract_id, full_amount_to_pay, remain_amount_to_pay, status, client_id, collaborator_id, creation_date)
+    VALUES
+    ('ay312', '455.60', '0', 'signed', '6', '2','2020-07-22 16:30:00')
+    """
+    cursor.execute(sql)
+
+    # 2 localisations en exemple supplémentaires les 2 premiers évènements ci-dessous
     sql = """
     INSERT INTO location(location_id, adresse, complement_adresse, code_postal, ville, region, pays, creation_date)
     VALUES
@@ -216,7 +306,7 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    # 3 évènements en exemple
+    # 7 évènements en exemple
     sql = """
     INSERT INTO event(
         event_id,
@@ -304,5 +394,118 @@ def dummy_database_creation(db_name="projet12"):
     )
     """
     cursor.execute(sql)
+
+    sql = """
+    INSERT INTO event(
+        event_id,
+        creation_date,
+        title,
+        contract_id,
+        client_id,
+        event_start_date,
+        event_end_date,
+        location_id,
+        attendees,
+        notes
+    )
+    VALUES(
+        'evav123',
+        '2020-07-31 15:35:22',
+        'Summer Bootstrap',
+        '4',
+        '3',
+        '2020-08-09 16:00',
+        '2020-08-09 22:00',
+        '3',
+        '100',
+        'bla bla bla penser à la musique.'
+    )
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO event(
+        event_id,
+        creation_date,
+        title,
+        contract_id,
+        client_id,
+        event_start_date,
+        event_end_date,
+        location_id,
+        attendees,
+        notes
+    )
+    VALUES(
+        'zawx235',
+        '2020-07-31 15:45:22',
+        'Summer Javascript',
+        '5',
+        '4',
+        '2020-08-15 17:00',
+        '2020-08-15 23:00',
+        '3',
+        '150',
+        'bla bla bla penser à la corbeille de fruits.'
+    )
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO event(
+        event_id,
+        creation_date,
+        title,
+        contract_id,
+        client_id,
+        event_start_date,
+        event_end_date,
+        location_id,
+        attendees,
+        notes
+    )
+    VALUES(
+        'dkap520',
+        '2021-03-15 10:45:22',
+        'Summer OWASP',
+        '6',
+        '5',
+        '2021-05-23 09:00',
+        '2021-05-24 23:00',
+        '3',
+        '50',
+        'bla bla bla penser aux équipements supplémentaires non prévus (ou couverts).'
+    )
+    """
+    cursor.execute(sql)
+
+    sql = """
+    INSERT INTO event(
+        event_id,
+        creation_date,
+        title,
+        contract_id,
+        client_id,
+        event_start_date,
+        event_end_date,
+        location_id,
+        attendees,
+        notes
+    )
+    VALUES(
+        'ay322',
+        '2022-02-23 09:25:22',
+        'Summer Python',
+        '7',
+        '6',
+        '2022-07-23 09:00',
+        '2022-07-23 23:00',
+        '3',
+        '100',
+        'bla bla bla penser aux thermos.'
+    )
+    """
+    cursor.execute(sql)
+
     conn.commit()
     conn.close()
