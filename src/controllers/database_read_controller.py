@@ -124,7 +124,6 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Collaborator.
         """
         db_collaborators = session.query(models.Collaborator).all()
-
         return db_collaborators
 
     def get_company(self, session, company_id):

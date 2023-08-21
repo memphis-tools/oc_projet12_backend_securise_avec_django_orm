@@ -233,9 +233,11 @@ class DatabaseInitializerController:
         Description:
         Dédiée à mettre à jour la base de données après une création initiale.
         """
+        init_db_name = db_name
         conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
+            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=init_db_name
         )
+
         cursor = conn.cursor()
         for db_name in settings.DATABASE_TO_CREATE:
             if db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}":
@@ -251,6 +253,8 @@ class DatabaseInitializerController:
                 f"""GRANT ALL PRIVILEGES ON DATABASE {db_name} TO {settings.ADMIN_LOGIN}"""
             )
             cursor.execute(sql)
+
+        db_name = init_db_name
 
         for role in [
             ("oc12_commercial", f"{settings.OC12_COMMERCIAL_PWD}"),
@@ -268,6 +272,7 @@ class DatabaseInitializerController:
             except Exception:
                 pass
 
+
             sql = f"""GRANT CONNECT ON DATABASE {db_name} TO {role[0]}"""
             cursor.execute(sql)
 
@@ -283,6 +288,7 @@ class DatabaseInitializerController:
             ]:
                 sql = f"""GRANT SELECT ON {model} TO {role[0]}"""
                 cursor.execute(sql)
+            conn.commit()
 
         oc12_commercial_allowed_tables = [
             "client",
@@ -321,8 +327,7 @@ class DatabaseInitializerController:
             sql = f"""GRANT USAGE ON SEQUENCE event_id_seq TO {service}"""
             cursor.execute(sql)
 
-        self.database_postinstall_task_for_test_db(f"{settings.TEST_DATABASE_NAME}")
-        self.database_postinstall_task_for_test_db(f"{settings.DEV_DATABASE_NAME}")
+        self.database_postinstall_task_for_test_db(db_name)
 
         conn.commit()
         conn.close()
