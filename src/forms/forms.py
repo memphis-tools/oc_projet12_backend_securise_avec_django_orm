@@ -14,7 +14,7 @@ try:
     from src.controllers import infos_data_controller
     from src.languages import language_bridge
     from src.external_datas.make_external_api_call_for_ville_based_on_code_postal import (
-        get_town_name_from_insee_open_api,
+        get_town_name_region_name_and_population_from_insee_open_api,
     )
     from src.printers import printer
     from src.settings import settings
@@ -23,7 +23,7 @@ except ModuleNotFoundError:
     from controllers import infos_data_controller
     from languages import language_bridge
     from external_datas.make_external_api_call_for_ville_based_on_code_postal import (
-        get_town_name_from_insee_open_api,
+        get_town_name_region_name_and_population_from_insee_open_api,
     )
     from printers import printer
     from settings import settings
@@ -59,7 +59,7 @@ def search_and_submit_a_town_name(code_postal):
     A partir du code postal saisi on propose de retenir le nom de ville trouvé.
     Si ville trouvée alors on connait le nom et on peut retenir le pays comme étant la France (par exemple).
     """
-    town_name, region_name, population = get_town_name_from_insee_open_api(code_postal)
+    town_name, region_name, population = get_town_name_region_name_and_population_from_insee_open_api(code_postal)
     return (town_name, region_name, population)
 
 

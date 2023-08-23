@@ -14,6 +14,9 @@ try:
     from src.external_datas.make_external_api_call_for_region_based_on_int_code import (
         get_region_name_from_insee_open_api,
     )
+    from src.external_datas.make_external_api_call_for_ville_based_on_code_postal import (
+        get_population_from_insee_open_api,
+    )
 except ModuleNotFoundError:
     from controllers import database_initializer_controller
     from models import models
@@ -21,6 +24,9 @@ except ModuleNotFoundError:
     from utils import utils
     from external_datas.make_external_api_call_for_region_based_on_int_code import (
         get_region_name_from_insee_open_api,
+    )
+    from external_datas.make_external_api_call_for_ville_based_on_code_postal import (
+        get_population_from_insee_open_api,
     )
 
 
@@ -100,14 +106,12 @@ class CsvFilesInitController:
         }
         # on parcourt un dictionnaire type {"siren1":{entreprise1}, "siren2":{entreprise2}, ...}
         temp_insee_dict = {}
-
         new_company_dict = {}
         new_location_dict = {}
         new_location_dict["pays"] = "France"
+        population = ""
         for k, v in api_data.items():
             if k in location_attributes_from_api_list:
-                if k == "population":
-                    print(f"SIR DEBUG WE FOUND population == {population}")
                 if k == "region":
                     # l'API nous aura renvoyé une région avec un entier (v est içi un id, un entier)
                     if v in temp_insee_dict.keys():
@@ -119,6 +123,7 @@ class CsvFilesInitController:
                         temp_insee_dict[v] = region_name
                 elif k == "code_postal":
                     new_location_dict[k] = int(v)
+                    new_location_dict["population"] = get_population_from_insee_open_api(v)
                 elif k == "commune":
                     new_location_dict["ville"] = v
                 elif k == "cedex":
@@ -228,7 +233,7 @@ class CsvFilesInitController:
 
             session_on_dev_db.close()
             session_on_test_db.close()
-        except Exception as error:
+        except Exception:
             session_on_dev_db.close()
             session_on_test_db.close()
 
