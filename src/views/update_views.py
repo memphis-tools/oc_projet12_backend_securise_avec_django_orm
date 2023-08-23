@@ -47,9 +47,9 @@ class UpdateAppViews:
         Description:
         Vue dédiée à instancier la base de données et retourner un controleur pour la mise à jour.
         """
-        db_name = utils.set_database_to_get_based_on_user_path(db_name)
+        db_name = utils.set_database_to_get_based_on_user_path(db_name=db_name)
         self.db_controller = DatabaseUpdateController()
-        self.db_initializer = DatabaseInitializerController(db_name)
+        self.db_initializer = DatabaseInitializerController(db_name=db_name)
         self.jwt_view = JwtView(self)
         decoded_token = self.jwt_view.get_decoded_token()
         # il faut charger le token de l'utilisateur, le décoder et le transmettre en clair

@@ -19,7 +19,7 @@ def generate_companies_file():
     api_max_page = settings.FR_COMPANIES_API_MAX_PAGE_TO_PARSE
     api_url = settings.FR_COMPANIES_API_URL
     api_max_per_page = settings.FR_COMPANIES_API_MAX_COMPANIES_PER_PAGE
-    api_departements_string_list = FR_COMPANIES_DEPARTEMENTS_STRING_LIST = "94,44,13"
+    api_departements_string_list = settings.FR_COMPANIES_DEPARTEMENTS_STRING_LIST
     for page_number in range(api_max_page):
         url = f"{api_url}?departement={api_departements_string_list}&page={page_number+1}&per_page={api_max_per_page}"
         headers = {"Content-Type": "application/json; charset=utf-8"}

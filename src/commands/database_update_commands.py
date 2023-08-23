@@ -208,9 +208,9 @@ def update_company(company_id, args):
     company_subregistration_number\n
     location_id: expected is custom id you set (free chars string)\n
     Exemple usage:
-    'oc12_update_company --company_id mtcx55124 company_subregistration_number="77785"
+    oc12_update_company --company_id mtcx55124 company_subregistration_number='77785'
     """
-    company_dict = {company_id}
+    company_dict = {}
     try:
         company_dict["company_id"] = f"{company_id}"
         for arg in args:
@@ -244,7 +244,9 @@ def update_company(company_id, args):
             "error",
             APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"],
         )
-    except Exception:
+    except Exception as error:
+        print("ECHEC SIR !!!!!!!!!!!!!!!!!!!")
+        print(error)
         printer.print_message(
             "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         )
@@ -477,7 +479,7 @@ def update_location(location_id, args):
     """
     location_dict = {}
     try:
-        location_dict["event_id"] = f"{location_id}"
+        location_dict["location_id"] = f"{location_id}"
         for arg in args:
             k, v = arg.split("=")
             location_dict[k] = v
@@ -524,7 +526,7 @@ def update_role(role_id, args):
     """
     role_dict = {}
     try:
-        role_dict["event_id"] = f"{role_id}"
+        role_dict["role_id"] = f"{role_id}"
         for arg in args:
             k, v = arg.split("=")
             role_dict[k] = v

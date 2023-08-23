@@ -18,7 +18,7 @@ class InitAppViews:
     Classe dédiée à effectuer l'interfaçage entre client et contrôleur.
     """
 
-    def __init__(self, db_name=f"{settings.DEV_DATABASE_NAME}"):
+    def __init__(self):
         """
         Description:
         Vue dédiée à initialiser le(s) base(s) de données.

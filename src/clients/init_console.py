@@ -30,12 +30,12 @@ class InitAppliConsole:
     Classe dédiée à l'interfaçage entre les 'src/commands/generate_sample_commands.py' et un backend.
     """
 
-    def __init__(self, db_name=f"{settings.DATABASE_NAME}"):
+    def __init__(self):
         """
         Description:
         On instancie la classe pour servir des méthodes en lién avec l'initialisation.
         """
-        self.app_init_view = InitAppViews(db_name)
+        self.app_init_view = InitAppViews()
 
     def generate_companies_file(self):
         """

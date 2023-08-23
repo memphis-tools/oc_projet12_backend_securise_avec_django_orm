@@ -71,7 +71,6 @@ class DatabaseInitializerController:
                 "error",
                 APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"],
             )
-
         session_maker = sessionmaker(engine)
         session = session_maker()
         return (engine, session)
@@ -88,7 +87,6 @@ class DatabaseInitializerController:
         Connexion à la base de données et renvoie une fabrique session qui sera utilisée par la vue AppViews.
         """
         try:
-            db_name = utils.set_database_to_get_based_on_user_path(db_name)
             if decoded_token == "":
                 # l'utilisateur demande un token, c'est sa "connexion" initiale à l'application
                 user_login = user_login
@@ -151,7 +149,7 @@ class DatabaseInitializerController:
         exemple: le service oc12_gestion a des droits sur les 2 bdd. C'est un référencement à purger pour supprimer.
         """
         conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name="projet12"
+            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name="projet12"
         )
         cursor = conn.cursor()
         for role in ["aa123456789", "oc12_commercial", "oc12_gestion", "oc12_support"]:
@@ -171,7 +169,7 @@ class DatabaseInitializerController:
             base = models.get_base()
             base.metadata.drop_all(engine)
             conn = utils.get_a_database_connection(
-                f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", db_name=db_name
+                f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
             )
             cursor = conn.cursor()
             tables_list = [
@@ -221,9 +219,7 @@ class DatabaseInitializerController:
             conn.commit()
             conn.close()
 
-    def database_postinstall_task_for_test_db(
-        self, db_name=f"{settings.TEST_DATABASE_NAME}"
-    ):
+    def database_postinstall_task_for_test_db(self):
         """
         Description:
         Sur la base de test on va maintenir un employé lambda "aa123456789" du service oc12_commercial.
@@ -355,7 +351,7 @@ class DatabaseInitializerController:
             sql = f"""GRANT USAGE ON SEQUENCE event_id_seq TO {service}"""
             cursor.execute(sql)
 
-        self.database_postinstall_task_for_test_db(db_name)
+        self.database_postinstall_task_for_test_db()
 
         conn.commit()
         conn.close()
