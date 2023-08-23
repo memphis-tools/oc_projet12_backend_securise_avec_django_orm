@@ -221,7 +221,7 @@ class Company(Base):
         descriptors += (
             f",(company_subregistration_number|{self.company_subregistration_number})"
         )
-        descriptors += f",(location_id|{self.location.location_id})"
+        descriptors += f",(location_id|{self.location_id})"
         descriptors += "]"
         return descriptors
 
@@ -294,7 +294,7 @@ class Client(Base):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
         descriptors += (
-            f'(last_update_date|{self.last_update_date.strftime("%d-%m-%Y")})'
+            f',(last_update_date|{self.last_update_date.strftime("%d-%m-%Y")})'
         )
         descriptors += f",(client_id|{self.client_id})"
         descriptors += f",(civility|{self.civility})"
