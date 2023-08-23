@@ -79,10 +79,10 @@ def set_database_to_get_based_on_user_path(app_init=False, db_name=""):
                 db_name = f"{settings.TEST_DATABASE_NAME}"
             else:
                 db_name = f"{settings.DATABASE_NAME}"
-        except KeyError as error:
+        except KeyError:
             pass
     else:
-        db_name = db_name
+        db_name = f"{settings.DATABASE_NAME}"
     return db_name
 
 
@@ -295,7 +295,8 @@ def get_a_database_connection(
     Description:
     Dédiée à obtenir un curseur pour interragir avec le SGBD.
     """
-    db_name = set_database_to_get_based_on_user_path(app_init, db_name)
+    if not app_init:
+        db_name = set_database_to_get_based_on_user_path(app_init, db_name)
     if user_name != "" and user_pwd != "":
         user = user_name
         password = user_pwd
