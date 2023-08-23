@@ -79,6 +79,7 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                         custom_dict["ville"] = ville
                         custom_dict["region"] = region
                         custom_dict["pays"] = f"{settings.DEFAULT_COUNTRY}"
+                        custom_dict["population"] = population
                 else:
                     # vérifier si quelque chose a été saisi
                     if item.strip() != "":

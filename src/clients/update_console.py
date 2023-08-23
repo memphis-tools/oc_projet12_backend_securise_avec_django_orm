@@ -35,11 +35,11 @@ class ConsoleClientForUpdate:
         """
         Description: on instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        db_name = utils.set_database_to_get_based_on_user_path(db_name)
+        db_name = utils.set_database_to_get_based_on_user_path(db_name=db_name)
         self.app_dict = language_bridge.LanguageBridge()
         utils.display_banner()
-        self.app_view = AppViews(db_name)
-        self.update_app_view = UpdateAppViews(db_name)
+        self.app_view = AppViews(db_name=db_name)
+        self.update_app_view = UpdateAppViews(db_name=db_name)
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
@@ -315,6 +315,7 @@ class ConsoleClientForUpdate:
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location_id = ""
+        print(f"DEBUG SIR custom_partial_dict == {custom_partial_dict}")
         try:
             if "location" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
@@ -329,7 +330,9 @@ class ConsoleClientForUpdate:
                 self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
             )
             sys.exit(0)
-        except Exception:
+        except Exception as error:
+            print("ERREUR SIR !")
+            print(error)
             printer.print_message(
                 "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             )

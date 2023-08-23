@@ -36,11 +36,11 @@ class ConsoleClientForDelete:
         Description:
         On instancie la classe avec les vues qui permettront tous débranchements et actions.
         """
-        db_name = utils.set_database_to_get_based_on_user_path(db_name)
+        db_name = utils.set_database_to_get_based_on_user_path(db_name=db_name)
         self.app_dict = language_bridge.LanguageBridge()
         utils.display_banner()
-        self.app_view = AppViews(db_name)
-        self.delete_app_view = DeleteAppViews(db_name)
+        self.app_view = AppViews(db_name=db_name)
+        self.delete_app_view = DeleteAppViews(db_name=db_name)
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.

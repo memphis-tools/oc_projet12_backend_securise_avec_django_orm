@@ -5,7 +5,7 @@ Ce controleur est utilisé par le seul client console dédié à l'initialisatio
 """
 import csv
 from unidecode import unidecode
-
+from datetime import datetime
 try:
     from src.controllers import database_initializer_controller
     from src.models import models
@@ -50,7 +50,7 @@ class CsvFilesInitController:
         - code_postal: entier, un code postal
         - nom_raison_sociale: chaine de caractères, nom entreprise
         """
-        return location_custom_id
+        return location_custom_id.upper()
 
     def set_a_company_id(
         self, nom_raison_sociale, siren, siret, date_debut_activite, ville
@@ -68,7 +68,7 @@ class CsvFilesInitController:
         company_custom_id = utils.set_a_company_custom_id(
             nom_raison_sociale, siren, siret, date_debut_activite, ville
         )
-        return company_custom_id
+        return company_custom_id.upper()
 
     def make_locations_and_companies_with_api_data(self, api_data):
         """
@@ -87,6 +87,7 @@ class CsvFilesInitController:
             "commune",
             "region",
             "pays",
+            "population",
         ]
 
         company_api_from_model_dict = {
@@ -105,6 +106,8 @@ class CsvFilesInitController:
         new_location_dict["pays"] = "France"
         for k, v in api_data.items():
             if k in location_attributes_from_api_list:
+                if k == "population":
+                    print(f"SIR DEBUG WE FOUND population == {population}")
                 if k == "region":
                     # l'API nous aura renvoyé une région avec un entier (v est içi un id, un entier)
                     if v in temp_insee_dict.keys():
@@ -129,10 +132,14 @@ class CsvFilesInitController:
                 if k == "siret":
                     new_company_dict[company_api_from_model_dict[k]] = v[-5:]
                 elif k == "tranche_effectif_salarie":
-                    if not k.isdigit():
+                    if not v.isdigit():
                         new_company_dict[company_api_from_model_dict[k]] = 0
+                    else:
+                        new_company_dict[company_api_from_model_dict[k]] = v
                 else:
                     new_company_dict[company_api_from_model_dict[k]] = v
+        new_location_dict["creation_date"] = datetime.now()
+        new_company_dict["creation_date"] = datetime.now()
         return (new_location_dict, new_company_dict)
 
     def append_external_datas_to_dev_database(self, api_data_dict):
@@ -183,7 +190,7 @@ class CsvFilesInitController:
                 )
 
                 id = utils.get_location_id_from_location_custom_id(
-                    session_on_dev_db, new_location_id
+                    session_on_dev_db, new_location_id.upper()
                 )
                 if not id:
                     new_location_dict["location_id"] = new_location_id.upper()
@@ -192,34 +199,36 @@ class CsvFilesInitController:
                     session_on_dev_db.commit()
                     session_on_dev_db.refresh(new_location_object)
                     new_company_dict["location_id"] = new_location_object.id
-                    new_company_dict["company_id"] = new_company_id
+                    new_company_dict["company_id"] = new_company_id.upper()
                 else:
                     new_company_dict["location_id"] = id
-                    new_company_dict["company_id"] = new_company_id
+                    new_company_dict["company_id"] = new_company_id.upper()
                 new_company_object = models.Company(**new_company_dict)
                 session_on_dev_db.add(new_company_object)
                 session_on_dev_db.commit()
+                session_on_dev_db.refresh(new_company_object)
 
                 id = utils.get_location_id_from_location_custom_id(
-                    session_on_test_db, new_location_id
+                    session_on_test_db, new_location_id.upper()
                 )
                 if not id:
+                    new_location_dict["location_id"] = new_location_id.upper()
                     new_location_object = models.Location(**new_location_dict)
                     session_on_test_db.add(new_location_object)
                     session_on_test_db.commit()
                     session_on_test_db.refresh(new_location_object)
                     new_company_dict["location_id"] = new_location_object.id
-                    new_company_dict["company_id"] = new_company_id
+                    new_company_dict["company_id"] = new_company_id.upper()
                 else:
                     new_company_dict["location_id"] = id
-                    new_company_dict["company_id"] = new_company_id
+                    new_company_dict["company_id"] = new_company_id.upper()
                 new_company_object = models.Company(**new_company_dict)
                 session_on_test_db.add(new_company_object)
                 session_on_test_db.commit()
 
             session_on_dev_db.close()
             session_on_test_db.close()
-        except Exception:
+        except Exception as error:
             session_on_dev_db.close()
             session_on_test_db.close()
 

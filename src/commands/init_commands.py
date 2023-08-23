@@ -51,7 +51,7 @@ def init_application():
     app_dict = language_bridge.LanguageBridge()
 
     for db_name in settings.DATABASE_TO_CREATE:
-        client_view_console = init_console.InitAppliConsole(db_name=db_name)
+        client_view_console = init_console.InitAppliConsole()
 
     utils.display_banner(app_init=True)
     print("Initialization authentication ", end="")

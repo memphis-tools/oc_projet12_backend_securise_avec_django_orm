@@ -28,7 +28,6 @@ def get_town_name_from_insee_open_api(code_postal):
     population = ""
     if settings.INTERNET_CONNECTION:
         headers = {"user-agent": "curl"}
-
         try:
             response = requests.get(url + query_string, headers=headers)
             json_response = json.loads(response.text)
