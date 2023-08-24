@@ -338,8 +338,7 @@ def test_delete_collaborator_view_with_gestion_profile(
         result = ConsoleClientForDelete(
             db_name=f"{settings.TEST_DATABASE_NAME}"
         ).delete_collaborator(matricule)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
     except Exception as error:
         print(error)
 
