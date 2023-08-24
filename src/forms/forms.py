@@ -12,25 +12,30 @@ from rich.prompt import Prompt
 
 try:
     from src.controllers import infos_data_controller
+    from src.exceptions import exceptions
     from src.languages import language_bridge
     from src.external_datas.make_external_api_call_for_ville_based_on_code_postal import (
         get_town_name_region_name_and_population_from_insee_open_api,
     )
     from src.printers import printer
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
+    from src.utils import utils
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from controllers import infos_data_controller
+    from exceptions import exceptions
     from languages import language_bridge
     from external_datas.make_external_api_call_for_ville_based_on_code_postal import (
         get_town_name_region_name_and_population_from_insee_open_api,
     )
     from printers import printer
-    from settings import settings
+    from settings import settings, logtail_handler
+    from utils import utils
     from validators.data_syntax.fr import validators
 
 
 APP_DICT = language_bridge.LanguageBridge()
+LOGGER = logtail_handler.logger
 
 
 def display_help(key, item, value):
@@ -63,6 +68,67 @@ def search_and_submit_a_town_name(code_postal):
     return (town_name, region_name, population)
 
 
+def display_any_error_message(key):
+    """
+    Description:
+    Appelée par fonction fullfill_form.
+    Selon la clef en erreur, un message spécifique est adressé ou non.
+    """
+    if key == "complement_adresse" or key == "employee_role":
+        message = APP_DICT.get_appli_dictionnary()["FORM_EXCEPTION"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+
+        message = APP_DICT.get_appli_dictionnary()["FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+
+        message = APP_DICT.get_appli_dictionnary()["FORM_GET_MORE_INFO_ABOUT_VALID_VALUES"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    else:
+        message = APP_DICT.get_appli_dictionnary()["FORM_EXCEPTION"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+
+        message = APP_DICT.get_appli_dictionnary()["FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    return False
+
+
+def validate_key(custom_dict, key, item):
+    """
+    Description:
+    Appelée par fonction fullfill_form.
+    On fait appel aux "validators" (validators/data_syntax/fr/validators.py) pour controler la saisie.
+    """
+    try:
+        # si quelque chose a été saisi on vérifie si ça respecte la /les valeur(s) attendue(s).
+        if key == "remain_amount_to_pay":
+            eval(f"validators.is_{key}_valid")(item, custom_dict["full_amount_to_pay"])
+        else:
+            eval(f"validators.is_{key}_valid")(item)
+        custom_dict[key] = item
+    except exceptions.ContractAmountToPayException:
+        message = APP_DICT.get_appli_dictionnary()["EXCEPTION_CONTRACT_AMOUNT_TO_PAY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except Exception as error:
+        print(f"CATCH SOMETHING ELSE SIR ?? error =={error}")
+        message = APP_DICT.get_appli_dictionnary()["UNEXPECTED_VALUE_IN_FORM"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    return custom_dict
+
+
 def fullfill_form(custom_dict, expected_attributes_dict):
     while not len(custom_dict) == len(expected_attributes_dict):
         for key, value in expected_attributes_dict.items():
@@ -83,47 +149,10 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                 else:
                     # vérifier si quelque chose a été saisi
                     if item.strip() != "":
-                        try:
-                            # si quelque chose a été saisi on vérifie si ça respecte la /les valeur(s) attendue(s).
-                            eval(f"validators.is_{key}_valid")(item)
-                            custom_dict[key] = item
-                        except Exception:
-                            printer.print_message(
-                                "error",
-                                APP_DICT.get_appli_dictionnary()[
-                                    "UNEXPECTED_VALUE_IN_FORM"
-                                ],
-                            )
-                            break
+                        custom_dict = validate_key(custom_dict, key, item)
+                        break
                     else:
-                        if key == "complement_adresse" or key == "employee_role":
-                            printer.print_message(
-                                "error",
-                                APP_DICT.get_appli_dictionnary()["FORM_EXCEPTION"],
-                            )
-                            printer.print_message(
-                                "error",
-                                APP_DICT.get_appli_dictionnary()[
-                                    "FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD"
-                                ],
-                            )
-                            printer.print_message(
-                                "error",
-                                APP_DICT.get_appli_dictionnary()[
-                                    "FORM_GET_MORE_INFO_ABOUT_VALID_VALUES"
-                                ],
-                            )
-                        else:
-                            printer.print_message(
-                                "error",
-                                APP_DICT.get_appli_dictionnary()["FORM_EXCEPTION"],
-                            )
-                            printer.print_message(
-                                "error",
-                                APP_DICT.get_appli_dictionnary()[
-                                    "FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD"
-                                ],
-                            )
+                        display_any_error_message(key)
                         break
     return custom_dict
 
@@ -457,7 +486,7 @@ def submit_a_contract_create_form(custom_dict={}):
             "contract_id": "id",
             "full_amount_to_pay": "total à payer",
             "remain_amount_to_pay": "total restant à payer",
-            "status": "signé /conclu ('oui' ou 'non')",
+            "status": "statut ('signed', 'unsigned', 'canceled')",
         }
         printer.print_message(
             "info", APP_DICT.get_appli_dictionnary()["CREATE_A_CONTRACT"]
@@ -465,17 +494,6 @@ def submit_a_contract_create_form(custom_dict={}):
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
-                if float(custom_dict["remain_amount_to_pay"]) > float(
-                    custom_dict["full_amount_to_pay"]
-                ):
-                    custom_dict.pop("remain_amount_to_pay")
-                    custom_dict["remain_amount_to_pay"] = None
-                    printer.print_message(
-                        "info",
-                        APP_DICT.get_appli_dictionnary()[
-                            "EXCEPTION_CONTRACT_AMOUNT_TO_PAY"
-                        ],
-                    )
         except KeyboardInterrupt:
             printer.print_message(
                 "info", APP_DICT.get_appli_dictionnary()["CREATION_ABORTED"]

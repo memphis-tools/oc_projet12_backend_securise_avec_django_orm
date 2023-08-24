@@ -7,8 +7,10 @@ import re
 
 try:
     from src.controllers import infos_data_controller
+    from src.exceptions import exceptions
 except ModuleNotFoundError:
     from controllers import infos_data_controller
+    from exceptions import exceptions
 
 
 def is_adresse_valid(adresse):
@@ -253,13 +255,15 @@ def is_registration_number_valid(registration_number):
     return re.match(pattern, registration_number).group()
 
 
-def is_remain_amount_to_pay_valid(remain_amount_to_pay):
+def is_remain_amount_to_pay_valid(remain_amount_to_pay, full_amount_to_pay):
     """
     Description: Controler le montant saisi.
     Fonction renvoie une exception AttributeError si montant invalide.
     """
     try:
         float(remain_amount_to_pay)
+        if float(remain_amount_to_pay) > float(full_amount_to_pay):
+            raise exceptions.ContractAmountToPayException()
     except ValueError:
         raise AttributeError()
 

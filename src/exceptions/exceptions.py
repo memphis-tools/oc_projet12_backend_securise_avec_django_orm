@@ -19,6 +19,10 @@ class InsufficientPrivilegeException(Exception):
     pass
 
 
+class ContractAmountToPayException(Exception):
+    pass
+
+
 class CustomIdEmptyException(Exception):
     pass
 
@@ -44,6 +48,10 @@ class CommercialCollaboratorIsNotAssignedToClient(Exception):
 
 
 class CommercialCollaboratorIsNotAssignedToContract(Exception):
+    pass
+
+
+class ClientNotFoundWithClientId(Exception):
     pass
 
 
