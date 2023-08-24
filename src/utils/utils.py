@@ -322,8 +322,22 @@ def get_user_id_from_registration_number(session, registration_number):
     - registration_number: chaine libre de caractères, le matricule de l'employé
     """
     sql = text(
-        f"""SELECT id FROM collaborator WHERE registration_number='{registration_number}'"""
+    f"""SELECT id FROM collaborator WHERE registration_number='{registration_number}'"""
     )
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
+
+
+def get_client_id_from_client_custom_id(session, client_id):
+    """
+    Description:
+    Récupérer l'id en bdd de du client ayant le custom id du modèle, en argument.
+    Paramètres:
+    - client_id: chaine libre de caractères, le custom id du client
+    """
+    print(f"DEBUGING SIR WE SEARCH CLIENT_ID == {client_id}")
+    sql = text(f"""SELECT id FROM client WHERE client_id='{client_id}'""")
     result = session.execute(sql).first()
     id = str(result[0]).lower()
     return id
