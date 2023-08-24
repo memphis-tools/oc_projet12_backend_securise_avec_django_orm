@@ -12,17 +12,18 @@ try:
     from src.languages import language_bridge
     from src.models import models
     from src.printers import printer
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
     from src.utils import utils
 except ModuleNotFoundError:
     from languages import language_bridge
     from models import models
     from printers import printer
-    from settings import settings
+    from settings import settings, logtail_handler
     from utils import utils
 
 
 APP_DICT = language_bridge.LanguageBridge()
+LOGGER = logtail_handler.logger
 
 
 class DatabaseInitializerController:
@@ -67,10 +68,10 @@ class DatabaseInitializerController:
                 f"postgresql+psycopg://{user_login}:{password_with_specialchars_escape}@localhost/{db_name}"
             )
         except psycopg.OperationalError as error:
-            printer.print_message(
-                "error",
-                APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
         session_maker = sessionmaker(engine)
         session = session_maker()
         return (engine, session)
@@ -102,10 +103,10 @@ class DatabaseInitializerController:
                 f"postgresql+psycopg://{user_login}:{password_with_specialchars_escape}@localhost/{db_name}"
             )
         except psycopg.OperationalError as error:
-            printer.print_message(
-                "error",
-                APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
 
         session_maker = sessionmaker(engine)
         session = session_maker()

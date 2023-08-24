@@ -12,7 +12,7 @@ try:
     from src.views.update_views import UpdateAppViews
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
     from src.utils import utils
 except ModuleNotFoundError:
     from languages import language_bridge
@@ -22,8 +22,11 @@ except ModuleNotFoundError:
     from views.update_views import UpdateAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
-    from settings import settings
+    from settings import settings, logtail_handler
     from utils import utils
+
+
+LOGGER = logtail_handler.logger
 
 
 class ConsoleClientForUpdate:
@@ -73,16 +76,17 @@ class ConsoleClientForUpdate:
         except exceptions.CommercialCollaboratorIsNotAssignedToClient:
             raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
         except TypeError:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -103,15 +107,16 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -144,25 +149,22 @@ class ConsoleClientForUpdate:
             )
 
         except exceptions.OldPasswordNotValidException:
-            printer.print_message(
-                "info", self.app_dict.get_appli_dictionnary()["OLD_PASSWORD_NOT_MATCH"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["OLD_PASSWORD_NOT_MATCH"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectMinSpecialCharsException:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()[
-                    "NEW_PASSWORD_NOT_MATCH_SPECIAL_CHARS"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["NEW_PASSWORD_NOT_MATCH_SPECIAL_CHARS"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectForbiddenSpecialCharsException:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()[
-                    "NEW_PASSWORD_NOT_MATCH_FORBIDEN_CHARS"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["NEW_PASSWORD_NOT_MATCH_FORBIDEN_CHARS"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         return (
             self.update_app_view.get_collaborators_view().update_collaborator_password(
@@ -188,15 +190,16 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -221,15 +224,16 @@ class ConsoleClientForUpdate:
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
         except TypeError:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -250,15 +254,16 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -295,15 +300,16 @@ class ConsoleClientForUpdate:
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except TypeError:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -315,7 +321,6 @@ class ConsoleClientForUpdate:
         user_service = str(decoded_token["department"]).upper()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location_id = ""
-        print(f"DEBUG SIR custom_partial_dict == {custom_partial_dict}")
         try:
             if "location" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
@@ -325,17 +330,16 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
-        except Exception as error:
-            print("ERREUR SIR !")
-            print(error)
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+        except Exception:
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -356,13 +360,14 @@ class ConsoleClientForUpdate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except TypeError:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)

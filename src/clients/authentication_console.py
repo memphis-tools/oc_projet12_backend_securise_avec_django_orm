@@ -5,7 +5,7 @@ Console dédiée aux seules opérations de login et logout
 import sys
 import maskpass
 from rich.prompt import Prompt
-
+import logtail
 try:
     from src.exceptions import exceptions
     from src.printers import printer
@@ -13,7 +13,7 @@ try:
     from src.views.authentication_view import AuthenticationView
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
     from src.utils import utils
 except ModuleNotFoundError:
     from exceptions import exceptions
@@ -22,8 +22,11 @@ except ModuleNotFoundError:
     from views.authentication_view import AuthenticationView
     from views.views import AppViews
     from views.jwt_view import JwtView
-    from settings import settings
+    from settings import settings, logtail_handler
     from utils import utils
+
+
+LOGGER = logtail_handler.logger
 
 
 class AuthenticationConsoleClient:
@@ -51,14 +54,17 @@ class AuthenticationConsoleClient:
             self.jwt_view = JwtView(self.app_view)
             return self.jwt_view.get_token(registration_number)
         except exceptions.AuthenticationCredentialsFailed:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["INVALID_CREDENTIALS_ERROR"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INVALID_CREDENTIALS_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': registration_number }):
+                    LOGGER.error(message)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': registration_number }):
+                    LOGGER.error(message)
 
     # @utils.authentication_permission_decorator
     @staticmethod

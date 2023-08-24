@@ -43,14 +43,14 @@ class DatabaseDeleteController:
             collaborator = (
                 session.query(models.Collaborator).filter_by(id=collaborator_id).first()
             )
-            session.delete(collaborator)
-
+            removed_id = collaborator.registration_number
             role = collaborator.registration_number
+            session.delete(collaborator)
             sql = text(f"""DROP ROLE {role}""")
             session.execute(sql)
             session.commit()
             session.close()
-            return True
+            return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)

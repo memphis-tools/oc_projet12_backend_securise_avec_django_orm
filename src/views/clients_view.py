@@ -7,10 +7,15 @@ try:
     from src.languages import language_bridge
     from src.printers import printer
     from src.utils import utils
+    from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from languages import language_bridge
     from printers import printer
     from utils import utils
+    from settings import settings, logtail_handler
+
+
+LOGGER = logtail_handler.logger
 
 
 class ClientsView:
@@ -45,17 +50,15 @@ class ClientsView:
                         "info", self.app_dict.get_appli_dictionnary()["NO_MORE_CLIENT"]
                     )
                 else:
-                    printer.print_message(
-                        "error",
-                        self.app_dict.get_appli_dictionnary()[
-                            "DATABASE_QUERY_NO_MATCHES"
-                        ],
-                    )
-            except Exception as error:
-                printer.print_message(
-                    "error",
-                    self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"],
-                )
+                    message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+                    printer.print_message("info", message)
+                    if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                    	LOGGER.info(message)
+            except Exception:
+                message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+                printer.print_message("error", message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.error(message)
                 raise Exception()
         else:
             db_model_queryset = self.db_controller.get_clients(self.session)
@@ -66,10 +69,10 @@ class ClientsView:
                     "info", self.app_dict.get_appli_dictionnary()["NO_MORE_CLIENT"]
                 )
             else:
-                printer.print_message(
-                    "error",
-                    self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-                )
+                message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+                printer.print_message("info", message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
         return self.db_controller.get_clients(self.session)
 
     def get_client(self, client_id):

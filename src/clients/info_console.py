@@ -10,7 +10,7 @@ try:
     from src.controllers.infos_update_password_controller import (
         display_info_password_policy,
     )
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
     from src.utils import utils
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
@@ -21,10 +21,13 @@ except ModuleNotFoundError:
     from controllers.infos_update_password_controller import (
         display_info_password_policy,
     )
-    from settings import settings
+    from settings import settings, logtail_handler
     from utils import utils
     from views.views import AppViews
     from views.jwt_view import JwtView
+
+
+LOGGER = logtail_handler.logger
 
 
 class InformationConsoleClient:
@@ -51,9 +54,10 @@ class InformationConsoleClient:
         try:
             display_info_password_policy()
         except Exception as error:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
 
     @utils.authentication_permission_decorator
     def display_info_data_medium_window_for_metiers(self):

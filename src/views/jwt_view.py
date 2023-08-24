@@ -9,11 +9,16 @@ try:
     from src.controllers.jwt_controller import JwtController
     from src.languages import language_bridge
     from src.printers import printer
+    from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from exceptions import exceptions
     from controllers.jwt_controller import JwtController
     from languages import language_bridge
     from printers import printer
+    from settings import settings, logtail_handler
+
+
+LOGGER = logtail_handler.logger
 
 
 class JwtView:

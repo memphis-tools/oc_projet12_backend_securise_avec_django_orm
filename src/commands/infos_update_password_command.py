@@ -8,13 +8,16 @@ try:
     from src.printers import printer
     from src.languages import language_bridge
     from src.clients.info_console import InformationConsoleClient
+    from src.settings import logtail_handler
 except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
     from clients.info_console import InformationConsoleClient
+    from settings import logtail_handler
 
 
 APP_DICT = language_bridge.LanguageBridge()
+LOGGER = logtail_handler.logger
 
 
 @click.command
@@ -26,7 +29,8 @@ def get_password_policy():
     try:
         console_client = InformationConsoleClient()
         console_client.display_info_password_policy()
-    except Exception as error:
-        printer.print_message(
-            "success", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+    except Exception:
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
