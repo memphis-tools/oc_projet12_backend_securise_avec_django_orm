@@ -7,6 +7,7 @@ import subprocess
 import maskpass
 import click
 from rich import print
+import logtail
 
 try:
     from src.clients import init_console
@@ -16,7 +17,7 @@ try:
     from src.external_datas.make_dummy_database_creation_command import (
         dummy_database_creation,
     )
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
     from src.utils import utils
 except ModuleNotFoundError:
     from clients import init_console
@@ -26,7 +27,7 @@ except ModuleNotFoundError:
     from external_datas.make_dummy_database_creation_command import (
         dummy_database_creation,
     )
-    from settings import settings
+    from settings import settings, logtail_handler
     from utils import utils
 
 
@@ -34,6 +35,7 @@ APP_DICT = language_bridge.LanguageBridge()
 FILENAME = (
     f"src/languages/{settings.DEFAULT_COUNTRY_SHORT}/application_dictionnary.json"
 )
+LOGGER = logtail_handler.logger
 
 
 @click.command
@@ -61,9 +63,10 @@ def init_application():
     print("Admin - ", end="")
     admin_pwd = maskpass.askpass()
     if not admin_pwd == f"{settings.ADMIN_PASSWORD}":
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["INVALID_ADMIN_CREDENTIALS_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["INVALID_ADMIN_CREDENTIALS_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
         sys.exit(0)
 
     print("Initialization authentication ", end="")
@@ -85,18 +88,23 @@ def init_application():
             )
 
             print(f"Database {database} ", end="")
-            printer.print_message(
-                "success", APP_DICT.get_appli_dictionnary()["DATABASE_DROPPED_SUCCESS"]
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_DROPPED_SUCCESS"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(db={ 'database': database }):
+                    LOGGER.info(message)
         except subprocess.CalledProcessError:
             print(f"Database {database} ", end="")
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_DROPPED_FAILURE"]
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_DROPPED_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(db={ 'database': database }):
+                	LOGGER.error(message)
         except KeyboardInterrupt:
-            printer.print_message(
-                "info", APP_DICT.get_appli_dictionnary()["INIT_ABORTED"]
-            )
+            message = APP_DICT.get_appli_dictionnary()["INIT_ABORTED"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             sys.exit(0)
 
     # on ne supprime qu'une fois le Account admin
@@ -108,16 +116,23 @@ def init_application():
             capture_output=True,
         )
         print(f"Account {settings.ADMIN_LOGIN} ", end="")
-        printer.print_message(
-            "success", APP_DICT.get_appli_dictionnary()["COLLABORATOR_DROPPED_SUCCESS"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["COLLABORATOR_DROPPED_SUCCESS"]
+        printer.print_message("info",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            with logtail.context(user={ 'username': settings.ADMIN_LOGIN }):
+                LOGGER.info(message)
     except subprocess.CalledProcessError:
         print(f"Database {database} {settings.ADMIN_LOGIN} ", end="")
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["COLLABORATOR_DROPPED_FAILURE"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["COLLABORATOR_DROPPED_FAILURE"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            with logtail.context(user={ 'username': settings.ADMIN_LOGIN }):
+                	LOGGER.error(message)
     except KeyboardInterrupt:
-        printer.print_message("info", APP_DICT.get_appli_dictionnary()["INIT_ABORTED"])
+        message = APP_DICT.get_appli_dictionnary()["INIT_ABORTED"]
+        printer.print_message("info",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.info(message)
         sys.exit(0)
 
     try:
@@ -137,16 +152,22 @@ def init_application():
             capture_output=True,
         )
         print(f"Account {settings.ADMIN_LOGIN} ", end="")
-        printer.print_message(
-            "success", APP_DICT.get_appli_dictionnary()["COLLABORATOR_CREATED_SUCCESS"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["COLLABORATOR_CREATED_SUCCESS"]
+        printer.print_message("info",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            with logtail.context(user={ 'username': settings.ADMIN_LOGIN }):
+                LOGGER.info(message)
     except subprocess.CalledProcessError:
         print(f"Database {database} {settings.ADMIN_LOGIN} ", end="")
-        printer.print_message(
-            "info", APP_DICT.get_appli_dictionnary()["USER_ALREADY_EXIST"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["USER_ALREADY_EXIST"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
     except KeyboardInterrupt:
-        printer.print_message("info", APP_DICT.get_appli_dictionnary()["INIT_ABORTED"])
+        message = APP_DICT.get_appli_dictionnary()["INIT_ABORTED"]
+        printer.print_message("info",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.info(message)
         sys.exit(0)
 
     for database in settings.DATABASE_TO_CREATE:
@@ -159,14 +180,15 @@ def init_application():
             )
         except subprocess.CalledProcessError:
             print(f"Database {database} {settings.ADMIN_LOGIN} ", end="")
-            printer.print_message(
-                "info", APP_DICT.get_appli_dictionnary()["DATABASE_ALREADY_EXIST"]
-            )
-
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_ALREADY_EXIST"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
         except KeyboardInterrupt:
-            printer.print_message(
-                "info", APP_DICT.get_appli_dictionnary()["INIT_ABORTED"]
-            )
+            message = APP_DICT.get_appli_dictionnary()["INIT_ABORTED"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             sys.exit(0)
 
         try:
@@ -174,27 +196,29 @@ def init_application():
                 f"sudo su -c 'psql -c \"ALTER DATABASE {database} OWNER TO admin\"' postgres 1>/dev/null"
             )
             print(f"Database {database} ", end="")
-            printer.print_message(
-                "success",
-                APP_DICT.get_appli_dictionnary()["DATABASE_OWNER_UPDATE_SUCCESS"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_OWNER_UPDATE_SUCCESS"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
         except subprocess.CalledProcessError:
             print(f"Database {database} ", end="")
-            printer.print_message(
-                "error",
-                APP_DICT.get_appli_dictionnary()["DATABASE_OWNER_UPDATE_FAILURE"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_OWNER_UPDATE_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
         except KeyboardInterrupt:
-            printer.print_message(
-                "info", APP_DICT.get_appli_dictionnary()["INIT_ABORTED"]
-            )
+            message = APP_DICT.get_appli_dictionnary()["INIT_ABORTED"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             sys.exit(0)
 
     for database in settings.DATABASE_TO_CREATE:
         print(f"Database {database} ", end="")
-        printer.print_message(
-            "info", APP_DICT.get_appli_dictionnary()["DATABASE_UPDATING"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_UPDATING"]
+        printer.print_message("info",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.info(message)
         utils.display_postgresql_controls()
         if database == "projet12":
             admin_console_client = AdminConsoleClient()

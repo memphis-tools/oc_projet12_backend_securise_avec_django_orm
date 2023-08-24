@@ -10,18 +10,19 @@ try:
     from src.exceptions import exceptions
     from src.languages import language_bridge
     from src.printers import printer
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
     from src.views.init_views import InitAppViews
 except ModuleNotFoundError:
     from external_datas import make_external_api_call_for_french_companies_sample
     from exceptions import exceptions
     from languages import language_bridge
     from printers import printer
-    from settings import settings
+    from settings import settings, logtail_handler
     from views.init_views import InitAppViews
 
 
 APP_DICT = language_bridge.LanguageBridge()
+LOGGER = logtail_handler.logger
 
 
 class InitAppliConsole:
@@ -77,10 +78,10 @@ class InitAppliConsole:
                 csv_filename=settings.COMPANIES_EXPORT_FILE_PATH
             )
         except exceptions.ApiQueryFailedException:
-            printer.print_message(
-                "error",
-                APP_DICT.get_appli_dictionnary()["API_QUERY_ACCESS_OR_QUERY_FAILED"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["API_QUERY_ACCESS_OR_QUERY_FAILED"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             return False
         print(
             "External_API [bold yellow]recherche-entreprises.api.gouv.fr [/bold yellow]",
@@ -122,7 +123,8 @@ class InitAppliConsole:
             return True
         except exceptions.MissingApiStaticFileException:
             settings_key = "SETTINGS_INTERNET_CONNECTION_DOWN_NO_FILES_TO_PARSE"
-            printer.print_message(
-                "info", APP_DICT.get_appli_dictionnary()[f"{settings_key}"]
-            )
+            message = self.app_dict.get_appli_dictionnary()[f"{settings_key}"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
         return False

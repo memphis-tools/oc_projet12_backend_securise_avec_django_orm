@@ -5,6 +5,7 @@ Client en mode console, dédié aux mises à jour (ajout, modification, suppress
 import sys
 from datetime import datetime
 from rich import print
+import logtail
 
 try:
     from src.languages import language_bridge
@@ -15,7 +16,7 @@ try:
     from src.views.create_views import CreateAppViews
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
     from src.utils import utils
     from src.validators import add_data_validators
     from src.validators.data_syntax.fr import validators
@@ -28,10 +29,13 @@ except ModuleNotFoundError:
     from views.create_views import CreateAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
-    from settings import settings
+    from settings import settings, logtail_handler
     from utils import utils
     from validators import add_data_validators
     from validators.data_syntax.fr import validators
+
+
+LOGGER = logtail_handler.logger
 
 
 class ConsoleClientForCreate:
@@ -67,9 +71,10 @@ class ConsoleClientForCreate:
             if client_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message(
-                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             return False
         client_lookup = None
         try:
@@ -77,10 +82,10 @@ class ConsoleClientForCreate:
             client_lookup = self.app_view.get_clients_view().get_client(client_id)
             return client_lookup.id
         except AttributeError:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             return False
 
     def ask_for_a_contract_id(self):
@@ -95,9 +100,10 @@ class ConsoleClientForCreate:
             if contract_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message(
-                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             return False
         contract_lookup = None
         try:
@@ -107,10 +113,10 @@ class ConsoleClientForCreate:
             )
             return contract_lookup.id
         except AttributeError:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error", message,)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             return False
 
     def ask_for_a_company_id(self):
@@ -125,9 +131,10 @@ class ConsoleClientForCreate:
             if company_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message(
-                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             return False
         company_lookup = None
         try:
@@ -135,10 +142,10 @@ class ConsoleClientForCreate:
             company_lookup = self.app_view.get_companies_view().get_company(company_id)
             return company_lookup.id
         except AttributeError:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message,)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             return False
 
     def ask_for_a_department_id(self):
@@ -153,9 +160,10 @@ class ConsoleClientForCreate:
             if department_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message(
-                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             return False
         department_lookup = None
         try:
@@ -165,10 +173,10 @@ class ConsoleClientForCreate:
             )
             return department_lookup.id
         except AttributeError:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             return False
 
     def ask_for_a_event_id(self):
@@ -183,9 +191,10 @@ class ConsoleClientForCreate:
             if event_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message(
-                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             return False
         event_lookup = None
         try:
@@ -193,10 +202,10 @@ class ConsoleClientForCreate:
             event_lookup = self.app_view.get_events_view().get_event(event_id)
             return event_lookup.id
         except AttributeError as error:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             return False
         return True
 
@@ -212,9 +221,10 @@ class ConsoleClientForCreate:
             if location_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message(
-                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             return False
         location_lookup = None
         try:
@@ -225,10 +235,10 @@ class ConsoleClientForCreate:
             if isinstance(location_lookup.id, int):
                 raise exceptions.LocationCustomIdAlReadyExists()
         except AttributeError:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             return location_id
 
     def ask_for_a_role_id(self):
@@ -243,9 +253,10 @@ class ConsoleClientForCreate:
             if role_id == "":
                 raise exceptions.CustomIdEmptyException()
         except exceptions.CustomIdEmptyException:
-            printer.print_message(
-                "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
             return False
         role_lookup = None
         try:
@@ -253,10 +264,10 @@ class ConsoleClientForCreate:
             role_lookup = self.app_view.get_roles_view().get_role(role_id)
             return role_lookup.id
         except AttributeError:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             return False
 
     @utils.authentication_permission_decorator
@@ -306,21 +317,20 @@ class ConsoleClientForCreate:
                 client_id = self.create_app_view.get_clients_view().add_client(
                     models.Client(**client_attributes_dict)
                 )
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(client={ 'client_id': client_attributes_dict['client_id'] }):
+                    LOGGER.info("Client creation success")
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         return client_id
@@ -352,33 +362,31 @@ class ConsoleClientForCreate:
             else:
                 collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
                 collaborator = models.Collaborator(**collaborator_attributes_dict)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(collaborator={ 'registration_number': collaborator.registration_number }):
+                    LOGGER.info("Collaborator creation success")
+            return self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
-        return self.create_app_view.get_collaborators_view().add_collaborator(
-            collaborator
-        )
 
     @utils.authentication_permission_decorator
     def add_company(self, company_attributes_dict=""):
@@ -412,28 +420,28 @@ class ConsoleClientForCreate:
                     company_location_id=company_location_id
                 )
                 company = models.Company(**company_attributes_dict)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(company={ 'company_id': company_attributes_dict['company_id'] }):
+                    LOGGER.info("Company creation success")
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         company.creation_date = datetime.now()
@@ -466,28 +474,28 @@ class ConsoleClientForCreate:
             else:
                 contract_attributes_dict = forms.submit_a_contract_create_form()
                 contract = models.Contract(**contract_attributes_dict)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(contract={ 'contract_id': contract_attributes_dict['contract_id'] }):
+                    LOGGER.info("Contract creation success")
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         contract.creation_date = datetime.now()
@@ -526,28 +534,28 @@ class ConsoleClientForCreate:
                 department = models.Collaborator_Department(
                     **department_attributes_dict
                 )
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(department={ 'department_id': department_attributes_dict['department_id'] }):
+                    LOGGER.info("Department creation success")
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         department.creation_date = datetime.now()
@@ -591,45 +599,43 @@ class ConsoleClientForCreate:
                 event_attributes_dict["contract_id"] = contract_id
                 event = models.Event(**event_attributes_dict)
             event.creation_date = datetime.now()
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(event={ 'event_id': event_attributes_dict['event_id'] }):
+                    LOGGER.info("Event creation success")
             return self.create_app_view.get_events_view().add_event(user_id, event)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
 
@@ -666,36 +672,35 @@ class ConsoleClientForCreate:
                     location_id
                 )
                 location = models.Location(**location_attributes_dict)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(location={ 'location_id': location_attributes_dict['location_id'] }):
+                    LOGGER.info("Location creation success")
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.LocationCustomIdAlReadyExists:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_ALREADY_EXISTS_"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_ALREADY_EXISTS_"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.LocationCustomIdAlReadyExists()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
-        except Exception as error:
-            print(error)
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+        except Exception:
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         location.creation_date = datetime.now()
@@ -726,28 +731,28 @@ class ConsoleClientForCreate:
             else:
                 role_attributes_dict = forms.submit_a_collaborator_role_create_form()
                 role = models.Collaborator_Role(**role_attributes_dict)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(role={ 'role_id': role_attributes_dict['role_id'] }):
+                    LOGGER.info("Role creation success")
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
         role.creation_date = datetime.now()

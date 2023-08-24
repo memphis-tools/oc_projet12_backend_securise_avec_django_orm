@@ -10,15 +10,18 @@ try:
     from src.exceptions import exceptions
     from src.models import models
     from src.utils import utils
+    from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from languages import language_bridge
     from printers import printer
     from exceptions import exceptions
     from models import models
     from utils import utils
+    from settings import settings, logtail_handler
 
 
 APP_DICT = language_bridge.LanguageBridge()
+LOGGER = logtail_handler.logger
 
 
 class DatabaseReadController:
@@ -53,9 +56,10 @@ class DatabaseReadController:
             )
             return db_model_queryset
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
 
     def get_client(self, session, client_id):
         """
@@ -72,10 +76,10 @@ class DatabaseReadController:
 
             return db_client_queryset
         except Exception:
-            printer.print_message(
-                "info",
-                APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
 
     def get_clients(self, session):
         """
@@ -103,10 +107,10 @@ class DatabaseReadController:
             )
             return db_collaborator_queryset
         except Exception:
-            printer.print_message(
-                "info",
-                APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
 
     def get_collaborator_join_department(self, session, registration_number):
         """
@@ -153,10 +157,10 @@ class DatabaseReadController:
 
             return db_company_queryset
         except Exception:
-            printer.print_message(
-                "info",
-                APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
 
     def get_companies(self, session):
         """
@@ -184,10 +188,10 @@ class DatabaseReadController:
 
             return db_collaborators_contract
         except Exception:
-            printer.print_message(
-                "info",
-                APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
 
     def get_contracts(self, session):
         """
@@ -215,10 +219,10 @@ class DatabaseReadController:
 
             return db_collaborators_department
         except Exception:
-            printer.print_message(
-                "info",
-                APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
 
     def get_departments(self, session):
         """
@@ -247,10 +251,10 @@ class DatabaseReadController:
 
             return db_collaborators_event
         except Exception:
-            printer.print_message(
-                "info",
-                APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
 
     def get_events(self, session):
         """
@@ -279,10 +283,10 @@ class DatabaseReadController:
 
             return db_locations_queryset
         except Exception:
-            printer.print_message(
-                "info",
-                APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
 
     def get_locations(self, session):
         """
@@ -311,10 +315,10 @@ class DatabaseReadController:
 
             return db_collaborators_role
         except Exception:
-            printer.print_message(
-                "info",
-                APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"],
-            )
+            message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+            printer.print_message("info",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
 
     def get_roles(self, session):
         """

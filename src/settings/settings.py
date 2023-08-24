@@ -20,6 +20,7 @@ INTERNET_CONNECTION = True
 LOG_COLLECT_ACTIVATED = True
 # on propose un log collector: "local", ou au nom de l'appli choisie, exemple "betterstack"
 LOG_COLLECTOR = "betterstack"
+BETTERSTACK_SOURCE_TOKEN = os.environ.get("BETTERSTACK_SOURCE_TOKEN")
 
 # variables dédiées aux imports
 FR_COMPANIES_API_URL = "https://recherche-entreprises.api.gouv.fr/search"

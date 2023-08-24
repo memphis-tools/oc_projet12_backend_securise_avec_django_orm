@@ -9,13 +9,16 @@ try:
     from src.printers import printer
     from src.languages import language_bridge
     from src.clients.read_console import ConsoleClientForRead
+    from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
     from clients.read_console import ConsoleClientForRead
+    from settings import settings, logtail_handler
 
 
 APP_DICT = language_bridge.LanguageBridge()
+LOGGER = logtail_handler.logger
 
 
 class ApplicationHelpFormatter(click.HelpFormatter):
@@ -53,9 +56,10 @@ def get_clients(args):
         console_client = ConsoleClientForRead()
         console_client.get_clients(user_query_filters_args)
     except Exception:
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
 
 
 @click.command
@@ -74,9 +78,10 @@ def get_collaborators(args):
         console_client = ConsoleClientForRead()
         console_client.get_collaborators(user_query_filters_args)
     except Exception:
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
 
 
 @click.command
@@ -95,9 +100,10 @@ def get_companies(args):
         console_client = ConsoleClientForRead()
         console_client.get_companies(user_query_filters_args)
     except Exception:
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
 
 
 @click.command
@@ -130,9 +136,10 @@ def get_contracts(args):
         console_client = ConsoleClientForRead()
         console_client.get_contracts(user_query_filters_args)
     except Exception:
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
 
 
 @click.command
@@ -151,9 +158,10 @@ def get_departments(args):
         console_client = ConsoleClientForRead()
         console_client.get_departments(user_query_filters_args)
     except Exception:
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
 
 
 @click.command
@@ -188,9 +196,10 @@ def get_events(args):
         console_client = ConsoleClientForRead()
         console_client.get_events(user_query_filters_args)
     except Exception:
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
 
 
 @click.command
@@ -209,9 +218,10 @@ def get_locations(args):
         console_client = ConsoleClientForRead()
         console_client.get_locations(user_query_filters_args)
     except Exception:
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
 
 
 @click.command
@@ -230,6 +240,7 @@ def get_roles(args):
         console_client = ConsoleClientForRead()
         console_client.get_roles(user_query_filters_args)
     except Exception:
-        printer.print_message(
-            "error", APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        )
+        message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)

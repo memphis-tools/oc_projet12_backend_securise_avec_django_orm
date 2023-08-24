@@ -8,15 +8,15 @@ try:
     from src.languages import language_bridge
     from src.printers import printer
     from src.exceptions import exceptions
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from languages import language_bridge
     from printers import printer
     from exceptions import exceptions
-    from settings import settings
+    from settings import settings, logtail_handler
 
 
-APP_DICT = language_bridge.LanguageBridge()
+LOGGER = logtail_handler.logger
 
 
 class DatabaseCreateController:
@@ -26,7 +26,7 @@ class DatabaseCreateController:
     """
 
     def __init__(self):
-        APP_DICT = language_bridge.LanguageBridge()
+        self.app_dict = language_bridge.LanguageBridge()
 
     def add_client(self, session, client):
         """
@@ -42,9 +42,10 @@ class DatabaseCreateController:
 
             return client.id
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
 
     def add_collaborator(self, session, collaborator):
         """
@@ -82,9 +83,10 @@ class DatabaseCreateController:
 
             return collaborator.id
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
 
     def add_company(self, session, company):
         """
@@ -100,10 +102,10 @@ class DatabaseCreateController:
 
             return company.id
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
-
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
     def add_contract(self, session, contract):
         """
         Description:
@@ -118,9 +120,10 @@ class DatabaseCreateController:
 
             return contract.id
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
 
     def add_department(self, session, department):
         """
@@ -135,9 +138,10 @@ class DatabaseCreateController:
             session.commit()
             return department.id
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
 
     def add_event(self, session, current_user_collaborator_id, event):
         """
@@ -157,9 +161,10 @@ class DatabaseCreateController:
             session.commit()
             return event.id
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
 
     def add_location(self, session, location):
         """
@@ -175,9 +180,10 @@ class DatabaseCreateController:
 
             return location.id
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
 
     def add_role(self, session, role):
         """
@@ -193,6 +199,7 @@ class DatabaseCreateController:
 
             return role.id
         except Exception:
-            printer.print_message(
-                "error", APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)

@@ -3,6 +3,7 @@ Description:
 Client en mode console, dédié aux mises à jour pour suppression.
 """
 import sys
+import logtail
 
 try:
     from src.languages import language_bridge
@@ -12,7 +13,7 @@ try:
     from src.views.delete_views import DeleteAppViews
     from src.views.views import AppViews
     from src.views.jwt_view import JwtView
-    from src.settings import settings
+    from src.settings import settings, logtail_handler
     from src.utils import utils
 except ModuleNotFoundError:
     from languages import language_bridge
@@ -22,8 +23,11 @@ except ModuleNotFoundError:
     from views.delete_views import DeleteAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
-    from settings import settings
+    from settings import settings, logtail_handler
     from utils import utils
+
+
+LOGGER = logtail_handler.logger
 
 
 class ConsoleClientForDelete:
@@ -60,9 +64,10 @@ class ConsoleClientForDelete:
                 if client_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message(
-                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-                )
+                message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                printer.print_message("info",message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
                 return False
             client_lookup = None
         else:
@@ -74,10 +79,10 @@ class ConsoleClientForDelete:
             )
             return client_lookup.get_dict()
         except Exception:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             return False
 
     def ask_for_a_contract_id(self, custom_id=""):
@@ -93,9 +98,10 @@ class ConsoleClientForDelete:
                 if contract_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message(
-                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-                )
+                message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                printer.print_message("info",message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
                 return False
             contract_lookup = None
         else:
@@ -107,10 +113,10 @@ class ConsoleClientForDelete:
             )
             return contract_lookup.get_dict()
         except Exception:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             return False
 
     def ask_for_a_collaborator_id(self, custom_id=""):
@@ -126,9 +132,10 @@ class ConsoleClientForDelete:
                 if registration_number == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message(
-                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-                )
+                message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                printer.print_message("info",message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
                 return False
             collaborator_lookup = None
         else:
@@ -143,10 +150,10 @@ class ConsoleClientForDelete:
 
             return collaborator_lookup.id
         except Exception:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             return False
 
     def ask_for_a_company_id(self, custom_id=""):
@@ -162,9 +169,10 @@ class ConsoleClientForDelete:
                 if company_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message(
-                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-                )
+                message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                printer.print_message("info",message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
                 return False
             company_lookup = None
         else:
@@ -176,10 +184,10 @@ class ConsoleClientForDelete:
             )
             return company_lookup.get_dict()
         except Exception:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             return False
 
     def ask_for_a_department_id(self, custom_id=""):
@@ -195,9 +203,10 @@ class ConsoleClientForDelete:
                 if department_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message(
-                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-                )
+                message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                printer.print_message("info",message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
                 return False
             department_lookup = None
         else:
@@ -209,10 +218,10 @@ class ConsoleClientForDelete:
             )
             return department_lookup.get_dict()
         except Exception:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             return False
 
     def ask_for_a_event_id(self, custom_id=""):
@@ -228,9 +237,10 @@ class ConsoleClientForDelete:
                 if event_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message(
-                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-                )
+                message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                printer.print_message("info",message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
                 return False
             event_lookup = None
         else:
@@ -240,10 +250,10 @@ class ConsoleClientForDelete:
             event_lookup = self.app_view.get_events_view().get_event(event_id=event_id)
             return event_lookup.get_dict()
         except Exception:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             return False
 
     def ask_for_a_location_id(self, custom_id=""):
@@ -259,9 +269,10 @@ class ConsoleClientForDelete:
                 if location_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message(
-                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-                )
+                message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                printer.print_message("info",message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
                 return False
             location_lookup = None
         else:
@@ -288,9 +299,10 @@ class ConsoleClientForDelete:
                 if role_id == "":
                     raise exceptions.CustomIdEmptyException()
             except exceptions.CustomIdEmptyException:
-                printer.print_message(
-                    "info", self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
-                )
+                message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+                printer.print_message("info",message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                	LOGGER.info(message)
                 return False
             role_lookup = None
         else:
@@ -300,10 +312,10 @@ class ConsoleClientForDelete:
             role_lookup = self.app_view.get_roles_view().get_role(role_id=role_id)
             return role_lookup.get_dict()
         except Exception:
-            printer.print_message(
-                "info",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             return False
 
     @utils.authentication_permission_decorator
@@ -332,29 +344,30 @@ class ConsoleClientForDelete:
                 client_id = self.ask_for_a_client_id()["id"]
             return self.delete_app_view.get_clients_view().delete_client(client_id)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': user_registration_number }):
+                	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
         except TypeError as error:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CLIENT_RATTACHED_TO_CONTRACT"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CLIENT_RATTACHED_TO_CONTRACT"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(client={ 'client_id': client_id }):
+                	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -365,6 +378,7 @@ class ConsoleClientForDelete:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         collaborator_id = ""
         try:
@@ -374,36 +388,36 @@ class ConsoleClientForDelete:
                 collaborator_id = self.ask_for_a_collaborator_id(collaborator_custom_id)
             else:
                 collaborator_id = self.ask_for_a_collaborator_id()
+
             return self.delete_app_view.get_collaborators_view().delete_collaborator(
                 collaborator_id
             )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': user_registration_number }):
+                	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "CLIENT_RATTACHED_TO_COLLABORATOR"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CLIENT_RATTACHED_TO_COLLABORATOR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(collaborator={ 'collaborator_id': collaborator_id }):
+                	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -414,6 +428,7 @@ class ConsoleClientForDelete:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         company_id = ""
         try:
@@ -425,30 +440,31 @@ class ConsoleClientForDelete:
                 company_id = self.ask_for_a_company_id()["id"]
             return self.delete_app_view.get_companies_view().delete_company(company_id)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': user_registration_number }):
+                	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["COMPANY_RATTACHED_TO_CLIENT"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["COMPANY_RATTACHED_TO_CLIENT"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(company={ 'company_id': company_id }):
+                	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -459,6 +475,7 @@ class ConsoleClientForDelete:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract_id = ""
         try:
@@ -472,30 +489,31 @@ class ConsoleClientForDelete:
                 contract_id
             )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': user_registration_number }):
+                	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CONTRACT_RATTACHED_TO_EVENT"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CONTRACT_RATTACHED_TO_EVENT"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(contract={ 'contract_id': contract_id }):
+                	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -506,6 +524,7 @@ class ConsoleClientForDelete:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         department_id = ""
         try:
@@ -522,32 +541,31 @@ class ConsoleClientForDelete:
                 department_id
             )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': user_registration_number }):
+                	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "DEPARTMENT_RATTACHED_TO_COLLABORATOR"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["DEPARTMENT_RATTACHED_TO_COLLABORATOR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(department={ 'department_id': department_id }):
+                	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -558,6 +576,7 @@ class ConsoleClientForDelete:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event_id = ""
         try:
@@ -569,24 +588,24 @@ class ConsoleClientForDelete:
                 event_id = self.ask_for_a_event_id()["id"]
             return self.delete_app_view.get_events_view().delete_event(event_id)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': user_registration_number }):
+                	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except TypeError as error:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -597,6 +616,7 @@ class ConsoleClientForDelete:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location_id = ""
         try:
@@ -610,30 +630,31 @@ class ConsoleClientForDelete:
                 location_id
             )
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': user_registration_number }):
+                	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["LOCATION_RATTACHED_TO_COMPANY"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["LOCATION_RATTACHED_TO_COMPANY"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(location={ 'location_id': location_id }):
+                	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -644,6 +665,7 @@ class ConsoleClientForDelete:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        user_registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         role_id = ""
         try:
@@ -655,28 +677,29 @@ class ConsoleClientForDelete:
                 role_id = self.ask_for_a_role_id()["id"]
             return self.delete_app_view.get_roles_view().delete_role(role_id)
         except exceptions.InsufficientPrivilegeException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()[
-                    "INSUFFICIENT_PRIVILEGES_EXCEPTION"
-                ],
-            )
+            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': user_registration_number }):
+                	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ForeignKeyDependyException:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["ROLE_RATTACHED_TO_COLLABORATOR"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["ROLE_RATTACHED_TO_COLLABORATOR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(role={ 'role_id': role_id }):
+                	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
         except TypeError as error:
-            printer.print_message(
-                "error",
-                self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"],
-            )
+            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
         except Exception:
-            printer.print_message(
-                "error", self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            )
+            message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            	LOGGER.error(message)
             sys.exit(0)
