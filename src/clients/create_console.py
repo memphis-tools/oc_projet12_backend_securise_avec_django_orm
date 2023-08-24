@@ -86,7 +86,7 @@ class ConsoleClientForCreate:
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
-            return False
+            sys.exit(0)
 
     def ask_for_a_contract_id(self):
         """
@@ -201,7 +201,7 @@ class ConsoleClientForCreate:
             # on propose de rechercher l'évènement
             event_lookup = self.app_view.get_events_view().get_event(event_id)
             return event_lookup.id
-        except AttributeError as error:
+        except AttributeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -321,10 +321,6 @@ class ConsoleClientForCreate:
                 with logtail.context(client={ 'client_id': client_attributes_dict['client_id'] }):
                     LOGGER.info("Client creation success")
         except exceptions.InsufficientPrivilegeException:
-            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-            printer.print_message("error",message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.SuppliedDataNotMatchModel:
             message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
@@ -367,10 +363,6 @@ class ConsoleClientForCreate:
                     LOGGER.info("Collaborator creation success")
             return self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
         except exceptions.InsufficientPrivilegeException:
-            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-            printer.print_message("error",message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception:
@@ -424,10 +416,6 @@ class ConsoleClientForCreate:
                 with logtail.context(company={ 'company_id': company_attributes_dict['company_id'] }):
                     LOGGER.info("Company creation success")
         except exceptions.InsufficientPrivilegeException:
-            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-            printer.print_message("error",message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
@@ -455,6 +443,10 @@ class ConsoleClientForCreate:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        registration_number = str(decoded_token["registration_number"])
+        user_id = utils.get_user_id_from_registration_number(
+            self.app_view.session, registration_number
+        )
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract = ""
         try:
@@ -472,16 +464,18 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
+                client_id = self.ask_for_a_client_id()
+                if not client_id:
+                    raise exceptions.ClientNotFoundWithClientId()
                 contract_attributes_dict = forms.submit_a_contract_create_form()
+                contract_attributes_dict["client_id"] = client_id
                 contract = models.Contract(**contract_attributes_dict)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(contract={ 'contract_id': contract_attributes_dict['contract_id'] }):
                     LOGGER.info("Contract creation success")
+            contract.creation_date = datetime.now()
+            return self.create_app_view.get_contracts_view().add_contract(contract)
         except exceptions.InsufficientPrivilegeException:
-            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-            printer.print_message("error",message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
@@ -498,8 +492,6 @@ class ConsoleClientForCreate:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
-        contract.creation_date = datetime.now()
-        return self.create_app_view.get_contracts_view().add_contract(contract)
 
     @utils.authentication_permission_decorator
     def add_department(self, department_attributes_dict=""):
@@ -538,10 +530,6 @@ class ConsoleClientForCreate:
                 with logtail.context(department={ 'department_id': department_attributes_dict['department_id'] }):
                     LOGGER.info("Department creation success")
         except exceptions.InsufficientPrivilegeException:
-            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-            printer.print_message("error",message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
@@ -604,10 +592,6 @@ class ConsoleClientForCreate:
                     LOGGER.info("Event creation success")
             return self.create_app_view.get_events_view().add_event(user_id, event)
         except exceptions.InsufficientPrivilegeException:
-            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-            printer.print_message("error",message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
@@ -676,10 +660,6 @@ class ConsoleClientForCreate:
                 with logtail.context(location={ 'location_id': location_attributes_dict['location_id'] }):
                     LOGGER.info("Location creation success")
         except exceptions.InsufficientPrivilegeException:
-            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-            printer.print_message("error",message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.LocationCustomIdAlReadyExists:
@@ -735,10 +715,6 @@ class ConsoleClientForCreate:
                 with logtail.context(role={ 'role_id': role_attributes_dict['role_id'] }):
                     LOGGER.info("Role creation success")
         except exceptions.InsufficientPrivilegeException:
-            message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-            printer.print_message("error",message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
