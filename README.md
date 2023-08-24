@@ -62,6 +62,8 @@ As the application is set to be connected to internet the following API's are us
 
 - https://geo.api.gouv.fr
 
+Notice that **log collect is activated by default**. You can deactivate it through settings file (INTERNET_CONNECTION and LOG_COLLECT_ACTIVATED to False).
+
 ---
 
 ### How use this project ?
@@ -75,6 +77,8 @@ As the application is set to be connected to internet the following API's are us
   2. Set a .envrc file
 
       You must create a .envrc file with this **example** content.
+      If you want to collect logs on Betterstack, you have to set the BETTERSTACK_SOURCE_TOKEN.
+      If you don't want to collect logs, you don't need to set it.
 
             SECRET_KEY='MakeYourOwnSecretKey'
             ADMIN_LOGIN='admin'
@@ -82,6 +86,7 @@ As the application is set to be connected to internet the following API's are us
             OC12_COMMERCIAL_PWD='MakeItStrong'
             OC12_GESTION_PWD='MakeItSecured'
             OC12_SUPPORT_PWD='MakeItGreat'
+            BETTERSTACK_SOURCE_TOKEN='SuperTokenFromBetterStack'
 
       To make your own secret_key use module secrets.
 
