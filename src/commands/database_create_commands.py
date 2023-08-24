@@ -9,13 +9,13 @@ try:
     from src.languages import language_bridge
     from src.clients.create_console import ConsoleClientForCreate
     from src.exceptions import exceptions
-    from src.settings import logtail_handler
+    from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
     from clients.create_console import ConsoleClientForCreate
     from exceptions import exceptions
-    from settings import logtail_handler
+    from settings import settings, logtail_handler
 
 
 APP_DICT = language_bridge.LanguageBridge()
@@ -31,6 +31,11 @@ def add_client():
     try:
         console_client = ConsoleClientForCreate()
         print(console_client.add_client())
+    except exceptions.InsufficientPrivilegeException:
+        message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -47,6 +52,11 @@ def add_collaborator():
     try:
         console_client = ConsoleClientForCreate()
         print(console_client.add_collaborator())
+    except exceptions.InsufficientPrivilegeException:
+        message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -63,6 +73,11 @@ def add_company():
     try:
         console_client = ConsoleClientForCreate()
         print(console_client.add_company())
+    except exceptions.InsufficientPrivilegeException:
+        message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -79,6 +94,11 @@ def add_contract():
     try:
         console_client = ConsoleClientForCreate()
         print(console_client.add_contract())
+    except exceptions.InsufficientPrivilegeException:
+        message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -95,6 +115,11 @@ def add_department():
     try:
         console_client = ConsoleClientForCreate()
         print(console_client.add_department())
+    except exceptions.InsufficientPrivilegeException:
+        message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -111,6 +136,11 @@ def add_event():
     try:
         console_client = ConsoleClientForCreate()
         print(console_client.add_event())
+    except exceptions.InsufficientPrivilegeException:
+        message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -129,6 +159,11 @@ def add_location():
         print(console_client.add_location())
     except exceptions.LocationCustomIdAlReadyExists:
         pass
+    except exceptions.InsufficientPrivilegeException:
+        message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -145,6 +180,11 @@ def add_role():
     try:
         console_client = ConsoleClientForCreate()
         print(console_client.add_role())
+    except exceptions.InsufficientPrivilegeException:
+        message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
