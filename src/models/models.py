@@ -150,8 +150,8 @@ class Collaborator(Base):
         descriptors += f"(creation_date|{self.creation_date})"
         descriptors += f",(user_id|{self.registration_number})"
         descriptors += f",(username|{self.username})"
-        descriptors += f",(department_id|{self.department_id})"
-        descriptors += f",(role|{self.role_id})"
+        descriptors += f",(department_id|{self.department.department_id})"
+        descriptors += f",(role|{self.role.role_id})"
         descriptors += "]"
         return descriptors
 
@@ -450,7 +450,7 @@ class Event(Base):
     def get_dict(self):
         event_dict = {
             "id": self.id,
-            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
+            "creation_date": self.creation_date,
             "event_id": self.event_id,
             "title": self.title,
             "contract_id": self.contract_id,

@@ -75,6 +75,8 @@ class ConsoleClientForUpdate:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CommercialCollaboratorIsNotAssignedToClient:
             raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
+        except exceptions.CustomIdMatchNothingException:
+            raise exceptions.CustomIdMatchNothingException()
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
@@ -106,6 +108,8 @@ class ConsoleClientForUpdate:
             )
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
+        except exceptions.CustomIdMatchNothingException:
+            raise exceptions.CustomIdMatchNothingException()
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
@@ -189,6 +193,8 @@ class ConsoleClientForUpdate:
             )
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
+        except exceptions.CustomIdMatchNothingException:
+            raise exceptions.CustomIdMatchNothingException()
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
@@ -223,13 +229,16 @@ class ConsoleClientForUpdate:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
+        except exceptions.CustomIdMatchNothingException:
+            raise exceptions.CustomIdMatchNothingException()
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             	LOGGER.error(message)
             sys.exit(0)
-        except Exception:
+        except Exception as error:
+            print(f"UPDATE CONTRACT ERROR SIR: {error}")
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -253,6 +262,8 @@ class ConsoleClientForUpdate:
             )
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
+        except exceptions.CustomIdMatchNothingException:
+            raise exceptions.CustomIdMatchNothingException()
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
@@ -290,6 +301,8 @@ class ConsoleClientForUpdate:
             )
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
+        except exceptions.CustomIdMatchNothingException:
+            raise exceptions.CustomIdMatchNothingException()
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
             printer.print_message(
                 "error",
@@ -329,6 +342,8 @@ class ConsoleClientForUpdate:
             )
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
+        except exceptions.CustomIdMatchNothingException:
+            raise exceptions.CustomIdMatchNothingException()
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
@@ -359,6 +374,8 @@ class ConsoleClientForUpdate:
             )
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
+        except exceptions.CustomIdMatchNothingException:
+            raise exceptions.CustomIdMatchNothingException()
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)

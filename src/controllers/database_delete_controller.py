@@ -26,10 +26,11 @@ class DatabaseDeleteController:
         """
         try:
             client = session.query(models.Client).filter_by(id=client_id).first()
+            removed_id = client.client_id
             session.delete(client)
             session.commit()
             session.close()
-            return True
+            return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
@@ -62,10 +63,11 @@ class DatabaseDeleteController:
         """
         try:
             company = session.query(models.Company).filter_by(id=company_id).first()
+            removed_id = company.company_id
             session.delete(company)
             session.commit()
             session.close()
-            return True
+            return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
@@ -77,10 +79,11 @@ class DatabaseDeleteController:
         """
         try:
             contract = session.query(models.Contract).filter_by(id=contract_id).first()
+            removed_id = contract.contract_id
             session.delete(contract)
             session.commit()
             session.close()
-            return True
+            return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
@@ -97,10 +100,11 @@ class DatabaseDeleteController:
                 .filter_by(id=int(department_id))
                 .first()
             )
+            removed_id = department.department_id
             session.delete(department)
             session.commit()
             session.close()
-            return True
+            return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
@@ -112,10 +116,11 @@ class DatabaseDeleteController:
         """
         try:
             event = session.query(models.Event).filter_by(id=event_id).first()
+            removed_id = event.event_id
             session.delete(event)
             session.commit()
             session.close()
-            return True
+            return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
@@ -127,10 +132,11 @@ class DatabaseDeleteController:
         """
         try:
             location = session.query(models.Location).filter_by(id=location_id).first()
+            removed_id = location.location_id
             session.delete(location)
             session.commit()
             session.close()
-            return True
+            return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
@@ -142,10 +148,11 @@ class DatabaseDeleteController:
         """
         try:
             role = session.query(models.Collaborator_Role).filter_by(id=role_id).first()
+            removed_id = role.role_id
             session.delete(role)
             session.commit()
             session.close()
-            return True
+            return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
                 raise exceptions.ForeignKeyDependyException(error.orig)
