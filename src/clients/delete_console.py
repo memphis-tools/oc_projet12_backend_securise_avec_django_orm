@@ -344,7 +344,7 @@ class ConsoleClientForDelete:
                 client_id = self.ask_for_a_client_id()["id"]
 
             client_id = self.delete_app_view.get_clients_view().delete_client(client_id)
-            message = f"Suppresion {client_id} by {user_registration_number}"
+            message = f"Suppression {client_id} by {user_registration_number}"
             return message
         except exceptions.InsufficientPrivilegeException:
             message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
@@ -393,7 +393,7 @@ class ConsoleClientForDelete:
                 collaborator_id = self.ask_for_a_collaborator_id()
 
             collaborator_id = self.delete_app_view.get_collaborators_view().delete_collaborator(collaborator_id)
-            message = f"Suppresion {collaborator_id} by {user_registration_number}"
+            message = f"Suppression {collaborator_id} by {user_registration_number}"
             return message
         except exceptions.InsufficientPrivilegeException:
             message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
@@ -443,7 +443,7 @@ class ConsoleClientForDelete:
                 company_id = self.ask_for_a_company_id()["id"]
 
             company_id = self.delete_app_view.get_companies_view().delete_company(company_id)
-            message = f"Suppresion {company_id} by {user_registration_number}"
+            message = f"Suppression {company_id} by {user_registration_number}"
             return message
         except exceptions.InsufficientPrivilegeException:
             message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
@@ -492,7 +492,7 @@ class ConsoleClientForDelete:
             else:
                 contract_id = self.ask_for_a_contract_id()["id"]
             contract_id = self.delete_app_view.get_contracts_view().delete_contract(contract_id)
-            message = f"Suppresion {contract_id} by {user_registration_number}"
+            message = f"Suppression {contract_id} by {user_registration_number}"
             return message
         except exceptions.InsufficientPrivilegeException:
             message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
@@ -545,7 +545,7 @@ class ConsoleClientForDelete:
                 department_id = self.ask_for_a_department_id()["id"]
 
             department_id = self.delete_app_view.get_departments_view().delete_department(department_id)
-            message = f"Suppresion {department_id} by {user_registration_number}"
+            message = f"Suppression {department_id} by {user_registration_number}"
             return message
         except exceptions.InsufficientPrivilegeException:
             message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
@@ -595,7 +595,7 @@ class ConsoleClientForDelete:
                 event_id = self.ask_for_a_event_id()["id"]
 
             event_id = self.delete_app_view.get_events_view().delete_event(event_id)
-            message = f"Suppresion {event_id} by {user_registration_number}"
+            message = f"Suppression {event_id} by {user_registration_number}"
             return message
         except exceptions.InsufficientPrivilegeException:
             message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
@@ -638,7 +638,7 @@ class ConsoleClientForDelete:
                 location_id = self.ask_for_a_location_id()["id"]
 
             location_id = self.delete_app_view.get_locations_view().delete_location(location_id)
-            message = f"Suppresion {location_id} by {user_registration_number}"
+            message = f"Suppression {location_id} by {user_registration_number}"
             return message
         except exceptions.InsufficientPrivilegeException:
             message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
@@ -688,7 +688,7 @@ class ConsoleClientForDelete:
                 role_id = self.ask_for_a_role_id()["id"]
 
             role_id = self.delete_app_view.get_roles_view().delete_role(role_id)
-            message = f"Suppresion {role_id} by {user_registration_number}"
+            message = f"Suppression {role_id} by {user_registration_number}"
             return message
         except exceptions.InsufficientPrivilegeException:
             message = self.app_dict.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
