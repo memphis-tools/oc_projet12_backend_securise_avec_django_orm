@@ -359,6 +359,18 @@ class ConsoleClientForCreate:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
+                department_custom_id = collaborator_attributes_dict["department_id"]
+                department_primary_id = utils.get_department_id_from_custom_id(
+                    self.app_view.session, department_custom_id
+                )
+                collaborator_attributes_dict["department_id"] = department_primary_id
+
+                role_custom_id = collaborator_attributes_dict["role_id"]
+                role_primary_id = utils.get_role_id_from_role_custom_id(
+                    self.app_view.session, role_custom_id
+                )
+                collaborator_attributes_dict["role_id"] = role_primary_id
+
                 collaborator = models.Collaborator(**collaborator_attributes_dict)
             collaborator_id = self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
             message = f"Creation collaborateur {collaborator} by {registration_number}"
@@ -369,6 +381,8 @@ class ConsoleClientForCreate:
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
+        except exceptions.CollaboratorAlreadyExistException:
+            raise exceptions.CollaboratorAlreadyExistException()
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error",message)

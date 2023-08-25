@@ -43,6 +43,10 @@ class MissingUpdateParamException(Exception):
     pass
 
 
+class CollaboratorAlreadyExistException(Exception):
+    pass
+
+
 class CommercialCollaboratorIsNotAssignedToClient(Exception):
     pass
 

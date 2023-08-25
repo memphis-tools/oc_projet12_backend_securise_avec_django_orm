@@ -3,7 +3,7 @@ Description:
 Un controleur avec toutes méthodes pour ajouter des données.
 """
 from sqlalchemy import text
-
+import sqlalchemy
 try:
     from src.languages import language_bridge
     from src.printers import printer
@@ -79,6 +79,8 @@ class DatabaseCreateController:
             session.execute(sql)
             session.commit()
             return collaborator.registration_number
+        except sqlalchemy.exc.ProgrammingError:
+            raise exceptions.CollaboratorAlreadyExistException()
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
