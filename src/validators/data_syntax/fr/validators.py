@@ -204,7 +204,7 @@ def is_first_name_valid(first_name):
     Description: Controler le prénom saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ']{,150})$")
+    pattern = re.compile(r"([\w \.']{,150})$")
     return re.match(pattern, first_name).group()
 
 
@@ -242,7 +242,7 @@ def is_notes_valid(notes):
     Description: Controler les notes saisis (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ' \"]{,2500})$")
+    pattern = re.compile(r"([\w ' \. \"]{,2500})$")
     return re.match(pattern, notes).group()
 
 
@@ -262,6 +262,17 @@ def is_registration_number_valid(registration_number):
     """
     pattern = re.compile(r"([\w ]{,12})$")
     return re.match(pattern, registration_number).group()
+
+
+def is_collaborator_id_valid(id):
+    """
+    Description: Controler l'id du collaborateur. C'est utilisé notamment en cas de mise à jour d'un évènement.
+    Pour éviter d'introduire des exceptions ailleurs dans le code, ce validateur est crée.
+    Cependant il ne fait que vérifier que l'id (réel, la primary key) du collaborateur, est un entier.
+    Et c'est ce qu'elle est pas défintion dans le modèle.
+    """
+    pattern = re.compile(r"\d")
+    return re.match(pattern, id).group()
 
 
 def is_remain_amount_to_pay_valid(remain_amount_to_pay, full_amount_to_pay):
