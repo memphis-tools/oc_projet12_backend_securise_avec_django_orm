@@ -26,8 +26,7 @@ def test_delete_client_view_with_commercial_profile_when_client_not_referenced_i
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
             ).delete_client(client)
-            assert isinstance(result, int)
-            assert result > 0
+            assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -68,8 +67,7 @@ def test_delete_company_view_with_commercial_profile(
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
             ).delete_company(company)
-            assert isinstance(result, int)
-            assert result > 0
+            assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -123,13 +121,12 @@ def test_delete_contract_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
-        dummy_contracts_list = ["D9Z1", "C9Z1"]
+        dummy_contracts_list = ["ff555", "av123"]
         for contract in dummy_contracts_list:
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
             ).delete_contract(contract)
-            assert isinstance(result, int)
-            assert result > 0
+            assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -170,8 +167,7 @@ def test_delete_event_view_with_gestion_profile(
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
             ).delete_event(event)
-            assert isinstance(result, int)
-            assert result > 0
+            assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -212,8 +208,7 @@ def test_delete_location_view_with_commercial_profile_when_location_not_referenc
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
             ).delete_location(location)
-            assert isinstance(result, int)
-            assert result > 0
+            assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -227,8 +222,7 @@ def test_delete_role_view_with_gestion_profile(
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
             ).delete_role(role)
-            assert isinstance(result, int)
-            assert result > 0
+            assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -269,8 +263,7 @@ def test_delete_department_view_with_gestion_profile(
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
             ).delete_department(department)
-            assert isinstance(result, int)
-            assert result > 0
+            assert isinstance(result, str)
     except Exception as error:
         print(error)
 

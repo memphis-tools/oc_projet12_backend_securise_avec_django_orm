@@ -7,7 +7,7 @@ Plus largement, les tests de suppression doivent venir après les créations ci-
 """
 
 import pytest
-
+from datetime import datetime
 try:
     from src.clients.create_console import ConsoleClientForCreate
     from src.exceptions import exceptions
@@ -28,7 +28,7 @@ location_attributes_dict_1 = {
     "cedex": "5",
     "ville": "Plurien",
     "pays": "France",
-    "creation_date": "2020-02-13 20:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 location_attributes_dict_2 = {
@@ -39,7 +39,7 @@ location_attributes_dict_2 = {
     "cedex": "0",
     "ville": "Gardanne",
     "pays": "France",
-    "creation_date": "2021-03-14 21:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 location_attributes_dict_3 = {
@@ -50,7 +50,7 @@ location_attributes_dict_3 = {
     "cedex": "18",
     "ville": "Versailles",
     "pays": "France",
-    "creation_date": "2023-01-15 22:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 company_attributes_dict_1 = {
@@ -60,7 +60,7 @@ company_attributes_dict_1 = {
     "company_name": "A la bonne meule",
     "activite_principale": "",
     "location_id": "2",
-    "creation_date": "2020-12-21 16:22:30",
+    "creation_date": f"{datetime.now()}",
 }
 
 company_attributes_dict_2 = {
@@ -70,7 +70,7 @@ company_attributes_dict_2 = {
     "company_name": "Calisson d'Aix",
     "activite_principale": "8230Z",
     "location_id": "1",
-    "creation_date": "2021-11-19 09:40:25",
+    "creation_date": f"{datetime.now()}",
 }
 
 company_attributes_dict_3 = {
@@ -80,7 +80,7 @@ company_attributes_dict_3 = {
     "company_name": "Distributeurs Auto de Bretagne",
     "activite_principale": "5320Z",
     "location_id": "2",
-    "creation_date": "2023-03-15 14:46:12",
+    "creation_date": f"{datetime.now()}",
 }
 
 client_attributes_dict_1 = {
@@ -93,7 +93,7 @@ client_attributes_dict_1 = {
     "telephone": "0611223344",
     "company_id": "1",
     "commercial_contact": "2",
-    "creation_date": "2023-06-15 18:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 client_attributes_dict_2 = {
@@ -106,7 +106,7 @@ client_attributes_dict_2 = {
     "telephone": "0655228844",
     "company_id": "1",
     "commercial_contact": "2",
-    "creation_date": "2023-06-15 18:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 commercial_collaborator_attributes_dict_1 = {
@@ -114,7 +114,7 @@ commercial_collaborator_attributes_dict_1 = {
     "username": "dummy bigtooth",
     "department_id": "1",
     "role_id": "2",
-    "creation_date": "2023-07-02 10:50",
+    "creation_date": f"{datetime.now()}",
 }
 
 commercial_collaborator_attributes_dict_2 = {
@@ -122,7 +122,7 @@ commercial_collaborator_attributes_dict_2 = {
     "username": "dummy bigfoot",
     "department_id": "1",
     "role_id": "2",
-    "creation_date": "2023-07-10 10:50",
+    "creation_date": f"{datetime.now()}",
 }
 
 gestion_collaborator_attributes_dict_1 = {
@@ -130,7 +130,7 @@ gestion_collaborator_attributes_dict_1 = {
     "username": "dustin river",
     "department_id": "2",
     "role_id": "2",
-    "creation_date": "2023-07-13 10:44",
+    "creation_date": f"{datetime.now()}",
 }
 
 gestion_collaborator_attributes_dict_2 = {
@@ -138,7 +138,7 @@ gestion_collaborator_attributes_dict_2 = {
     "username": "myriam lake",
     "department_id": "2",
     "role_id": "2",
-    "creation_date": "2023-06-27 10:32",
+    "creation_date": f"{datetime.now()}",
 }
 
 support_collaborator_attributes_dict_1 = {
@@ -146,7 +146,7 @@ support_collaborator_attributes_dict_1 = {
     "username": "william summerland",
     "department_id": "3",
     "role_id": "2",
-    "creation_date": "2023-06-15 14:25",
+    "creation_date": f"{datetime.now()}",
 }
 
 support_collaborator_attributes_dict_2 = {
@@ -154,7 +154,7 @@ support_collaborator_attributes_dict_2 = {
     "username": "marianne dupin",
     "department_id": "3",
     "role_id": "2",
-    "creation_date": "2023-06-12 08:32",
+    "creation_date": f"{datetime.now()}",
 }
 
 contract_attributes_dict_1 = {
@@ -163,8 +163,7 @@ contract_attributes_dict_1 = {
     "remain_amount_to_pay": "999.99",
     "status": "unsigned",
     "client_id": "1",
-    "collaborator_id": "1",
-    "creation_date": "2023-06-15 15:04:25",
+    "creation_date": f"{datetime.now()}",
 }
 
 contract_attributes_dict_2 = {
@@ -173,8 +172,7 @@ contract_attributes_dict_2 = {
     "remain_amount_to_pay": "932.44",
     "status": "signed",
     "client_id": "1",
-    "collaborator_id": "2",
-    "creation_date": "2023-06-15 11:35:12",
+    "creation_date": f"{datetime.now()}",
 }
 
 event_attributes_dict_1 = {
@@ -188,7 +186,7 @@ event_attributes_dict_1 = {
     "contract_id": "1",
     "location_id": "2",
     "collaborator_id": "1",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 event_attributes_dict_2 = {
@@ -202,31 +200,31 @@ event_attributes_dict_2 = {
     "contract_id": "1",
     "location_id": "2",
     "collaborator_id": "2",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 dpmt_attributes_dict_1 = {
     "department_id": "design",
     "name": "oc12_design",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 dpmt_attributes_dict_2 = {
     "department_id": "logist",
     "name": "oc12_logistic",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 role_attributes_dict_1 = {
     "role_id": "sec",
     "name": "SECRETARY",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 role_attributes_dict_2 = {
     "role_id": "driv",
     "name": "DRIVER",
-    "creation_date": "2023-07-15 22:00:00",
+    "creation_date": f"{datetime.now()}",
 }
 
 
@@ -288,8 +286,7 @@ def test_add_collaborator_view_with_gestion_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_collaborator(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -305,8 +302,8 @@ def test_add_valid_location_view_with_commercial_profile(
         result = ConsoleClientForCreate(db_name).add_location(
             location_attributes_dict_1
         )
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
+
     except Exception as error:
         print(error)
 
@@ -361,8 +358,7 @@ def test_add_company_id_1_view_with_commercial_profile_with_valid_company(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_company(company_attributes_dict_1)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -376,8 +372,8 @@ def test_add_company_id_3_view_with_commercial_profile_with_valid_company(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_company(company_attributes_dict_3)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
+
     except Exception as error:
         print(error)
 
@@ -394,8 +390,7 @@ def test_add_company_view_with_gestion_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_company(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -412,8 +407,8 @@ def test_add_company_view_with_support_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_company(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
+
     except Exception as error:
         print(error)
 
@@ -444,8 +439,7 @@ def test_add_contract_view_with_gestion_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_contract(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -473,8 +467,8 @@ def test_add_event_view_with_commercial_profile_when_assigned_contract(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_event(event_attributes_dict_1)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
+
     except Exception as error:
         print(error)
 
@@ -532,8 +526,7 @@ def test_add_role_view_with_gestion_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_role(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
     except Exception as error:
         print(error)
 
@@ -550,8 +543,8 @@ def test_add_department_view_with_gestion_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_department(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
+
     except Exception as error:
         print(error)
 
@@ -582,8 +575,7 @@ def test_add_client_view_with_commercial_profile(
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForCreate(db_name).add_client(custom_dict)
-        assert isinstance(result, int)
-        assert result > 0
+        assert isinstance(result, str)
     except Exception as error:
         print(error)
 
