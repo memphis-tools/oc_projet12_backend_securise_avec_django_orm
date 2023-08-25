@@ -187,7 +187,13 @@ def make_a_user_query_as_a_list(splited_args):
     user_query_as_a_list = []
     for arg in splited_args:
         arg_to_list = []
-        if "=" in arg and not any(["<" in arg, ">" in arg]):
+        if "None" in arg:
+            # cas particulier d'une recherche d'un élément 'null' en base de données.
+            # typiquement le collaborateur d'un évènement peut ne pas encore être
+            arg_to_list = re.split("=", f"{arg}")
+            arg_to_list[1] = None
+            arg_to_list.append(" is null")
+        elif "=" in arg and not any(["<" in arg, ">" in arg]):
             arg_to_list = re.split("=", f"{arg}")
             arg_to_list.append("=")
         elif ">" in arg and "=" in arg:
@@ -248,12 +254,19 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model):
             if item_key == "creation_date":
                 str_date = item_value.split("-")
                 item_value = str_date[2] + "-" + str_date[1] + "-" + str_date[0]
-            # filtered_db_model: Contract, Collaborator_Role, Client etc
-            # Le nom doit être celui de la table (__tablename__) du modèle.
-            # exemple: si filtered_db_model=='Contract' on aura 'contract.creation_date' en requête
-            filter_to_apply_rebuilt_query += (
-                f"({filtered_db_model}.{item_key}{item_operator}'{item_value}')"
-            )
+
+            if item_key == "collaborator_id":
+                if item_value is None:
+                    filter_to_apply_rebuilt_query += (
+                        f"({filtered_db_model}.{item_key}{item_operator})"
+                    )
+            else:
+                # filtered_db_model: Contract, Collaborator_Role, Client etc
+                # Le nom doit être celui de la table (__tablename__) du modèle.
+                # exemple: si filtered_db_model=='Contract' on aura 'contract.creation_date' en requête
+                filter_to_apply_rebuilt_query += (
+                    f"({filtered_db_model}.{item_key}{item_operator}'{item_value}')"
+                )
         else:
             filter_to_apply_rebuilt_query += f" {subquery_tuple[0]} "
     return filter_to_apply_rebuilt_query
@@ -336,7 +349,6 @@ def get_client_id_from_client_custom_id(session, client_id):
     Paramètres:
     - client_id: chaine libre de caractères, le custom id du client
     """
-    print(f"DEBUGING SIR WE SEARCH CLIENT_ID == {client_id}")
     sql = text(f"""SELECT id FROM client WHERE client_id='{client_id}'""")
     result = session.execute(sql).first()
     id = str(result[0]).lower()
