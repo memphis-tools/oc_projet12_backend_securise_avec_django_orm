@@ -31,7 +31,7 @@ def delete_client():
     """
     try:
         console_client = ConsoleClientForDelete()
-        print(f"Suppression: {console_client.delete_client()}")
+        print(f"{console_client.delete_client()}")
     except exceptions.ForeignKeyDependyException as error:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
         printer.print_message("error",message)
@@ -52,7 +52,7 @@ def delete_collaborator():
     """
     try:
         console_client = ConsoleClientForDelete()
-        print(f"Suppression: {console_client.delete_collaborator()}")
+        print(f"{console_client.delete_collaborator()}")
     except exceptions.ForeignKeyDependyException as error:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_COLLABORATOR_CAN_NOT_BE_DROP"]
         printer.print_message("error",message)
@@ -73,7 +73,7 @@ def delete_company():
     """
     try:
         console_client = ConsoleClientForDelete()
-        print(f"Suppression: {console_client.delete_company()}")
+        print(f"{console_client.delete_company()}")
     except exceptions.ForeignKeyDependyException as error:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_COMPANY_CAN_NOT_BE_DROP"]
         printer.print_message("error",message)
@@ -95,7 +95,7 @@ def delete_contract():
     """
     try:
         console_client = ConsoleClientForDelete()
-        print(f"Suppression: {console_client.delete_contract()}")
+        print(f"{console_client.delete_contract()}")
     except exceptions.ForeignKeyDependyException:
         pass
     except Exception as error:
@@ -114,7 +114,7 @@ def delete_department():
     """
     try:
         console_client = ConsoleClientForDelete()
-        print(f"Suppression: {console_client.delete_department()}")
+        print(f"{console_client.delete_department()}")
     except exceptions.ForeignKeyDependyException as error:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_DEPARTMENT_CAN_NOT_BE_DROP"]
         printer.print_message("error",message)
@@ -136,7 +136,7 @@ def delete_event():
     """
     try:
         console_client = ConsoleClientForDelete()
-        print(f"Suppression: {console_client.delete_event()}")
+        print(f"{console_client.delete_event()}")
     except exceptions.ForeignKeyDependyException as error:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_EVENT_CAN_NOT_BE_DROP"]
         printer.print_message("error",message)
@@ -158,7 +158,7 @@ def delete_location():
     """
     try:
         console_client = ConsoleClientForDelete()
-        print(f"Suppression: {console_client.delete_location()}")
+        print(f"{console_client.delete_location()}")
     except exceptions.ForeignKeyDependyException as error:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_LOCATION_CAN_NOT_BE_DROP"]
         printer.print_message("error",message)
@@ -180,7 +180,7 @@ def delete_role():
     """
     try:
         console_client = ConsoleClientForDelete()
-        message = f"Suppression: {console_client.delete_role()}"
+        message = f"{console_client.delete_role()}"
         print(message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             with logtail.context(company={ 'company_id': company_attributes_dict['company_id'] }):

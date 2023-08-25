@@ -311,12 +311,10 @@ def submit_a_collaborator_get_form(custom_id=""):
     """
     if custom_id == "":
         printer.print_message(
-            "info", APP_DICT.get_appli_dictionnary()["CREATE_A_COLLABORATOR_ROLE"]
+            "info", APP_DICT.get_appli_dictionnary()["LOOKUP_A_COLLABORATOR"]
         )
         try:
-            printer.print_message(
-                "info", APP_DICT.get_appli_dictionnary()["LOOKUP_A_COLLABORATOR"]
-            )
+            custom_id = Prompt.ask("id collaborator: ")
         except KeyboardInterrupt:
             printer.print_message(
                 "info", APP_DICT.get_appli_dictionnary()["LOOKUP_ABORTED"]
@@ -334,8 +332,8 @@ def submit_a_collaborator_create_form(custom_dict={}):
         expected_attributes_dict = {
             "registration_number": "matricule employé",
             "username": "nom utilisateur",
-            "department": "service (OC12_COMMERCIAL, OC12_GESTION, OC12_SUPPORT)",
-            "role": "role (MANAGER, EMPLOYEE)",
+            "department_id": "service ccial, gest ou supp (OC12_COMMERCIAL, OC12_GESTION, OC12_SUPPORT)",
+            "role_id": "role man ou emp (MANAGER, EMPLOYEE)",
         }
         printer.print_message(
             "info", APP_DICT.get_appli_dictionnary()["CREATE_A_COLLABORATOR"]
