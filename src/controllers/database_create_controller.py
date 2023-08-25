@@ -39,8 +39,7 @@ class DatabaseCreateController:
         try:
             session.add(client)
             session.commit()
-
-            return client.id
+            return client.client_id
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
@@ -78,10 +77,8 @@ class DatabaseCreateController:
 
             sql = text(f"""GRANT {department} TO {role}""")
             session.execute(sql)
-
             session.commit()
-
-            return collaborator.id
+            return collaborator.registration_number
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
@@ -100,12 +97,13 @@ class DatabaseCreateController:
             session.add(company)
             session.commit()
 
-            return company.id
+            return company.company_id
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             	LOGGER.error(message)
+
     def add_contract(self, session, contract):
         """
         Description:
@@ -118,8 +116,9 @@ class DatabaseCreateController:
             session.add(contract)
             session.commit()
 
-            return contract.id
-        except Exception:
+            return contract.contract_id
+        except Exception as error:
+            print(f"THE ERROR SIR: {error}")
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -136,7 +135,7 @@ class DatabaseCreateController:
         try:
             session.add(department)
             session.commit()
-            return department.id
+            return department.department_id
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
@@ -159,7 +158,7 @@ class DatabaseCreateController:
         try:
             session.add(event)
             session.commit()
-            return event.id
+            return event.event_id
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
@@ -178,7 +177,7 @@ class DatabaseCreateController:
             session.add(location)
             session.commit()
 
-            return location.id
+            return location.location_id
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
@@ -197,7 +196,7 @@ class DatabaseCreateController:
             session.add(role)
             session.commit()
 
-            return role.id
+            return role.role_id
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)

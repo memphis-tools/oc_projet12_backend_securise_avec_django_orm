@@ -288,6 +288,7 @@ class ConsoleClientForCreate:
         user_id = utils.get_user_id_from_registration_number(
             self.app_view.session, registration_number
         )
+        message = ""
         try:
             if (
                 "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
@@ -314,12 +315,11 @@ class ConsoleClientForCreate:
                 client_attributes_dict = forms.submit_a_client_create_form()
                 client_attributes_dict["company_id"] = company_id
                 client_attributes_dict["commercial_contact"] = user_id
-                client_id = self.create_app_view.get_clients_view().add_client(
-                    models.Client(**client_attributes_dict)
-                )
+                client_id = self.create_app_view.get_clients_view().add_client(models.Client(**client_attributes_dict))
+            message = f"Creation client {client_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(client={ 'client_id': client_attributes_dict['client_id'] }):
-                    LOGGER.info("Client creation success")
+                    LOGGER.info(message)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.SuppliedDataNotMatchModel:
@@ -329,7 +329,7 @@ class ConsoleClientForCreate:
                 LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
-        return client_id
+        return message
 
     @utils.authentication_permission_decorator
     def add_collaborator(self, collaborator_attributes_dict=""):
@@ -339,8 +339,10 @@ class ConsoleClientForCreate:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         collaborator = ""
+        message = ""
         try:
             if (
                 "collaborator" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
@@ -358,10 +360,12 @@ class ConsoleClientForCreate:
             else:
                 collaborator_attributes_dict = forms.submit_a_collaborator_create_form()
                 collaborator = models.Collaborator(**collaborator_attributes_dict)
+            collaborator_id = self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
+            message = f"Creation collaborateur {collaborator} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(collaborator={ 'registration_number': collaborator.registration_number }):
-                    LOGGER.info("Collaborator creation success")
-            return self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
+                with logtail.context(collaborator={'registration_number': collaborator.registration_number }):
+                    LOGGER.info(message)
+            return message
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -388,8 +392,10 @@ class ConsoleClientForCreate:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         company = ""
+        message = ""
         try:
             if (
                 "company" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
@@ -412,9 +418,13 @@ class ConsoleClientForCreate:
                     company_location_id=company_location_id
                 )
                 company = models.Company(**company_attributes_dict)
+                company.creation_date = datetime.now()
+            company_id = self.create_app_view.get_companies_view().add_company(company)
+            message = f"Creation company {company_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(company={ 'company_id': company_attributes_dict['company_id'] }):
-                    LOGGER.info("Company creation success")
+                    LOGGER.info(message)
+            return message
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -432,8 +442,6 @@ class ConsoleClientForCreate:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
-        company.creation_date = datetime.now()
-        return self.create_app_view.get_companies_view().add_company(company)
 
     @utils.authentication_permission_decorator
     def add_contract(self, contract_attributes_dict=""):
@@ -449,6 +457,7 @@ class ConsoleClientForCreate:
         )
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract = ""
+        message = ""
         try:
             if (
                 "contract" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
@@ -470,11 +479,13 @@ class ConsoleClientForCreate:
                 contract_attributes_dict = forms.submit_a_contract_create_form()
                 contract_attributes_dict["client_id"] = client_id
                 contract = models.Contract(**contract_attributes_dict)
+                contract.creation_date = datetime.now()
+            contract_id = self.create_app_view.get_contracts_view().add_contract(contract)
+            message = f"Creation contract {contract_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(contract={ 'contract_id': contract_attributes_dict['contract_id'] }):
-                    LOGGER.info("Contract creation success")
-            contract.creation_date = datetime.now()
-            return self.create_app_view.get_contracts_view().add_contract(contract)
+                    LOGGER.info(message)
+            return message
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -501,8 +512,10 @@ class ConsoleClientForCreate:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         department = ""
+        message = ""
         try:
             if (
                 "collaborator_department" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
@@ -526,9 +539,13 @@ class ConsoleClientForCreate:
                 department = models.Collaborator_Department(
                     **department_attributes_dict
                 )
+                department.creation_date = datetime.now()
+            department_id = self.create_app_view.get_departments_view().add_department(department)
+            message = f"Creation department {department_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(department={ 'department_id': department_attributes_dict['department_id'] }):
-                    LOGGER.info("Department creation success")
+                    LOGGER.info(message)
+            return message
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -546,8 +563,6 @@ class ConsoleClientForCreate:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
-        department.creation_date = datetime.now()
-        return self.create_app_view.get_departments_view().add_department(department)
 
     @utils.authentication_permission_decorator
     def add_event(self, event_attributes_dict=""):
@@ -563,6 +578,7 @@ class ConsoleClientForCreate:
         user_id = utils.get_user_id_from_registration_number(
             self.app_view.session, registration_number
         )
+        message = ""
         try:
             if (
                 "event" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
@@ -586,11 +602,13 @@ class ConsoleClientForCreate:
                 event_attributes_dict["collaborator_id"] = user_id
                 event_attributes_dict["contract_id"] = contract_id
                 event = models.Event(**event_attributes_dict)
-            event.creation_date = datetime.now()
+                event.creation_date = datetime.now()
+            event_id = self.create_app_view.get_events_view().add_event(user_id, event)
+            message = f"Creation event {event_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(event={ 'event_id': event_attributes_dict['event_id'] }):
-                    LOGGER.info("Event creation success")
-            return self.create_app_view.get_events_view().add_event(user_id, event)
+                    LOGGER.info(message)
+            return message
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -631,8 +649,10 @@ class ConsoleClientForCreate:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location = ""
+        message = ""
         try:
             if (
                 "location" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
@@ -656,9 +676,13 @@ class ConsoleClientForCreate:
                     location_id
                 )
                 location = models.Location(**location_attributes_dict)
+                location.creation_date = datetime.now()
+            location_id = self.create_app_view.get_locations_view().add_location(location)
+            message = f"Creation location {location_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(location={ 'location_id': location_attributes_dict['location_id'] }):
-                    LOGGER.info("Location creation success")
+                    LOGGER.info(message)
+            return message
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -683,8 +707,6 @@ class ConsoleClientForCreate:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
-        location.creation_date = datetime.now()
-        return self.create_app_view.get_locations_view().add_location(location)
 
     @utils.authentication_permission_decorator
     def add_role(self, role_attributes_dict=""):
@@ -694,8 +716,10 @@ class ConsoleClientForCreate:
         """
         decoded_token = self.jwt_view.get_decoded_token()
         user_service = str(decoded_token["department"]).upper()
+        registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         role = ""
+        message = ""
         try:
             if (
                 "collaborator_role" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
@@ -711,9 +735,13 @@ class ConsoleClientForCreate:
             else:
                 role_attributes_dict = forms.submit_a_collaborator_role_create_form()
                 role = models.Collaborator_Role(**role_attributes_dict)
+                role.creation_date = datetime.now()
+            role_id = self.create_app_view.get_roles_view().add_role(role)
+            message = f"Creation role {role_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(role={ 'role_id': role_attributes_dict['role_id'] }):
-                    LOGGER.info("Role creation success")
+                    LOGGER.info(message)
+            return message
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -731,5 +759,3 @@ class ConsoleClientForCreate:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
             sys.exit(0)
-        role.creation_date = datetime.now()
-        return self.create_app_view.get_roles_view().add_role(role)
