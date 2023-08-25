@@ -450,7 +450,7 @@ class Event(Base):
     def get_dict(self):
         event_dict = {
             "id": self.id,
-            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
+            "creation_date": self.creation_date,
             "event_id": self.event_id,
             "title": self.title,
             "contract_id": self.contract_id,
