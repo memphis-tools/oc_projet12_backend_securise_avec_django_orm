@@ -160,6 +160,7 @@ class Collaborator(Base):
 
     def get_dict(self):
         collaborator_dict = {
+            "id": self.id,
             "creation_date": self.creation_date,
             "registration_number": self.registration_number,
             "username": self.username,
@@ -475,6 +476,7 @@ class Event(Base):
             "title",
             "contract_id",
             "client_id",
+            "commercial_id",
             "collaborator_id",
             "event_start_date",
             "event_end_date",
