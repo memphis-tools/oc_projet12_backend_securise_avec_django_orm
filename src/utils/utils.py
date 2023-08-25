@@ -420,6 +420,23 @@ def get_department_name_from_id(session, department_id):
     return department_name
 
 
+def get_department_id_from_custom_id(session, department_id):
+    """
+    Description:
+    Récupérer le nom du service /département à partir du custom id.
+    C'est un besoin récurrent lors de l'ajout de collaborateurs.
+    Paramètres:
+    - session: une session ouverte sur la base de données
+    - department_id: chaine libre, le matricule employé (custom id)
+    """
+    sql = text(
+        f"""SELECT id FROM collaborator_department WHERE department_id = '{department_id}'"""
+    )
+    result = session.execute(sql).first()
+    department_id = str(result[0]).lower()
+    return department_id
+
+
 def get_department_id_from_name(session, department_name):
     """
     Description:
