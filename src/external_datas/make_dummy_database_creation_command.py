@@ -364,7 +364,8 @@ def dummy_database_creation(db_name="projet12"):
         event_end_date,
         location_id,
         attendees,
-        notes
+        notes,
+        collaborator_id
     )
     VALUES(
         'hob2023',
@@ -376,7 +377,8 @@ def dummy_database_creation(db_name="projet12"):
         '2023-07-25 22:00',
         '2',
         '500',
-        'bla bla bla penser au catering'
+        'bla bla bla penser au catering',
+        '2'
     )
     """
     cursor.execute(sql)
@@ -388,12 +390,12 @@ def dummy_database_creation(db_name="projet12"):
         title,
         contract_id,
         client_id,
-        collaborator_id,
         event_start_date,
         event_end_date,
         location_id,
         attendees,
-        notes
+        notes,
+        collaborator_id
     )
     VALUES(
         'geg2022',
@@ -401,12 +403,12 @@ def dummy_database_creation(db_name="projet12"):
         'Gourin escape game 2022',
         '2',
         '1',
-        '6',
         '2022-07-25 16:00',
         '2022-07-25 22:00',
         '2',
         '35',
-        'bla bla bla penser à tout le nécessaire. Ne pas oublier de gâteaux à la crème.'
+        'bla bla bla penser à tout le nécessaire. Ne pas oublier de gâteaux à la crème.',
+        '6'
     )
     """
     cursor.execute(sql)
@@ -418,7 +420,6 @@ def dummy_database_creation(db_name="projet12"):
         title,
         contract_id,
         client_id,
-        collaborator_id,
         event_start_date,
         event_end_date,
         location_id,
@@ -431,7 +432,6 @@ def dummy_database_creation(db_name="projet12"):
         'Gourin escape game 2021',
         '3',
         '2',
-        '6',
         '2021-07-25 16:00',
         '2021-07-25 22:00',
         '2',
@@ -452,7 +452,8 @@ def dummy_database_creation(db_name="projet12"):
         event_end_date,
         location_id,
         attendees,
-        notes
+        notes,
+        collaborator_id
     )
     VALUES(
         'evav123',
@@ -464,7 +465,8 @@ def dummy_database_creation(db_name="projet12"):
         '2020-08-09 22:00',
         '3',
         '100',
-        'bla bla bla penser à la musique.'
+        'bla bla bla penser à la musique.',
+        '2'
     )
     """
     cursor.execute(sql)
@@ -480,7 +482,8 @@ def dummy_database_creation(db_name="projet12"):
         event_end_date,
         location_id,
         attendees,
-        notes
+        notes,
+        collaborator_id
     )
     VALUES(
         'zawx235',
@@ -492,7 +495,8 @@ def dummy_database_creation(db_name="projet12"):
         '2020-08-15 23:00',
         '3',
         '150',
-        'bla bla bla penser à la corbeille de fruits.'
+        'bla bla bla penser à la corbeille de fruits.',
+        '1'
     )
     """
     cursor.execute(sql)
@@ -508,7 +512,8 @@ def dummy_database_creation(db_name="projet12"):
         event_end_date,
         location_id,
         attendees,
-        notes
+        notes,
+        collaborator_id
     )
     VALUES(
         'dkap520',
@@ -520,7 +525,8 @@ def dummy_database_creation(db_name="projet12"):
         '2021-05-24 23:00',
         '3',
         '50',
-        'bla bla bla penser aux équipements supplémentaires non prévus (ou couverts).'
+        'bla bla bla penser aux équipements supplémentaires non prévus (ou couverts).',
+        '2'
     )
     """
     cursor.execute(sql)
@@ -536,7 +542,8 @@ def dummy_database_creation(db_name="projet12"):
         event_end_date,
         location_id,
         attendees,
-        notes
+        notes,
+        collaborator_id
     )
     VALUES(
         'ay322',
@@ -548,7 +555,8 @@ def dummy_database_creation(db_name="projet12"):
         '2022-07-23 23:00',
         '3',
         '100',
-        'bla bla bla penser aux thermos.'
+        'bla bla bla penser aux thermos.',
+        '1'
     )
     """
     cursor.execute(sql)
