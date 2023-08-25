@@ -77,9 +77,13 @@ class ConsoleClientForUpdate:
 
             if ("commercial_contact" in custom_partial_dict.keys() and user_service.lower() == "oc12_commercial"):
                 raise exceptions.CommercialCanNotUpdateClientCommercialContactException()
-            return self.update_app_view.get_clients_view().update_client(
-                user_collaborator_id, user_service, custom_partial_dict
-            )
+
+            if len(user_query_filters_args) == 0:
+                return self.update_app_view.get_clients_view().update_client(
+                    user_collaborator_id, user_service, custom_partial_dict
+                )
+            else:
+                return self.update_app_view.get_clients_view().update_client_filtered(self, user_query_filters_args)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CommercialCollaboratorIsNotAssignedToClient:
@@ -93,7 +97,7 @@ class ConsoleClientForUpdate:
                 with logtail.context(user={ 'registration_number': r_number }):
                     LOGGER.error(message)
             sys.exit(0)
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -108,7 +112,7 @@ class ConsoleClientForUpdate:
             sys.exit(0)
 
     @utils.authentication_permission_decorator
-    def update_collaborator(self, custom_partial_dict=""):
+    def update_collaborator(self, custom_partial_dict="", user_query_filters_args=""):
         """
         Description: vue dédiée à mettre à jour un utilisateur /collaborateur de l'entreprise.
         """
@@ -119,9 +123,13 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_collaborators_view().update_collaborator(
-                custom_partial_dict
-            )
+
+            if len(user_query_filters_args) == 0:
+                return self.update_app_view.get_collaborators_view().update_collaborator(
+                    custom_partial_dict
+                )
+            else:
+                return self.update_app_view.get_collaborators_view().update_collaborator_filtered(self, user_query_filters_args)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CustomIdMatchNothingException:
@@ -193,7 +201,7 @@ class ConsoleClientForUpdate:
         )
 
     @utils.authentication_permission_decorator
-    def update_company(self, custom_partial_dict=""):
+    def update_company(self, custom_partial_dict="", user_query_filters_args=""):
         """
         Description: vue dédiée à mettre à jour une entreprise sans client, mais avec une localité nécessaire.
         """
@@ -204,9 +212,13 @@ class ConsoleClientForUpdate:
         try:
             if "company" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_companies_view().update_company(
-                custom_partial_dict
-            )
+
+            if len(user_query_filters_args) == 0:
+                return self.update_app_view.get_companies_view().update_company(
+                    custom_partial_dict
+                )
+            else:
+                return self.update_app_view.get_companies_view().update_company_filtered(self, user_query_filters_args)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CustomIdMatchNothingException:
@@ -225,7 +237,7 @@ class ConsoleClientForUpdate:
             sys.exit(0)
 
     @utils.authentication_permission_decorator
-    def update_contract(self, custom_partial_dict=""):
+    def update_contract(self, custom_partial_dict="", user_query_filters_args=""):
         """
         Description: vue dédiée à mettre à jour un contrat pour l'entreprise.
         """
@@ -238,9 +250,13 @@ class ConsoleClientForUpdate:
         try:
             if "contract" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_contracts_view().update_contract(
-                user_collaborator_id, user_service, custom_partial_dict
-            )
+
+            if len(user_query_filters_args) == 0:
+                return self.update_app_view.get_contracts_view().update_contract(
+                    user_collaborator_id, user_service, custom_partial_dict
+                )
+            else:
+                return self.update_app_view.get_contracts_view().update_contract_filtered(self, user_query_filters_args)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
@@ -253,8 +269,7 @@ class ConsoleClientForUpdate:
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             	LOGGER.error(message)
             sys.exit(0)
-        except Exception as error:
-            print(f"UPDATE CONTRACT ERROR SIR: {error}")
+        except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -262,7 +277,7 @@ class ConsoleClientForUpdate:
             sys.exit(0)
 
     @utils.authentication_permission_decorator
-    def update_department(self, custom_partial_dict=""):
+    def update_department(self, custom_partial_dict="", user_query_filters_args=""):
         """
         Description: vue dédiée à mettre à jour un département /service de l'entreprise.
         """
@@ -273,9 +288,13 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator_department" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_departments_view().update_department(
-                custom_partial_dict
-            )
+
+            if len(user_query_filters_args) == 0:
+                return self.update_app_view.get_departments_view().update_department(
+                    custom_partial_dict
+                )
+            else:
+                return self.update_app_view.get_departments_view().update_department_filtered(self, user_query_filters_args)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CustomIdMatchNothingException:
@@ -294,7 +313,7 @@ class ConsoleClientForUpdate:
             sys.exit(0)
 
     @utils.authentication_permission_decorator
-    def update_event(self, custom_partial_dict=""):
+    def update_event(self, custom_partial_dict="", user_query_filters_args=""):
         """
         Description: vue dédiée à mettre à jour un évènement de l'entreprise.
         """
@@ -311,10 +330,14 @@ class ConsoleClientForUpdate:
                 "event" not in allowed_crud_tables or user_service.lower() == "oc12_commercial"
             ):
                 raise exceptions.InsufficientPrivilegeException()
-            # dans le cas où d'un collaborateur du serivce gestion, il modifie seulement s'il est assigné.
-            return self.update_app_view.get_events_view().update_event(
-                user_collaborator_id, user_service, custom_partial_dict
-            )
+
+            if len(user_query_filters_args) == 0:
+                # dans le cas où d'un collaborateur du serivce gestion, il modifie seulement s'il est assigné.
+                return self.update_app_view.get_events_view().update_event(
+                    user_collaborator_id, user_service, custom_partial_dict
+                )
+            else:
+                return self.update_app_view.get_events_view().update_event_filtered(self, user_query_filters_args)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CustomIdMatchNothingException:
@@ -342,7 +365,7 @@ class ConsoleClientForUpdate:
             sys.exit(0)
 
     @utils.authentication_permission_decorator
-    def update_location(self, custom_partial_dict=""):
+    def update_location(self, custom_partial_dict="", user_query_filters_args=""):
         """
         Description: vue dédiée à mettre à jour une localité.
         """
@@ -353,9 +376,13 @@ class ConsoleClientForUpdate:
         try:
             if "location" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_locations_view().update_location(
-                custom_partial_dict
-            )
+
+            if len(user_query_filters_args) == 0:
+                return self.update_app_view.get_locations_view().update_location(
+                    custom_partial_dict
+                )
+            else:
+                return self.update_app_view.get_locations_view().update_location_filtered(self, user_query_filters_args)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CustomIdMatchNothingException:
@@ -374,7 +401,7 @@ class ConsoleClientForUpdate:
             sys.exit(0)
 
     @utils.authentication_permission_decorator
-    def update_role(self, custom_partial_dict=""):
+    def update_role(self, custom_partial_dict="", user_query_filters_args=""):
         """
         Description: vue dédiée à mettre à jour un rôle pour les collaborateurs de l'entreprise.
         """
@@ -385,9 +412,13 @@ class ConsoleClientForUpdate:
         try:
             if "collaborator_role" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-            return self.update_app_view.get_roles_view().update_role(
-                custom_partial_dict
-            )
+
+            if len(user_query_filters_args) == 0:
+                return self.update_app_view.get_roles_view().update_role(
+                    custom_partial_dict
+                )
+            else:
+                return self.update_app_view.get_roles_view().update_role_filtered(self, user_query_filters_args)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CustomIdMatchNothingException:

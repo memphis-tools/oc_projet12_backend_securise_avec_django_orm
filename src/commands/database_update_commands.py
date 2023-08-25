@@ -9,6 +9,7 @@ from termcolor import colored, cprint
 try:
     from src.printers import printer
     from src.languages import language_bridge
+    from src.clients.read_console import ConsoleClientForRead
     from src.clients.update_console import ConsoleClientForUpdate
     from src.exceptions import exceptions
     from src.validators.data_syntax.fr import validators
@@ -16,6 +17,7 @@ try:
 except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
+    from clients.read_console import ConsoleClientForRead
     from clients.update_console import ConsoleClientForUpdate
     from exceptions import exceptions
     from validators.data_syntax.fr import validators
@@ -34,8 +36,8 @@ def display_option(options):
 def check_if_partial_dict_valid(partial_dict):
     for key, value in partial_dict.items():
         try:
-            validators.is_adresse_valid("adresse lambda")
-            eval(f"validators.is_{key}_valid")(value)
+            if value != None:
+                eval(f"validators.is_{key}_valid")(value)
         except Exception:
             message = APP_DICT.get_appli_dictionnary()["VALUE_UNEXPECTED"]
             printer.print_message("error",message)
@@ -300,13 +302,19 @@ def update_contract(contract_id, args):
     'oc12_update_contract --contract_id c20z38 remain_amount_to_pay="66.55"
     """
     contract_dict = {}
+    console = ConsoleClientForRead()
     try:
         contract_dict["contract_id"] = f"{contract_id}"
         for arg in args:
-            k, v = arg.split("=")
+            try:
+                k, v = arg.split("=")
+            except:
+                # exception avec le seul 'et' par exemple
+                pass
+
             if k == "client_id":
                 expected_client = (
-                    ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
+                    console.app_view.get_clients_view().get_client(v)
                 )
                 expected_client_id = expected_client.get_dict()["id"]
                 contract_dict[k] = str(expected_client_id)
@@ -318,6 +326,11 @@ def update_contract(contract_id, args):
                 )
                 expected_collaborator_id = expected_collaborator.get_dict()["id"]
                 contract_dict[k] = str(expected_collaborator_id)
+            elif k == "remain_amount_to_pay":
+                contract = (
+                    console.app_view.get_contracts_view().get_contract(contract_id)
+                )
+                contract_dict["full_amount_to_pay"] = contract.full_amount_to_pay
             else:
                 contract_dict[k] = str(v)
         if len(contract_dict) == 1:
@@ -439,7 +452,12 @@ def update_event(event_id, args):
     try:
         event_dict["event_id"] = f"{event_id}"
         for arg in args:
-            k, v = arg.split("=")
+            try:
+                k, v = arg.split("=")
+            except:
+                # exception avec le seul 'et' par exemple
+                pass
+
             if k == "client_id":
                 expected_client = (
                     ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
@@ -447,13 +465,16 @@ def update_event(event_id, args):
                 expected_client_id = expected_client.get_dict()["id"]
                 event_dict[k] = str(expected_client_id)
             elif k == "collaborator_id":
-                expected_collaborator = (
-                    ConsoleClientForUpdate()
-                    .app_view.get_collaborators_view()
-                    .get_collaborator(v)
-                )
-                expected_collaborator_id = expected_collaborator.get_dict()["id"]
-                event_dict[k] = str(expected_collaborator_id)
+                if v == 'None':
+                    event_dict[k] = None
+                else:
+                    expected_collaborator = (
+                        ConsoleClientForUpdate()
+                        .app_view.get_collaborators_view()
+                        .get_collaborator(v)
+                    )
+                    expected_collaborator_id = expected_collaborator.get_dict()["id"]
+                    event_dict[k] = str(expected_collaborator_id)
             elif k == "contract_id":
                 expected_contract = (
                     ConsoleClientForUpdate()
@@ -472,6 +493,7 @@ def update_event(event_id, args):
                 event_dict[k] = str(expected_location_id)
             else:
                 event_dict[k] = str(v)
+
         if len(event_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         check_if_partial_dict_valid(event_dict)
@@ -527,8 +549,12 @@ def update_location(location_id, args):
     try:
         location_dict["location_id"] = f"{location_id}"
         for arg in args:
-            k, v = arg.split("=")
-            location_dict[k] = v
+            try:
+                k, v = arg.split("=")
+                location_dict[k] = v
+            except:
+                # exception avec le seul 'et' par exemple
+                pass
         if len(location_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         check_if_partial_dict_valid(location_dict)
@@ -581,8 +607,12 @@ def update_role(role_id, args):
     try:
         role_dict["role_id"] = f"{role_id}"
         for arg in args:
-            k, v = arg.split("=")
-            role_dict[k] = v
+            try:
+                k, v = arg.split("=")
+                role_dict[k] = v
+            except:
+                # exception avec le seul 'et' par exemple
+                pass
         if len(role_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         check_if_partial_dict_valid(role_dict)
