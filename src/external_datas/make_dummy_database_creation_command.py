@@ -2,6 +2,7 @@
 Description:
 Une fonction pour peupler la base de données avec des données de DEV
 """
+from datetime import datetime
 try:
     from src.settings import settings
     from src.utils import utils
@@ -276,60 +277,60 @@ def dummy_database_creation(db_name="projet12"):
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status,
-    client_id, collaborator_id, creation_date)
-    VALUES('kc555', '999.99', '999.99', 'unsigned', '1', '1', '2023-06-03 08:35:25')
+    client_id, creation_date)
+    VALUES('kc555', '999.99', '999.99', 'unsigned', '1', '2023-06-03 08:35:25')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status,
-    client_id, collaborator_id, creation_date)
-    VALUES('ff555', '444.55', '20.99', 'signed', '1', '2', '2022-01-16 10:40:14')
+    client_id, creation_date)
+    VALUES('ff555', '444.55', '20.99', 'signed', '1', '2022-01-16 10:40:14')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status,
-    client_id, collaborator_id, creation_date)
-    VALUES('zz123', '72.5', '0', 'signed', '2', '1','2021-04-15 14:40:14')
+    client_id, creation_date)
+    VALUES('zz123', '72.5', '0', 'signed', '2','2021-04-15 14:40:14')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status,
-    client_id, collaborator_id, creation_date)
+    client_id, creation_date)
     VALUES
-    ('av123', '155.60', '0', 'signed', '3', '1','2020-06-02 10:40:14')
+    ('av123', '155.60', '0', 'signed', '3','2020-06-02 10:40:14')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status,
-    client_id, collaborator_id, creation_date)
+    client_id, creation_date)
     VALUES
-    ('aw231', '255.60', '0', 'signed', '4', '2','2020-06-22 11:40:14')
+    ('aw231', '255.60', '0', 'signed', '4','2020-06-22 11:40:14')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status,
-    client_id, collaborator_id, creation_date)
+    client_id, creation_date)
     VALUES
-    ('ax312', '355.60', '0', 'signed', '5', '1','2020-07-12 12:00:00')
+    ('ax312', '355.60', '0', 'signed', '5', '2020-07-12 12:00:00')
     """
     cursor.execute(sql)
 
     sql = """
     INSERT INTO contract
     (contract_id, full_amount_to_pay, remain_amount_to_pay, status,
-    client_id, collaborator_id, creation_date)
+    client_id, creation_date)
     VALUES
-    ('ay312', '455.60', '0', 'signed', '6', '2','2020-07-22 16:30:00')
+    ('ay312', '455.60', '0', 'signed', '6', '2020-07-22 16:30:00')
     """
     cursor.execute(sql)
 
@@ -352,7 +353,7 @@ def dummy_database_creation(db_name="projet12"):
     cursor.execute(sql)
 
     # 7 évènements en exemple
-    sql = """
+    sql = f"""
     INSERT INTO event(
         event_id,
         creation_date,
@@ -367,7 +368,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'hob2023',
-        '2023-07-03 10:35:22',
+        '{datetime.now()}',
         'Holiday on beach',
         '1',
         '1',
@@ -380,7 +381,7 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    sql = """
+    sql = f"""
     INSERT INTO event(
         event_id,
         creation_date,
@@ -396,7 +397,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'geg2022',
-        '2022-02-15 08:32:15',
+        '{datetime.now()}',
         'Gourin escape game 2022',
         '2',
         '1',
@@ -410,7 +411,7 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    sql = """
+    sql = f"""
     INSERT INTO event(
         event_id,
         creation_date,
@@ -426,7 +427,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'geg2021',
-        '2021-07-03 14:25:10',
+        '{datetime.now()}',
         'Gourin escape game 2021',
         '3',
         '2',
@@ -440,7 +441,7 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    sql = """
+    sql = f"""
     INSERT INTO event(
         event_id,
         creation_date,
@@ -455,7 +456,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'evav123',
-        '2020-07-31 15:35:22',
+        '{datetime.now()}',
         'Summer Bootstrap',
         '4',
         '3',
@@ -468,7 +469,7 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    sql = """
+    sql = f"""
     INSERT INTO event(
         event_id,
         creation_date,
@@ -483,7 +484,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'zawx235',
-        '2020-07-31 15:45:22',
+        '{datetime.now()}',
         'Summer Javascript',
         '5',
         '4',
@@ -496,7 +497,7 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    sql = """
+    sql = f"""
     INSERT INTO event(
         event_id,
         creation_date,
@@ -511,7 +512,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'dkap520',
-        '2021-03-15 10:45:22',
+        '{datetime.now()}',
         'Summer OWASP',
         '6',
         '5',
@@ -524,7 +525,7 @@ def dummy_database_creation(db_name="projet12"):
     """
     cursor.execute(sql)
 
-    sql = """
+    sql = f"""
     INSERT INTO event(
         event_id,
         creation_date,
@@ -539,7 +540,7 @@ def dummy_database_creation(db_name="projet12"):
     )
     VALUES(
         'ay322',
-        '2022-02-23 09:25:22',
+        '{datetime.now()}',
         'Summer Python',
         '7',
         '6',
