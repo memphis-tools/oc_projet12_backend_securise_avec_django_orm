@@ -113,6 +113,11 @@ def update_client(client_id, args):
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -165,6 +170,11 @@ def update_collaborator(registration_number, args):
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -191,6 +201,11 @@ def update_collaborator_password():
         	LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
@@ -250,6 +265,11 @@ def update_company(company_id, args):
         	LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
@@ -326,6 +346,11 @@ def update_contract(contract_id, args):
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -373,6 +398,11 @@ def update_department(department_id, args):
         	LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_DEPARTMENT_CAN_NOT_BE_DROP"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
@@ -463,6 +493,11 @@ def update_event(event_id, args):
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -515,6 +550,11 @@ def update_location(location_id, args):
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
@@ -561,6 +601,11 @@ def update_role(role_id, args):
         	LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_ROLE_CAN_NOT_BE_DROP"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
