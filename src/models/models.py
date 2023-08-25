@@ -140,9 +140,6 @@ class Collaborator(Base):
     client = relationship(
         "Client", back_populates="collaborator", passive_deletes="all"
     )
-    contract = relationship(
-        "Contract", back_populates="collaborator", passive_deletes="all"
-    )
     event = relationship("Event", back_populates="collaborator")
     creation_date = Column(
         DateTime(), nullable=False, default=utils.get_today_fulldate()
@@ -163,7 +160,6 @@ class Collaborator(Base):
 
     def get_dict(self):
         collaborator_dict = {
-            # "id": self.id,
             "creation_date": self.creation_date,
             "registration_number": self.registration_number,
             "username": self.username,
@@ -358,34 +354,19 @@ class Contract(Base):
     status = Column(ChoiceType(STATUS), default="unsigned")
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="contract", passive_deletes="all")
-    collaborator_id = Column(Integer, ForeignKey("collaborator.id"), nullable=True)
-    collaborator = relationship(
-        "Collaborator", back_populates="contract", passive_deletes="all"
-    )
     event = relationship("Event", back_populates="contract", passive_deletes="all")
 
     def __str__(self):
         descriptors = ""
-        try:
-            descriptors = "["
-            descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-            descriptors += f",(contract_id|{self.contract_id})"
-            descriptors += f",(client_id|{self.client.client_id})"
-            descriptors += f",(collaborator_id|{self.collaborator.registration_number})"
-            descriptors += f",(status|{self.status})"
-            descriptors += f",(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
-            descriptors += f",(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
-            descriptors += "]"
-        except Exception:
-            descriptors = "["
-            descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-            descriptors += f",(contract_id|{self.contract_id})"
-            descriptors += f",(client_id|{self.client.client_id})"
-            descriptors += f",(collaborator_id|None)"
-            descriptors += f",(status|{self.status})"
-            descriptors += f",(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
-            descriptors += f",(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
-            descriptors += "]"
+        descriptors = "["
+        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f",(contract_id|{self.contract_id})"
+        descriptors += f",(client_id|{self.client.client_id})"
+        descriptors += f",(collaborator_id|{self.client.collaborator.registration_number})"
+        descriptors += f",(status|{self.status})"
+        descriptors += f",(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
+        descriptors += f",(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
+        descriptors += "]"
         return descriptors
 
     def __repr__(self):
@@ -400,7 +381,7 @@ class Contract(Base):
             "remain_amount_to_pay": self.remain_amount_to_pay,
             "status": f"{self.status}",
             "client_id": self.client_id,
-            "collaborator_id": self.collaborator_id,
+            "collaborator_id": self.client.commercial_contact,
         }
         return contract_dict
 
