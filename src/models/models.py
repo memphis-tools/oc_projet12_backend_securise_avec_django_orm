@@ -412,7 +412,7 @@ class Event(Base):
     contract = relationship("Contract", back_populates="event", passive_deletes="all")
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="event", passive_deletes="all")
-    collaborator_id = Column(Integer, ForeignKey("collaborator.id"), nullable=True)
+    collaborator_id = Column(Integer, ForeignKey("collaborator.id"), nullable=True, default=None)
     collaborator = relationship("Collaborator", back_populates="event")
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     event_start_date = Column(DateTime(timezone=False), default=datetime.now())
@@ -430,9 +430,14 @@ class Event(Base):
         descriptors += f",(contract_id|{self.contract.contract_id})"
         descriptors += f",(client_id|{self.client.client_id})"
         descriptors += (
+            f",(commercial_id|{self.client.collaborator.registration_number})"
+            if self.client.collaborator is not None
+            else ",(commercial_id|None)"
+        )
+        descriptors += (
             f",(collaborator_id|{self.collaborator.registration_number})"
             if self.collaborator_id is not None
-            else ",(collaborator_id|Aucun)"
+            else ",(collaborator_id|None)"
         )
         descriptors += (
             f',(event_start_date|{self.event_start_date.strftime("%d-%m-%Y")})'
