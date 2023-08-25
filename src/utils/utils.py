@@ -251,7 +251,7 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model):
     for subquery_tuple in user_query_as_a_list:
         if len(subquery_tuple) > 1:
             item_key, item_value, item_operator = subquery_tuple
-            if item_key == "creation_date":
+            if "_date" in item_key:
                 str_date = item_value.split("-")
                 item_value = str_date[2] + "-" + str_date[1] + "-" + str_date[0]
 
