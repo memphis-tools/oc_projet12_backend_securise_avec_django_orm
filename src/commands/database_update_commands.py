@@ -84,7 +84,6 @@ def update_client(client_id, args):
                 client_dict[k] = str(v)
         if len(client_dict) == 1:
             raise exceptions.MissingUpdateParamException()
-        print(client_dict)
         check_if_partial_dict_valid(client_dict)
         console_client_return = ConsoleClientForUpdate().update_client(client_dict)
         click.secho(console_client_return, bg="blue", fg="white")

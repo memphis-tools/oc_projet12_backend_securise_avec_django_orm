@@ -3,6 +3,7 @@ Description:
 Client en mode console, dédié aux mises à jour.
 """
 import sys
+import logtail
 
 try:
     from src.languages import language_bridge
@@ -55,7 +56,11 @@ class ConsoleClientForUpdate:
         # demander mot de passe à utilisateur en cours
         # controler le mot de passe
         """
-        Description: vue dédiée à mettre à jour un client de l'entreprise.
+        Description:
+        Dédiée à mettre à jour un client de l'entreprise.
+        Paramètres:
+        - custom_partial_dict: un dictionnaire, exemple:
+            " {'client_id': 'DBLATT85', 'commercial_contact': 'ab123456789'} "
         """
         client_id = ""
         decoded_token = self.jwt_view.get_decoded_token()
@@ -63,11 +68,15 @@ class ConsoleClientForUpdate:
         r_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, r_number)}"
+
         try:
             if (
                 "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
             ):
                 raise exceptions.InsufficientPrivilegeException()
+
+            if ("commercial_contact" in custom_partial_dict.keys() and user_service.lower() == "oc12_commercial"):
+                raise exceptions.CommercialCanNotUpdateClientCommercialContactException()
             return self.update_app_view.get_clients_view().update_client(
                 user_collaborator_id, user_service, custom_partial_dict
             )
@@ -77,7 +86,14 @@ class ConsoleClientForUpdate:
             raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
         except exceptions.CustomIdMatchNothingException:
             raise exceptions.CustomIdMatchNothingException()
-        except TypeError:
+        except exceptions.CommercialCanNotUpdateClientCommercialContactException:
+            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_CAN_NOT_UPDATE_CLIENT_COMMERCIAL_CONTACT"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(user={ 'registration_number': r_number }):
+                    LOGGER.error(message)
+            sys.exit(0)
+        except TypeError as error:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:

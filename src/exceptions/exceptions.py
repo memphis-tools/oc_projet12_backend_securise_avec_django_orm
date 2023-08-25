@@ -19,6 +19,10 @@ class InsufficientPrivilegeException(Exception):
     pass
 
 
+class CommercialCanNotUpdateClientCommercialContactException(Exception):
+    pass
+
+
 class ContractAmountToPayException(Exception):
     pass
 
