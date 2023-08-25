@@ -57,7 +57,12 @@ def add_collaborator():
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
-    except Exception:
+    except exceptions.CollaboratorAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_ALREADY_EXISTS_"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
