@@ -107,3 +107,9 @@ class CompaniesView:
         - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
         return self.db_controller.update_company(self.session, custom_dict)
+
+    def update_company_filtered(self, user_query_filters_args):
+        if len(user_query_filters_args) > 0:
+            db_model_queryset = self.db_controller.get_filtered_models(
+                self.session, user_query_filters_args[0], "Company"
+            )
