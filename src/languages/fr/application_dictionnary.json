@@ -11,6 +11,7 @@
   "COLLABORATOR_CREATED_SUCCESS":"Collaborateur crée.",
   "COLLABORATOR_DROPPED_SUCCESS":"Collaborateur supprimé.",
   "COLLABORATOR_DROPPED_FAILURE":"Collaborateur n'existe pas, pas de suppression.",
+  "COMMERCIAL_COLLABORATOR_CAN_NOT_UPDATE_CLIENT_COMMERCIAL_CONTACT":"Un commercial ne peut pas modifier le commercial associé à un client.",
   "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT":"Vous n'êtes pas le commercial du client; mise à jour non autorisée.",
   "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT":"Vous n'êtes pas le commercial du contrat; mise à jour non autorisée.",
   "COMPANY_RATTACHED_TO_CLIENT":"Entreprise rattachée à client existant.",
