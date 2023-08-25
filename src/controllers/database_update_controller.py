@@ -26,6 +26,8 @@ class DatabaseUpdateController:
         """
         client_id = client_dict.pop("client_id")
         client = session.query(models.Client).filter_by(client_id=client_id).first()
+        if client is None:
+            raise exceptions.CustomIdMatchNothingException()
         keys_to_explore = models.Client.metadata.tables["client"].columns.keys()
         try:
             for key in keys_to_explore:
@@ -52,6 +54,8 @@ class DatabaseUpdateController:
             .filter_by(registration_number=collaborator_id)
             .first()
         )
+        if collaborator is None:
+            raise exceptions.CustomIdMatchNothingException()
         keys_to_explore = models.Collaborator.metadata.tables[
             "collaborator"
         ].columns.keys()
@@ -114,6 +118,8 @@ class DatabaseUpdateController:
         """
         company_id = company_dict.pop("company_id")
         company = session.query(models.Company).filter_by(company_id=company_id).first()
+        if company is None:
+            raise exceptions.CustomIdMatchNothingException()
         companies = session.query(models.Company).all()
         keys_to_explore = models.Company.metadata.tables["company"].columns.keys()
 
@@ -139,6 +145,8 @@ class DatabaseUpdateController:
         contract = (
             session.query(models.Contract).filter_by(contract_id=contract_id).first()
         )
+        if contract is None:
+            raise exceptions.CustomIdMatchNothingException()
         keys_to_explore = models.Contract.metadata.tables["contract"].columns.keys()
         try:
             for key in keys_to_explore:
@@ -149,7 +157,7 @@ class DatabaseUpdateController:
         # un collaborateur du service gestion peut modifier tout contrat
         # un commercial ne peut modifier que les contrats auxquels il est rattaché
         if user_service.lower() == "oc12_commercial":
-            if int(current_user_collaborator_id) != int(contract.collaborator_id):
+            if int(current_user_collaborator_id) != int(contract.client.commercial_contact):
                 raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
 
         session.commit()
@@ -167,6 +175,8 @@ class DatabaseUpdateController:
             .filter_by(department_id=department_id)
             .first()
         )
+        if department is None:
+            raise exceptions.CustomIdMatchNothingException()
         keys_to_explore = models.Collaborator_Department.metadata.tables[
             "collaborator_department"
         ].columns.keys()
@@ -191,6 +201,8 @@ class DatabaseUpdateController:
         """
         event_id = event_dict.pop("event_id")
         event = session.query(models.Event).filter_by(event_id=event_id).first()
+        if event is None:
+            raise exceptions.CustomIdMatchNothingException()
         keys_to_explore = models.Event.metadata.tables["event"].columns.keys()
 
         try:
@@ -218,6 +230,8 @@ class DatabaseUpdateController:
         location = (
             session.query(models.Location).filter_by(location_id=location_id).first()
         )
+        if location is None:
+            raise exceptions.CustomIdMatchNothingException()
         keys_to_explore = models.Location.metadata.tables["location"].columns.keys()
 
         try:
@@ -239,6 +253,8 @@ class DatabaseUpdateController:
         role = (
             session.query(models.Collaborator_Role).filter_by(role_id=role_id).first()
         )
+        if role is None:
+            raise exceptions.CustomIdMatchNothingException()
         keys_to_explore = models.Collaborator_Role.metadata.tables[
             "collaborator_role"
         ].columns.keys()
