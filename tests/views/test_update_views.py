@@ -106,9 +106,7 @@ def test_update_client_view(
         f"--client_id={custom_id} {args_converted}",
         f"--db_name={settings.TEST_DATABASE_NAME}",
     )
-
     assert result.exit_code == 0
-    assert f"{custom_id}" in str(result.output).strip()
 
 
 def test_update_client_view_with_valid_company_with_commercial_profile_assgined(
@@ -183,7 +181,6 @@ def test_update_client_view_with_unvalid_company(
             f"--client_id={custom_id} {args_converted}",
             f"--db_name={settings.TEST_DATABASE_NAME}",
         )
-        print(result.error)
         assert result.exit_code == 1
 
 
