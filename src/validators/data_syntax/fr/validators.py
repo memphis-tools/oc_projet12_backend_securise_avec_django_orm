@@ -135,6 +135,15 @@ def is_creation_date_valid(creation_date):
     return re.match(pattern, creation_date).group()
 
 
+def is_commercial_contact_valid(commercial_contact_id):
+    """
+    Description: Controler le commercial qu'on souhaite modifier pour un client.
+    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    """
+    pattern = re.compile(r"([\w ']{,120})$")
+    return re.match(pattern, commercial_contact_id).group()
+
+
 def is_department_id_valid(department_id):
     """
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
