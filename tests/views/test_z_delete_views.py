@@ -4,9 +4,8 @@ Test de la vue "delete_views.py", on test la suppression de données métier ave
 Pas de bases de données de test, içi on supprime les données créées via "tests/views/test_create_views.py".
 On supprime les données en recherchant un "custom id" (une chaine libre), pas l'id entier auto incrémenté de la table.
 """
-
+import os
 import pytest
-
 try:
     from src.clients.delete_console import ConsoleClientForDelete
     from src.exceptions import exceptions
@@ -18,7 +17,7 @@ except ModuleNotFoundError:
 
 
 def test_delete_client_view_with_commercial_profile_when_client_not_referenced_in_contract(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
         dummy_clients_list = ["dduck", "poabm"]
@@ -32,7 +31,7 @@ def test_delete_client_view_with_commercial_profile_when_client_not_referenced_i
 
 
 def test_delete_client_view_with_commercial_profile_when_client_referenced_in_contract_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.ForeignKeyDependyException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_client(
@@ -41,7 +40,7 @@ def test_delete_client_view_with_commercial_profile_when_client_referenced_in_co
 
 
 def test_delete_client_view_with_support_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_client(
@@ -50,7 +49,7 @@ def test_delete_client_view_with_support_profile_raises_exception(
 
 
 def test_delete_client_view_with_gestion_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_client(
@@ -59,10 +58,10 @@ def test_delete_client_view_with_gestion_profile_raises_exception(
 
 
 def test_delete_company_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
-        dummy_companies_list = ["db45785", "abm99998", "NFEPG12345"]
+        dummy_companies_list = ["db45785", "abm99998"]
         for company in dummy_companies_list:
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
@@ -73,7 +72,7 @@ def test_delete_company_view_with_commercial_profile(
 
 
 def test_delete_company_view_with_commercial_profile_when_company_referenced_by_client_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.ForeignKeyDependyException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_company(
@@ -82,7 +81,7 @@ def test_delete_company_view_with_commercial_profile_when_company_referenced_by_
 
 
 def test_delete_company_view_with_gestion_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_company(
@@ -91,7 +90,7 @@ def test_delete_company_view_with_gestion_profile_raises_exception(
 
 
 def test_delete_company_view_with_support_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_company(
@@ -100,7 +99,7 @@ def test_delete_company_view_with_support_profile_raises_exception(
 
 
 def test_delete_contract_view_with_commercial_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(
@@ -109,7 +108,7 @@ def test_delete_contract_view_with_commercial_profile_raises_exception(
 
 
 def test_delete_contract_view_with_support_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(
@@ -118,21 +117,18 @@ def test_delete_contract_view_with_support_profile_raises_exception(
 
 
 def test_delete_contract_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        dummy_contracts_list = ["ff555", "av123"]
-        for contract in dummy_contracts_list:
-            result = ConsoleClientForDelete(
-                db_name=f"{settings.TEST_DATABASE_NAME}"
-            ).delete_contract(contract)
-            assert isinstance(result, str)
-    except Exception as error:
-        print(error)
+    dummy_contracts_list = ["C9Z1", "D9Z1"]
+    for contract in dummy_contracts_list:
+        result = ConsoleClientForDelete(
+            db_name=f"{settings.TEST_DATABASE_NAME}"
+        ).delete_contract(contract)
+        assert isinstance(result, str)
 
 
 def test_delete_contract_view_with_gestion_profile_when_contract_referenced_in_event_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.ForeignKeyDependyException):
         ConsoleClientForDelete(
@@ -141,7 +137,7 @@ def test_delete_contract_view_with_gestion_profile_when_contract_referenced_in_e
 
 
 def test_delete_event_view_with_commercial_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_event(
@@ -150,7 +146,7 @@ def test_delete_event_view_with_commercial_profile_raises_exception(
 
 
 def test_delete_event_view_with_support_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_event(
@@ -159,7 +155,7 @@ def test_delete_event_view_with_support_profile_raises_exception(
 
 
 def test_delete_event_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
         dummy_events_list = ["EV971"]
@@ -173,7 +169,7 @@ def test_delete_event_view_with_gestion_profile(
 
 
 def test_delete_location_view_with_gestion_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(
@@ -182,7 +178,7 @@ def test_delete_location_view_with_gestion_profile_raises_exception(
 
 
 def test_delete_location_view_with_support_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(
@@ -191,7 +187,7 @@ def test_delete_location_view_with_support_profile_raises_exception(
 
 
 def test_delete_location_view_with_commercial_profile_when_location_referenced_by_company_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.ForeignKeyDependyException):
         ConsoleClientForDelete(
@@ -200,10 +196,10 @@ def test_delete_location_view_with_commercial_profile_when_location_referenced_b
 
 
 def test_delete_location_view_with_commercial_profile_when_location_not_referenced_by_company(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
-        dummy_locations_list = ["llb44430"]
+        dummy_locations_list = ["CAL13555"]
         for location in dummy_locations_list:
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
@@ -214,7 +210,7 @@ def test_delete_location_view_with_commercial_profile_when_location_not_referenc
 
 
 def test_delete_role_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
         dummy_roles_list = ["driv", "sec"]
@@ -228,7 +224,7 @@ def test_delete_role_view_with_gestion_profile(
 
 
 def test_delete_role_view_with_gestion_profile_when_role_referenced_in_collaborator_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.ForeignKeyDependyException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_role(
@@ -237,7 +233,7 @@ def test_delete_role_view_with_gestion_profile_when_role_referenced_in_collabora
 
 
 def test_delete_role_view_with_commercial_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_role(
@@ -246,7 +242,7 @@ def test_delete_role_view_with_commercial_profile_raises_exception(
 
 
 def test_delete_role_view_with_support_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_role(
@@ -255,7 +251,7 @@ def test_delete_role_view_with_support_profile_raises_exception(
 
 
 def test_delete_department_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
         dummy_departments_list = ["logist", "design"]
@@ -269,7 +265,7 @@ def test_delete_department_view_with_gestion_profile(
 
 
 def test_delete_department_view_with_gestion_profile_when_department_referenced_in_collaborator_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.ForeignKeyDependyException):
         ConsoleClientForDelete(
@@ -278,7 +274,7 @@ def test_delete_department_view_with_gestion_profile_when_department_referenced_
 
 
 def test_delete_department_view_with_support_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(
@@ -287,7 +283,7 @@ def test_delete_department_view_with_support_profile_raises_exception(
 
 
 def test_delete_department_view_with_commercial_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(
@@ -296,7 +292,7 @@ def test_delete_department_view_with_commercial_profile_raises_exception(
 
 
 def test_delete_collaborator_view_with_commercial_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(
@@ -305,7 +301,7 @@ def test_delete_collaborator_view_with_commercial_profile_raises_exception(
 
 
 def test_delete_collaborator_view_with_support_profile_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(
@@ -325,7 +321,7 @@ def test_delete_collaborator_view_with_support_profile_raises_exception(
     ],
 )
 def test_delete_collaborator_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator, matricule
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, matricule
 ):
     try:
         result = ConsoleClientForDelete(
@@ -337,7 +333,7 @@ def test_delete_collaborator_view_with_gestion_profile(
 
 
 def test_delete_collaborator_view_with_gestion_profile_when_collaborator_referenced_in_contract_raises_exception(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.ForeignKeyDependyException):
         ConsoleClientForDelete(

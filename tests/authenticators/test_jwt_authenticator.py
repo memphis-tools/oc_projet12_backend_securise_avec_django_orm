@@ -19,7 +19,7 @@ except ModuleNotFoundError:
     from settings import settings
 
 
-def test_get_token_with_unvalid_credentials(db_name=f"{settings.TEST_DATABASE_NAME}"):
+def test_get_token_with_unvalid_credentials(set_a_test_env, db_name=f"{settings.TEST_DATABASE_NAME}"):
     """
     Description:
     Pour obtenir un token l'utilisateur doit fournir un "registration_number" valide.
@@ -35,7 +35,7 @@ def test_get_token_with_unvalid_credentials(db_name=f"{settings.TEST_DATABASE_NA
 
 
 def test_get_token_with_valid_credentials(
-    get_runner, db_name=f"{settings.TEST_DATABASE_NAME}"
+    get_runner, set_a_test_env, db_name=f"{settings.TEST_DATABASE_NAME}"
 ):
     """
     Description:
@@ -50,7 +50,7 @@ def test_get_token_with_valid_credentials(
 
 
 def test_random_jwt_token_against_application_for_invalid_signature_error(
-    get_runner, mocker
+    get_runner, set_a_test_env, mocker
 ):
     """
     Description:
@@ -84,7 +84,7 @@ def test_random_jwt_token_against_application_for_invalid_signature_error(
         revocation = jwt_controller.does_a_valid_token_exist()
 
 
-def test_check_token_expiration_when_time_elapsed_valid(get_runner, mocker):
+def test_check_token_expiration_when_time_elapsed_valid(get_runner, set_a_test_env, mocker):
     """
     Description:
     Un token doit être révoqué après un délai spécifié dans le fichier settings.py.
@@ -103,7 +103,7 @@ def test_check_token_expiration_when_time_elapsed_valid(get_runner, mocker):
     assert revocation is False
 
 
-def test_check_token_expiration_when_time_elapsed_not_valid():
+def test_check_token_expiration_when_time_elapsed_not_valid(set_a_test_env):
     """
     Description:
     Un token doit être révoqué après un délai spécifié dans le fichier settings.py.

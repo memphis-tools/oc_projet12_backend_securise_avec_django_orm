@@ -1,3 +1,4 @@
+import os
 import pytest
 from datetime import datetime, timedelta
 from click.testing import CliRunner
@@ -10,6 +11,12 @@ except ModuleNotFoundError:
     from controllers.jwt_controller import JwtController
     from settings import settings
     from views.jwt_view import JwtView
+
+
+@pytest.fixture
+def set_a_test_env():
+    os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] = "TEST"
+    return
 
 
 @pytest.fixture
@@ -238,6 +245,19 @@ def dummy_contract_data(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
+def dummy_contract_data_2(request):
+    contract = {
+        "creation_date": "2023-05-10 15:04:20",
+        "contract_id": "C9Z1",
+        "full_amount_to_pay": "299.99",
+        "remain_amount_to_pay": "299.99",
+        "status": "unsigned",
+        "client_id": "2",
+    }
+    return contract
+
+
+@pytest.fixture(scope="session", autouse=True)
 def dummy_contract_partial_data(request):
     contract = {
         "contract_id": "C9Z1",
@@ -320,7 +340,9 @@ def dummy_location_data(request):
         "adresse": "3 rue de la tannerie",
         "complement_adresse": "La meule en bière",
         "code_postal": "24250",
+        "cedex": "0",
         "ville": "Plurien",
+        "region": "Bretagne",
         "pays": "France",
     }
     return location

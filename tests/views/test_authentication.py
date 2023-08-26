@@ -2,9 +2,9 @@
 Description:
 Test de la vue pour l'authentification.
 """
+import os
 import pytest
 import sqlalchemy
-
 try:
     from src.views.views import AppViews
     from src.views.authentication_view import AuthenticationView
@@ -13,6 +13,9 @@ except ModuleNotFoundError:
     from views.views import AppViews
     from views.authentication_view import AuthenticationView
     from settings import settings
+
+
+os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] = "TEST"
 
 
 def test_authentication_with_wrong_credentials():
