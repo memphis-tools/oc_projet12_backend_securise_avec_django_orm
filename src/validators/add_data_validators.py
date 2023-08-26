@@ -25,8 +25,8 @@ def add_client_data_is_valid(data) -> bool:
         "company_id",
         "commercial_contact",
     ]
-    b = bool(len(data) == len(expected_keys))
-    return list(data.keys()).sort() == expected_keys.sort() and b
+    expected_keys_valid = bool(len(data) == len(expected_keys))
+    return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
 
 
 def add_collaborator_data_is_valid(data) -> bool:
@@ -37,8 +37,8 @@ def add_collaborator_data_is_valid(data) -> bool:
         "department_id",
         "role_id",
     ]
-    b = bool(len(data) == len(expected_keys))
-    return list(data.keys()).sort() == expected_keys.sort() and b
+    expected_keys_valid = bool(len(data) == len(expected_keys))
+    return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
 
 
 def add_company_data_is_valid(data) -> bool:
@@ -51,8 +51,8 @@ def add_company_data_is_valid(data) -> bool:
         "activite_principale",
         "location_id",
     ]
-    b = bool(len(data) == len(expected_keys))
-    return list(data.keys()).sort() == expected_keys.sort() and b
+    expected_keys_valid = bool(len(data) == len(expected_keys))
+    return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
 
 
 def add_contract_data_is_valid(data) -> bool:
@@ -64,8 +64,8 @@ def add_contract_data_is_valid(data) -> bool:
         "status",
         "client_id",
     ]
-    b = bool(len(data) == len(expected_keys))
-    return list(data.keys()).sort() == expected_keys.sort() and b
+    expected_keys_valid = bool(len(data) == len(expected_keys))
+    return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
 
 
 def add_department_data_is_valid(data) -> bool:
@@ -74,8 +74,8 @@ def add_department_data_is_valid(data) -> bool:
         "department_id",
         "name",
     ]
-    b = bool(len(data) == len(expected_keys))
-    return list(data.keys()).sort() == expected_keys.sort() and b
+    expected_keys_valid = bool(len(data) == len(expected_keys))
+    return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
 
 
 def add_event_data_is_valid(data) -> bool:
@@ -92,8 +92,8 @@ def add_event_data_is_valid(data) -> bool:
         "collaborator_id",
         "location_id",
     ]
-    b = bool(len(data) == len(expected_keys))
-    return list(data.keys()).sort() == expected_keys.sort() and b
+    expected_keys_valid = bool(len(data) == len(expected_keys))
+    return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
 
 
 def add_location_data_is_valid(data) -> bool:
@@ -103,14 +103,16 @@ def add_location_data_is_valid(data) -> bool:
         "adresse",
         "complement_adresse",
         "code_postal",
+        "cedex",
         "ville",
+        "region",
         "pays",
     ]
-    b = bool(len(data) == len(expected_keys))
-    return list(data.keys()).sort() == expected_keys.sort() and b
+    expected_keys_valid = bool(len(data) == len(expected_keys))
+    return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
 
 
 def add_role_data_is_valid(data) -> bool:
     expected_keys = ["creation_date", "role_id", "name"]
-    b = bool(len(data) == len(expected_keys))
-    return list(data.keys()).sort() == expected_keys.sort() and b
+    expected_keys_valid = bool(len(data) == len(expected_keys))
+    return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
