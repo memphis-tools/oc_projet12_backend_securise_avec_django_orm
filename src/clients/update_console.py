@@ -50,7 +50,7 @@ class ConsoleClientForUpdate:
         settings.APP_FIGLET_TITLE
 
     @utils.authentication_permission_decorator
-    def update_client(self, custom_partial_dict, db_name=f"{settings.DATABASE_NAME}"):
+    def update_client(self, custom_partial_dict, db_name=f"{settings.DATABASE_NAME}", user_query_filters_args=""):
         # rechercher le id de l'utilisateur courant
         # obtenir le token décodé (et valide)
         # demander mot de passe à utilisateur en cours
@@ -68,7 +68,6 @@ class ConsoleClientForUpdate:
         r_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, r_number)}"
-
         try:
             if (
                 "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"

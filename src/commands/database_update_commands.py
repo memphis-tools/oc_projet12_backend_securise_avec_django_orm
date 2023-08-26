@@ -80,6 +80,8 @@ def update_client(client_id, args):
                     .app_view.get_companies_view()
                     .get_company(v)
                 )
+                if not expected_company or expected_company == None:
+                    raise exceptions.CustomIdMatchNothingException()
                 expected_company_id = expected_company.get_dict()["id"]
                 client_dict[k] = str(expected_company_id)
             else:
