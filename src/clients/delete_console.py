@@ -352,7 +352,7 @@ class ConsoleClientForDelete:
                 with logtail.context(user={ 'registration_number': user_registration_number }):
                 	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -408,7 +408,7 @@ class ConsoleClientForDelete:
                 with logtail.context(collaborator={ 'collaborator_id': collaborator_id }):
                 	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -458,7 +458,7 @@ class ConsoleClientForDelete:
                 with logtail.context(company={ 'company_id': company_id }):
                 	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -508,7 +508,7 @@ class ConsoleClientForDelete:
                 	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
             sys.exit(0)
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -560,7 +560,7 @@ class ConsoleClientForDelete:
                 with logtail.context(department={ 'department_id': department_id }):
                 	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -603,7 +603,7 @@ class ConsoleClientForDelete:
                 	LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -653,7 +653,7 @@ class ConsoleClientForDelete:
                 with logtail.context(location={ 'location_id': location_id }):
                 	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -703,7 +703,7 @@ class ConsoleClientForDelete:
                 with logtail.context(role={ 'role_id': role_id }):
                 	LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
-        except TypeError as error:
+        except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
