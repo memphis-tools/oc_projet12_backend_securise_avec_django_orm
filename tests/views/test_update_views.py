@@ -168,20 +168,19 @@ def test_update_client_view_with_valid_company_with_commercial_profile_unassgine
 
 
 def test_update_client_view_with_unvalid_company(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, get_valid_decoded_token_for_a_commercial_collaborator_id_2
 ):
-    with pytest.raises(AttributeError):
-        args_to_convert = client_partial_dict_3
-        custom_id = args_to_convert.pop("client_id")
-        args_converted = ""
-        for k, v in args_to_convert.items():
-            args_converted += f"{k}={v} "
-        result = get_runner.invoke(
-            database_update_commands.update_client,
-            f"--client_id={custom_id} {args_converted}",
-            f"--db_name={settings.TEST_DATABASE_NAME}",
-        )
-        assert result.exit_code == 1
+    args_to_convert = client_partial_dict_3
+    custom_id = args_to_convert.pop("client_id")
+    args_converted = ""
+    for k, v in args_to_convert.items():
+        args_converted += f"{k}={v} "
+    result = get_runner.invoke(
+        database_update_commands.update_client,
+        f"--client_id={custom_id} {args_converted}",
+        f"--db_name={settings.TEST_DATABASE_NAME}",
+    )
+    assert "Aucun résultat trouvé en base de données" in result.output
 
 
 def test_update_company_view_with_commercial_profile(
