@@ -215,7 +215,7 @@ class DatabaseUpdateController:
         event_dict = event.get_dict()
         # un collaborateur du service support ne peut modifier que les évènements qui lui sont assignés
         if user_service.lower() == "oc12_support":
-            if current_user_collaborator_id != event_dict["collaborator_id"]:
+            if int(current_user_collaborator_id) != event_dict["collaborator_id"]:
                 raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
         session.commit()
         return event.get_dict()
