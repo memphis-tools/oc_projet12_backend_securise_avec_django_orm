@@ -180,6 +180,18 @@ def dummy_collaborator_data(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
+def dummy_collaborator_data_2(request):
+    collaborator = {
+        "creation_date": "2023-07-14 09:05:10",
+        "registration_number": "nn123456789",
+        "username": "nono duck",
+        "department_id": "1",
+        "role_id": "1",
+    }
+    return collaborator
+
+
+@pytest.fixture(scope="session", autouse=True)
 def dummy_collaborator_department_data(request):
     collaborator_department = {
         "creation_date": "2023-07-14 09:05:10",
@@ -221,7 +233,16 @@ def dummy_contract_data(request):
         "remain_amount_to_pay": "999.99",
         "status": "unsigned",
         "client_id": "1",
-        "collaborator_id": "2",
+    }
+    return contract
+
+
+@pytest.fixture(scope="session", autouse=True)
+def dummy_contract_partial_data(request):
+    contract = {
+        "contract_id": "C9Z1",
+        "remain_amount_to_pay": "554.29",
+        "status": "signed",
     }
     return contract
 
@@ -242,6 +263,21 @@ def dummy_event_data(request):
         "collaborator_id": "2",
     }
     return event
+
+
+@pytest.fixture(scope="session", autouse=True)
+def dummy_collaborator_partial_data(request):
+    collaborator_partial_dict = {
+        "registration_number": "nn123456789",
+        "username": "Mr Xyz",
+    }
+    return collaborator_partial_dict
+
+
+@pytest.fixture(scope="session", autouse=True)
+def dummy_event_partial_data_0(request):
+    event_partial_dict = {"event_id": "hob2023", "collaborator_id": 5}
+    return event_partial_dict
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -267,6 +303,12 @@ def dummy_event_partial_data_3(request):
         "attendees": "2500",
         "notes": "Prévoir eau plate et gazeuse.",
     }
+    return event_partial_dict
+
+
+@pytest.fixture(scope="session", autouse=True)
+def dummy_event_partial_data_4(request):
+    event_partial_dict = {"collaborator_id": "aa123456789"}
     return event_partial_dict
 
 

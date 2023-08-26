@@ -77,7 +77,6 @@ contract_partial_dict2 = {
 
 contract_partial_dict3 = {
     "contract_id": "ff555",
-    "remain_amount_to_pay": "99.99",
     "status": "signed",
 }
 
@@ -251,14 +250,10 @@ def test_update_contract_view_with_commercial_profile_assigned_to_contract(
 def test_update_contract_view_with_gestion_profile(
     get_runner, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_contract(
-            contract_partial_dict3
-        )
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict3)
+    assert isinstance(result, str)
+    assert "Update" in result
 
 
 def test_update_contract_view_with_support_profile(
@@ -287,16 +282,14 @@ def test_update_event_view_with_commercial_profile(
 def test_update_event_view_with_gestion_profile(
     get_runner,
     get_valid_decoded_token_for_a_gestion_collaborator,
-    dummy_event_partial_data_1,
+    dummy_event_partial_data_0,
 ):
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_event(
-            dummy_event_partial_data_1
-        )
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForUpdate(db_name=db_name).update_event(
+        dummy_event_partial_data_0
+    )
+    assert isinstance(result, str)
+    assert "Update" in result
 
 
 def test_update_event_view_with_support_profile_when_collaborator_is_assigned(
