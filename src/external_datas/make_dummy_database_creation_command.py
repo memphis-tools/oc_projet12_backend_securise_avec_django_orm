@@ -378,7 +378,7 @@ def dummy_database_creation(db_name="projet12"):
         '2',
         '500',
         'bla bla bla penser au catering',
-        '2'
+        '5'
     )
     """
     cursor.execute(sql)
