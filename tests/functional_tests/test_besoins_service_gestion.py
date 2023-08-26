@@ -2,6 +2,7 @@
 Description:
 Tests fonctionnels pour les besoins spécifiques de l'équipe Gestion
 """
+import os
 import pytest
 try:
     from src.clients.create_console import ConsoleClientForCreate
@@ -21,8 +22,11 @@ except ModuleNotFoundError:
     from settings import settings
 
 
+os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] = "TEST"
+
+
 def test_collaborator_manipulation(
-    get_runner,
+    get_runner, set_a_test_env,
     dummy_collaborator_data_2,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_collaborator_partial_data
@@ -47,8 +51,8 @@ def test_collaborator_manipulation(
 
 
 def test_contract_manipulation(
-    get_runner,
-    dummy_contract_data,
+    get_runner, set_a_test_env,
+    dummy_contract_data_2,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_contract_partial_data
     ):
@@ -57,9 +61,9 @@ def test_contract_manipulation(
     Un membre du service Gestion doit pouvoir créer et modifier tous les contrats.
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    contract_custom_id = dummy_contract_data["contract_id"]
+    contract_custom_id = dummy_contract_data_2["contract_id"]
 
-    result = ConsoleClientForCreate(db_name).add_contract(dummy_contract_data)
+    result = ConsoleClientForCreate(db_name).add_contract(dummy_contract_data_2)
     assert isinstance(result, str)
     assert "Creation contract" in result
 
@@ -73,7 +77,7 @@ def test_contract_manipulation(
 
 
 def test_event_display_manipulation(
-    get_runner,
+    get_runner, set_a_test_env,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_event_partial_data_4
     ):
@@ -93,7 +97,7 @@ def test_event_display_manipulation(
 
 
 def test_event_update_manipulation(
-    get_runner,
+    get_runner, set_a_test_env,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_event_partial_data_1,
     ):

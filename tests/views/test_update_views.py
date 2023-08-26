@@ -86,6 +86,12 @@ contract_partial_dict4 = {
     "status": "signed",
 }
 
+contract_partial_dict5 = {
+    "contract_id": "av123",
+    "remain_amount_to_pay": "9599.99",
+    "status": "canceled",
+}
+
 location_partial_dict = {
     "location_id": "p22240",
     "complement_adresse": "allée de la patissière",
@@ -93,7 +99,7 @@ location_partial_dict = {
 
 
 def test_update_client_view(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     args_to_convert = client_partial_dict_1
     custom_id = args_to_convert.pop("client_id")
@@ -109,7 +115,7 @@ def test_update_client_view(
 
 
 def test_update_client_view_with_valid_company_with_commercial_profile_assgined(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     """
     Description:
@@ -138,8 +144,8 @@ def test_update_client_view_with_valid_company_with_commercial_profile_assgined(
     assert f"{custom_id}" == result["client_id"]
 
 
-def test_update_client_view_with_valid_company_with_commercial_profile_unassgined(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+def test_update_client_view_with_valid_company_with_commercial_profile_unassgined_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     """
     Description:
@@ -167,7 +173,7 @@ def test_update_client_view_with_valid_company_with_commercial_profile_unassgine
 
 
 def test_update_client_view_with_unvalid_company(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator_id_2
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator_id_2
 ):
     args_to_convert = client_partial_dict_3
     custom_id = args_to_convert.pop("client_id")
@@ -183,20 +189,17 @@ def test_update_client_view_with_unvalid_company(
 
 
 def test_update_company_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_company(
-            company_partial_dict
-        )
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForUpdate(db_name=db_name).update_company(
+        company_partial_dict
+    )
+    assert isinstance(result, str)
 
 
-def test_update_company_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+def test_update_company_view_with_gestion_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -205,8 +208,8 @@ def test_update_company_view_with_gestion_profile(
         )
 
 
-def test_update_company_view_with_support_profile(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+def test_update_company_view_with_support_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -215,8 +218,8 @@ def test_update_company_view_with_support_profile(
         )
 
 
-def test_update_contract_view_with_commercial_profile_unassigned_to_contract(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+def test_update_contract_view_with_commercial_profile_unassigned_to_contract_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     """
     Description:
@@ -231,24 +234,21 @@ def test_update_contract_view_with_commercial_profile_unassigned_to_contract(
 
 
 def test_update_contract_view_with_commercial_profile_assigned_to_contract(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     """
     Description:
     Un commercial ne peut modifier un contrat que s'il est le commercial assigné.
     """
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_contract(
-            contract_partial_dict2
-        )
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForUpdate(db_name=db_name).update_contract(
+        contract_partial_dict5
+    )
+    assert isinstance(result, str)
 
 
 def test_update_contract_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     db_name = f"{settings.TEST_DATABASE_NAME}"
     result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict3)
@@ -256,8 +256,8 @@ def test_update_contract_view_with_gestion_profile(
     assert "Update" in result
 
 
-def test_update_contract_view_with_support_profile(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+def test_update_contract_view_with_support_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -266,8 +266,8 @@ def test_update_contract_view_with_support_profile(
         )
 
 
-def test_update_event_view_with_commercial_profile(
-    get_runner,
+def test_update_event_view_with_commercial_profile_raises_exception(
+    get_runner, set_a_test_env,
     get_valid_decoded_token_for_a_commercial_collaborator,
     dummy_event_partial_data_1,
 ):
@@ -280,7 +280,7 @@ def test_update_event_view_with_commercial_profile(
 
 
 def test_update_event_view_with_gestion_profile(
-    get_runner,
+    get_runner, set_a_test_env,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_event_partial_data_0,
 ):
@@ -293,26 +293,23 @@ def test_update_event_view_with_gestion_profile(
 
 
 def test_update_event_view_with_support_profile_when_collaborator_is_assigned(
-    get_runner,
+    get_runner, set_a_test_env,
     get_valid_decoded_token_for_a_support_collaborator_with_id_5,
     dummy_event_partial_data_2,
 ):
     """
     Description:
-    Un membre du service support ne peut modifier un évènement que s'il le collaborateur assigné.
+    Un membre du service support ne peut modifier un évènement que s'il est le collaborateur assigné.
     """
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_event(
-            dummy_event_partial_data_2
-        )
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForUpdate(db_name=db_name).update_event(
+        dummy_event_partial_data_2
+    )
+    assert isinstance(result, str)
 
 
-def test_update_event_view_with_support_profile_when_collaborator_is_not_assigned(
-    get_runner,
+def test_update_event_view_with_support_profile_when_collaborator_is_not_assigned_raises_exception(
+    get_runner, set_a_test_env,
     get_valid_decoded_token_for_a_support_collaborator_with_id_7,
     dummy_event_partial_data_3,
 ):
@@ -329,7 +326,7 @@ def test_update_event_view_with_support_profile_when_collaborator_is_not_assigne
 
 
 def test_update_location_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     try:
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -341,8 +338,8 @@ def test_update_location_view_with_commercial_profile(
         print(error)
 
 
-def test_update_location_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+def test_update_location_view_with_gestion_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -351,8 +348,8 @@ def test_update_location_view_with_gestion_profile(
         )
 
 
-def test_update_location_view_with_support_profile(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+def test_update_location_view_with_support_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -362,26 +359,23 @@ def test_update_location_view_with_support_profile(
 
 
 def test_update_role_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_role(role_partial_dict)
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForUpdate(db_name=db_name).update_role(role_partial_dict)
+    assert isinstance(result, str)
 
 
-def test_update_role_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+def test_update_role_view_with_commercial_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_role(role_partial_dict)
 
 
-def test_update_role_view_with_support_profile(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+def test_update_role_view_with_support_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -389,20 +383,17 @@ def test_update_role_view_with_support_profile(
 
 
 def test_update_department_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_department(
-            department_partial_dict
-        )
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForUpdate(db_name=db_name).update_department(
+        department_partial_dict
+    )
+    assert isinstance(result, str)
 
 
-def test_update_department_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+def test_update_department_view_with_commercial_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -411,8 +402,8 @@ def test_update_department_view_with_commercial_profile(
         )
 
 
-def test_update_department_view_with_support_profile(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+def test_update_department_view_with_support_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -422,20 +413,17 @@ def test_update_department_view_with_support_profile(
 
 
 def test_update_collaborator_view_with_gestion_profile(
-    get_runner, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_collaborator(
-            collaborator_partial_dict
-        )
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForUpdate(db_name=db_name).update_collaborator(
+        collaborator_partial_dict
+    )
+    assert isinstance(result, str)
 
 
-def test_update_collaborator_view_with_commercial_profile(
-    get_runner, get_valid_decoded_token_for_a_commercial_collaborator
+def test_update_collaborator_view_with_commercial_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
@@ -444,8 +432,8 @@ def test_update_collaborator_view_with_commercial_profile(
         )
 
 
-def test_update_collaborator_view_with_support_profile(
-    get_runner, get_valid_decoded_token_for_a_support_collaborator
+def test_update_collaborator_view_with_support_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
