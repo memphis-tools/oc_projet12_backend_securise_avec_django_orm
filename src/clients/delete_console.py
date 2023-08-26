@@ -147,7 +147,6 @@ class ConsoleClientForDelete:
                     registration_number
                 )
             )
-
             return collaborator_lookup.id
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
@@ -391,7 +390,6 @@ class ConsoleClientForDelete:
                 collaborator_id = self.ask_for_a_collaborator_id(collaborator_custom_id)
             else:
                 collaborator_id = self.ask_for_a_collaborator_id()
-
             collaborator_id = self.delete_app_view.get_collaborators_view().delete_collaborator(collaborator_id)
             message = f"Suppression {collaborator_id} by {user_registration_number}"
             return message
