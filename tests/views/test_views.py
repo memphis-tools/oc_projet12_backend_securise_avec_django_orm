@@ -30,7 +30,6 @@ except ModuleNotFoundError:
 def test_get_views(
     get_runner, command, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    database_read_commands
     result = get_runner.invoke(eval(f"database_read_commands.{command}"))
     assert result.exit_code == 0
 

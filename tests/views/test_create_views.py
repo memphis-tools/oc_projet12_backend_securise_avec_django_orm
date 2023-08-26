@@ -436,12 +436,9 @@ def test_add_contract_view_with_gestion_profile(
     """
     Vérifier si un membre du service gestion peut ajouter un contrat.
     """
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForCreate(db_name).add_contract(custom_dict)
-        assert isinstance(result, str)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForCreate(db_name).add_contract(custom_dict)
+    assert isinstance(result, str)
 
 
 @pytest.mark.parametrize(
