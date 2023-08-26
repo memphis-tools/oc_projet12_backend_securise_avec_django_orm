@@ -63,7 +63,6 @@ def add_contract_data_is_valid(data) -> bool:
         "remain_amount_to_pay",
         "status",
         "client_id",
-        "collaborator_id",
     ]
     b = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and b
