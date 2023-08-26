@@ -677,10 +677,10 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_location_data_is_valid(
                     location_attributes_dict
                 )
-                b3 = validators.is_complement_adresse_valid(
+                complement_adresse_valid = validators.is_complement_adresse_valid(
                     location_attributes_dict["complement_adresse"]
                 )
-                if data_is_dict and dict_is_valid and b3:
+                if data_is_dict and dict_is_valid and complement_adresse_valid:
                     location = models.Location(**location_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
