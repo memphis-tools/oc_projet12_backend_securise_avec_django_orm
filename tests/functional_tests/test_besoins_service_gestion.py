@@ -87,10 +87,6 @@ def test_event_display_manipulation(
     par exemple : afficher tous les événements qui n’ont pas de « support » associé.
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    args_to_convert = dummy_event_partial_data_4
-    args_converted = ""
-    for k, v in args_to_convert.items():
-        args_converted += f"{k}='{v}' "
     console_client = ConsoleClientForRead(db_name=db_name)
     result = console_client.get_events(('collaborator_id=None',))
     assert isinstance(result, list)
