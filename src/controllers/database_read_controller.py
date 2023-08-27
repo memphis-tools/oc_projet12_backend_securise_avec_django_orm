@@ -42,7 +42,7 @@ class DatabaseReadController:
             Collaborator, Collaborator_Role, Client, Contract, etc
         """
         filter_to_apply_rebuilt_query = utils.rebuild_filter_query(
-            user_query_filters_args, filtered_db_model
+            user_query_filters_args, filtered_db_model, session
         )
         try:
             db_model_queryset = (
@@ -55,7 +55,8 @@ class DatabaseReadController:
                 .filter(text(filter_to_apply_rebuilt_query)).all()
             )
             return db_model_queryset
-        except Exception:
+        except Exception as error:
+            print(f"DEBUG SIR: {error}")
             message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
