@@ -134,7 +134,7 @@ class ConsoleClientForUpdate:
             else:
                 self.update_app_view.get_collaborators_view().update_collaborator_filtered(self, user_query_filters_args)
 
-            message = f"Update collaborateur {matricule} by {r_number}"
+            message = f"Update collaborator {matricule} by {r_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(collaborator={'custom_partial_dict': custom_partial_dict }):
                     LOGGER.info(message)
