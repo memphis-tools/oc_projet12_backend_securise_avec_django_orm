@@ -217,7 +217,45 @@ def make_a_user_query_as_a_list(splited_args):
     return user_query_as_a_list
 
 
-def rebuild_filter_query(user_query_filters_args, filtered_db_model):
+def set_a_many_collaborators_id_expression_for_event(nb_clients, filtered_db_model, item_operator, id, client_ids):
+    """
+    Description:
+    Appéelée par rebuild_filter_query.
+    Un utilisateur peut chercher à filtrer les évènements lors d'une lecture.
+    Parmi les champs possible recherchés il y a le "commercial_id". Ce n'est pas un attribut du modèle Event.
+    A 1 client correspond 1 commercial. On va récupérer la référence du commercial via le client.
+    Içi on fait en sorte de créer une expression de type:
+    "(Event.client_id='1' OR Event.client_id='2' OR Event.client_id='4' OR Event.client_id='6')"
+    On retourne cette expression.
+    """
+    id = client_ids.pop(0)[0]
+    # on ouvre la parenthèse de l'expression
+    many_query = f"({filtered_db_model}.client_id{item_operator}'{id}'"
+    i = 0
+    for id in client_ids:
+        i += 1
+        if i == nb_clients-1:
+            # on ferme l'expression avec une parenthèse
+            many_query += (
+                f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}')"
+            )
+        else:
+            many_query += (
+                f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}'"
+            )
+    return many_query
+
+
+def set_a_many_collaborators_id_expression_for_event(nb_clients, filtered_db_model, item_operator, id, client_ids):
+    """
+    Description:
+    Appéelée par rebuild_filter_query.
+
+    """
+    pass
+
+
+def rebuild_filter_query(user_query_filters_args, filtered_db_model, session="", ):
     """
     Description:
     Fonction utilisée lorsque l'utilisateur demande une vue filtrée.
@@ -259,6 +297,42 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model):
                 if item_value is None:
                     filter_to_apply_rebuilt_query += (
                         f"({filtered_db_model}.{item_key}{item_operator})"
+                    )
+                else:
+                    collaborator_id = get_user_id_from_registration_number(session, item_value)
+                    filter_to_apply_rebuilt_query += (
+                        f"({filtered_db_model}.{item_key}{item_operator}'{collaborator_id}')"
+                    )
+            elif item_key == "client_id":
+                client_id = get_client_id_from_client_custom_id(session, item_value)
+                filter_to_apply_rebuilt_query += (
+                    f"({filtered_db_model}.{item_key}{item_operator}'{client_id}')"
+                )
+            elif item_key == "contract_id":
+                contract_id = get_contract_id_from_contract_custom_id(session, item_value)
+                filter_to_apply_rebuilt_query += (
+                    f"({filtered_db_model}.{item_key}{item_operator}'{contract_id}')"
+                )
+            elif item_key == "location_id":
+                location_id = get_location_id_from_location_custom_id(session, item_value)
+                filter_to_apply_rebuilt_query += (
+                    f"({filtered_db_model}.{item_key}{item_operator}'{location_id}')"
+                )
+            elif item_key == "commercial_id":
+                collaborator_id = get_user_id_from_registration_number(session, item_value)
+                client_ids = get_all_client_ids_for_a_collaborator_id(session, collaborator_id)
+                nb_clients = len(client_ids)
+                if nb_clients == 1:
+                    filter_to_apply_rebuilt_query += (
+                        f"({filtered_db_model}.client_id{item_operator}'{client_ids[0]}')"
+                    )
+                else:
+                    filter_to_apply_rebuilt_query += set_a_many_collaborators_id_expression_for_event(
+                        nb_clients,
+                        filtered_db_model,
+                        item_operator,
+                        id,
+                        client_ids
                     )
             else:
                 # filtered_db_model: Contract, Collaborator_Role, Client etc
@@ -355,6 +429,36 @@ def get_client_id_from_client_custom_id(session, client_id):
     return id
 
 
+def get_commercial_id_from_client_id(session, client_id):
+    """
+    Description:
+    Récupérer l'id du commercial d'un client ayant un id clef primaire, en argument.
+    Utile lors de la recherche filtrée d'évènements.
+    Paramètres:
+    - client_id: entier, l'id clef primaire
+    """
+    sql = text(f"""SELECT commercial_contact FROM client WHERE id='{client_id}'""")
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
+
+
+def get_all_client_ids_for_a_collaborator_id(session, collaborator_id):
+    """
+    Description:
+    Récupérer les ids des clients associés au id colllaborateur (clef primaire), en argument.
+    Utile lors de la recherche filtrée d'évènements par collaborateur.
+    Pas de clef étrangère pour le collaborateur dans modèle Event. A 1 client == 1 collaborateur (commercial).
+    On récupère donc l'id du collaborateur au travers du client.
+    La recherche d'un évènement filtré par id du collaborateur, revient à rechercher par clients.
+    Paramètres:
+    - collaborator_id: entier, l'id clef primaire
+    """
+    sql = text(f"""SELECT id FROM client WHERE commercial_contact='{collaborator_id}'""")
+    result = session.execute(sql).all()
+    return result
+
+
 def get_contract_id_from_contract_custom_id(session, contract_id):
     """
     Description:
@@ -390,15 +494,12 @@ def get_location_id_from_location_custom_id(session, location_id):
     Paramètres:
     - location_id: chaine libre de caractères, le custom id de la localité
     """
-    try:
-        sql = text(
-            f"""SELECT id FROM location WHERE location_id='{location_id.upper()}'"""
-        )
-        result = session.execute(sql).first()
-        id = str(result[0]).lower()
-        return id
-    except TypeError:
-        return None
+    sql = text(
+        f"""SELECT id FROM location WHERE location_id='{location_id}'"""
+    )
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
 
 
 def get_role_id_from_role_custom_id(session, role_id):
