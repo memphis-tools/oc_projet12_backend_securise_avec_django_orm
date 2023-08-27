@@ -373,7 +373,7 @@ class ConsoleClientForCreate:
 
                 collaborator = models.Collaborator(**collaborator_attributes_dict)
             collaborator_id = self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
-            message = f"Creation collaborateur {collaborator} by {registration_number}"
+            message = f"Creation collaborator {collaborator.registration_number} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(collaborator={'registration_number': collaborator.registration_number }):
                     LOGGER.info(message)
