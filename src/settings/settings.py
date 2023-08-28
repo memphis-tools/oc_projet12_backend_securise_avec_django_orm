@@ -5,8 +5,15 @@ Dédiées à l'administrateur de l'application.
 """
 
 import os
+import platform
 from pathlib import Path
 from dotenv import load_dotenv
+
+# détecter le système d'exploitation
+if platform.system() == "Linux":
+    USER_OPERATING_SYSTEM = "Linux"
+elif platform.system() == "Windows":
+    USER_OPERATING_SYSTEM = "Windows"
 
 # on charge le PATH
 dotenv_path = Path(".envrc")
