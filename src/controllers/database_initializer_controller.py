@@ -316,7 +316,6 @@ class DatabaseInitializerController:
             conn.commit()
 
         oc12_commercial_allowed_tables = [
-            "client",
             "company",
             "event",
             "location",
@@ -327,6 +326,11 @@ class DatabaseInitializerController:
             cursor.execute(sql)
             sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_commercial"""
             cursor.execute(sql)
+
+        sql = """GRANT INSERT, UPDATE ON client TO oc12_commercial"""
+        cursor.execute(sql)
+        sql = f"""GRANT USAGE ON SEQUENCE client_id_seq TO oc12_commercial"""
+        cursor.execute(sql)
         sql = """GRANT UPDATE ON contract TO oc12_commercial"""
         cursor.execute(sql)
         sql = """GRANT UPDATE ON event TO oc12_commercial"""
@@ -344,6 +348,10 @@ class DatabaseInitializerController:
             cursor.execute(sql)
             sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_gestion"""
             cursor.execute(sql)
+        sql = """GRANT DELETE ON client TO oc12_gestion"""
+        cursor.execute(sql)
+        sql = f"""GRANT USAGE ON SEQUENCE client_id_seq TO oc12_gestion"""
+        cursor.execute(sql)
 
         allowed_services = ["oc12_support"]
         for service in allowed_services:
