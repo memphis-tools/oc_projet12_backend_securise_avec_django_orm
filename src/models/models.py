@@ -148,7 +148,7 @@ class Collaborator(Base):
     def __str__(self):
         descriptors = "["
         descriptors += f"(creation_date|{self.creation_date})"
-        descriptors += f",(user_id|{self.registration_number})"
+        descriptors += f",(registration_number|{self.registration_number})"
         descriptors += f",(username|{self.username})"
         descriptors += f",(department_id|{self.department.department_id})"
         descriptors += f",(role|{self.role.role_id})"
@@ -172,6 +172,7 @@ class Collaborator(Base):
     @staticmethod
     def _get_keys():
         return [
+            "registration_number",
             "username",
             "department_id",
             "role_id",
