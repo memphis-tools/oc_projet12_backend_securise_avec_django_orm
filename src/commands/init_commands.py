@@ -11,7 +11,9 @@ import logtail
 
 try:
     from src.clients import init_console
+    from src.exceptions import exceptions
     from src.printers import printer
+    from src.settings import settings
     from src.languages import language_bridge
     from src.clients.admin_console import AdminConsoleClient
     from src.external_datas.make_dummy_database_creation_command import (
@@ -21,7 +23,9 @@ try:
     from src.utils import utils
 except ModuleNotFoundError:
     from clients import init_console
+    from exceptions import exceptions
     from printers import printer
+    from settings import settings
     from languages import language_bridge
     from clients.admin_console import AdminConsoleClient
     from external_datas.make_dummy_database_creation_command import (
@@ -80,12 +84,15 @@ def init_application():
     )
     for database in settings.DATABASE_TO_CREATE:
         try:
-            subprocess.run(
-                [f"sudo -u postgres dropdb {database}"],
-                shell=True,
-                check=True,
-                capture_output=True,
-            )
+            if settings.USER_OPERATING_SYSTEM == "Linux":
+                subprocess.run(
+                    [f"sudo -u postgres dropdb {database}"],
+                    shell=True,
+                    check=True,
+                    capture_output=True,
+                )
+            elif settings.USER_OPERATING_SYSTEM != "Linux":
+                raise exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException()
 
             print(f"Database {database} ", end="")
             message = APP_DICT.get_appli_dictionnary()["DATABASE_DROPPED_SUCCESS"]
@@ -93,6 +100,13 @@ def init_application():
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(db={ 'database': database }):
                     LOGGER.info(message)
+        except exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException:
+            print(f"Database {database} ", end="")
+            message = APP_DICT.get_appli_dictionnary()["APPLICATION_NOT_SET_YET_FOR_THIS_OPERATING_SYSTEM"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(db={ 'database': database }):
+                	LOGGER.error(message)
         except subprocess.CalledProcessError:
             print(f"Database {database} ", end="")
             message = APP_DICT.get_appli_dictionnary()["DATABASE_DROPPED_FAILURE"]
@@ -109,18 +123,29 @@ def init_application():
 
     # on ne supprime qu'une fois le Account admin
     try:
-        subprocess.run(
-            [f"sudo -u postgres dropuser {settings.ADMIN_LOGIN}"],
-            shell=True,
-            check=True,
-            capture_output=True,
-        )
+        if settings.USER_OPERATING_SYSTEM == "Linux":
+            subprocess.run(
+                [f"sudo -u postgres dropuser {settings.ADMIN_LOGIN}"],
+                shell=True,
+                check=True,
+                capture_output=True,
+            )
+        elif settings.USER_OPERATING_SYSTEM != "Linux":
+            raise exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException()
+
         print(f"Account {settings.ADMIN_LOGIN} ", end="")
         message = APP_DICT.get_appli_dictionnary()["COLLABORATOR_DROPPED_SUCCESS"]
         printer.print_message("info",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             with logtail.context(user={ 'username': settings.ADMIN_LOGIN }):
                 LOGGER.info(message)
+    except exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException:
+        print(f"Database {database} ", end="")
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_NOT_SET_YET_FOR_THIS_OPERATING_SYSTEM"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            with logtail.context(db={ 'database': database }):
+                LOGGER.error(message)
     except subprocess.CalledProcessError:
         print(f"Database {database} {settings.ADMIN_LOGIN} ", end="")
         message = APP_DICT.get_appli_dictionnary()["COLLABORATOR_DROPPED_FAILURE"]
@@ -136,27 +161,38 @@ def init_application():
         sys.exit(0)
 
     try:
-        subprocess.run(
-            [f"sudo -u postgres createuser -s -i -d -r -l -w {settings.ADMIN_LOGIN}"],
-            shell=True,
-            check=True,
-            capture_output=True,
-        )
+        if settings.USER_OPERATING_SYSTEM == "Linux":
+            subprocess.run(
+                [f"sudo -u postgres createuser -s -i -d -r -l -w {settings.ADMIN_LOGIN}"],
+                shell=True,
+                check=True,
+                capture_output=True,
+            )
 
-        subprocess.run(
-            [
-                f"sudo -u postgres psql -c \"ALTER ROLE admin WITH PASSWORD '{settings.ADMIN_PASSWORD}';\""
-            ],
-            shell=True,
-            check=True,
-            capture_output=True,
-        )
+            subprocess.run(
+                [
+                    f"sudo -u postgres psql -c \"ALTER ROLE admin WITH PASSWORD '{settings.ADMIN_PASSWORD}';\""
+                ],
+                shell=True,
+                check=True,
+                capture_output=True,
+            )
+        elif settings.USER_OPERATING_SYSTEM != "Linux":
+            raise exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException()
+
         print(f"Account {settings.ADMIN_LOGIN} ", end="")
         message = APP_DICT.get_appli_dictionnary()["COLLABORATOR_CREATED_SUCCESS"]
         printer.print_message("info",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             with logtail.context(user={ 'username': settings.ADMIN_LOGIN }):
                 LOGGER.info(message)
+    except exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException:
+        print(f"Database {database} ", end="")
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_NOT_SET_YET_FOR_THIS_OPERATING_SYSTEM"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            with logtail.context(db={ 'database': database }):
+                LOGGER.error(message)
     except subprocess.CalledProcessError:
         print(f"Database {database} {settings.ADMIN_LOGIN} ", end="")
         message = APP_DICT.get_appli_dictionnary()["USER_ALREADY_EXIST"]
@@ -172,12 +208,22 @@ def init_application():
 
     for database in settings.DATABASE_TO_CREATE:
         try:
-            subprocess.run(
-                [f"sudo -u postgres createdb '{database}'"],
-                shell=True,
-                check=True,
-                capture_output=True,
-            )
+            if settings.USER_OPERATING_SYSTEM == "Linux":
+                subprocess.run(
+                    [f"sudo -u postgres createdb '{database}'"],
+                    shell=True,
+                    check=True,
+                    capture_output=True,
+                )
+            elif settings.USER_OPERATING_SYSTEM != "Linux":
+                raise exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException()
+        except exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException:
+            print(f"Database {database} ", end="")
+            message = APP_DICT.get_appli_dictionnary()["APPLICATION_NOT_SET_YET_FOR_THIS_OPERATING_SYSTEM"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(db={ 'database': database }):
+                	LOGGER.error(message)
         except subprocess.CalledProcessError:
             print(f"Database {database} {settings.ADMIN_LOGIN} ", end="")
             message = APP_DICT.get_appli_dictionnary()["DATABASE_ALREADY_EXIST"]
@@ -192,14 +238,25 @@ def init_application():
             sys.exit(0)
 
         try:
-            os.system(
-                f"sudo su -c 'psql -c \"ALTER DATABASE {database} OWNER TO admin\"' postgres 1>/dev/null"
-            )
+            if settings.USER_OPERATING_SYSTEM == "Linux":
+                os.system(
+                    f"sudo su -c 'psql -c \"ALTER DATABASE {database} OWNER TO admin\"' postgres 1>/dev/null"
+                )
+            elif settings.USER_OPERATING_SYSTEM != "Linux":
+                raise exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException()
+
             print(f"Database {database} ", end="")
             message = APP_DICT.get_appli_dictionnary()["DATABASE_OWNER_UPDATE_SUCCESS"]
             printer.print_message("info",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)
+        except exceptions.ApplicationCanNotBeInitializeFromOperatingSystemException:
+            print(f"Database {database} ", end="")
+            message = APP_DICT.get_appli_dictionnary()["APPLICATION_NOT_SET_YET_FOR_THIS_OPERATING_SYSTEM"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                with logtail.context(db={ 'database': database }):
+                	LOGGER.error(message)
         except subprocess.CalledProcessError:
             print(f"Database {database} ", end="")
             message = APP_DICT.get_appli_dictionnary()["DATABASE_OWNER_UPDATE_FAILURE"]
