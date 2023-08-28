@@ -337,7 +337,10 @@ class ConsoleClientForCreate:
                 client_id = self.create_app_view.get_clients_view().add_client(models.Client(**client_attributes_dict))
             message = f"Creation client {client_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(client={ 'client_id': client_attributes_dict['client_id'] }):
+                with logtail.context(client={
+                    'client_id': client_attributes_dict['client_id'],
+                    'current_collaborator': registration_number,
+                }):
                     LOGGER.info(message)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
@@ -394,7 +397,10 @@ class ConsoleClientForCreate:
             collaborator_id = self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
             message = f"Creation collaborator {collaborator.registration_number} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(collaborator={'registration_number': collaborator.registration_number }):
+                with logtail.context(collaborator={
+                    'registration_number': collaborator.registration_number,
+                    'current_collaborator': registration_number,
+                }):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -455,7 +461,10 @@ class ConsoleClientForCreate:
             company_id = self.create_app_view.get_companies_view().add_company(company)
             message = f"Creation company {company_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(company={ 'company_id': company_attributes_dict['company_id'] }):
+                with logtail.context(company={
+                    'company_id': company_attributes_dict['company_id'],
+                    'current_collaborator': registration_number,
+                }):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -516,7 +525,10 @@ class ConsoleClientForCreate:
             contract_id = self.create_app_view.get_contracts_view().add_contract(contract)
             message = f"Creation contract {contract_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(contract={ 'contract_id': contract_attributes_dict['contract_id'] }):
+                with logtail.context(contract={
+                    'contract_id': contract_attributes_dict['contract_id'],
+                    'current_collaborator': registration_number,
+                }):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -576,7 +588,10 @@ class ConsoleClientForCreate:
             department_id = self.create_app_view.get_departments_view().add_department(department)
             message = f"Creation department {department_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(department={ 'department_id': department_attributes_dict['department_id'] }):
+                with logtail.context(department={
+                    'department_id': department_attributes_dict['department_id'],
+                    'current_collaborator': registration_number,
+                }):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -649,7 +664,10 @@ class ConsoleClientForCreate:
             event_id = self.create_app_view.get_events_view().add_event(user_id, event)
             message = f"Creation event {event_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(event={ 'event_id': event_attributes_dict['event_id'] }):
+                with logtail.context(event={
+                    'event_id': event_attributes_dict['event_id'],
+                    'current_collaborator': registration_number,
+                }):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -730,7 +748,10 @@ class ConsoleClientForCreate:
             location_id = self.create_app_view.get_locations_view().add_location(location)
             message = f"Creation location {location_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(location={ 'location_id': location_attributes_dict['location_id'] }):
+                with logtail.context(location={
+                    'location_id': location_attributes_dict['location_id'],
+                    'current_collaborator': registration_number,
+                }):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -789,7 +810,10 @@ class ConsoleClientForCreate:
             role_id = self.create_app_view.get_roles_view().add_role(role)
             message = f"Creation role {role_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(role={ 'role_id': role_attributes_dict['role_id'] }):
+                with logtail.context(role={
+                    'role_id': role_attributes_dict['role_id'],
+                    'current_collaborator': registration_number,
+                }):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
