@@ -219,7 +219,7 @@ class Company(Base):
         descriptors += (
             f",(company_subregistration_number|{self.company_subregistration_number})"
         )
-        descriptors += f",(location_id|{self.location_id})"
+        descriptors += f",(location_id|{self.location.location_id})"
         descriptors += "]"
         return descriptors
 
