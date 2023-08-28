@@ -26,6 +26,8 @@ BETTERSTACK_SOURCE_TOKEN = os.environ.get("BETTERSTACK_SOURCE_TOKEN")
 FR_COMPANIES_API_URL = "https://recherche-entreprises.api.gouv.fr/search"
 FR_COMPANIES_DEPARTEMENTS_STRING_LIST = "44,13"
 FR_COMPANIES_API_MAX_PAGE_TO_PARSE = 5
+# cette API est ouverte mais vient avec des limites, voir la documentation.
+# https://recherche-entreprises.api.gouv.fr/docs/
 FR_COMPANIES_API_MAX_COMPANIES_PER_PAGE = 20
 COMPANIES_EXPORT_FILE_PATH = "src/external_datas/csv/french_companies.csv"
 COMPANIES_CSV_HEADERS = [
