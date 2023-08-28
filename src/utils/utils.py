@@ -673,6 +673,46 @@ def get_role_id_from_role_custom_id(session, role_id):
     return id
 
 
+def get_department_name_from_registration_number(session, registration_number):
+    """
+    Description:
+    Récupérer le nom du service /département à partir du registration_number d'un collaborateur.
+    C'est un besoin récurrent lors de la mise à jour des évènements.
+    Seuls les membres du service Support doivent pouvoir être ajoutés en collaborateur.
+    Paramètres:
+    - session: une session ouverte sur la base de données
+    - registration_number: chaine libre, le matricule employé (custom id)
+    """
+    sql = text(
+        f"""SELECT department_id FROM collaborator WHERE registration_number = '{registration_number}'"""
+    )
+    department_id = session.execute(sql).first()[0]
+    sql = text(
+        f"""SELECT name FROM collaborator_department WHERE id = '{department_id}'"""
+    )
+    result = session.execute(sql).first()
+    department_name = str(result[0]).lower()
+    return department_name
+
+
+def get_department_name_from_collaborator_id(session, collaborator_id):
+    """
+    Description:
+    Récupérer le nom du service /département à partir de l'id.
+    C'est un besoin récurrent lors de la mise à jour des collaborateurs.
+    Leur attribut department est la clef étrangère de celui-ci.
+    Paramètres:
+    - session: une session ouverte sur la base de données
+    - collaborator_id: entier, clef primaire d'un collaborator
+    """
+    sql = text(
+        f"""SELECT department_id FROM collaborator WHERE id = '{collaborator_id}'"""
+    )
+    result = session.execute(sql).first()
+    department_name = str(result[0]).lower()
+    return department_name
+
+
 def get_department_name_from_id(session, department_id):
     """
     Description:
