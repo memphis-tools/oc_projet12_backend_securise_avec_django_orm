@@ -282,7 +282,6 @@ def set_a_many_companies_id_expression_for_location(nb_companies, filtered_db_mo
     A 1 localité peut correspondre plusieurs entreprises.
     On permet la création d'une expression pour extraire plusieurs éléments.
     """
-    print(f"DEBUG OUR NEW CASE SIR company_ids:{company_ids}")
     id = company_ids.pop(0)[0]
     # on ouvre la parenthèse de l'expression
     many_query = f"({filtered_db_model}.id{item_operator}'{id}'"
@@ -572,10 +571,8 @@ def get_all_company_ids_for_a_location_id(session, location_id):
     Paramètres:
     - location_id: entier, l'id clef primaire
     """
-    print(f"DEBUG UTILS:get_all_company_ids_for_a_location_id location_id=={location_id}")
     sql = text(f"""SELECT id FROM company WHERE location_id='{location_id}'""")
     result = session.execute(sql).all()
-    print(f"DEBUG UTILS:get_all_company_ids_for_a_location_id result=={result}")
     return result
 
 
@@ -603,6 +600,31 @@ def get_contract_id_from_contract_custom_id(session, contract_id):
     result = session.execute(sql).first()
     id = str(result[0]).lower()
     return id
+
+
+def get_contract_custom_id_from_contract_id(session, contract_id):
+    """
+    Description:
+    Récupérer l'id du contrat ayant le custom id du modèle, en argument.
+    Paramètres:
+    - contract_id: entier, l'id clef primaire du modèle contrat
+    """
+    sql = text(f"""SELECT contract_id FROM contract WHERE id='{contract_id}'""")
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
+
+
+def get_contract_from_id(session, contract_id):
+    """
+    Description:
+    Récupérer l'id du contrat ayant le custom id du modèle, en argument.
+    Paramètres:
+    - contract_id: entier, l'id clef primaire du modèle contrat
+    """
+    sql = text(f"""SELECT * FROM contract WHERE id='{contract_id}'""")
+    result = session.execute(sql).first()
+    return result
 
 
 def get_department_id_from_department_custom_id(session, department_id):
