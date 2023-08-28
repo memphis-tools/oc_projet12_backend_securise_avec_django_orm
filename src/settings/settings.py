@@ -106,6 +106,7 @@ OC12_COMMERCIAL_CRUD_TABLES = ["client", "company", "contract", "event", "locati
 OC12_COMMERCIAL_PWD = os.environ.get("OC12_COMMERCIAL_PWD")
 
 OC12_GESTION_CRUD_TABLES = [
+    "client",
     "collaborator",
     "collaborator_department",
     "collaborator_role",
