@@ -34,7 +34,7 @@ except ModuleNotFoundError:
 class CsvFilesInitController:
     """
     Description:
-    (...)
+    Utilisé pour les imporst en masse, l'exploitation des données reçues.
     """
 
     def __init__(self):

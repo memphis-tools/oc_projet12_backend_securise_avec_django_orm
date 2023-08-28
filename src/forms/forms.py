@@ -129,6 +129,12 @@ def validate_key(custom_dict, key, item):
 
 
 def fullfill_form(custom_dict, expected_attributes_dict):
+    """
+    Description:
+    Faire remplir interractivement un formulaire par l'utilisateur.
+    Paramètres:
+    - expected_attributes_dict: un dictionnaire, il représente les attributs attendus
+    """
     while not len(custom_dict) == len(expected_attributes_dict):
         for key, value in expected_attributes_dict.items():
             if key not in custom_dict.keys():

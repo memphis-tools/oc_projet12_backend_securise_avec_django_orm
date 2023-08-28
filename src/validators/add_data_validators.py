@@ -7,12 +7,26 @@ C'est pour le 2ème cas qu'on introduit ce module.
 
 
 def data_is_dict(data) -> bool:
+    """
+    Description:
+    Vérifier si les données correspondent à une structure de données type dictionnaire.
+    Retourne Vrai si type est dictionnaire.
+    Paramètres:
+    - data: raw, on attend un dictionnaire
+    """
     if isinstance(data, dict):
         return True
     return False
 
 
 def add_client_data_is_valid(data) -> bool:
+    """
+    Description:
+    Vérifier s'il y autant de clef dans le dictionnaire en argument, que celles attendues pour le modèle.
+    Retourne True si vrai.
+    Paramètres:
+    - data: raw, on attend un dictionnaire, représentant les attributs du modèle.
+    """
     expected_keys = [
         "creation_date",
         "client_id",
@@ -29,6 +43,13 @@ def add_client_data_is_valid(data) -> bool:
 
 
 def add_collaborator_data_is_valid(data) -> bool:
+    """
+    Description:
+    Vérifier s'il y autant de clef dans le dictionnaire en argument, que celles attendues pour le modèle.
+    Retourne True si vrai.
+    Paramètres:
+    - data: raw, on attend un dictionnaire, représentant les attributs du modèle.
+    """
     expected_keys = [
         "creation_date",
         "registration_number",
@@ -41,6 +62,13 @@ def add_collaborator_data_is_valid(data) -> bool:
 
 
 def add_company_data_is_valid(data) -> bool:
+    """
+    Description:
+    Vérifier s'il y autant de clef dans le dictionnaire en argument, que celles attendues pour le modèle.
+    Retourne True si vrai.
+    Paramètres:
+    - data: raw, on attend un dictionnaire, représentant les attributs du modèle.
+    """
     expected_keys = [
         "creation_date",
         "company_id",
@@ -55,6 +83,13 @@ def add_company_data_is_valid(data) -> bool:
 
 
 def add_contract_data_is_valid(data) -> bool:
+    """
+    Description:
+    Vérifier s'il y autant de clef dans le dictionnaire en argument, que celles attendues pour le modèle.
+    Retourne True si vrai.
+    Paramètres:
+    - data: raw, on attend un dictionnaire, représentant les attributs du modèle.
+    """
     expected_keys = [
         "creation_date",
         "contract_id",
@@ -68,6 +103,13 @@ def add_contract_data_is_valid(data) -> bool:
 
 
 def add_department_data_is_valid(data) -> bool:
+    """
+    Description:
+    Vérifier s'il y autant de clef dans le dictionnaire en argument, que celles attendues pour le modèle.
+    Retourne True si vrai.
+    Paramètres:
+    - data: raw, on attend un dictionnaire, représentant les attributs du modèle.
+    """
     expected_keys = [
         "creation_date",
         "department_id",
@@ -78,6 +120,13 @@ def add_department_data_is_valid(data) -> bool:
 
 
 def add_event_data_is_valid(data) -> bool:
+    """
+    Description:
+    Vérifier s'il y autant de clef dans le dictionnaire en argument, que celles attendues pour le modèle.
+    Retourne True si vrai.
+    Paramètres:
+    - data: raw, on attend un dictionnaire, représentant les attributs du modèle.
+    """
     expected_keys = [
         "creation_date",
         "event_id",
@@ -96,6 +145,13 @@ def add_event_data_is_valid(data) -> bool:
 
 
 def add_location_data_is_valid(data) -> bool:
+    """
+    Description:
+    Vérifier s'il y autant de clef dans le dictionnaire en argument, que celles attendues pour le modèle.
+    Retourne True si vrai.
+    Paramètres:
+    - data: raw, on attend un dictionnaire, représentant les attributs du modèle.
+    """
     expected_keys = [
         "creation_date",
         "location_id",
@@ -112,6 +168,13 @@ def add_location_data_is_valid(data) -> bool:
 
 
 def add_role_data_is_valid(data) -> bool:
+    """
+    Description:
+    Vérifier s'il y autant de clef dans le dictionnaire en argument, que celles attendues pour le modèle.
+    Retourne True si vrai.
+    Paramètres:
+    - data: raw, on attend un dictionnaire, représentant les attributs du modèle.
+    """
     expected_keys = ["creation_date", "role_id", "name"]
     expected_keys_valid = bool(len(data) == len(expected_keys))
     return list(data.keys()).sort() == expected_keys.sort() and expected_keys_valid
