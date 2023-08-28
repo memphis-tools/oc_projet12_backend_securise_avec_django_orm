@@ -466,7 +466,7 @@ def dummy_database_creation(db_name="projet12"):
         '3',
         '100',
         'bla bla bla penser à la musique.',
-        '2'
+        '7'
     )
     """
     cursor.execute(sql)
@@ -496,7 +496,7 @@ def dummy_database_creation(db_name="projet12"):
         '3',
         '150',
         'bla bla bla penser à la corbeille de fruits.',
-        '1'
+        '6'
     )
     """
     cursor.execute(sql)
@@ -526,7 +526,7 @@ def dummy_database_creation(db_name="projet12"):
         '3',
         '50',
         'bla bla bla penser aux équipements supplémentaires non prévus (ou couverts).',
-        '2'
+        '7'
     )
     """
     cursor.execute(sql)
@@ -556,7 +556,7 @@ def dummy_database_creation(db_name="projet12"):
         '3',
         '100',
         'bla bla bla penser aux thermos.',
-        '1'
+        '7'
     )
     """
     cursor.execute(sql)
