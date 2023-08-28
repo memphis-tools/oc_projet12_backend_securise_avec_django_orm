@@ -26,7 +26,8 @@ os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] = "TEST"
 
 
 def test_collaborator_manipulation(
-    get_runner, set_a_test_env,
+    get_runner,
+    set_a_test_env,
     dummy_collaborator_data_2,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_collaborator_partial_data
@@ -51,7 +52,8 @@ def test_collaborator_manipulation(
 
 
 def test_contract_manipulation(
-    get_runner, set_a_test_env,
+    get_runner,
+    set_a_test_env,
     dummy_contract_data_2,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_contract_partial_data
@@ -77,7 +79,8 @@ def test_contract_manipulation(
 
 
 def test_event_display_manipulation(
-    get_runner, set_a_test_env,
+    get_runner,
+    set_a_test_env,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_event_partial_data_4
     ):
@@ -93,7 +96,8 @@ def test_event_display_manipulation(
 
 
 def test_event_update_manipulation(
-    get_runner, set_a_test_env,
+    get_runner,
+    set_a_test_env,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_event_partial_data_1,
     ):

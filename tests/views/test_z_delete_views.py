@@ -16,11 +16,11 @@ except ModuleNotFoundError:
     from settings import settings
 
 
-def test_delete_client_view_with_commercial_profile_when_client_not_referenced_in_contract(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
+def test_delete_client_view_with_gestion_profile_when_client_not_referenced_in_contract(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
-        dummy_clients_list = ["dduck", "poabm"]
+        dummy_clients_list = ["dduck", "poabm", "bduck"]
         for client in dummy_clients_list:
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"
@@ -33,7 +33,7 @@ def test_delete_client_view_with_commercial_profile_when_client_not_referenced_i
 def test_delete_client_view_with_commercial_profile_when_client_referenced_in_contract_raises_exception(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    with pytest.raises(exceptions.ForeignKeyDependyException):
+    with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_client(
             "mkc111"
         )
@@ -48,8 +48,8 @@ def test_delete_client_view_with_support_profile_raises_exception(
         )
 
 
-def test_delete_client_view_with_gestion_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
+def test_delete_client_view_with_commercial_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         ConsoleClientForDelete(db_name=f"{settings.TEST_DATABASE_NAME}").delete_client(
@@ -158,7 +158,7 @@ def test_delete_event_view_with_gestion_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     try:
-        dummy_events_list = ["EV971"]
+        dummy_events_list = ["EV971", "fvc4440"]
         for event in dummy_events_list:
             result = ConsoleClientForDelete(
                 db_name=f"{settings.TEST_DATABASE_NAME}"

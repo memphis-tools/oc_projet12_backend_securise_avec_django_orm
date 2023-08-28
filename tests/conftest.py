@@ -136,6 +136,24 @@ def get_valid_decoded_token_for_a_support_collaborator_with_id_7(mocker):
 
 
 @pytest.fixture
+def get_valid_decoded_token_for_a_support_collaborator_with_id_8(mocker):
+    expiration = datetime.utcnow() + timedelta(minutes=1)
+    dummy_payload_data = {
+        "registration_number": "ag123456789",
+        "username": "Kate Hastroff",
+        "department": "oc12_support",
+        "expiration": f'{expiration.strftime("%Y-%m-%d %H:%M:%S")}',
+    }
+    mocker.patch(
+        "controllers.jwt_controller.JwtController.get_decoded_token",
+        return_value=dummy_payload_data,
+    )
+    mocker.patch.object(JwtController, "does_a_valid_token_exist", return_value=True)
+    mocker.patch.object(JwtView, "get_decoded_token", return_value=dummy_payload_data)
+    return dummy_payload_data
+
+
+@pytest.fixture
 def get_unvalid_decoded_token(mocker):
     dummy_payload_data = {
         "registration_number": "Zaa123456789",
@@ -169,7 +187,22 @@ def dummy_client_data(request):
         "email": "d.duck@abm.fr",
         "telephone": "0655228844",
         "company_id": "1",
-        "commercial_contact": "2",
+    }
+    return client
+
+
+@pytest.fixture(scope="session", autouse=True)
+def dummy_client_data_2(request):
+    client = {
+        "creation_date": f"{datetime.now()}",
+        "client_id": "bduck",
+        "civility": "MR",
+        "first_name": "Bernard",
+        "last_name": "duck",
+        "employee_role": "logistic officer",
+        "email": "baba.duck@abm.fr",
+        "telephone": "064465238977",
+        "company_id": "1",
     }
     return client
 
@@ -268,19 +301,39 @@ def dummy_contract_partial_data(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
+def dummy_contract_partial_data_2(request):
+    contract = {
+        "contract_id": "av123",
+        "remain_amount_to_pay": "155.6",
+        "status": "canceled",
+    }
+    return contract
+
+
+@pytest.fixture(scope="session", autouse=True)
+def dummy_contract_partial_data_3(request):
+    contract = {
+        "contract_id": "ax312",
+        "remain_amount_to_pay": "355.6",
+        "status": "canceled",
+    }
+    return contract
+
+
+@pytest.fixture(scope="session", autouse=True)
 def dummy_event_data(request):
     event = {
         "creation_date": "2023-07-14 09:05:10",
         "event_id": "EV971",
         "title": "What a Swing",
         "attendees": "2500",
-        "notes": "Bla bla bla bla bla bla dummy bla. As expected anything bu a bla.",
+        "notes": "Evènement avec partenariats autres associations locales.",
         "event_start_date": "2023-07-15 20:00:00",
         "event_end_date": "2023-07-15 22:00:00",
         "client_id": "1",
         "contract_id": "1",
         "location_id": "2",
-        "collaborator_id": "2",
+        "collaborator_id": "5",
     }
     return event
 
@@ -322,6 +375,16 @@ def dummy_event_partial_data_3(request):
         "event_id": "geg2021",
         "attendees": "2500",
         "notes": "Prévoir eau plate et gazeuse.",
+    }
+    return event_partial_dict
+
+
+@pytest.fixture(scope="session", autouse=True)
+def dummy_client_partial_data(request):
+    event_partial_dict = {
+        "client_id": "bduck",
+        "telephone": "0011223344",
+        "first_name": "Baba"
     }
     return event_partial_dict
 
