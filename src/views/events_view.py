@@ -42,9 +42,7 @@ class EventsView:
                     self.session, user_query_filters_args[0], "Event"
                 )
                 if len(db_model_queryset) > 0:
-                    table = utils.set_a_click_table_from_data(
-                        "events", db_model_queryset
-                    )
+                    table = utils.set_a_click_table_from_data("events", db_model_queryset)
                     console.print(table)
                     printer.print_message(
                         "info", self.app_dict.get_appli_dictionnary()["NO_MORE_EVENT"]
@@ -54,7 +52,7 @@ class EventsView:
                     printer.print_message("info", message)
                     if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                     	LOGGER.info(message)
-            except TypeError as error:
+            except TypeError:
                 message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
