@@ -19,15 +19,12 @@ except ModuleNotFoundError:
 def test_delete_client_view_with_gestion_profile_when_client_not_referenced_in_contract(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        dummy_clients_list = ["dduck", "poabm", "bduck"]
-        for client in dummy_clients_list:
-            result = ConsoleClientForDelete(
-                db_name=f"{settings.TEST_DATABASE_NAME}"
-            ).delete_client(client)
-            assert isinstance(result, str)
-    except Exception as error:
-        print(error)
+    dummy_clients_list = ["dduck", "poabm", "bduck"]
+    for client in dummy_clients_list:
+        result = ConsoleClientForDelete(
+            db_name=f"{settings.TEST_DATABASE_NAME}"
+        ).delete_client(client)
+        assert isinstance(result, str)
 
 
 def test_delete_client_view_with_commercial_profile_when_client_referenced_in_contract_raises_exception(
