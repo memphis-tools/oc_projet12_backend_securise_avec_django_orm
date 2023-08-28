@@ -246,11 +246,75 @@ def set_a_many_collaborators_id_expression_for_event(nb_clients, filtered_db_mod
     return many_query
 
 
-def set_a_many_collaborators_id_expression_for_event(nb_clients, filtered_db_model, item_operator, id, client_ids):
+def set_a_many_collaborators_id_expression_for_contract(nb_clients, filtered_db_model, item_operator, id, client_ids):
     """
     Description:
     Appéelée par rebuild_filter_query.
+    Un utilisateur peut chercher à filtrer les contrats lors d'une lecture.
+    Parmi les champs possible recherchés il y a le "collaborator_id".
+    A 1 collaborateur peut correspondre plusieurs contrats.
+    On permet la création d'une expression pour extraire plusieurs éléments.
+    """
+    id = client_ids.pop(0)[0]
+    # on ouvre la parenthèse de l'expression
+    many_query = f"({filtered_db_model}.client_id{item_operator}'{id}'"
+    i = 0
+    for id in client_ids:
+        i += 1
+        if i == nb_clients-1:
+            # on ferme l'expression avec une parenthèse
+            many_query += (
+                f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}')"
+            )
+        else:
+            many_query += (
+                f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}'"
+            )
+    return many_query
 
+
+def set_a_many_companies_id_expression_for_location(nb_companies, filtered_db_model, item_operator, id, company_ids):
+    """
+    Description:
+    Appéelée par rebuild_filter_query.
+    Un utilisateur peut chercher à filtrer les entreprises lors d'une lecture.
+    Parmi les champs possible recherchés il y a le "location_id".
+    A 1 localité peut correspondre plusieurs entreprises.
+    On permet la création d'une expression pour extraire plusieurs éléments.
+    """
+    print(f"DEBUG OUR NEW CASE SIR company_ids:{company_ids}")
+    id = company_ids.pop(0)[0]
+    # on ouvre la parenthèse de l'expression
+    many_query = f"({filtered_db_model}.id{item_operator}'{id}'"
+    i = 0
+    for id in company_ids:
+        i += 1
+        if i == nb_companies-1:
+            # on ferme l'expression avec une parenthèse
+            many_query += (
+                f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
+            )
+        else:
+            many_query += (
+                f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
+            )
+    return many_query
+
+
+def set_a_many_clients_id_expression_for_company(nb_clients, filtered_db_model, item_operator, id, client_ids):
+    """
+    Description:
+    Appéelée par rebuild_filter_query.
+    (...)
+    """
+    pass
+
+
+def set_a_many_clients_id_expression_for_commercial_contact(nb_clients, filtered_db_model, item_operator, id, client_ids):
+    """
+    Description:
+    Appéelée par rebuild_filter_query.
+    (...)
     """
     pass
 
@@ -293,31 +357,72 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model, session="",
                 str_date = item_value.split("-")
                 item_value = str_date[2] + "-" + str_date[1] + "-" + str_date[0]
 
-            if item_key == "collaborator_id":
+            if item_key == "collaborator_id" or item_key == "commercial_contact":
                 if item_value is None:
                     filter_to_apply_rebuilt_query += (
                         f"({filtered_db_model}.{item_key}{item_operator})"
                     )
                 else:
-                    collaborator_id = get_user_id_from_registration_number(session, item_value)
-                    filter_to_apply_rebuilt_query += (
-                        f"({filtered_db_model}.{item_key}{item_operator}'{collaborator_id}')"
-                    )
+                    if "Contract" in filtered_db_model:
+                        collaborator_id = get_user_id_from_registration_number(session, item_value)
+                        client_ids = get_all_client_ids_for_a_collaborator_id(session, collaborator_id)
+                        nb_clients = len(client_ids)
+                        if nb_clients == 1:
+                            filter_to_apply_rebuilt_query += (
+                                f"({filtered_db_model}.client_id{item_operator}'{client_ids[0]}')"
+                            )
+                        else:
+                            filter_to_apply_rebuilt_query += set_a_many_collaborators_id_expression_for_contract(
+                                nb_clients,
+                                filtered_db_model,
+                                item_operator,
+                                id,
+                                client_ids
+                            )
+                    else:
+                        collaborator_id = get_user_id_from_registration_number(session, item_value)
+                        filter_to_apply_rebuilt_query += (
+                            f"({filtered_db_model}.{item_key}{item_operator}'{collaborator_id}')"
+                        )
             elif item_key == "client_id":
                 client_id = get_client_id_from_client_custom_id(session, item_value)
                 filter_to_apply_rebuilt_query += (
-                    f"({filtered_db_model}.{item_key}{item_operator}'{client_id}')"
+                    f"({filtered_db_model}.id{item_operator}'{client_id}')"
                 )
+            elif item_key == "company_id":
+                if "Client" in filtered_db_model:
+                    pass
+                else:
+                    company_id = get_company_id_from_company_custom_id(session, item_value)
+                    filter_to_apply_rebuilt_query += (
+                        f"({filtered_db_model}.id{item_operator}'{company_id}')"
+                    )
             elif item_key == "contract_id":
                 contract_id = get_contract_id_from_contract_custom_id(session, item_value)
                 filter_to_apply_rebuilt_query += (
-                    f"({filtered_db_model}.{item_key}{item_operator}'{contract_id}')"
+                    f"({filtered_db_model}.id{item_operator}'{contract_id}')"
                 )
             elif item_key == "location_id":
-                location_id = get_location_id_from_location_custom_id(session, item_value)
-                filter_to_apply_rebuilt_query += (
-                    f"({filtered_db_model}.{item_key}{item_operator}'{location_id}')"
-                )
+                if filtered_db_model == "Location":
+                    location_id = get_location_id_from_location_custom_id(session, item_value)
+                    filter_to_apply_rebuilt_query += (
+                        f"({filtered_db_model}.id{item_operator}'{location_id[0]}')"
+                    )
+                else:
+                    company_ids = get_all_company_ids_for_a_location_id(session, location_id)
+                    nb_companies = len(company_ids)
+                    if nb_companies == 1:
+                        filter_to_apply_rebuilt_query += (
+                            f"({filtered_db_model}.id{item_operator}'{company_ids[0]}')"
+                        )
+                    else:
+                        filter_to_apply_rebuilt_query += set_a_many_companies_id_expression_for_location(
+                            nb_companies,
+                            filtered_db_model,
+                            item_operator,
+                            id,
+                            company_ids
+                        )
             elif item_key == "commercial_id":
                 collaborator_id = get_user_id_from_registration_number(session, item_value)
                 client_ids = get_all_client_ids_for_a_collaborator_id(session, collaborator_id)
@@ -404,7 +509,7 @@ def get_a_database_connection(
 def get_user_id_from_registration_number(session, registration_number):
     """
     Description:
-    Récupérer l'id en bdd de l'utilisateur ayant le matricule en argument.
+    Récupérer l'id de l'utilisateur ayant le matricule en argument.
     Paramètres:
     - registration_number: chaine libre de caractères, le matricule de l'employé
     """
@@ -419,7 +524,7 @@ def get_user_id_from_registration_number(session, registration_number):
 def get_client_id_from_client_custom_id(session, client_id):
     """
     Description:
-    Récupérer l'id en bdd de du client ayant le custom id du modèle, en argument.
+    Récupérer l'id de du client ayant le custom id du modèle, en argument.
     Paramètres:
     - client_id: chaine libre de caractères, le custom id du client
     """
@@ -459,10 +564,38 @@ def get_all_client_ids_for_a_collaborator_id(session, collaborator_id):
     return result
 
 
+def get_all_company_ids_for_a_location_id(session, location_id):
+    """
+    Description:
+    Récupérer les ids des entreprises associés au id localité (clef primaire), en argument.
+    Utile lors de la recherche filtrée d'entreprise par localité.
+    Paramètres:
+    - location_id: entier, l'id clef primaire
+    """
+    print(f"DEBUG UTILS:get_all_company_ids_for_a_location_id location_id=={location_id}")
+    sql = text(f"""SELECT id FROM company WHERE location_id='{location_id}'""")
+    result = session.execute(sql).all()
+    print(f"DEBUG UTILS:get_all_company_ids_for_a_location_id result=={result}")
+    return result
+
+
+def get_company_id_from_company_custom_id(session, company_id):
+    """
+    Description:
+    Récupérer l'id de l'entreprise ayant le custom id du modèle, en argument.
+    Paramètres:
+    - company_id: chaine libre de caractères, le custom id de l'entreprise
+    """
+    sql = text(f"""SELECT id FROM company WHERE company_id='{company_id}'""")
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
+
+
 def get_contract_id_from_contract_custom_id(session, contract_id):
     """
     Description:
-    Récupérer l'id en bdd de du contrat ayant le custom id du modèle, en argument.
+    Récupérer l'id du contrat ayant le custom id du modèle, en argument.
     Paramètres:
     - contract_id: chaine libre de caractères, le custom id du contrat
     """
@@ -475,7 +608,7 @@ def get_contract_id_from_contract_custom_id(session, contract_id):
 def get_department_id_from_department_custom_id(session, department_id):
     """
     Description:
-    Récupérer l'id en bdd de du contrat ayant le custom id du modèle, en argument.
+    Récupérer l'id du contrat ayant le custom id du modèle, en argument.
     Paramètres:
     - department_id: chaine libre de caractères, le custom id du contrat
     """
@@ -490,7 +623,7 @@ def get_department_id_from_department_custom_id(session, department_id):
 def get_location_id_from_location_custom_id(session, location_id):
     """
     Description:
-    Récupérer l'id en bdd de la localité ayant le custom id du modèle, en argument.
+    Récupérer l'id de la localité ayant le custom id du modèle, en argument.
     Paramètres:
     - location_id: chaine libre de caractères, le custom id de la localité
     """
@@ -505,7 +638,7 @@ def get_location_id_from_location_custom_id(session, location_id):
 def get_role_id_from_role_custom_id(session, role_id):
     """
     Description:
-    Récupérer l'id en bdd de du contrat ayant le custom id du modèle, en argument.
+    Récupérer l'id de du contrat ayant le custom id du modèle, en argument.
     Paramètres:
     - role_id: chaine libre de caractères, le custom id du contrat
     """
