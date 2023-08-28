@@ -396,6 +396,12 @@ def dummy_event_partial_data_4(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
+def dummy_event_partial_data_5(request):
+    event_partial_dict = {"event_id": "hob2023", "collaborator_id": "1"}
+    return event_partial_dict
+
+
+@pytest.fixture(scope="session", autouse=True)
 def dummy_location_data(request):
     location = {
         "creation_date": "2023-07-14 09:05:10",
