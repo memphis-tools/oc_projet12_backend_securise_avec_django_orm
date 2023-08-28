@@ -3,6 +3,13 @@ from tkinter import Tk, Text, INSERT, Button, S
 
 
 def get_infos_data(file_basename):
+    """
+    Description:
+    Sert à lire un fichier .csv avec plsueirs enregistrements mono-colonnes.
+    Fichiers sont par défaut ceux en Français: src/validators/references/fr/*.csv
+    Paramètres:
+    - file_basename: le nom du fichier .csv à exploiter
+    """
     ml = []
     with open(f"src/validators/references/fr/{file_basename}.csv", "r") as file:
         csvreader = csv.reader(file)
@@ -14,6 +21,11 @@ def get_infos_data(file_basename):
 
 
 def display_info_data_medium_window(element):
+    """
+    Description:
+    Usage depuis src/clients/info_console.py.
+    Sert à présenter, sous forme de popup large, les saisies possibles à produire.
+    """
     items = get_infos_data(element)
     items.sort()
     popup = Tk()
@@ -30,6 +42,11 @@ def display_info_data_medium_window(element):
 
 
 def display_info_data_thin_window(element):
+    """
+    Description:
+    Usage depuis src/clients/info_console.py.
+    Sert à présenter, sous forme de popup étroite, les saisies possibles à produire.
+    """
     items = get_infos_data(element)
     items.sort()
     popup = Tk()

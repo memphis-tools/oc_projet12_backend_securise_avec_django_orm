@@ -33,6 +33,7 @@ def set_a_location_custom_id(pays, region, code_postal, nom_raison_sociale):
     On constitue un custom id dédiée à une nouvelle localité.
     Noter qu'on utilise en partie une "raison sociale".
     Cette méthode est utilisée pour les imports en masse.
+    Dans le cas d'usage standard c'est l'utilisateur qui le définit, le saisit.
     On interroge une API pour récupérer une liste d'entreprises.
     Cette liste nous permet de créer des localités puis les entreprises.
     """
@@ -54,6 +55,12 @@ def set_a_location_custom_id(pays, region, code_postal, nom_raison_sociale):
 def set_a_company_custom_id(
     nom_raison_sociale, siren, siret, date_debut_activite, ville
 ):
+    """
+    Description:
+    On constitue un custom id dédiée à une nouvelle entreprise.
+    Cette méthode est utilisée pour les imports en masse.
+    Dans le cas d'usage standard c'est l'utilisateur qui le définit, le saisit.
+    """
     r_siren = siret[0:1]
     r_siret = siret[0:3]
     r_date_debut_activite = date_debut_activite[2:4]
@@ -71,6 +78,13 @@ def set_a_company_custom_id(
 
 
 def set_database_to_get_based_on_user_path(app_init=False, db_name=""):
+    """
+    Description:
+    Sert lors de l'initialisation de l'application et au cours des opérations CRUD.
+    On vérifie si l'utilisateur a spécifié un environnement 'OC_12_ENV' en PATH.
+    Si l'application n'est pas en cours d'initialisation on retient la valeur de OC_12_ENV.
+    Si l'application est en cours d'initialisation, les opérations à réaliser concerne la prod.
+    """
     if not app_init:
         try:
             if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
@@ -87,6 +101,11 @@ def set_database_to_get_based_on_user_path(app_init=False, db_name=""):
 
 
 def recall_which_running_env_in_use():
+    """
+    Description:
+    Recherche d'une variable dans le PATH courant, associé au processus en cours.
+    Si un environnement a été spécifié, le retenir, autrement c'est la PROD par défaut.
+    """
     try:
         if os.environ[f"{settings.PATH_APPLICATION_ENV_NAME}"] == "DEV":
             return "DEV"
@@ -98,6 +117,12 @@ def recall_which_running_env_in_use():
 
 
 def authentication_permission_decorator(func):
+    """
+    Description:
+    Décorateur associé aux vues.
+    Il permet de vérifier que l'utilisateur s'est authentifié.
+    C'est une permission générale, indispensable pour l'usage de l'application.
+    """
     @wraps(func)
     def check_user_token(*args, **kwargs):
         try:
