@@ -4,6 +4,7 @@
   "API_QUERYING_DATA":"Accès à l'API et collecte de l'échantillon.",
   "APPLICATION_ERROR":"Erreur applicative. Echec requête.",
   "APPLICATION_INITIALISATION":"Initialisation de l'application.",
+  "APPLICATION_NOT_SET_YET_FOR_THIS_OPERATING_SYSTEM":"Application non prévue pour être initialisée depuis votre système d'exploitation.",
   "ASK_FOR_ADMIN_PASSWORD":"Fournir le mot de passe administrateur de l'application.",
   "ASK_FOR_SUDO_PASSWORD":"Fournir le mot de passe d'un compte avec privilèges étendus.",
   "CLIENT_RATTACHED_TO_COLLABORATOR":"Collaborateur rattaché à client existant.",
