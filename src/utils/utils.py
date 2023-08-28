@@ -653,7 +653,10 @@ def get_location_id_from_location_custom_id(session, location_id):
         f"""SELECT id FROM location WHERE location_id='{location_id}'"""
     )
     result = session.execute(sql).first()
-    id = str(result[0]).lower()
+    try:
+        id = str(result[0]).lower()
+    except TypeError:
+        id = None
     return id
 
 
