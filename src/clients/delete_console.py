@@ -334,7 +334,7 @@ class ConsoleClientForDelete:
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         try:
             if (
-                "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
+                "client" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
             ):
                 raise exceptions.InsufficientPrivilegeException()
             if client_custom_id != "":
