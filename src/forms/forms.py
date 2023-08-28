@@ -120,8 +120,7 @@ def validate_key(custom_dict, key, item):
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
-    except Exception as error:
-        print(f"CATCH SOMETHING ELSE SIR ?? error =={error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["UNEXPECTED_VALUE_IN_FORM"]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:

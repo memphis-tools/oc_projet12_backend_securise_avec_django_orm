@@ -55,8 +55,7 @@ class DatabaseReadController:
                 .filter(text(filter_to_apply_rebuilt_query)).all()
             )
             return db_model_queryset
-        except Exception as error:
-            print(f"DEBUG SIR: {error}")
+        except Exception:
             message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
