@@ -6,6 +6,10 @@ class ApplicationErrorException(Exception):
     pass
 
 
+class ApplicationCanNotBeInitializeFromOperatingSystemException(Exception):
+    pass
+
+
 class AuthenticationCredentialsFailed(Exception):
     pass
 
