@@ -3,6 +3,7 @@ Description:
 Dédié aux parcours des fichiers '.csv' constituées à partir des requêtes aux API externes.
 Ce controleur est utilisé par le seul client console dédié à l'initialisation ('src/clients/init_console.py').
 """
+from rich.progress import Progress
 import csv
 from unidecode import unidecode
 from datetime import datetime
@@ -147,7 +148,7 @@ class CsvFilesInitController:
         new_company_dict["creation_date"] = datetime.now()
         return (new_location_dict, new_company_dict)
 
-    def append_external_datas_to_dev_database(self, api_data_dict):
+    def append_external_datas_to_dev_and_test_databases(self, api_data_dict):
         """
         Description:
         Exploite un JSON en entrée et en extrait des objets Location et Company.
@@ -173,66 +174,74 @@ class CsvFilesInitController:
                 f"{settings.ADMIN_PASSWORD}",
                 db_name=f"{settings.TEST_DATABASE_NAME}",
             )
-            for api_data in api_data_dict.values():
-                (
-                    new_location_dict,
-                    new_company_dict,
-                ) = self.make_locations_and_companies_with_api_data(api_data)
 
-                new_location_id = self.set_a_location_id(
-                    new_location_dict["pays"],
-                    new_location_dict["region"],
-                    new_location_dict["code_postal"],
-                    new_company_dict["company_name"],
-                )
+            with Progress() as progress:
+                nb_companies = len(api_data_dict.keys())
+                task = progress.add_task("[white]External_API Processing Companies data", total=nb_companies)
+                while not progress.finished:
+                    for api_data in api_data_dict.values():
+                        progress.update(task, advance=1)
+                        (
+                            new_location_dict,
+                            new_company_dict,
+                        ) = self.make_locations_and_companies_with_api_data(api_data)
 
-                new_company_id = self.set_a_company_id(
-                    new_company_dict["company_name"],
-                    new_company_dict["company_registration_number"],
-                    new_company_dict["company_subregistration_number"],
-                    new_company_dict["date_debut_activite"],
-                    new_location_dict["ville"],
-                )
+                        new_location_id = self.set_a_location_id(
+                            new_location_dict["pays"],
+                            new_location_dict["region"],
+                            new_location_dict["code_postal"],
+                            new_company_dict["company_name"],
+                        )
 
-                id = utils.get_location_id_from_location_custom_id(
-                    session_on_dev_db, new_location_id.upper()
-                )
-                if not id:
-                    new_location_dict["location_id"] = new_location_id.upper()
-                    new_location_object = models.Location(**new_location_dict)
-                    session_on_dev_db.add(new_location_object)
-                    session_on_dev_db.commit()
-                    session_on_dev_db.refresh(new_location_object)
-                    new_company_dict["location_id"] = new_location_object.id
-                    new_company_dict["company_id"] = new_company_id.upper()
-                else:
-                    new_company_dict["location_id"] = id
-                    new_company_dict["company_id"] = new_company_id.upper()
-                new_company_object = models.Company(**new_company_dict)
-                session_on_dev_db.add(new_company_object)
-                session_on_dev_db.commit()
-                session_on_dev_db.refresh(new_company_object)
+                        new_company_id = self.set_a_company_id(
+                            new_company_dict["company_name"],
+                            new_company_dict["company_registration_number"],
+                            new_company_dict["company_subregistration_number"],
+                            new_company_dict["date_debut_activite"],
+                            new_location_dict["ville"],
+                        )
 
-                id = utils.get_location_id_from_location_custom_id(
-                    session_on_test_db, new_location_id.upper()
-                )
-                if not id:
-                    new_location_dict["location_id"] = new_location_id.upper()
-                    new_location_object = models.Location(**new_location_dict)
-                    session_on_test_db.add(new_location_object)
-                    session_on_test_db.commit()
-                    session_on_test_db.refresh(new_location_object)
-                    new_company_dict["location_id"] = new_location_object.id
-                    new_company_dict["company_id"] = new_company_id.upper()
-                else:
-                    new_company_dict["location_id"] = id
-                    new_company_dict["company_id"] = new_company_id.upper()
-                new_company_object = models.Company(**new_company_dict)
-                session_on_test_db.add(new_company_object)
-                session_on_test_db.commit()
+                        id = utils.get_location_id_from_location_custom_id(
+                            session_on_dev_db, new_location_id.upper()
+                        )
+                        # si pas d'id, la localité n'existe pas, on va l'ajouter
+                        if not id:
+                            new_location_dict["location_id"] = new_location_id.upper()
+                            new_location_object = models.Location(**new_location_dict)
+                            session_on_dev_db.add(new_location_object)
+                            session_on_dev_db.commit()
+                            session_on_dev_db.refresh(new_location_object)
+                            new_company_dict["location_id"] = new_location_object.id
+                            new_company_dict["company_id"] = new_company_id.upper()
+                        else:
+                            new_company_dict["location_id"] = id
+                            new_company_dict["company_id"] = new_company_id.upper()
+                        new_company_object = models.Company(**new_company_dict)
+                        session_on_dev_db.add(new_company_object)
+                        session_on_dev_db.commit()
+                        session_on_dev_db.refresh(new_company_object)
+
+                        id = utils.get_location_id_from_location_custom_id(
+                            session_on_test_db, new_location_id.upper()
+                        )
+                        if not id:
+                            new_location_dict["location_id"] = new_location_id.upper()
+                            new_location_object = models.Location(**new_location_dict)
+                            session_on_test_db.add(new_location_object)
+                            session_on_test_db.commit()
+                            session_on_test_db.refresh(new_location_object)
+                            new_company_dict["location_id"] = new_location_object.id
+                            new_company_dict["company_id"] = new_company_id.upper()
+                        else:
+                            new_company_dict["location_id"] = id
+                            new_company_dict["company_id"] = new_company_id.upper()
+                        new_company_object = models.Company(**new_company_dict)
+                        session_on_test_db.add(new_company_object)
+                        session_on_test_db.commit()
 
             session_on_dev_db.close()
             session_on_test_db.close()
+            return True
         except Exception:
             session_on_dev_db.close()
             session_on_test_db.close()
@@ -249,8 +258,4 @@ class CsvFilesInitController:
             for rows in csv_reader:
                 key = rows["siren"]
                 self.csv_file_jsonified[key] = rows
-
-        self.append_external_datas_to_dev_database(
-            api_data_dict=self.csv_file_jsonified
-        )
-        return True
+        return self.csv_file_jsonified

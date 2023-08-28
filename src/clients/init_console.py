@@ -56,7 +56,8 @@ class InitAppliConsole:
         Les données du fichier vont être assemblées de sorte à créér au tant de Localité que d'entreprises.
         On ne crée pas de doublons si une Localité existe déjà.
         """
-        self.app_init_view.read_a_csv_file_and_return_data_as_json(csv_filename)
+        csv_file_jsonified = self.app_init_view.read_a_csv_file_and_return_data_as_json(csv_filename)
+        self.app_init_view.append_external_datas_to_dev_and_test_databases(csv_file_jsonified)
         return True
 
     def import_data_from_externals_api(self):
