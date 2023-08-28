@@ -119,6 +119,24 @@ class ConsoleClientForCreate:
                 LOGGER.error(message)
             return False
 
+    def ask_for_a_contract_custom_id(self):
+        """
+        Description:
+        Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
+        Fonction renvoie le custom_id saisi
+        """
+        contract_custom_id = forms.submit_a_contract_get_form()
+        try:
+            if contract_custom_id == "":
+                raise exceptions.CustomIdEmptyException()
+        except exceptions.CustomIdEmptyException:
+            message = self.app_dict.get_appli_dictionnary()["MISSING_CUSTOM_ID"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
+            return False
+        return contract_custom_id
+
     def ask_for_a_company_id(self):
         """
         Description:
@@ -299,6 +317,7 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_client_data_is_valid(
                     client_attributes_dict
                 )
+                client_attributes_dict["commercial_contact"] = user_id
                 if data_is_dict and dict_is_valid:
                     client_id = self.create_app_view.get_clients_view().add_client(
                         models.Client(**client_attributes_dict)
@@ -601,20 +620,30 @@ class ConsoleClientForCreate:
             if event_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(event_attributes_dict)
                 dict_is_valid = add_data_validators.add_event_data_is_valid(event_attributes_dict)
+                custom_id = utils.get_contract_custom_id_from_contract_id(
+                    self.app_view.session,
+                    event_attributes_dict["contract_id"]
+                )
+                contract = self.app_view.get_contracts_view().get_contract(contract_id=custom_id)
+                commercial_id_attached_to_contract = contract.client.commercial_contact
+                if commercial_id_attached_to_contract != int(user_id):
+                    raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
                 if data_is_dict and dict_is_valid:
                     event = models.Event(**event_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                contract_id_asked = self.ask_for_a_contract_id()
-                contract_id = utils.get_contract_id_from_contract_custom_id(
-                    self.app_view.session, contract_id_asked
-                )
-                if not contract_id:
+                contract_id_asked = self.ask_for_a_contract_custom_id()
+                contract = self.app_view.get_contracts_view().get_contract(contract_id=contract_id_asked)
+                commercial_id_attached_to_contract = contract.client.commercial_contact
+                if not contract:
                     raise exceptions.ContractNotFoundWithContractId()
+                if commercial_id_attached_to_contract != int(user_id):
+                    raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
+
                 event_attributes_dict = forms.submit_a_event_create_form()
                 event_attributes_dict["collaborator_id"] = user_id
-                event_attributes_dict["contract_id"] = contract_id
+                event_attributes_dict["contract_id"] = contract.id
                 event = models.Event(**event_attributes_dict)
                 event.creation_date = datetime.now()
             event_id = self.create_app_view.get_events_view().add_event(user_id, event)
@@ -632,6 +661,13 @@ class ConsoleClientForCreate:
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
+            sys.exit(0)
+        except exceptions.CommercialCollaboratorIsNotAssignedToContract:
+            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
+            printer.print_message("error",message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
+            raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
             message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]

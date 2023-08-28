@@ -119,8 +119,7 @@ class DatabaseCreateController:
             session.commit()
 
             return contract.contract_id
-        except Exception as error:
-            print(f"THE ERROR SIR: {error}")
+        except Exception:
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -155,13 +154,13 @@ class DatabaseCreateController:
         """
         # un collaborateur du service commercial ne peut créer un évènements
         # que pour un contrat qu'il a conclu avec un client (signé ou non)
-        if current_user_collaborator_id != event.get_dict()["collaborator_id"]:
-            raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
+        # la condition a été vérfiée en amont depuis add_event du create_console
         try:
             session.add(event)
             session.commit()
             return event.event_id
-        except Exception:
+        except Exception as error:
+            print(f"GOD DAMN IT {error}")
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
