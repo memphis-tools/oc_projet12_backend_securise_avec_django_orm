@@ -110,3 +110,20 @@ def test_event_update_manipulation(
     result = ConsoleClientForUpdate(db_name=db_name).update_event(dummy_event_partial_data_1)
     assert isinstance(result, str)
     assert "Update" in result
+
+
+def test_event_update_manipulation_raise_exception(
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    dummy_event_partial_data_5,
+    ):
+    """
+    Description:
+    Un membre du service Gestion doit pouvoir modifier des événements (pour associer un collaborateur support à
+    l’événement).
+    Seul un membre du service Support doit pouvoir etre ajouté.
+    """
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    with pytest.raises(exceptions.OnlySuportMemberCanBeAssignedToEventSupportException):
+        result = ConsoleClientForUpdate(db_name=db_name).update_event(dummy_event_partial_data_5)
