@@ -20,6 +20,7 @@ except ModuleNotFoundError:
 
 
 def test_event_display_manipulation(
+    set_a_test_env,
     get_runner,
     get_valid_decoded_token_for_a_support_collaborator,
     dummy_event_partial_data_4
@@ -39,13 +40,14 @@ def test_event_display_manipulation(
 @pytest.mark.parametrize(
     "events_id",
     [
-        "geg2022",
-        "zawx235",
+        "dkap520",
+        "ay322",
     ]
 )
 def test_event_update_manipulation(
+    set_a_test_env,
     get_runner,
-    get_valid_decoded_token_for_a_support_collaborator_with_id_7,
+    get_valid_decoded_token_for_a_support_collaborator_with_id_8,
     events_id
     ):
     """
