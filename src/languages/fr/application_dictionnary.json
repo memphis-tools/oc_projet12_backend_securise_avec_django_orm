@@ -88,6 +88,7 @@
   "NO_MORE_ROLE":"Aucun autres rôle.",
   "NO_MORE_DEPARTEMENT":"Aucun autres services /départements.",
   "OLD_PASSWORD_NOT_MATCH":"Mot de passe erroné.",
+  "ONLY_SUPPORT_SERVICE_MEMBER_CAN_BE_ASSIGNED_TO_EVENT_SUPPORT":"Seul un membre du service Support peut être assigné à un évènement",
   "PASSWORD_POLICY_TITLE":"POLITIQUE DES MOTS DE PASSE",
   "PASSWORD_UPDATED":"Mot de pase mis à jour.",
   "ROLE_RATTACHED_TO_COLLABORATOR":"Role rattaché à 1 ou plusieurs collaborateurs.",
