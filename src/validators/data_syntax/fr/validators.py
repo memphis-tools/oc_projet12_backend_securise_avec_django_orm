@@ -24,10 +24,10 @@ def is_adresse_valid(adresse):
 
 def is_attendees_valid(attendees):
     """
-    Description: Controler le montant saisi.
-    Fonction renvoie une exception AttributeError si montant invalide.
+    Description: Controler le nombre saisi.
+    Fonction renvoie une exception AttributeError si chiffre invalide.
     """
-    pattern = re.compile(r"\d{+}")
+    pattern = re.compile(r"\d+")
     return re.match(pattern, attendees).group()
 
 
@@ -320,7 +320,7 @@ def is_title_valid(title):
     Description: Controler le titre saisi.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"\w ' {,125}$")
+    pattern = re.compile(r"([\w ' ]{,125})$")
     return re.match(pattern, title).group()
 
 
