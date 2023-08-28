@@ -359,7 +359,20 @@ class ConsoleClientForUpdate:
 
             event_id = custom_partial_dict["event_id"]
             if len(user_query_filters_args) == 0:
-                # dans le cas où d'un collaborateur du serivce gestion, il modifie seulement s'il est assigné.
+                if "collaborator_id" in custom_partial_dict:
+                    if custom_partial_dict["collaborator_id"] != None:
+                        # un membre du service Gestion doit seulement pouvoir assigner un membre du service Support.
+                        # Ainsi il ne doit pas être possible d'assigner un membre du service commercial etc.
+                        assigned_user_department_id = utils.get_department_name_from_collaborator_id(
+                            self.app_view.session,
+                            custom_partial_dict["collaborator_id"]
+                        )
+                        department_name = utils.get_department_name_from_id(
+                            self.app_view.session,
+                            assigned_user_department_id
+                        )
+                        if department_name != "oc12_support":
+                            raise exceptions.OnlySuportMemberCanBeAssignedToEventSupportException()
                 self.update_app_view.get_events_view().update_event(
                     user_collaborator_id, user_service, custom_partial_dict
                 )
@@ -374,6 +387,8 @@ class ConsoleClientForUpdate:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CustomIdMatchNothingException:
             raise exceptions.CustomIdMatchNothingException()
+        except exceptions.OnlySuportMemberCanBeAssignedToEventSupportException:
+            raise exceptions.OnlySuportMemberCanBeAssignedToEventSupportException()
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
             printer.print_message(
                 "error",

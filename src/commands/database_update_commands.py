@@ -450,6 +450,7 @@ def update_event(event_id, args):
     Exemple usage:
     'oc12_update_event --event_id a89pz15 notes="Attention à la météo."
     """
+    console = ConsoleClientForUpdate()
     event_dict = {}
     try:
         event_dict["event_id"] = f"{event_id}"
@@ -462,7 +463,7 @@ def update_event(event_id, args):
 
             if k == "client_id":
                 expected_client = (
-                    ConsoleClientForUpdate().app_view.get_clients_view().get_client(v)
+                    console.app_view.get_clients_view().get_client(v)
                 )
                 expected_client_id = expected_client.get_dict()["id"]
                 event_dict[k] = str(expected_client_id)
@@ -471,7 +472,7 @@ def update_event(event_id, args):
                     event_dict[k] = None
                 else:
                     expected_collaborator = (
-                        ConsoleClientForUpdate()
+                        console
                         .app_view.get_collaborators_view()
                         .get_collaborator(v)
                     )
@@ -479,7 +480,7 @@ def update_event(event_id, args):
                     event_dict[k] = str(expected_collaborator_id)
             elif k == "contract_id":
                 expected_contract = (
-                    ConsoleClientForUpdate()
+                    console
                     .app_view.get_contracts_view()
                     .get_contract(v)
                 )
@@ -487,7 +488,7 @@ def update_event(event_id, args):
                 event_dict[k] = str(expected_contract_id)
             elif k == "location_id":
                 expected_location = (
-                    ConsoleClientForUpdate()
+                    console
                     .app_view.get_locations_view()
                     .get_location(v)
                 )
@@ -499,7 +500,7 @@ def update_event(event_id, args):
         if len(event_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         check_if_partial_dict_valid(event_dict)
-        console_client_return = ConsoleClientForUpdate().update_event(event_dict)
+        console_client_return = console.update_event(event_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
@@ -513,6 +514,11 @@ def update_event(event_id, args):
         	LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_EVENT_CAN_NOT_BE_DROP"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
+    except exceptions.OnlySuportMemberCanBeAssignedToEventSupportException:
+        message = APP_DICT.get_appli_dictionnary()["ONLY_SUPPORT_SERVICE_MEMBER_CAN_BE_ASSIGNED_TO_EVENT_SUPPORT"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)

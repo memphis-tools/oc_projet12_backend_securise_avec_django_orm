@@ -87,5 +87,9 @@ class OldPasswordNotValidException(Exception):
     pass
 
 
+class OnlySuportMemberCanBeAssignedToEventSupportException(Exception):
+    pass
+
+
 class SuppliedDataNotMatchModel(Exception):
     pass
