@@ -71,8 +71,7 @@ contract_partial_dict1 = {
 
 contract_partial_dict2 = {
     "contract_id": "zz123",
-    "remain_amount_to_pay": "9599.99",
-    "status": "canceled",
+    "remain_amount_to_pay": "99.99",
 }
 
 contract_partial_dict3 = {
@@ -88,8 +87,7 @@ contract_partial_dict4 = {
 
 contract_partial_dict5 = {
     "contract_id": "av123",
-    "remain_amount_to_pay": "9599.99",
-    "status": "canceled",
+    "remain_amount_to_pay": "55.23",
 }
 
 location_partial_dict = {
