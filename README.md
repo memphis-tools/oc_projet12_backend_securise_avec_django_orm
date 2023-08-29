@@ -9,13 +9,14 @@
     Company has several departments: commercial, gestion, support.
     Commercial will look for clients. They try to sign contracts for an event.
     Once contract signed, the gestion team assign a support collaborator to the event.
-    For 1 event, we have 1 client, 1 commercial and 1 support collaborator.
 
 
 ### Requirements
     Python >= 3.9
     Supply a database scheme.
     Use an ORM (SQLALCHEMY).
+    Any of these SGBD: SQLite, MySQL, PostgreSQL.
+    Propose a graphical admin tool dedicated to the SGBD (pgadmin, MySQLWorkbench, etc)
     Secure authentication with JWT.
     Use Click python's package.
     Supply a Sentry's like log monitoring capability. Grab any of these elements:
@@ -25,21 +26,50 @@
 
 
 ### Competencies assessed
+    Create a "Customer Relationship Management" like application
     Set a secured database with Python and SQL
 
 ---
 
+### Project setup
+    Application have been developed on a Linux system. The choosen SGBD is Postgresql (version 15).
+    Initialization of application needs to run several command as admin on the SGBD, see: src/commands/init_commands.py
+    On Linux these commands are run with sudo.
+    For Windows user, use Windows 10 or later, and activate the bash usage on it. You can offcourse update the code as an improvement.
+
+    Application initialization will create 3 databases named: projet12, dev_projet12. et test_projet12 (prod, dev and test environment).
+    In each one you will have the 3 companies departments expected in specifications: oc12_commercial, oc12_gestion et oc12_support.
+    Also 7 collaborators will be created: 2 commercial, 2 gestion, and 3 gestion members.
+    Accounts: a123456789, ab123456789, ..., ag123456789.
+    Default password is specify in settings, you can change it. By default the user password is: @pplepie94.
+
+    The Dev and Test databases will be populated with more datas (clients, companies, contracts, events).
+    The Test database is dedicated to be used by pytest.
+
+---
+
+### Database administration
+    Optional. As a graphical tool to administrate database, pgadmin4 can be used for Postgresql.
+    Illustration in the wiki page [OC12 WIKI](https://github.com/memphis-tools/oc_projet12_backend_securise_avec_django_orm/wiki)
+
+---
+
 ### How works this project ?
-    Any commands you could /should consult with command "oc12_help".
+
+Notice the Wiki page created for this project, from Github: [OC12 WIKI](https://github.com/memphis-tools/oc_projet12_backend_securise_avec_django_orm/wiki)
+
+    Any commands you could /should be consult with command "oc12_help".
 
 |COMMAND|INFO|
 |-------|----|
-|oc12_init_application| initialiser un POC|
-|oc12_token| obtenir un jeton d'accès|
-|oc12_logout| se déconnecter de l'application|
-|oc12_clients| obtenir les clients de l'entreprise|
-|oc12_contracts --help| obtenir de l'aide sur la commande oc12_contracts|
-|oc12_contracts "status=signed et remain_amount_to_pay =>0"| un exemple d'usage de l'aide pour la commande.|
+|oc12_init_application| initialize application|
+|oc12_token| obtain an access token|
+|oc12_clients| obtain all clients of the company|
+|oc12_contracts --help| obtain help for command oc12_contracts|
+|oc12_contracts "status=signed et remain_amount_to_pay =>0"| usecase example for a filter query|
+|oc12_update_event --event_id=geg2021 collaborator_id=af123456789|usecase example for update event|
+|oc12_update_event --event_id=geg2021 collaborator_id=None|usecase example for update event|
+|oc12_events 'commercial_id=aa123456789 ou commercial_id=ab123456789'|usecase example for filter events looking for 2 assigned collaborators|
 |(...)||
 
     Notice: all commands can be prefixed too by "poetry run". Example: "poetry run get_clients" etc.
@@ -48,13 +78,13 @@
     Most of them should be intuitive (by the Foreign keys dependencies).
     From now you may consider, for example:
       - To query application you need a JWT token exported in your PATH.
+      - Before query a JWT token, you first need to declare the application environment in your PATH.
       - To obtain a JWT token you will use command 'oc12_token' as precise through 'oc12_help'.
-      - 1 collaborator belongs to 1 service /department.
+      - 1 collaborator has 1 service /department and 1 role (manager, employee etc).
       - 1 company depends on an existing location.
-      - 1 contract depends on an existing company and existing collaborator.
       - Any instance model can be filtered as soon as user allowed to query.
       - Any instance model comes with a(n implicit) creation date.
-      etc
+Please consult all implemented rules in the wiki project page [OC12 WIKI](https://github.com/memphis-tools/oc_projet12_backend_securise_avec_django_orm/wiki)
 
 As the application is set to be connected to internet the following API's are used:
 
@@ -130,9 +160,9 @@ Notice that **log collect is activated by default**. You can deactivate it throu
 
   5. Start using the application
 
-      Notice application had been run on a Linux operating system. Some commands will relied on it.
+      Notice application has been run on a Linux operating system. Some commands will relied on it.
 
-      First deactivate any input into history: `set -o history` (this will apply for the terminal session duration). This is optional.
+      First in a Linux running context, deactivate any input into history: `set -o history` (this will apply for the terminal session duration). This is optional.
 
       Then you will need a token access. Valid duration period is set through the settings.py file.
 
