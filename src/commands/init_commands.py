@@ -281,18 +281,22 @@ def init_application():
             admin_console_client = AdminConsoleClient()
             admin_console_client.reset_db(db_name=f"{database}")
             admin_console_client.init_db()
-            admin_console_client.database_postinstall_tasks()
             admin_console_client.database_postinstall_alter_tables()
         else:
             admin_console_client = AdminConsoleClient(db_name=f"{database}")
             admin_console_client.reset_db(db_name=f"{database}")
             admin_console_client.init_db(db_name=f"{database}")
-            admin_console_client.database_postinstall_tasks(db_name=f"{database}")
-            admin_console_client.database_postinstall_alter_tables(
-                db_name=f"{database}"
-            )
+            admin_console_client.database_postinstall_alter_tables(db_name=f"{database}")
 
-    # On peuple la base de données avec des données quelconques, pour le POC, en développement
+    admin_console_client.database_postinstall_tasks()
+    admin_console_client.database_postinstall_tasks(db_name='dev_projet12')
+    admin_console_client.database_postinstall_tasks(db_name='test_projet12')
+
+    admin_console_client.database_postinstall_add_default_collaborators()
+    admin_console_client.database_postinstall_add_default_collaborators(db_name='dev_projet12')
+    admin_console_client.database_postinstall_add_default_collaborators(db_name='test_projet12')
+
+    # On peuple les base de données de dev et de test avec des données quelconques, pour le POC, en développement
     dummy_database_creation(db_name="dev_projet12")
     dummy_database_creation(db_name="test_projet12")
 

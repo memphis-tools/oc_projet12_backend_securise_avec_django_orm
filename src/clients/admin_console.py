@@ -63,3 +63,10 @@ class AdminConsoleClient:
         Dédiée à forcer la mise à jour de valeurs par défaut de tables.
         """
         self.app_view.database_postinstall_alter_tables(db_name=db_name)
+
+    def database_postinstall_add_default_collaborators(self, db_name=f"{settings.DATABASE_NAME}"):
+        """
+        Description:
+        Dédiée à créer des employés par défaut, utilisables sur chaque base.
+        """
+        self.app_view.database_postinstall_add_default_collaborators(db_name=db_name)

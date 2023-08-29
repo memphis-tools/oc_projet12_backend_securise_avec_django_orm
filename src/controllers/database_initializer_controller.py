@@ -7,6 +7,7 @@ import psycopg
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import urllib.parse
+from datetime import datetime
 
 try:
     from src.languages import language_bridge
@@ -220,22 +221,16 @@ class DatabaseInitializerController:
             conn.commit()
             conn.close()
 
-    def database_postinstall_task_for_test_db(self):
+    def database_postinstall_task_for_test_db(self, conn):
         """
         Description:
-        Sur la base de test on va maintenir un employé lambda "aa123456789" du service oc12_commercial.
+        Sur les bases de test et dev on va maintenir un employé lambda "aa123456789" du service oc12_commercial.
         Ca permet de conserver l'éxécution des tests du module test_jwt_authenticator.py avant ceux des vues.
         """
         for db_name in settings.DATABASE_TO_CREATE:
             if (
                 db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}"
             ):
-                conn = utils.get_a_database_connection(
-                    f"{settings.ADMIN_LOGIN}",
-                    f"{settings.ADMIN_PASSWORD}",
-                    app_init=True,
-                    db_name=db_name,
-                )
                 cursor = conn.cursor()
                 dummy_registration_number = "aa123456789"
                 sql = f"""
@@ -249,12 +244,14 @@ class DatabaseInitializerController:
                 sql = f"""GRANT oc12_commercial TO {dummy_registration_number}"""
                 cursor.execute(sql)
                 conn.commit()
-                conn.close()
+        return True
 
     def database_postinstall_tasks(self, db_name="projet12"):
         """
         Description:
         Dédiée à mettre à jour la base de données après une création initiale.
+        On met en place le compte admin (qui aura les mêmes droits que le role par défaut postgres).
+        On crée les services attendus par défaut, et on fixe leurs droits sur les tables.
         """
         init_db_name = db_name
         conn = utils.get_a_database_connection(
@@ -360,11 +357,137 @@ class DatabaseInitializerController:
             sql = f"""GRANT USAGE ON SEQUENCE event_id_seq TO {service}"""
             cursor.execute(sql)
 
-        self.database_postinstall_task_for_test_db()
+        self.database_postinstall_task_for_test_db(conn)
 
         conn.commit()
         conn.close()
         return True
+
+    def database_postinstall_add_default_collaborators(self, db_name="projet12"):
+        """
+        Description:
+        On crée des collaborateurs par défaut de chaque service de l'entreprise.
+        Ca amène d'abord à créer des rôles, et les services, puis les collaborateurs.
+        """
+        conn = utils.get_a_database_connection(
+            f"{settings.ADMIN_LOGIN}",
+            f"{settings.ADMIN_PASSWORD}",
+            app_init=True,
+            db_name=db_name,
+        )
+        cursor = conn.cursor()
+        sql = f"""
+            INSERT INTO collaborator_department(department_id, name, creation_date)
+            VALUES('ccial', 'oc12_commercial', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator_department(department_id, name, creation_date)
+            VALUES('gest', 'oc12_gestion', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator_department(department_id, name, creation_date)
+            VALUES('supp', 'oc12_support', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator_department(department_id, name, creation_date)
+            VALUES('dev', 'oc12_developer', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator_role(role_id, name, creation_date)
+            VALUES('man', 'MANAGER', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator_role(role_id, name, creation_date)
+            VALUES('emp', 'EMPLOYEE', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        # 2 membres de l'équipe COMMERCIAL, dont 1 nommé dans les exemples du cahier des charges
+        sql = f"""
+            INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+            VALUES('aa123456789', 'donald duck', '1', '1', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+            VALUES('ab123456789', 'Bill Boquet', '1', '2', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        # 2 membres de l'équipe GESTION, pas d'exemples dans cahier des charges
+        sql = f"""
+            INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+            VALUES('ac123456789', 'daisy duck', '2', '1', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+            VALUES('ad123456789', 'loulou duck', '2', '2', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        # 3 membres de l'équipe SUPPORT, dont 2 nommés dans les exemples du cahier des charges
+        sql = f"""
+            INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+            VALUES('ae123456789', 'louloute duck', '3', '2', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+            VALUES('af123456789', 'Aliénor Vichum', '3', '2', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+
+        sql = f"""
+            INSERT INTO collaborator(registration_number, username, department_id, role_id, creation_date)
+            VALUES('ag123456789', 'Kate Hastroff', '3', '2', '{datetime.now()}')
+        """
+        cursor.execute(sql)
+        conn.commit()
+
+        # On crée un "rôle" pour chaque utilisateur prévu. Chacun hérite des permissions de son service.
+        # on crée le try/except parce qu'on ne CREATE/GRANT qu'une fois pour N bases.
+        password = settings.DEFAULT_NEW_COLLABORATOR_PASSWORD
+        for user in [
+            ("aa123456789", "oc12_commercial"),
+            ("ab123456789", "oc12_commercial"),
+            ("ac123456789", "oc12_gestion"),
+            ("ad123456789", "oc12_gestion"),
+            ("ae123456789", "oc12_support"),
+            ("af123456789", "oc12_support"),
+            ("ag123456789", "oc12_support"),
+        ]:
+            try:
+                if user[1] == "oc12_gestion":
+                    sql = (
+                        f"""CREATE ROLE {user[0]} CREATEROLE LOGIN PASSWORD '{password}'"""
+                    )
+                    cursor.execute(sql)
+                else:
+                    sql = f"""CREATE ROLE {user[0]} LOGIN PASSWORD '{password}'"""
+                    cursor.execute(sql)
+                sql = f"""GRANT {user[1]} TO {user[0]}"""
+                cursor.execute(sql)
+                conn.commit()
+            except Exception:
+                continue
+        conn.commit()
+        conn.close()
+        return True
+
 
     def database_postinstall_alter_tables(self, db_name="projet12"):
         """
