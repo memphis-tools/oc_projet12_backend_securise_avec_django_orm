@@ -285,7 +285,11 @@ class ConsoleClientForUpdate:
                 )
             else:
                 self.update_app_view.get_contracts_view().update_contract_filtered(self, user_query_filters_args)
-            message = f"Update contract {contract_id} by {registration_number}"
+
+            if "status" in custom_partial_dict.keys():
+                message = f"Update contract {contract_id} for signature by {registration_number}"
+            else:
+                message = f"Update contract {contract_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(contract={
                     'custom_partial_dict': custom_partial_dict,
