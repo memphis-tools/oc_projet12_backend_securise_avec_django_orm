@@ -141,9 +141,7 @@ class Collaborator(Base):
         "Client", back_populates="collaborator", passive_deletes="all"
     )
     event = relationship("Event", back_populates="collaborator")
-    creation_date = Column(
-        DateTime(), nullable=False, default=utils.get_today_fulldate()
-    )
+    creation_date = Column(DateTime(), nullable=False, default=datetime.now())
 
     def __str__(self):
         descriptors = "["
