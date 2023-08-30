@@ -61,8 +61,7 @@ def delete_client():
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
-    except Exception as error:
-        print(f"MORE DEBUG SIR: {error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -107,8 +106,7 @@ def delete_collaborator():
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
-    except Exception as error:
-        print(f"MORE DEBUG SIR: {error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -153,8 +151,7 @@ def delete_company():
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
-    except Exception as error:
-        print(f"MORE DEBUG SIR: {error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -199,8 +196,7 @@ def delete_contract(contract_id):
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
-    except Exception as error:
-        print(f"MORE DEBUG SIR: {error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -245,8 +241,7 @@ def delete_department():
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
-    except Exception as error:
-        print(f"MORE DEBUG SIR: {error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -291,8 +286,7 @@ def delete_event():
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
-    except Exception as error:
-        print(f"MORE DEBUG SIR: {error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -337,8 +331,7 @@ def delete_location():
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
-    except Exception as error:
-        print(f"MORE DEBUG SIR: {error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -383,8 +376,7 @@ def delete_role():
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
-    except Exception as error:
-        print(f"MORE DEBUG SIR: {error}")
+    except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:

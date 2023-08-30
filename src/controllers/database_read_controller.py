@@ -3,7 +3,7 @@ Description:
 Un controleur avec toutes méthodes GET.
 """
 from sqlalchemy import text
-
+import sys
 try:
     from src.languages import language_bridge
     from src.printers import printer
@@ -41,9 +41,17 @@ class DatabaseReadController:
         - filtered_db_model: chaine caractères qui nomme un modèle métier, soit
             Collaborator, Collaborator_Role, Client, Contract, etc
         """
-        filter_to_apply_rebuilt_query = utils.rebuild_filter_query(
-            user_query_filters_args, filtered_db_model, session
-        )
+        try:
+            filter_to_apply_rebuilt_query = utils.rebuild_filter_query(
+                user_query_filters_args, filtered_db_model, session
+            )
+        except exceptions.QueryStructureException:
+            message = APP_DICT.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
+            printer.print_message("info", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.info(message)
+            sys.exit(0)
+
         try:
             db_model_queryset = (
                 session.query(eval(f"models.{filtered_db_model}"))
@@ -73,7 +81,6 @@ class DatabaseReadController:
             db_client_queryset = (
                 session.query(models.Client).filter_by(client_id=client_id).first()
             )
-
             return db_client_queryset
         except Exception:
             message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
@@ -88,7 +95,6 @@ class DatabaseReadController:
         Requête de la base de données et renvoie du résultat selon "str/repr" du modèle Client.
         """
         db_collaborators_clients = session.query(models.Client).all()
-
         return db_collaborators_clients
 
     def get_collaborator(self, session, registration_number):

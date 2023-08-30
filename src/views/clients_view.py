@@ -6,11 +6,13 @@ from rich.console import Console
 try:
     from src.languages import language_bridge
     from src.printers import printer
+    from src.exceptions import exceptions
     from src.utils import utils
     from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from languages import language_bridge
     from printers import printer
+    from exceptions import exceptions
     from utils import utils
     from settings import settings, logtail_handler
 
@@ -54,6 +56,12 @@ class ClientsView:
                     printer.print_message("info", message)
                     if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                     	LOGGER.info(message)
+            except exceptions.QueryStructureException:
+                message = APP_DICT.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
+                printer.print_message("info", message)
+                if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                    LOGGER.info(message)
+                raise exceptions.QueryStructureException()
             except TypeError:
                 message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
                 printer.print_message("error", message)
