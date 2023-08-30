@@ -25,14 +25,21 @@ LOGGER = logtail_handler.logger
 
 @click.command
 @click.option("--client_id", prompt=True, help="")
-def delete_client():
+def delete_client(client_id):
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
+
     Dédiée à supprimer un client de l'entreprise.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]client_id[/bright_white]: id du client.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_delete_client --client_id=mkc111
     """
     console = ConsoleClientForDelete()
     try:
-        console_client_return = console.delete_app_view.get_clients().delete_client(
+        console_client_return = console.delete_client(
             client_id
         )
         click.secho(console_client_return, bg="blue", fg="white")
@@ -70,16 +77,21 @@ def delete_client():
 
 @click.command
 @click.option("--collaborator_id", prompt=True, help="")
-def delete_collaborator():
+def delete_collaborator(collaborator_id):
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
+
     Dédiée à supprimer un utilisateur /collaborateur de l'entreprise.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]collaborator_id[/bright_white]: id du collaborateur.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_delete_collaborator --collaborator_id=aa123456789
     """
     console = ConsoleClientForDelete()
     try:
-        console_client_return = console.delete_app_view.get_collaborators().delete_collaborator(
-            collaborator_id
-        )
+        console_client_return = console.delete_collaborator(collaborator_id)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
@@ -115,16 +127,21 @@ def delete_collaborator():
 
 @click.command
 @click.option("--company_id", prompt=True, help="")
-def delete_company():
+def delete_company(company_id):
     """
-    Description:
-    Dédiée à supprimer une entreprise sans client, mais avec une localité nécessaire.
+    [bold cyan]Description:[/bold cyan]
+
+    Dédiée à supprimer une entreprise.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]company_id[/bright_white]: id de l'entreprise.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_delete_company --company_id=666217CHCGF
     """
     console = ConsoleClientForDelete()
     try:
-        console_client_return = console.delete_app_view.get_companies().delete_company(
-            company_id
-        )
+        console_client_return = console.delete_company(company_id)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
@@ -162,14 +179,19 @@ def delete_company():
 @click.option("--contract_id", prompt=True, help="")
 def delete_contract(contract_id):
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
+
     Dédiée à supprimer un contrat de l'entreprise.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]contract_id[/bright_white]: id du contrat.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_delete_contract --contract_id=xx55555
     """
     console = ConsoleClientForDelete()
     try:
-        console_client_return = console.delete_app_view.get_contracts_view().delete_contract(
-            contract_id
-        )
+        console_client_return = console.delete_contract(contract_id)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
@@ -205,14 +227,21 @@ def delete_contract(contract_id):
 
 @click.command
 @click.option("--department_id", prompt=True, help="")
-def delete_department():
+def delete_department(department_id):
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
+
     Dédiée à supprimer un département /service de l'entreprise.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]department_id[/bright_white]: id du département /service.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_delete_department --department_id=dev
     """
     console = ConsoleClientForDelete()
     try:
-        console_client_return = console.delete_app_view.get_departments().delete_department(
+        console_client_return = console.delete_department(
             department_id
         )
         click.secho(console_client_return, bg="blue", fg="white")
@@ -250,16 +279,21 @@ def delete_department():
 
 @click.command
 @click.option("--event_id", prompt=True, help="")
-def delete_event():
+def delete_event(event_id):
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
+
     Dédiée à supprimer un évènement organisé par l'entreprise.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]event_id[/bright_white]: id de l'évènement.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_delete_event --event_id=dkap520
     """
     console = ConsoleClientForDelete()
     try:
-        console_client_return = console.delete_app_view.get_events().delete_event(
-            department_id
-        )
+        console_client_return = console.delete_event(event_id)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
@@ -295,16 +329,21 @@ def delete_event():
 
 @click.command
 @click.option("--location_id", prompt=True, help="")
-def delete_location():
+def delete_location(location_id):
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
+
     Dédiée à supprimer une localité.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]location_id[/bright_white]: id de la localité.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_delete_location --location_id=FRIL94150L
     """
     console = ConsoleClientForDelete()
     try:
-        console_client_return = console.delete_app_view.get_locations().delete_location(
-            location_id
-        )
+        console_client_return = console.delete_location(location_id)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
@@ -312,7 +351,7 @@ def delete_location():
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
-        message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CONTRACT_CAN_NOT_BE_DROP"]
+        message = APP_DICT.get_appli_dictionnary()["LOCATION_RATTACHED_TO_COMPANY"]
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
@@ -340,14 +379,21 @@ def delete_location():
 
 @click.command
 @click.option("--role_id", prompt=True, help="")
-def delete_role():
+def delete_role(role_id):
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
+
     Dédiée à supprimer un roles pour les utilisateurs /collaborateurs de l'entreprise.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]role_id[/bright_white]: id du role.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_delete_role --role_id=man
     """
     console = ConsoleClientForDelete()
     try:
-        console_client_return = console.delete_app_view.get_roles().delete_role(
+        console_client_return = console.delete_role(
             role_id
         )
         click.secho(console_client_return, bg="blue", fg="white")
