@@ -56,18 +56,23 @@ def check_if_partial_dict_valid(partial_dict):
 )
 def update_client(client_id, args):
     """
-    Description:
-    Dédiée à mettre à jour un client de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
-    civility: expected 'MR, MME, MLE, AUTRE'\n
-    first_name\n
-    last_name\n
-    employee_role\n
-    email\n
-    telephone\n
-    company_id: expected is custom id you set (free chars string)\n
-    commercial_contact: expected is registration_number\n
+    [bold cyan]Description:[/bold cyan]
+
+    Dédiée à mettre à jour un client de l'entreprise avec 1 ou plusieurs options ci-dessous:
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]civility[/bright_white]: expected 'MR, MME, MLE, AUTRE'
+    [bright_white]first_name[/bright_white]:
+    [bright_white]last_name[/bright_white]:
+    [bright_white]employee_role[/bright_white]:
+    [bright_white]email[/bright_white]:
+    [bright_white]telephone[/bright_white]:
+    [bright_white]company_id[/bright_white]: expected is custom id you set (free chars string)
+    [bright_white]commercial_contact[/bright_white]: expected is registration_number
+
+    [bold cyan]Usage examples:[/bold cyan]
     Exemple usage:
-    'oc12_update_client --client_id az123456789 first_name="john" last_name="doe"'
+    oc12_update_client --client_id=SRODAP37 telephone=0611882244
     """
     client_dict = {}
     try:
@@ -137,13 +142,16 @@ def update_client(client_id, args):
 )
 def update_collaborator(registration_number, args):
     """
-    Description:
-    Dédiée à mettre à jour un collaborateur de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
-    username\n
-    department\n
-    role\n
-    Exemple usage:
-    'oc12_update_collaborator --registration_number ab123456789 role="DESIGNER"
+    [bold cyan]Description:[/bold cyan]
+    Dédiée à mettre à jour un collaborateur de l'entreprise avec 1 ou plusieurs options ci-dessous.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]username[/bright_white]:
+    [bright_white]department[/bright_white]:
+    [bright_white]role[/bright_white]:
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_update_collaborator --registration_number=ae123456789 username="Louloute Duck"
     """
     collaborator_dict = {}
     try:
@@ -198,8 +206,10 @@ def update_collaborator(registration_number, args):
 @click.command
 def update_collaborator_password():
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
     Dédiée à mettre à jour le mot de passe d'un collaborateur de l'entreprise.
+    Pas d'arguments attendus.
+    La politique de mot de passe peut être consultée avec: oc12_info_collaborator_password.
     """
     try:
         console_client = ConsoleClientForUpdate()
@@ -253,14 +263,19 @@ def update_collaborator_password():
 )
 def update_company(company_id, args):
     """
-    Description:
-    Dédiée à mettre à jour une entreprise avec 1 ou plusieurs options ci-dessous:\n
-    company_name\n
-    company_registration_number\n
-    company_subregistration_number\n
-    location_id: expected is custom id you set (free chars string)\n
-    Exemple usage:
-    oc12_update_company --company_id mtcx55124 company_subregistration_number='77785'
+    [bold cyan]Description:[/bold cyan]
+    Dédiée à mettre à jour une entreprise avec 1 ou plusieurs options ci-dessous.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]creation_date[/bright_white]: filtre pour date de création (dans le système).
+    [bright_white]date_debut_activite[/bright_white]: filtre pour date début activité.
+    [bright_white]company_name[/bright_white]: filtre pour nom entreprise.
+    [bright_white]company_registration_number[/bright_white]: filtre pour SIREN entreprise.
+    [bright_white]company_subregistration_number[/bright_white]: filtre pour NIC entreprise.
+    [bright_white]location_id[/bright_white]: filtre pour localité entreprise.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_update_company --company_id=660316COE company_name=ELORES
     """
     company_dict = {}
     try:
@@ -328,19 +343,22 @@ def update_company(company_id, args):
 )
 def update_contract(contract_id, args):
     """
-    Description:
-    Dédiée à mettre à jour un contrat de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
-    full_amount_to_pay\n
-    remain_amount_to_pay\n
-    creation_date\n
-    status\n
-    client_id: expected is custom id you set (free chars string)\n
-    collaborator_id: expected is registration_number\n
-    Exemple usage:
-    'oc12_update_contract --contract_id c20z38 remain_amount_to_pay="66.55"
+    [bold cyan]Description:[/bold cyan]
+    Dédiée à mettre à jour un contrat de l'entreprise avec 1 ou plusieurs options ci-dessous.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]full_amount_to_pay[/bright_white]: filtre pour total à payer.
+    [bright_white]remain_amount_to_pay[/bright_white]: filtre pour restant à payer.
+    [bright_white]creation_date[/bright_white]: filtre pour date de création.
+    [bright_white]status[/bright_white]: filtre pour statut.
+    [bright_white]client_id[/bright_white]: filtre pour id client.
+    [bright_white]collaborator_id[/bright_white]: filtre pour id collaborateur commercial.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_update_contract --contract_id=ax312 status=canceled
     """
     contract_dict = {}
-    console = ConsoleClientForRead()
+    console = ConsoleClientForUpdate()
     try:
         contract_dict["contract_id"] = f"{contract_id}"
         for arg in args:
@@ -358,7 +376,7 @@ def update_contract(contract_id, args):
                 contract_dict[k] = str(expected_client_id)
             elif k == "collaborator_id":
                 expected_collaborator = (
-                    ConsoleClientForUpdate()
+                    console
                     .app_view.get_collaborators_view()
                     .get_collaborator(v)
                 )
@@ -374,7 +392,7 @@ def update_contract(contract_id, args):
         if len(contract_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         check_if_partial_dict_valid(contract_dict)
-        console_client_return = ConsoleClientForUpdate().update_contract(contract_dict)
+        console_client_return = console.update_contract(contract_dict)
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
@@ -422,11 +440,14 @@ def update_contract(contract_id, args):
 )
 def update_department(department_id, args):
     """
-    Description:
-    Dédiée à mettre à jour un département /service de l'entreprise avec 1 ou plusieurs options ci-dessous:\n
-    name\n
-    Exemple usage:
-    'oc12_update_department --department_id zz94 name="La boucle sur yvette"
+    [bold cyan]Description:[/bold cyan]
+    Dédiée à mettre à jour un département /service de l'entreprise avec 1 ou plusieurs options ci-dessous.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]name[/bright_white]: filtre pour nom département /service.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_update_department --department_id=DEVX name=OC12_DEVOPS
     """
     department_dict = {}
     try:
@@ -487,19 +508,23 @@ def update_department(department_id, args):
 )
 def update_event(event_id, args):
     """
-    Description:
-    Dédiée à mettre à jour un évènement avec 1 ou plusieurs options ci-dessous:\n
-    title\n
-    contract_id: expected is custom id you set (free chars string)\n
-    client_id: expected is custom id you set (free chars string)\n
-    collaborator_id: expected is registration_number\n
-    location_id: expected is custom id you set (free chars string)\n
-    event_start_date\n
-    event_end_date\n
-    attendees\n
-    notes\n
-    Exemple usage:
-    'oc12_update_event --event_id a89pz15 notes="Attention à la météo."
+    [bold cyan]Description:[/bold cyan]
+    Dédiée à mettre à jour un évènement avec 1 ou plusieurs options ci-dessous.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]title[/bright_white]: filtre pour titre.
+    [bright_white]contract_id[/bright_white]: expected is custom id you set (free chars string)
+    [bright_white]client_id[/bright_white]: expected is custom id you set (free chars string)
+    [bright_white]collaborator_id[/bright_white]: expected is registration_number
+    [bright_white]location_id[/bright_white]: expected is custom id you set (free chars string)
+    [bright_white]event_start_date[/bright_white]: filtre pour date début évènement.
+    [bright_white]event_end_date[/bright_white]: filtre pour date fin évènement.
+    [bright_white]attendees[/bright_white]: filtre pour le nombre de participants attendus.
+    [bright_white]notes[/bright_white]: filtre pour notes évènement.
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_update_event --event_id=dkap520 notes="Penser à des batteries de secours."
+    oc12_update_event --event_id=geg2021 collaborator_id=af123456789
     """
     console = ConsoleClientForUpdate()
     event_dict = {}
@@ -558,6 +583,11 @@ def update_event(event_id, args):
         printer.print_message("error",message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
         	LOGGER.error(message)
+    except exceptions.OnlySuportMemberCanBeAssignedToEventSupportException:
+        message = APP_DICT.get_appli_dictionnary()["ONLY_SUPPORT_SERVICE_MEMBER_CAN_BE_ASSIGNED_TO_EVENT_SUPPORT"]
+        printer.print_message("error",message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+        	LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
         printer.print_message("error",message)
@@ -599,15 +629,20 @@ def update_event(event_id, args):
 )
 def update_location(location_id, args):
     """
-    Description:
-    Dédiée à mettre à jour une localité avec 1 ou plusieurs options ci-dessous:\n
-    adresse\n
-    complement_adresse\n
-    code_postal\n
-    ville\n
-    pays\n
-    Exemple usage:
-    'oc12_update_location --location_id zp44250 complement_adresse="Allée du champ."
+    [bold cyan]Description:[/bold cyan]
+    Dédiée à mettre à jour une localité avec 1 ou plusieurs options ci-dessous.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]adresse[/bright_white]: filtre pour adresse
+    [bright_white]complement_adresse[/bright_white]: filtre pour complément adresse
+    [bright_white]code_postal[/bright_white]: filtre pour code_postal
+    [bright_white]cedex[/bright_white]: filtre pour cedex
+    [bright_white]ville[/bright_white]: filtre pour ville
+    [bright_white]region[/bright_white]: filtre pour région
+    [bright_white]pays[/bright_white]: filtre pour pays
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_update_location --location_id=csb41120 "complement_adresse=Allée du champ."
     """
     location_dict = {}
     try:
@@ -670,12 +705,15 @@ def update_location(location_id, args):
 )
 def update_role(role_id, args):
     """
-    Description:
+    [bold cyan]Description:[/bold cyan]
     Dédiée à mettre à jour un roles pour les collaborateurs de l'entreprise
-    avec 1 ou plusieurs options ci-dessous:\n
-    name\n
-    Exemple usage:
-    'oc12_update_department --role_id driv name="OC12_DRIVER"
+    avec 1 ou plusieurs options ci-dessous.
+
+    [bold cyan]Arguments:[/bold cyan]
+    [bright_white]name[/bright_white]: filtre pour nom du role
+
+    [bold cyan]Usage examples:[/bold cyan]
+    oc12_update_role --role_id=emp name=Employé
     """
     role_dict = {}
     try:
