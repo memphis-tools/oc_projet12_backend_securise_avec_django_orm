@@ -424,7 +424,7 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
     if custom_dict == {}:
         expected_attributes_dict = {
             "department_id": "id service (chaine de caractères libre)",
-            "department": "service (examples: OC12_COMMERCIAL, OC12_GESTION, ...)",
+            "name": "service (examples: OC12_COMMERCIAL, OC12_GESTION, ...)",
         }
         printer.print_message(
             "info", APP_DICT.get_appli_dictionnary()["CREATE_A_COLLABORATOR_DEPARTMENT"]
