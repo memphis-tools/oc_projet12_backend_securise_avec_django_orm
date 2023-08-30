@@ -13,8 +13,8 @@ try:
     from src.exceptions import exceptions
     from src.forms import forms
     from src.models import models
-    from src.views.create_views import CreateAppViews
-    from src.views.views import AppViews
+    from src.views.crud_views.create_views import CreateAppViews
+    from src.views.crud_views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings, logtail_handler
     from src.utils import utils
@@ -26,7 +26,7 @@ except ModuleNotFoundError:
     from exceptions import exceptions
     from forms import forms
     from models import models
-    from views.create_views import CreateAppViews
+    from views.crud_views.create_views import CreateAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings, logtail_handler

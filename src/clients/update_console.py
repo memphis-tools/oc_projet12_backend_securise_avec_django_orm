@@ -10,8 +10,8 @@ try:
     from src.printers import printer
     from src.exceptions import exceptions
     from src.forms import forms
-    from src.views.update_views import UpdateAppViews
-    from src.views.views import AppViews
+    from src.views.crud_views.update_views import UpdateAppViews
+    from src.views.crud_views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings, logtail_handler
     from src.utils import utils
@@ -20,7 +20,7 @@ except ModuleNotFoundError:
     from printers import printer
     from exceptions import exceptions
     from forms import forms
-    from views.update_views import UpdateAppViews
+    from views.update_views.crud_views import UpdateAppViews
     from views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings, logtail_handler

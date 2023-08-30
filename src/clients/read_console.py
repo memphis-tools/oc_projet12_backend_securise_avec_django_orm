@@ -4,13 +4,13 @@ Client en mode console, pour la lecture de données.
 """
 try:
     from src.languages import language_bridge
-    from src.views.views import AppViews
+    from src.views.crud_views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings
     from src.utils import utils
 except ModuleNotFoundError:
     from languages import language_bridge
-    from views.views import AppViews
+    from views.crud_views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings
     from utils import utils
