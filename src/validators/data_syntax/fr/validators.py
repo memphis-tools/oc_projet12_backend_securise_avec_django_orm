@@ -153,6 +153,15 @@ def is_department_id_valid(department_id):
     return re.match(pattern, department_id).group()
 
 
+def is_department_valid(department):
+    """
+    Description: Controler le department saisi (nombre caractères max repris du modèle).
+    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    """
+    pattern = re.compile(r"([\w -']{,120})$")
+    return re.match(pattern, department).group()
+
+
 def is_email_valid(email):
     """
     Description: Controler l'email saisi.
@@ -295,6 +304,15 @@ def is_role_id_valid(role_id):
     """
     pattern = re.compile(r"([\w ' ]{,120})$")
     return re.match(pattern, role_id).group()
+
+
+def is_role_valid(role):
+    """
+    Description: Controler le role saisi (nombre caractères max repris du modèle).
+    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    """
+    pattern = re.compile(r"([\w ' - ]{,120})$")
+    return re.match(pattern, role).group()
 
 
 def is_name_valid(role):
