@@ -76,6 +76,8 @@ class DatabaseDeleteController:
         """
         Description: Fonction dédiée à servir la vue lors de la suppression d'un contrat.
         Requête de la base de données et renvoie True si réussie.
+        Parameters:
+        - contract_id: entier, clef primaire du modèle (pas le custom id)
         """
         try:
             contract = session.query(models.Contract).filter_by(id=contract_id).first()
