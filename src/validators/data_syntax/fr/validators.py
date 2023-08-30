@@ -18,7 +18,7 @@ def is_adresse_valid(adresse):
     Description: Controler l'adresse saisis.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"[\w ']{,150}$")
+    pattern = re.compile(r"[\w - ']{,150}$")
     return re.match(pattern, adresse).group()
 
 
@@ -110,7 +110,7 @@ def is_complement_adresse_valid(complement_adresse):
     """
     if complement_adresse == '""' or complement_adresse == "''":
         return complement_adresse
-    pattern = re.compile(r"[\w' ]{,75}$")
+    pattern = re.compile(r"[\w' -]{,75}$")
     complement_words = complement_adresse.split(" ")
     if not is_complement_word_foreseen(complement_words):
         return False
@@ -233,7 +233,7 @@ def is_location_id_valid(location_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ']{,120})$")
+    pattern = re.compile(r"([\w -']{,120})$")
     return re.match(pattern, location_id).group()
 
 
@@ -338,5 +338,5 @@ def is_ville_valid(ville):
     Description: Controler la ville saisie.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"[\w' ]{,100}$")
+    pattern = re.compile(r"[\w' -]{,100}$")
     return re.match(pattern, ville).group()
