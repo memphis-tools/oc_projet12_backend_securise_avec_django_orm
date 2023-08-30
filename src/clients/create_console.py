@@ -460,7 +460,11 @@ class ConsoleClientForCreate:
             message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
+                with logtail.context(collaborator={
+                    'collaborator_attributes_dict': collaborator_attributes_dict,
+                    'current_collaborator': registration_number,
+                }):
+                    LOGGER.info(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
@@ -543,7 +547,11 @@ class ConsoleClientForCreate:
             message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
+                with logtail.context(company={
+                    'company_attributes_dict': company_attributes_dict,
+                    'current_collaborator': registration_number,
+                }):
+                    LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
@@ -628,7 +636,11 @@ class ConsoleClientForCreate:
             message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
+                with logtail.context(contract={
+                    'contract_attributes_dict': contract_attributes_dict,
+                    'current_collaborator': registration_number,
+                }):
+                    LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
@@ -712,7 +724,11 @@ class ConsoleClientForCreate:
             message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
+                with logtail.context(department={
+                    'department_attributes_dict': department_attributes_dict,
+                    'current_collaborator': registration_number,
+                }):
+                    LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
@@ -809,7 +825,11 @@ class ConsoleClientForCreate:
             message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
+                with logtail.context(event={
+                    'event_attributes_dict': event_attributes_dict,
+                    'current_collaborator': registration_number,
+                }):
+                    LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
@@ -893,7 +913,11 @@ class ConsoleClientForCreate:
             message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
+                with logtail.context(location={
+                    'location_attributes_dict': location_attributes_dict,
+                    'current_collaborator': registration_number,
+                }):
+                    LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
@@ -969,7 +993,11 @@ class ConsoleClientForCreate:
             message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
+                with logtail.context(location={
+                    'role_attributes_dict': role_attributes_dict,
+                    'current_collaborator': registration_number,
+                }):
+                    LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
