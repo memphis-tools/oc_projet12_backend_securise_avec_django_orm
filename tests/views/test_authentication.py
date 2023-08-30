@@ -6,11 +6,11 @@ import os
 import pytest
 import sqlalchemy
 try:
-    from src.views.views import AppViews
+    from src.views.crud_views.views import AppViews
     from src.views.authentication_view import AuthenticationView
     from src.settings import settings
 except ModuleNotFoundError:
-    from views.views import AppViews
+    from views.crud_views.views import AppViews
     from views.authentication_view import AuthenticationView
     from settings import settings
 

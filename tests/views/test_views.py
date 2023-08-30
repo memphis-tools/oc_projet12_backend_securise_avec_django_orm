@@ -8,11 +8,11 @@ import pytest
 try:
     from src.commands import database_read_commands
     from src.settings import settings
-    from src.views.views import AppViews
+    from src.views.crud_views.views import AppViews
 except ModuleNotFoundError:
     from commands import database_read_commands
     from settings import settings
-    from views.views import AppViews
+    from views.crud_views.views import AppViews
 
 
 @pytest.mark.parametrize(

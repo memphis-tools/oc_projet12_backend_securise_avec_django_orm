@@ -12,7 +12,7 @@ try:
     from src.views.events_view import EventsView
     from src.views.locations_view import LocationsView
     from src.views.roles_view import RolesView
-    from src.views.views import AppViews
+    from src.views.crud_views.views import AppViews
     from src.controllers.jwt_controller import JwtController
     from src.controllers.database_initializer_controller import (
         DatabaseInitializerController,
@@ -26,7 +26,7 @@ except ModuleNotFoundError:
     from views.events_view import EventsView
     from views.locations_view import LocationsView
     from views.roles_view import RolesView
-    from views.views import AppViews
+    from views.crud_views.views import AppViews
     from controllers.jwt_controller import JwtController
     from controllers.database_initializer_controller import (
         DatabaseInitializerController,
