@@ -27,7 +27,7 @@ except ModuleNotFoundError:
     from forms import forms
     from models import models
     from views.crud_views.create_views import CreateAppViews
-    from views.views import AppViews
+    from views.crud_views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings, logtail_handler
     from utils import utils
