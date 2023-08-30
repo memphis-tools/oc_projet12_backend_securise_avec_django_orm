@@ -222,7 +222,7 @@ def make_a_user_query_as_a_list(splited_args):
             arg_to_list = re.split("=", f"{arg}")
             arg_to_list.append("=")
         elif ">" in arg and "=" in arg:
-            operator_index = arg.index("=")
+            operator_index = arg.index(">=")
             arg_to_list.append(arg[0:operator_index])
             arg_to_list.append(arg[operator_index + 2: len(arg) + 1])
             arg_to_list.append(">=")
@@ -374,6 +374,7 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model, session="",
     # elle aura une forme de type: [('status', 'signed', '='), ('AND',), ('remain_amount_to_pay', '0', '>=')]
     if len(splited_args) > 0:
         user_query_as_a_list = make_a_user_query_as_a_list(splited_args)
+
     for subquery_tuple in user_query_as_a_list:
         if len(subquery_tuple) > 1:
             item_key, item_value, item_operator = subquery_tuple
