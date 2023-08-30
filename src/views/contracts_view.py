@@ -96,7 +96,6 @@ class ContractsView:
         Parameters:
         - contract_id: id de l'objet (la clef primaire).
         """
-        print(f"DEBUG FROM CONTRACT VIEW SIR, contract_id=={contract_id}")
         return self.db_controller.delete_contract(self.session, contract_id)
 
     def update_contract(self, current_user_collaborator_id, user_service, custom_dict):
