@@ -368,6 +368,7 @@ class ConsoleClientForDelete:
                     'current_collaborator': registration_number,
                 }):
                     LOGGER.info(message)
+            raise exceptions.ForeignKeyDependyException("")
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error",message)
@@ -413,6 +414,7 @@ class ConsoleClientForDelete:
                     'current_collaborator': registration_number,
                 }):
                     LOGGER.info(message)
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
@@ -465,6 +467,7 @@ class ConsoleClientForDelete:
                     'current_collaborator': registration_number,
                 }):
                     LOGGER.info(message)
+            raise exceptions.ForeignKeyDependyException("")
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error",message)
@@ -505,8 +508,12 @@ class ConsoleClientForDelete:
             message = self.app_dict.get_appli_dictionnary()["CONTRACT_RATTACHED_TO_EVENT"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(contract={ 'contract_id': contract_id }):
+                with logtail.context(contract={
+                    'contract_id': contract_id,
+                    'current_collaborator': registration_number,
+                }):
                 	LOGGER.error(message)
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
@@ -561,6 +568,7 @@ class ConsoleClientForDelete:
                     'current_collaborator': registration_number,
                 }):
                     LOGGER.info(message)
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
@@ -656,6 +664,7 @@ class ConsoleClientForDelete:
                     'current_collaborator': registration_number,
                 }):
                 	LOGGER.error(message)
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
@@ -703,8 +712,12 @@ class ConsoleClientForDelete:
             message = self.app_dict.get_appli_dictionnary()["ROLE_RATTACHED_TO_COLLABORATOR"]
             printer.print_message("error",message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(role={ 'role_id': role_id }):
+                with logtail.context(role={
+                    'role_id': role_id,
+                    'current_collaborator': registration_number,
+                }):
                 	LOGGER.error(message)
+            raise exceptions.ForeignKeyDependyException("")
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error",message)
