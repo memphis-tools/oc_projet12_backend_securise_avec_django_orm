@@ -274,7 +274,7 @@ class Client(Base):
     telephone = Column(String(60), nullable=True)
     company_id = Column(Integer, ForeignKey("company.id"))
     creation_date = Column(Date(), nullable=False, default=date.today())
-    last_update_date = Column(Date(), nullable=False, default=utils.get_today_date())
+    last_update_date = Column(Date(), nullable=False, default=datetime.now())
     commercial_contact = Column(Integer, ForeignKey("collaborator.id"), nullable=False)
     # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer un client si référencée par un collaborateur
     collaborator = relationship(
