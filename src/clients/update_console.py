@@ -20,8 +20,8 @@ except ModuleNotFoundError:
     from printers import printer
     from exceptions import exceptions
     from forms import forms
-    from views.update_views.crud_views import UpdateAppViews
-    from views.views import AppViews
+    from views.crud_views.update_views import UpdateAppViews
+    from views.crud_views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings, logtail_handler
     from utils import utils
