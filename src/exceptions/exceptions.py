@@ -95,5 +95,9 @@ class OnlySuportMemberCanBeAssignedToEventSupportException(Exception):
     pass
 
 
+class QueryStructureException(Exception):
+    pass
+
+
 class SuppliedDataNotMatchModel(Exception):
     pass

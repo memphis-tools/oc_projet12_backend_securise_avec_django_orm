@@ -92,6 +92,7 @@
   "ONLY_SUPPORT_SERVICE_MEMBER_CAN_BE_ASSIGNED_TO_EVENT_SUPPORT":"Seul un membre du service Support peut être assigné à un évènement",
   "PASSWORD_POLICY_TITLE":"POLITIQUE DES MOTS DE PASSE",
   "PASSWORD_UPDATED":"Mot de pase mis à jour.",
+  "QUERY_STRUCTURE_FAILURE":"Requête mal formulée. Le 'employee_role' doit être le dernier filtre de la requête.",
   "ROLE_RATTACHED_TO_COLLABORATOR":"Role rattaché à 1 ou plusieurs collaborateurs.",
   "SETTINGS_INTERNET_CONNECTION_DOWN":"Connection à internet désengagée (voir settings, 'INTERNET_CONNECTION')",
   "SETTINGS_INTERNET_CONNECTION_DOWN_NO_FILES_TO_PARSE":"Connection à internet désengagée. Pas de fichiers .csv statiques à exploiter.",
