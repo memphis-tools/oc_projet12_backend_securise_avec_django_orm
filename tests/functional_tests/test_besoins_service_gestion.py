@@ -64,7 +64,6 @@ def test_contract_manipulation(
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
     contract_custom_id = dummy_contract_data_2["contract_id"]
-
     result = ConsoleClientForCreate(db_name).add_contract(dummy_contract_data_2)
     assert isinstance(result, str)
     assert "Creation contract" in result
