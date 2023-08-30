@@ -67,7 +67,9 @@ class LocationsView:
             if len(db_model_queryset) > 0:
                 table = utils.set_a_click_table_from_data("lieu", db_model_queryset)
                 console.print(table)
-                print("Aucun autres localités")
+                printer.print_message(
+                    "info", self.app_dict.get_appli_dictionnary()["NO_MORE_LOCATION"],
+                )
             else:
                 message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
                 printer.print_message("info", message)
