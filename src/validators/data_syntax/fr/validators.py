@@ -297,6 +297,15 @@ def is_role_id_valid(role_id):
     return re.match(pattern, role_id).group()
 
 
+def is_name_valid(role):
+    """
+    Description: Controler le nom saisi (nom du role)
+    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    """
+    pattern = re.compile(r"([\w ' ]{,120})$")
+    return re.match(pattern, role).group()
+
+
 def is_status_valid(status):
     """
     Description: Controler le statut saisi.
