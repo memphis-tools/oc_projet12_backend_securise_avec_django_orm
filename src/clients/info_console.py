@@ -12,7 +12,7 @@ try:
     )
     from src.settings import settings, logtail_handler
     from src.utils import utils
-    from src.views.views import AppViews
+    from src.views.crud_views.views import AppViews
     from src.views.jwt_view import JwtView
 except ModuleNotFoundError:
     from languages import language_bridge
@@ -23,7 +23,7 @@ except ModuleNotFoundError:
     )
     from settings import settings, logtail_handler
     from utils import utils
-    from views.views import AppViews
+    from views.crud_views.views import AppViews
     from views.jwt_view import JwtView
 
 

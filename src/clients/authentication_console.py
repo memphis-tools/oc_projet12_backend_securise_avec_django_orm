@@ -11,7 +11,7 @@ try:
     from src.printers import printer
     from src.languages import language_bridge
     from src.views.authentication_view import AuthenticationView
-    from src.views.views import AppViews
+    from src.views.crud_views.views import AppViews
     from src.views.jwt_view import JwtView
     from src.settings import settings, logtail_handler
     from src.utils import utils
@@ -20,7 +20,7 @@ except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
     from views.authentication_view import AuthenticationView
-    from views.views import AppViews
+    from views.crud_views.views import AppViews
     from views.jwt_view import JwtView
     from settings import settings, logtail_handler
     from utils import utils
