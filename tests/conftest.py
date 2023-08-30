@@ -391,7 +391,7 @@ def dummy_client_partial_data(request):
 
 @pytest.fixture(scope="session", autouse=True)
 def dummy_event_partial_data_4(request):
-    event_partial_dict = {"collaborator_id": "aa123456789"}
+    event_partial_dict = {"collaborator_id": "ae123456789"}
     return event_partial_dict
 
 
