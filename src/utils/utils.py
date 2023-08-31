@@ -249,7 +249,7 @@ def make_a_user_query_as_a_list(splited_args):
 
 
 def set_a_many_collaborators_id_expression_for_event(
-    nb_clients, filtered_db_model, item_operator, id, client_ids
+    nb_clients, filtered_db_model, item_operator, client_ids
 ):
     """
     Description:
@@ -276,7 +276,7 @@ def set_a_many_collaborators_id_expression_for_event(
 
 
 def set_a_many_contracts_id_expression_for_event(
-    nb_contracts, filtered_db_model, item_operator, id, contract_ids
+    nb_contracts, filtered_db_model, item_operator, contract_ids
 ):
     """
     Description:
@@ -286,7 +286,6 @@ def set_a_many_contracts_id_expression_for_event(
     A 1 collaborateur peut correspondre plusieurs contrats.
     On permet la création d'une expression pour extraire plusieurs éléments.
     """
-    print("GO AHEAD SIR !!!!!!!!!!")
     id = contract_ids.pop(0)[0]
     # on ouvre la parenthèse de l'expression
     many_query = f"({filtered_db_model}.contract_id{item_operator}'{id}'"
@@ -304,7 +303,7 @@ def set_a_many_contracts_id_expression_for_event(
 
 
 def set_a_many_collaborators_id_expression_for_contract(
-    nb_clients, filtered_db_model, item_operator, id, client_ids
+    nb_clients, filtered_db_model, item_operator, client_ids
 ):
     """
     Description:
@@ -329,7 +328,7 @@ def set_a_many_collaborators_id_expression_for_contract(
 
 
 def set_a_many_collaborators_id_expression_for_department(
-    nb_collaborators, filtered_db_model, item_operator, id, collaborator_ids
+    nb_collaborators, filtered_db_model, item_operator, collaborator_ids
 ):
     """
     Description:
@@ -353,7 +352,7 @@ def set_a_many_collaborators_id_expression_for_department(
 
 
 def set_a_many_events_id_expression_for_client(
-    nb_events, filtered_db_model, item_operator, id, event_ids
+    nb_events, filtered_db_model, item_operator, event_ids
 ):
     """
     Description:
@@ -377,7 +376,7 @@ def set_a_many_events_id_expression_for_client(
 
 
 def set_a_many_collaborators_id_expression_for_role(
-    nb_collaborators, filtered_db_model, item_operator, id, collaborator_ids
+    nb_collaborators, filtered_db_model, item_operator, collaborator_ids
 ):
     """
     Description:
@@ -401,7 +400,7 @@ def set_a_many_collaborators_id_expression_for_role(
 
 
 def set_a_many_companies_id_expression_for_location(
-    nb_companies, filtered_db_model, item_operator, id, company_ids
+    nb_companies, filtered_db_model, item_operator, company_ids
 ):
     """
     Description:
@@ -426,7 +425,7 @@ def set_a_many_companies_id_expression_for_location(
 
 
 def set_a_many_events_id_expression_for_location(
-    nb_events, filtered_db_model, item_operator, id, events_ids
+    nb_events, filtered_db_model, item_operator, events_ids
 ):
     """
     Description:
@@ -451,7 +450,7 @@ def set_a_many_events_id_expression_for_location(
 
 
 def set_a_many_clients_id_expression_for_company(
-    nb_clients, filtered_db_model, item_operator, id, client_ids
+    nb_clients, filtered_db_model, item_operator, client_ids
 ):
     """
     Description:
@@ -710,7 +709,6 @@ def rebuild_filter_query(
                                     nb_clients,
                                     filtered_db_model,
                                     item_operator,
-                                    id,
                                     client_ids,
                                 )
                             )
@@ -740,7 +738,6 @@ def rebuild_filter_query(
                                 nb_contracts,
                                 filtered_db_model,
                                 item_operator,
-                                id,
                                 contract_ids,
                             )
                         )
@@ -777,7 +774,6 @@ def rebuild_filter_query(
                                 nb_clients,
                                 filtered_db_model,
                                 item_operator,
-                                id,
                                 client_ids,
                             )
                         )
@@ -815,7 +811,6 @@ def rebuild_filter_query(
                                 nb_collaborators,
                                 filtered_db_model,
                                 item_operator,
-                                id,
                                 collaborator_ids,
                             )
                         )
@@ -844,7 +839,6 @@ def rebuild_filter_query(
                                 nb_collaborators,
                                 filtered_db_model,
                                 item_operator,
-                                id,
                                 collaborator_ids,
                             )
                         )
@@ -881,7 +875,6 @@ def rebuild_filter_query(
                                     nb_companies,
                                     filtered_db_model,
                                     item_operator,
-                                    id,
                                     company_ids,
                                 )
                             )
@@ -901,7 +894,6 @@ def rebuild_filter_query(
                                     nb_events,
                                     filtered_db_model,
                                     item_operator,
-                                    id,
                                     event_ids,
                                 )
                             )
