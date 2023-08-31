@@ -1,36 +1,44 @@
-from src.clients import console
+"""
+Description:
+Test du client en mode console de l'application.
+"""
+
+try:
+    from src.commands import database_read_commands
+except ModuleNotFoundError:
+    from commands import database_read_commands
 
 
-def test_get_clients(get_runner):
-    result = get_runner.invoke(console.get_clients)
+def test_get_clients(get_runner, set_a_test_env):
+    result = get_runner.invoke(database_read_commands.get_clients)
     assert result.exit_code == 0
 
 
-def test_get_collaborators(get_runner):
-    result = get_runner.invoke(console.get_collaborators)
+def test_get_collaborators(get_runner, set_a_test_env):
+    result = get_runner.invoke(database_read_commands.get_collaborators)
     assert result.exit_code == 0
 
 
-def test_get_contracts(get_runner):
-    result = get_runner.invoke(console.get_contracts)
+def test_get_contracts(get_runner, set_a_test_env):
+    result = get_runner.invoke(database_read_commands.get_contracts)
     assert result.exit_code == 0
 
 
-def test_get_departments(get_runner):
-    result = get_runner.invoke(console.get_departments)
+def test_get_departments(get_runner, set_a_test_env):
+    result = get_runner.invoke(database_read_commands.get_departments)
     assert result.exit_code == 0
 
 
-def test_get_events(get_runner):
-    result = get_runner.invoke(console.get_events)
+def test_get_events(get_runner, set_a_test_env):
+    result = get_runner.invoke(database_read_commands.get_events)
     assert result.exit_code == 0
 
 
-def test_get_locations(get_runner):
-    result = get_runner.invoke(console.get_locations)
+def test_get_locations(get_runner, set_a_test_env):
+    result = get_runner.invoke(database_read_commands.get_locations)
     assert result.exit_code == 0
 
 
-def test_get_roles(get_runner):
-    result = get_runner.invoke(console.get_roles)
+def test_get_roles(get_runner, set_a_test_env):
+    result = get_runner.invoke(database_read_commands.get_roles)
     assert result.exit_code == 0

@@ -5,11 +5,16 @@ description = "Projet 12 du parcours Développeur Python de OpenClassRoom."
 authors = ["memphis-tools <rn@github.com>"]
 readme = "README.md"
 packages = [
+  {include = "authenticators", from = "src"},
   {include = "clients", from = "src"},
+  {include = "commands", from = "src"},
   {include = "controllers", from = "src"},
+  {include = "exceptions", from = "src"},
+  {include = "forms", from = "src"},
   {include = "models", from = "src"},
   {include = "settings", from = "src"},
   {include = "utils", from = "src"},
+  {include = "validators", from = "src"},
   {include = "views", from = "src"}
 ]
 
@@ -28,16 +33,64 @@ flake8-html = "^0.4.3"
 pyjwt = {extras = ["crypto"], version = "^2.7.0"}
 pytest-cov = "^4.1.0"
 python-dotenv = "^1.0.0"
+pytest-mock = "^3.11.1"
+maskpass = "^0.3.7"
+werkzeug = "^2.3.6"
+pyfiglet = "^0.8.post1"
+termcolor = "^2.3.0"
+jinja2 = "^3.1.2"
+unidecode = "^1.3.6"
+logtail-python = "^0.2.6"
 
 [tool.poetry.scripts]
-launch_application = "clients.console:launch_application"
-get_clients = "clients.console:get_clients"
-get_collaborators = "clients.console:get_collaborators"
-get_contracts = "clients.console:get_contracts"
-get_departments = "clients.console:get_departments"
-get_events = "clients.console:get_events"
-get_locations = "clients.console:get_locations"
-get_roles = "clients.console:get_roles"
+# commandes pour gérer l'authentification
+oc12_init_application = "commands.init_commands:init_application"
+oc12_token = "commands.authentication_commands:get_token"
+oc12_logout = "commands.authentication_commands:logout"
+# commandes pour accéder en lecture aux données
+oc12_clients = "commands.database_read_commands:get_clients"
+oc12_collaborators = "commands.database_read_commands:get_collaborators"
+oc12_companies = "commands.database_read_commands:get_companies"
+oc12_contracts = "commands.database_read_commands:get_contracts"
+oc12_departments = "commands.database_read_commands:get_departments"
+oc12_events = "commands.database_read_commands:get_events"
+oc12_locations = "commands.database_read_commands:get_locations"
+oc12_roles = "commands.database_read_commands:get_roles"
+# commande pour obtenir de l'aide
+oc12_help = "commands.helps:help"
+# commande pour obtenir de l'aide sur la politique de mot de passe
+oc12_info_collaborator_password = "commands.infos_update_password_command:get_password_policy"
+# commandes pour obtenir des infos sur les formats ou données attendues
+oc12_info_metiers = "commands.infos_data_commands:get_metiers"
+oc12_info_types_voies = "commands.infos_data_commands:get_types_voies"
+# commandes pour ajouter des données
+oc12_add_client = "commands.database_create_commands:add_client"
+oc12_add_collaborator = "commands.database_create_commands:add_collaborator"
+oc12_add_company = "commands.database_create_commands:add_company"
+oc12_add_contract = "commands.database_create_commands:add_contract"
+oc12_add_department = "commands.database_create_commands:add_department"
+oc12_add_event = "commands.database_create_commands:add_event"
+oc12_add_location = "commands.database_create_commands:add_location"
+oc12_add_role = "commands.database_create_commands:add_role"
+# commandes pour supprimer des données
+oc12_delete_client = "commands.database_delete_commands:delete_client"
+oc12_delete_collaborator = "commands.database_delete_commands:delete_collaborator"
+oc12_delete_company = "commands.database_delete_commands:delete_company"
+oc12_delete_contract = "commands.database_delete_commands:delete_contract"
+oc12_delete_department = "commands.database_delete_commands:delete_department"
+oc12_delete_event = "commands.database_delete_commands:delete_event"
+oc12_delete_location = "commands.database_delete_commands:delete_location"
+oc12_delete_role = "commands.database_delete_commands:delete_role"
+# commandes pour mettre à jour des données
+oc12_update_client = "commands.database_update_commands:update_client"
+oc12_update_collaborator = "commands.database_update_commands:update_collaborator"
+oc12_update_collaborator_password = "commands.database_update_commands:update_collaborator_password"
+oc12_update_company = "commands.database_update_commands:update_company"
+oc12_update_contract = "commands.database_update_commands:update_contract"
+oc12_update_department = "commands.database_update_commands:update_department"
+oc12_update_event = "commands.database_update_commands:update_event"
+oc12_update_location = "commands.database_update_commands:update_location"
+oc12_update_role = "commands.database_update_commands:update_role"
 
 [build-system]
 requires = ["poetry-core"]
