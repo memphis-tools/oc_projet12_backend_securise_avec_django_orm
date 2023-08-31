@@ -193,7 +193,7 @@ event_attributes_dict_1 = {
     "notes": "Bla bla bla bla bla bla dummy bla. As expected anything bu a bla.",
     "event_start_date": "2023-07-15 20:00:00",
     "event_end_date": "2023-07-15 22:00:00",
-    "client_id": "1",
+    "client_id": "5",
     "contract_id": "6",
     "location_id": "2",
     "collaborator_id": "7",
@@ -481,13 +481,9 @@ def test_add_event_view_with_commercial_profile_when_assigned_contract(
     """
     Vérifier si un membre du service commercial peut ajouter un évènement.
     """
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForCreate(db_name).add_event(event_attributes_dict_1)
-        assert isinstance(result, str)
-
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    result = ConsoleClientForCreate(db_name).add_event(event_attributes_dict_1)
+    assert isinstance(result, str)
 
 
 def test_add_event_view_with_commercial_profile_when_unassigned_contract_raises_exception(
