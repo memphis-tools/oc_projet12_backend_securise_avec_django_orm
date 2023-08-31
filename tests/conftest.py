@@ -380,15 +380,6 @@ def dummy_event_partial_data_3(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def dummy_event_partial_data_5(request):
-    event_partial_dict = {
-        "event_id": "geg2022",
-        "collaborator_id": "aa123456789",
-    }
-    return event_partial_dict
-
-
-@pytest.fixture(scope="session", autouse=True)
 def dummy_client_partial_data(request):
     event_partial_dict = {
         "client_id": "bduck",
