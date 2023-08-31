@@ -95,6 +95,10 @@ class OnlySuportMemberCanBeAssignedToEventSupportException(Exception):
     pass
 
 
+class QueryFailureException(Exception):
+    pass
+
+
 class QueryStructureException(Exception):
     pass
 

@@ -296,6 +296,23 @@ def test_update_event_view_with_gestion_profile(
     assert "Update" in result
 
 
+def test_update_event_view_with_gestion_profile_when_collaborator_assigned_not_from_support_team(
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    dummy_event_partial_data_5,
+):
+    """
+    Description:
+    Un membre du service support ne peut modifier un évènement que s'il est le collaborateur assigné.
+    """
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    with pytest.raises(exceptions.OnlySuportMemberCanBeAssignedToEventSupportException):
+        result = ConsoleClientForUpdate(db_name=db_name).update_event(
+            dummy_event_partial_data_5
+        )
+
+
 def test_update_event_view_with_support_profile_when_collaborator_is_assigned(
     get_runner,
     set_a_test_env,
