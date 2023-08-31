@@ -349,7 +349,7 @@ class DatabaseInitializerController:
             cursor.execute(sql)
             sql = f"""GRANT USAGE ON SEQUENCE {table}_id_seq TO oc12_gestion"""
             cursor.execute(sql)
-        sql = """GRANT DELETE ON client TO oc12_gestion"""
+        sql = """GRANT DELETE, UPDATE ON client TO oc12_gestion"""
         cursor.execute(sql)
         sql = """GRANT USAGE ON SEQUENCE client_id_seq TO oc12_gestion"""
         cursor.execute(sql)
