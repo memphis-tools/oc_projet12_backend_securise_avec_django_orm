@@ -317,7 +317,6 @@ class DatabaseInitializerController:
 
         oc12_commercial_allowed_tables = [
             "company",
-            "event",
             "location",
         ]
 
@@ -331,9 +330,11 @@ class DatabaseInitializerController:
         cursor.execute(sql)
         sql = """GRANT USAGE ON SEQUENCE client_id_seq TO oc12_commercial"""
         cursor.execute(sql)
-        sql = """GRANT UPDATE ON contract TO oc12_commercial"""
+        sql = """GRANT INSERT ON event TO oc12_commercial"""
         cursor.execute(sql)
-        sql = """GRANT UPDATE ON event TO oc12_commercial"""
+        sql = """GRANT USAGE ON SEQUENCE event_id_seq TO oc12_commercial"""
+        cursor.execute(sql)
+        sql = """GRANT UPDATE ON contract TO oc12_commercial"""
         cursor.execute(sql)
 
         oc12_gestion_allowed_tables = [
