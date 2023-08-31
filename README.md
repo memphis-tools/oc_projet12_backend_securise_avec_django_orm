@@ -40,17 +40,36 @@
     Application initialization will create 3 databases named: projet12, dev_projet12. et test_projet12 (prod, dev and test environment).
     In each one you will have the 3 companies departments expected in specifications: oc12_commercial, oc12_gestion et oc12_support.
     Also 7 collaborators will be created: 2 commercial, 2 gestion, and 3 gestion members.
+    A collaborator belongs to 1 department.
+
     Accounts: a123456789, ab123456789, ..., ag123456789.
     Default password is specify in settings, you can change it. By default the user password is: @pplepie94.
+    Each user has only 1 account ("role", according to Postgresql terminology) to access the 3 databases.
+    So a password update would concern any environment.
 
     The Dev and Test databases will be populated with more datas (clients, companies, contracts, events).
     The Test database is dedicated to be used by pytest.
 
 ---
 
+### About authentication and authorizations
+    As explained and illustrated below, users will have to obtain a JWT Token in order to use application.
+    To obtain the token or to update the password, use will use his credential.
+
+    The token will specify the collaborator's service: it is the service which owns the grant on database.
+    Users will inheritate all of his service's authorizations.
+
+    One exception concerns the "Gestion service" whose members must be able to create, delete, update an user.
+    In our Postgresql context, we have to set the specific grant "Create Role" to any member of this service.
+    This grant won't be inheritated.
+   [Postgresql doc](https://www.postgresql.org/docs/current/sql-createrole.html)
+
+---
+
 ### Database administration
     Optional. As a graphical tool to administrate database, pgadmin4 can be used for Postgresql.
-    Illustration in the wiki page [OC12 WIKI](https://github.com/memphis-tools/oc_projet12_backend_securise_avec_django_orm/wiki)
+    Illustration in the wiki page:
+   [OC12 WIKI](https://github.com/memphis-tools/oc_projet12_backend_securise_avec_django_orm/wiki)
 
 ---
 
