@@ -28,7 +28,7 @@ def help():
     display_banner()
     printer.print_message("info", APP_DICT.get_appli_dictionnary()["HELP_MENU_TITLE"])
     print(
-    """
+        """
 [bold cyan]Commandes (usage aux seuls utilisateurs authentifiés):[/bold cyan]
 [bright_white]oc12_init_application[/bright_white]: initialiser l'application
 [bright_white]oc12_update_collaborator_password[/bright_white]: mise à jour mot de passe

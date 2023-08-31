@@ -5,6 +5,7 @@ test des controleurs de syntaxes des attributs, utilisés par les validateurs
 import random
 import string
 import pytest
+
 try:
     from src.validators.data_syntax.fr import validators
     from src.exceptions import exceptions
