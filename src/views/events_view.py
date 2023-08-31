@@ -1,15 +1,18 @@
 """
+Description:
 vue évènements
 """
 from rich.console import Console
 
 try:
     from src.languages import language_bridge
+    from src.exceptions import exceptions
     from src.printers import printer
     from src.utils import utils
     from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from languages import language_bridge
+    from exceptions import exceptions
     from printers import printer
     from utils import utils
     from settings import settings, logtail_handler
@@ -56,6 +59,7 @@ class EventsView:
                     printer.print_message("info", message)
                     if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                         LOGGER.info(message)
+                    raise exceptions.CustomIdMatchNothingException()
             except TypeError:
                 message = self.app_dict.get_appli_dictionnary()[
                     "DATABASE_QUERY_NO_MATCHES"
@@ -63,6 +67,7 @@ class EventsView:
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                     LOGGER.error(message)
+                raise exceptions.CustomIdMatchNothingException()
             except Exception:
                 message = self.app_dict.get_appli_dictionnary()[
                     "DATABASE_QUERY_FAILURE"
@@ -70,6 +75,7 @@ class EventsView:
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                     LOGGER.error(message)
+                raise exceptions.QueryFailureException()
         else:
             db_model_queryset = self.db_controller.get_events(self.session)
             if len(db_model_queryset) > 0:
@@ -85,6 +91,7 @@ class EventsView:
                 printer.print_message("info", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                     LOGGER.info(message)
+                raise exceptions.CustomIdMatchNothingException()
 
         return self.db_controller.get_events(self.session)
 

@@ -8,11 +8,13 @@ try:
     from src.clients.read_console import ConsoleClientForRead
     from src.commands import database_read_commands
     from src.settings import settings
+    from src.exceptions import exceptions
     from src.views.crud_views.views import AppViews
 except ModuleNotFoundError:
     from clients.read_console import ConsoleClientForRead
     from commands import database_read_commands
     from settings import settings
+    from exceptions import exceptions
     from views.crud_views.views import AppViews
 
 
@@ -97,8 +99,8 @@ def test_get_role_with_invalid_attributes_raise_exception(
     Vérifier le filtre d'un role.
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    with pytest.raises(sqlalchemy.exc.InternalError):
-        ConsoleClientForRead(db_name).get_roles(('role_id>man et some_id=something',))
+    with pytest.raises(exceptions.QueryFailureException):
+        ConsoleClientForRead(db_name).get_roles(('role_id=man et some_id=something',))
 
 
 def test_get_department(
@@ -125,7 +127,7 @@ def test_get_department_with_invalid_attributes_raise_exception(
     Vérifier le filtre d'un service.
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    with pytest.raises(sqlalchemy.exc.InternalError):
+    with pytest.raises(exceptions.QueryFailureException):
         ConsoleClientForRead(db_name).get_roles(('department_id=ccial et some_id=something',))
 
 
@@ -153,7 +155,7 @@ def test_get_location_with_invalid_attributes_raise_exception(
     Vérifier le filtre d'une localité.
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    with pytest.raises(sqlalchemy.exc.InternalError):
+    with pytest.raises(exceptions.QueryFailureException):
         ConsoleClientForRead(db_name).get_roles(('location_id=p22240 et some_id=something',))
 
 
@@ -181,7 +183,7 @@ def test_get_company_with_invalid_attributes_raise_exception(
     Vérifier le filtre d'une entreprise.
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    with pytest.raises(sqlalchemy.exc.InternalError):
+    with pytest.raises(exceptions.QueryFailureException):
         ConsoleClientForRead(db_name).get_roles(('company_id=CSLLC12345 et some_id=something',))
 
 
@@ -209,7 +211,7 @@ def test_get_contract_with_invalid_attributes_raise_exception(
     Vérifier le filtre d'une entreprise.
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    with pytest.raises(sqlalchemy.exc.InternalError):
+    with pytest.raises(exceptions.QueryFailureException):
         ConsoleClientForRead(db_name).get_roles(('contract_id=kc555 et some_id=something',))
 
 
@@ -237,5 +239,5 @@ def test_get_event_with_invalid_attributes_raise_exception(
     Vérifier le filtre d'un évènement.
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    with pytest.raises(sqlalchemy.exc.InternalError):
+    with pytest.raises(exceptions.CustomIdMatchNothingException):
         ConsoleClientForRead(db_name).get_events(('attendees>50 et some_id=something',))
