@@ -1,6 +1,6 @@
 import requests
 import json
-import psycopg
+
 try:
     from src.settings import settings
     from src.external_datas.make_external_api_call_for_region_based_on_int_code import (
@@ -27,7 +27,7 @@ def get_population_from_insee_open_api(code_postal):
     """
     digit_code_postal = int(code_postal)
 
-    fields = 'population&format=json&geometry=centre'
+    fields = "population&format=json&geometry=centre"
     query_string = f"codePostal={digit_code_postal}&fields={fields}"
     town_name = ""
     region_name = ""
@@ -53,7 +53,7 @@ def get_town_name_region_name_and_population_from_insee_open_api(code_postal):
     """
     digit_code_postal = int(code_postal)
 
-    fields = 'nom,code,codesPostaux,siren,codeEpci,codeDepartement,codeRegion,population&format=json&geometry=centre'
+    fields = "nom,code,codesPostaux,siren,codeEpci,codeDepartement,codeRegion,population&format=json&geometry=centre"
     query_string = f"codePostal={digit_code_postal}&fields={fields}"
     town_name = ""
     region_name = ""

@@ -3,6 +3,7 @@ Description:
 Une fonction pour peupler la base de données avec des données de DEV
 """
 from datetime import datetime
+
 try:
     from src.settings import settings
     from src.utils import utils

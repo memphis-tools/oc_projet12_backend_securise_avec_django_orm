@@ -3,24 +3,19 @@ Description:
 Toutes les commandes qui permettent les mises à jour
 """
 import click
-from rich import print
 from termcolor import colored, cprint
 
 try:
     from src.printers import printer
     from src.languages import language_bridge
-    from src.clients.read_console import ConsoleClientForRead
     from src.clients.update_console import ConsoleClientForUpdate
     from src.exceptions import exceptions
-    from src.validators.data_syntax.fr import validators
     from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
-    from clients.read_console import ConsoleClientForRead
     from clients.update_console import ConsoleClientForUpdate
     from exceptions import exceptions
-    from validators.data_syntax.fr import validators
     from settings import settings, logtail_handler
 
 
@@ -36,13 +31,13 @@ def display_option(options):
 def check_if_partial_dict_valid(partial_dict):
     for key, value in partial_dict.items():
         try:
-            if value != None:
+            if value is not None:
                 eval(f"validators.is_{key}_valid")(value)
         except Exception:
             message = APP_DICT.get_appli_dictionnary()["VALUE_UNEXPECTED"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             break
     return True
 
@@ -85,7 +80,7 @@ def update_client(client_id, args):
                     .app_view.get_companies_view()
                     .get_company(v)
                 )
-                if not expected_company or expected_company == None:
+                if not expected_company or expected_company is None:
                     raise exceptions.CustomIdMatchNothingException()
                 expected_company_id = expected_company.get_dict()["id"]
                 client_dict[k] = str(expected_company_id)
@@ -98,39 +93,41 @@ def update_client(client_id, args):
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -168,39 +165,41 @@ def update_collaborator(registration_number, args):
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -219,39 +218,41 @@ def update_collaborator_password():
             )
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -299,39 +300,41 @@ def update_company(company_id, args):
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -364,27 +367,23 @@ def update_contract(contract_id, args):
         for arg in args:
             try:
                 k, v = arg.split("=")
-            except:
+            except Exception:
                 # exception avec le seul 'et' par exemple
                 pass
 
             if k == "client_id":
-                expected_client = (
-                    console.app_view.get_clients_view().get_client(v)
-                )
+                expected_client = console.app_view.get_clients_view().get_client(v)
                 expected_client_id = expected_client.get_dict()["id"]
                 contract_dict[k] = str(expected_client_id)
             elif k == "collaborator_id":
                 expected_collaborator = (
-                    console
-                    .app_view.get_collaborators_view()
-                    .get_collaborator(v)
+                    console.app_view.get_collaborators_view().get_collaborator(v)
                 )
                 expected_collaborator_id = expected_collaborator.get_dict()["id"]
                 contract_dict[k] = str(expected_collaborator_id)
             elif k == "remain_amount_to_pay":
-                contract = (
-                    console.app_view.get_contracts_view().get_contract(contract_id)
+                contract = console.app_view.get_contracts_view().get_contract(
+                    contract_id
                 )
                 contract_dict["full_amount_to_pay"] = contract.full_amount_to_pay
             else:
@@ -396,39 +395,41 @@ def update_contract(contract_id, args):
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -464,39 +465,41 @@ def update_department(department_id, args):
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -533,40 +536,32 @@ def update_event(event_id, args):
         for arg in args:
             try:
                 k, v = arg.split("=")
-            except:
+            except Exception:
                 # exception avec le seul 'et' par exemple
                 pass
 
             if k == "client_id":
-                expected_client = (
-                    console.app_view.get_clients_view().get_client(v)
-                )
+                expected_client = console.app_view.get_clients_view().get_client(v)
                 expected_client_id = expected_client.get_dict()["id"]
                 event_dict[k] = str(expected_client_id)
             elif k == "collaborator_id":
-                if v == 'None':
+                if v == "None":
                     event_dict[k] = None
                 else:
                     expected_collaborator = (
-                        console
-                        .app_view.get_collaborators_view()
-                        .get_collaborator(v)
+                        console.app_view.get_collaborators_view().get_collaborator(v)
                     )
                     expected_collaborator_id = expected_collaborator.get_dict()["id"]
                     event_dict[k] = str(expected_collaborator_id)
             elif k == "contract_id":
-                expected_contract = (
-                    console
-                    .app_view.get_contracts_view()
-                    .get_contract(v)
+                expected_contract = console.app_view.get_contracts_view().get_contract(
+                    v
                 )
                 expected_contract_id = expected_contract.get_dict()["id"]
                 event_dict[k] = str(expected_contract_id)
             elif k == "location_id":
-                expected_location = (
-                    console
-                    .app_view.get_locations_view()
-                    .get_location(v)
+                expected_location = console.app_view.get_locations_view().get_location(
+                    v
                 )
                 expected_location_id = expected_location.get_dict()["id"]
                 event_dict[k] = str(expected_location_id)
@@ -580,44 +575,48 @@ def update_event(event_id, args):
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.OnlySuportMemberCanBeAssignedToEventSupportException:
-        message = APP_DICT.get_appli_dictionnary()["ONLY_SUPPORT_SERVICE_MEMBER_CAN_BE_ASSIGNED_TO_EVENT_SUPPORT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "ONLY_SUPPORT_SERVICE_MEMBER_CAN_BE_ASSIGNED_TO_EVENT_SUPPORT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -651,7 +650,7 @@ def update_location(location_id, args):
             try:
                 k, v = arg.split("=")
                 location_dict[k] = v
-            except:
+            except Exception:
                 # exception avec le seul 'et' par exemple
                 pass
         if len(location_dict) == 1:
@@ -661,39 +660,41 @@ def update_location(location_id, args):
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -722,7 +723,7 @@ def update_role(role_id, args):
             try:
                 k, v = arg.split("=")
                 role_dict[k] = v
-            except:
+            except Exception:
                 # exception avec le seul 'et' par exemple
                 pass
         if len(role_dict) == 1:
@@ -732,36 +733,38 @@ def update_role(role_id, args):
         click.secho(console_client_return, bg="blue", fg="white")
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
         message = APP_DICT.get_appli_dictionnary()["FOREIGNKEY_CLIENT_CAN_NOT_BE_DROP"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except NameError:
         message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CommercialCollaboratorIsNotAssignedToClient:
-        message = APP_DICT.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"]
-        printer.print_message("error",message)
+        message = APP_DICT.get_appli_dictionnary()[
+            "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CLIENT"
+        ]
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except exceptions.CustomIdMatchNothingException:
         message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)

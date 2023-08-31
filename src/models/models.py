@@ -17,10 +17,8 @@ from datetime import date, datetime
 
 try:
     from src.settings import settings
-    from src.utils import utils
 except ModuleNotFoundError:
     from settings import settings
-    from utils import utils
 
 
 Base = declarative_base()
@@ -338,7 +336,6 @@ class Client(Base):
         ]
 
 
-
 class Contract(Base):
     """
     Description:
@@ -363,7 +360,9 @@ class Contract(Base):
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
         descriptors += f",(contract_id|{self.contract_id})"
         descriptors += f",(client_id|{self.client.client_id})"
-        descriptors += f",(collaborator_id|{self.client.collaborator.registration_number})"
+        descriptors += (
+            f",(collaborator_id|{self.client.collaborator.registration_number})"
+        )
         descriptors += f",(status|{self.status})"
         descriptors += f",(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
         descriptors += f",(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
@@ -412,7 +411,9 @@ class Event(Base):
     contract = relationship("Contract", back_populates="event", passive_deletes="all")
     client_id = Column(Integer, ForeignKey("client.id"))
     client = relationship("Client", back_populates="event", passive_deletes="all")
-    collaborator_id = Column(Integer, ForeignKey("collaborator.id"), nullable=True, default=None)
+    collaborator_id = Column(
+        Integer, ForeignKey("collaborator.id"), nullable=True, default=None
+    )
     collaborator = relationship("Collaborator", back_populates="event")
     creation_date = Column(DateTime(), nullable=False, default=datetime.now())
     event_start_date = Column(DateTime(timezone=False), default=datetime.now())

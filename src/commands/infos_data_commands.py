@@ -3,16 +3,17 @@ Description:
 Toutes les commandes pour obtenir des infos sur les formats ou données attendues.
 """
 import click
+
 try:
     from src.printers import printer
     from src.languages import language_bridge
     from src.clients.info_console import InformationConsoleClient
-    from src.settings import logtail_handler
+    from src.settings import logtail_handler, settings
 except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
     from clients.info_console import InformationConsoleClient
-    from settings import logtail_handler
+    from settings import logtail_handler, settings
 
 
 APP_DICT = language_bridge.LanguageBridge()
@@ -30,14 +31,14 @@ def get_metiers():
         console_client.display_info_data_medium_window_for_metiers()
     except FileNotFoundError as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_FILE"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -51,11 +52,11 @@ def get_types_voies():
         console_client.display_info_data_medium_window_for_complement_adresse()
     except FileNotFoundError as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_FILE"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)

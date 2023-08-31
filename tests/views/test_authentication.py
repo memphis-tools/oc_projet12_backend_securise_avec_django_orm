@@ -5,6 +5,7 @@ Test de la vue pour l'authentification.
 import os
 import pytest
 import sqlalchemy
+
 try:
     from src.views.crud_views.views import AppViews
     from src.views.authentication_view import AuthenticationView

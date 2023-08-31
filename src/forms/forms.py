@@ -19,7 +19,6 @@ try:
     )
     from src.printers import printer
     from src.settings import settings, logtail_handler
-    from src.utils import utils
     from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from controllers import infos_data_controller
@@ -30,7 +29,6 @@ except ModuleNotFoundError:
     )
     from printers import printer
     from settings import settings, logtail_handler
-    from utils import utils
     from validators.data_syntax.fr import validators
 
 
@@ -64,7 +62,11 @@ def search_and_submit_a_town_name(code_postal):
     A partir du code postal saisi on propose de retenir le nom de ville trouvé.
     Si ville trouvée alors on connait le nom et on peut retenir le pays comme étant la France (par exemple).
     """
-    town_name, region_name, population = get_town_name_region_name_and_population_from_insee_open_api(code_postal)
+    (
+        town_name,
+        region_name,
+        population,
+    ) = get_town_name_region_name_and_population_from_insee_open_api(code_postal)
     return (town_name, region_name, population)
 
 
@@ -80,12 +82,16 @@ def display_any_error_message(key):
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
 
-        message = APP_DICT.get_appli_dictionnary()["FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD"]
+        message = APP_DICT.get_appli_dictionnary()[
+            "FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD"
+        ]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
 
-        message = APP_DICT.get_appli_dictionnary()["FORM_GET_MORE_INFO_ABOUT_VALID_VALUES"]
+        message = APP_DICT.get_appli_dictionnary()[
+            "FORM_GET_MORE_INFO_ABOUT_VALID_VALUES"
+        ]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
@@ -95,7 +101,9 @@ def display_any_error_message(key):
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
 
-        message = APP_DICT.get_appli_dictionnary()["FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD"]
+        message = APP_DICT.get_appli_dictionnary()[
+            "FORM_GET_MORE_INFO_ABOUT_A_NULLABLE_FIELD"
+        ]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)

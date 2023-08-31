@@ -6,6 +6,7 @@ import sys
 import maskpass
 from rich.prompt import Prompt
 import logtail
+
 try:
     from src.exceptions import exceptions
     from src.printers import printer
@@ -55,15 +56,15 @@ class AuthenticationConsoleClient:
             return self.jwt_view.get_token(registration_number)
         except exceptions.AuthenticationCredentialsFailed:
             message = self.app_dict.get_appli_dictionnary()["INVALID_CREDENTIALS_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(user={ 'registration_number': registration_number }):
+                with logtail.context(user={"registration_number": registration_number}):
                     LOGGER.error(message)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(user={ 'registration_number': registration_number }):
+                with logtail.context(user={"registration_number": registration_number}):
                     LOGGER.error(message)
 
     # @utils.authentication_permission_decorator

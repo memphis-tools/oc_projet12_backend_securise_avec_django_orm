@@ -19,7 +19,9 @@ except ModuleNotFoundError:
     from settings import settings
 
 
-def test_get_token_with_unvalid_credentials(set_a_test_env, db_name=f"{settings.TEST_DATABASE_NAME}"):
+def test_get_token_with_unvalid_credentials(
+    set_a_test_env, db_name=f"{settings.TEST_DATABASE_NAME}"
+):
     """
     Description:
     Pour obtenir un token l'utilisateur doit fournir un "registration_number" valide.
@@ -84,7 +86,9 @@ def test_random_jwt_token_against_application_for_invalid_signature_error(
         revocation = jwt_controller.does_a_valid_token_exist()
 
 
-def test_check_token_expiration_when_time_elapsed_valid(get_runner, set_a_test_env, mocker):
+def test_check_token_expiration_when_time_elapsed_valid(
+    get_runner, set_a_test_env, mocker
+):
     """
     Description:
     Un token doit être révoqué après un délai spécifié dans le fichier settings.py.

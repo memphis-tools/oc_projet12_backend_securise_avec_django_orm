@@ -6,10 +6,8 @@ On fournit une vue dédiée à s'interfacer entre le client et controleur suivan
 """
 try:
     from src.controllers.csv_file_read_controller import CsvFilesInitController
-    from src.settings import settings
 except ModuleNotFoundError:
     from controllers.csv_file_read_controller import CsvFilesInitController
-    from settings import settings
 
 
 class InitAppViews:

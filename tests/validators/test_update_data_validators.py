@@ -1,8 +1,9 @@
 """
+Description:
 test des validateurs qui controlent les mises à jour de données
 """
-import os
 import pytest
+
 try:
     from src.validators import update_data_validators
 except ModuleNotFoundError:
@@ -19,7 +20,9 @@ def test_new_collaborator_password_is_valid_with_valid_new_password(set_a_test_e
 
 
 @pytest.mark.parametrize("new_password", ("123", "azerty", "azerty123"))
-def test_new_collaborator_password_is_valid_with_unvalid_new_password(set_a_test_env, new_password):
+def test_new_collaborator_password_is_valid_with_unvalid_new_password(
+    set_a_test_env, new_password
+):
     """
     Description:
     Tester la politique de mot de passe avec un mot de passe invalide.

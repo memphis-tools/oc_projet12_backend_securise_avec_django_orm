@@ -7,6 +7,7 @@ import csv
 import requests
 from time import sleep
 from rich.progress import Progress
+
 try:
     from src.settings import settings
 except ModuleNotFoundError:
@@ -28,22 +29,26 @@ def generate_companies_file():
 
     with Progress() as progress:
         nb_companies = api_max_page * api_max_per_page
-        task = progress.add_task("[white]External_API Request Companies data", total=nb_companies)
+        task = progress.add_task(
+            "[white]External_API Request Companies data", total=nb_companies
+        )
         while not progress.finished:
             for page_number in range(api_max_page):
                 progress.update(task, advance=1)
-                url = f"{api_url}?departement={api_departements_string_list}&page={page_number+1}&per_page={api_max_per_page}"
+                more_params = f"page={page_number+1}&per_page={api_max_per_page}"
+                url = f"{api_url}?departement={api_departements_string_list}&{more_params}"
                 headers = {"Content-Type": "application/json; charset=utf-8"}
                 response = requests.get(url, headers=headers)
                 with open(f"{EXPORT_FILE_PATH}", "a+", newline="") as csvfile:
-                    spamwriter = csv.writer(csvfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
+                    spamwriter = csv.writer(
+                        csvfile, delimiter=",", quoting=csv.QUOTE_MINIMAL
+                    )
                     for company in response.json()["results"]:
                         company["pays"] = "France"
                         adresse = ""
                         try:
-                            adresse = (
-                                company["siege"]["numero_voie"] + " " + company["siege"]["libelle_voie"]
-                            )
+                            numero = company["siege"]["numero_voie"]
+                            adresse = numero + " " + company["siege"]["libelle_voie"]
                         except Exception:
                             adresse = company["siege"]["libelle_voie"]
                         # noter la correspondance avec les headers du csv, indiqués en 'settings.COMPANIES_CSV_HEADERS'

@@ -4,7 +4,6 @@ Client en mode console, dédié aux mises à jour (ajout, modification, suppress
 """
 import sys
 from datetime import datetime
-from rich import print
 import logtail
 
 try:
@@ -83,7 +82,7 @@ class ConsoleClientForCreate:
             return client_lookup.id
         except AttributeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             sys.exit(0)
@@ -114,7 +113,10 @@ class ConsoleClientForCreate:
             return contract_lookup.id
         except AttributeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error", message,)
+            printer.print_message(
+                "error",
+                message,
+            )
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             return False
@@ -161,7 +163,10 @@ class ConsoleClientForCreate:
             return company_lookup.id
         except AttributeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message,)
+            printer.print_message(
+                "error",
+                message,
+            )
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             return False
@@ -192,7 +197,7 @@ class ConsoleClientForCreate:
             return department_lookup.id
         except AttributeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             return False
@@ -221,7 +226,7 @@ class ConsoleClientForCreate:
             return event_lookup.id
         except AttributeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             return False
@@ -254,7 +259,7 @@ class ConsoleClientForCreate:
                 raise exceptions.LocationCustomIdAlReadyExists()
         except AttributeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             return location_id
@@ -283,7 +288,7 @@ class ConsoleClientForCreate:
             return role_lookup.id
         except AttributeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             return False
@@ -308,9 +313,8 @@ class ConsoleClientForCreate:
         )
         message = ""
         try:
-            if (
-                "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
-            ):
+            grant_valid = bool("client" not in allowed_crud_tables)
+            if grant_valid or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if client_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(client_attributes_dict)
@@ -334,48 +338,58 @@ class ConsoleClientForCreate:
                 client_attributes_dict = forms.submit_a_client_create_form()
                 client_attributes_dict["company_id"] = company_id
                 client_attributes_dict["commercial_contact"] = user_id
-                client_id = self.create_app_view.get_clients_view().add_client(models.Client(**client_attributes_dict))
+                client_id = self.create_app_view.get_clients_view().add_client(
+                    models.Client(**client_attributes_dict)
+                )
             message = f"Creation client {client_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(client={
-                    'client_id': client_attributes_dict['client_id'],
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    client={
+                        "client_id": client_attributes_dict["client_id"],
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
@@ -395,12 +409,13 @@ class ConsoleClientForCreate:
         collaborator = ""
         message = ""
         try:
-            if (
-                "collaborator" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
-            ):
+            grant_valid = bool("collaborator" not in allowed_crud_tables)
+            if grant_valid or user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if collaborator_attributes_dict != "":
-                data_is_dict = add_data_validators.data_is_dict(collaborator_attributes_dict)
+                data_is_dict = add_data_validators.data_is_dict(
+                    collaborator_attributes_dict
+                )
                 dict_is_valid = add_data_validators.add_collaborator_data_is_valid(
                     collaborator_attributes_dict
                 )
@@ -423,13 +438,19 @@ class ConsoleClientForCreate:
                 collaborator_attributes_dict["role_id"] = role_primary_id
 
                 collaborator = models.Collaborator(**collaborator_attributes_dict)
-            collaborator_id = self.create_app_view.get_collaborators_view().add_collaborator(collaborator)
+            collaborator_id = (
+                self.create_app_view.get_collaborators_view().add_collaborator(
+                    collaborator
+                )
+            )
             message = f"Creation collaborator {collaborator.registration_number} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(collaborator={
-                    'registration_number': collaborator.registration_number,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    collaborator={
+                        "registration_number": collaborator.registration_number,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -437,39 +458,47 @@ class ConsoleClientForCreate:
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(collaborator={
-                    'collaborator_attributes_dict': collaborator_attributes_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    collaborator={
+                        "collaborator_attributes_dict": collaborator_attributes_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
@@ -488,9 +517,8 @@ class ConsoleClientForCreate:
         company = ""
         message = ""
         try:
-            if (
-                "company" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
-            ):
+            grant_valid = bool("company" not in allowed_crud_tables)
+            if grant_valid or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if company_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(company_attributes_dict)
@@ -513,10 +541,12 @@ class ConsoleClientForCreate:
             company_id = self.create_app_view.get_companies_view().add_company(company)
             message = f"Creation company {company_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(company={
-                    'company_id': company_attributes_dict['company_id'],
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    company={
+                        "company_id": company_attributes_dict["company_id"],
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -524,39 +554,47 @@ class ConsoleClientForCreate:
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(company={
-                    'company_attributes_dict': company_attributes_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    company={
+                        "company_attributes_dict": company_attributes_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
@@ -578,12 +616,13 @@ class ConsoleClientForCreate:
         contract = ""
         message = ""
         try:
-            if (
-                "contract" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
-            ):
+            grant_valid = bool("contract" not in allowed_crud_tables)
+            if grant_valid or user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if contract_attributes_dict != "":
-                data_is_dict = add_data_validators.data_is_dict(contract_attributes_dict)
+                data_is_dict = add_data_validators.data_is_dict(
+                    contract_attributes_dict
+                )
                 dict_is_valid = add_data_validators.add_contract_data_is_valid(
                     contract_attributes_dict
                 )
@@ -599,13 +638,17 @@ class ConsoleClientForCreate:
                 contract_attributes_dict["client_id"] = client_id
                 contract = models.Contract(**contract_attributes_dict)
                 contract.creation_date = datetime.now()
-            contract_id = self.create_app_view.get_contracts_view().add_contract(contract)
+            contract_id = self.create_app_view.get_contracts_view().add_contract(
+                contract
+            )
             message = f"Creation contract {contract_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(contract={
-                    'contract_id': contract_attributes_dict['contract_id'],
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    contract={
+                        "contract_id": contract_attributes_dict["contract_id"],
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -613,39 +656,47 @@ class ConsoleClientForCreate:
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(contract={
-                    'contract_attributes_dict': contract_attributes_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    contract={
+                        "contract_attributes_dict": contract_attributes_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
@@ -664,12 +715,13 @@ class ConsoleClientForCreate:
         department = ""
         message = ""
         try:
-            if (
-                "collaborator_department" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
-            ):
+            grant_valid = bool("collaborator_department" not in allowed_crud_tables)
+            if grant_valid or user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if department_attributes_dict != "":
-                data_is_dict = add_data_validators.data_is_dict(department_attributes_dict)
+                data_is_dict = add_data_validators.data_is_dict(
+                    department_attributes_dict
+                )
                 dict_is_valid = add_data_validators.add_department_data_is_valid(
                     department_attributes_dict
                 )
@@ -687,13 +739,17 @@ class ConsoleClientForCreate:
                     **department_attributes_dict
                 )
                 department.creation_date = datetime.now()
-            department_id = self.create_app_view.get_departments_view().add_department(department)
+            department_id = self.create_app_view.get_departments_view().add_department(
+                department
+            )
             message = f"Creation department {department_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(department={
-                    'department_id': department_attributes_dict['department_id'],
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    department={
+                        "department_id": department_attributes_dict["department_id"],
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -701,39 +757,47 @@ class ConsoleClientForCreate:
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(department={
-                    'department_attributes_dict': department_attributes_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    department={
+                        "department_attributes_dict": department_attributes_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
@@ -755,18 +819,20 @@ class ConsoleClientForCreate:
         )
         message = ""
         try:
-            if (
-                "event" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
-            ):
+            grant_valid = bool("event" not in allowed_crud_tables)
+            if grant_valid or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if event_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(event_attributes_dict)
-                dict_is_valid = add_data_validators.add_event_data_is_valid(event_attributes_dict)
-                custom_id = utils.get_contract_custom_id_from_contract_id(
-                    self.app_view.session,
-                    event_attributes_dict["contract_id"]
+                dict_is_valid = add_data_validators.add_event_data_is_valid(
+                    event_attributes_dict
                 )
-                contract = self.app_view.get_contracts_view().get_contract(contract_id=custom_id)
+                custom_id = utils.get_contract_custom_id_from_contract_id(
+                    self.app_view.session, event_attributes_dict["contract_id"]
+                )
+                contract = self.app_view.get_contracts_view().get_contract(
+                    contract_id=custom_id
+                )
                 commercial_id_attached_to_contract = contract.client.commercial_contact
                 if commercial_id_attached_to_contract != int(user_id):
                     raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
@@ -776,7 +842,9 @@ class ConsoleClientForCreate:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
                 contract_id_asked = self.ask_for_a_contract_custom_id()
-                contract = self.app_view.get_contracts_view().get_contract(contract_id=contract_id_asked)
+                contract = self.app_view.get_contracts_view().get_contract(
+                    contract_id=contract_id_asked
+                )
                 commercial_id_attached_to_contract = contract.client.commercial_contact
                 if not contract:
                     raise exceptions.ContractNotFoundWithContractId()
@@ -791,10 +859,12 @@ class ConsoleClientForCreate:
             event_id = self.create_app_view.get_events_view().add_event(user_id, event)
             message = f"Creation event {event_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(event={
-                    'event_id': event_attributes_dict['event_id'],
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    event={
+                        "event_id": event_attributes_dict["event_id"],
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -802,39 +872,47 @@ class ConsoleClientForCreate:
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(event={
-                    'event_attributes_dict': event_attributes_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    event={
+                        "event_attributes_dict": event_attributes_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
@@ -853,12 +931,13 @@ class ConsoleClientForCreate:
         location = ""
         message = ""
         try:
-            if (
-                "location" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
-            ):
+            grant_valid = bool("location" not in allowed_crud_tables)
+            if grant_valid or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if location_attributes_dict != "":
-                data_is_dict = add_data_validators.data_is_dict(location_attributes_dict)
+                data_is_dict = add_data_validators.data_is_dict(
+                    location_attributes_dict
+                )
                 dict_is_valid = add_data_validators.add_location_data_is_valid(
                     location_attributes_dict
                 )
@@ -876,13 +955,17 @@ class ConsoleClientForCreate:
                 )
                 location = models.Location(**location_attributes_dict)
                 location.creation_date = datetime.now()
-            location_id = self.create_app_view.get_locations_view().add_location(location)
+            location_id = self.create_app_view.get_locations_view().add_location(
+                location
+            )
             message = f"Creation location {location_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(location={
-                    'location_id': location_attributes_dict['location_id'],
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    location={
+                        "location_id": location_attributes_dict["location_id"],
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -890,39 +973,47 @@ class ConsoleClientForCreate:
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(location={
-                    'location_attributes_dict': location_attributes_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    location={
+                        "location_attributes_dict": location_attributes_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()
@@ -941,13 +1032,14 @@ class ConsoleClientForCreate:
         role = ""
         message = ""
         try:
-            if (
-                "collaborator_role" not in allowed_crud_tables or user_service.lower() != "oc12_gestion"
-            ):
+            grant_valid = bool("collaborator_role" not in allowed_crud_tables)
+            if grant_valid or user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if role_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(role_attributes_dict)
-                dict_is_valid = add_data_validators.add_role_data_is_valid(role_attributes_dict)
+                dict_is_valid = add_data_validators.add_role_data_is_valid(
+                    role_attributes_dict
+                )
                 if data_is_dict and dict_is_valid:
                     role = models.Collaborator_Role(**role_attributes_dict)
                 else:
@@ -959,10 +1051,12 @@ class ConsoleClientForCreate:
             role_id = self.create_app_view.get_roles_view().add_role(role)
             message = f"Creation role {role_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(role={
-                    'role_id': role_attributes_dict['role_id'],
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    role={
+                        "role_id": role_attributes_dict["role_id"],
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -970,39 +1064,47 @@ class ConsoleClientForCreate:
             sys.exit(0)
         except exceptions.ContractNotFoundWithContractId:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
             sys.exit(0)
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
             sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()["SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
             sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
-            message = self.app_dict.get_appli_dictionnary()["SUPPLIED_DATA_DO_NOT_MATCH_MODEL"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(location={
-                    'role_attributes_dict': role_attributes_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    location={
+                        "role_attributes_dict": role_attributes_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.error(message)
             raise exceptions.SuppliedDataNotMatchModel()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.ApplicationErrorException()

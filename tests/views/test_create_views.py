@@ -5,9 +5,9 @@ Attention à l'ordre. Exemple on ne peut pas créer un client tant que l'entrepr
 n'est pas encore créée.
 Plus largement, les tests de suppression doivent venir après les créations ci-dessous.
 """
-import os
 import pytest
 from datetime import datetime
+
 try:
     from src.clients.create_console import ConsoleClientForCreate
     from src.exceptions import exceptions
@@ -248,7 +248,10 @@ role_attributes_dict_2 = {
     ],
 )
 def test_add_collaborator_view_with_commercial_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_commercial_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service commercial peut ajouter un collaborateur.
@@ -267,7 +270,10 @@ def test_add_collaborator_view_with_commercial_profile_raises_exception(
     ],
 )
 def test_add_collaborator_view_with_support_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_support_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service support peut ajouter un collaborateur.
@@ -289,7 +295,10 @@ def test_add_collaborator_view_with_support_profile_raises_exception(
     ],
 )
 def test_add_collaborator_view_with_gestion_profile(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service gestion peut ajouter un collaborateur.
@@ -327,7 +336,10 @@ def test_add_unvalid_location_view_with_commercial_profile_raises_exception(
     "custom_dict", [location_attributes_dict_1, location_attributes_dict_2]
 )
 def test_add_location_view_with_gestion_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service gestion peut ajouter une localité.
@@ -341,7 +353,10 @@ def test_add_location_view_with_gestion_profile_raises_exception(
     "custom_dict", [location_attributes_dict_1, location_attributes_dict_2]
 )
 def test_add_location_view_with_support_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_support_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service support peut ajouter une localité.
@@ -377,7 +392,10 @@ def test_add_company_id_3_view_with_commercial_profile_with_valid_company(
     "custom_dict", [company_attributes_dict_1, company_attributes_dict_2]
 )
 def test_add_company_view_with_gestion_profile(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service gestion peut ajouter une entreprise.
@@ -392,7 +410,10 @@ def test_add_company_view_with_gestion_profile(
     "custom_dict", [company_attributes_dict_1, company_attributes_dict_2]
 )
 def test_add_company_view_with_support_profile(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_support_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service support peut ajouter une entreprise.
@@ -407,7 +428,10 @@ def test_add_company_view_with_support_profile(
     "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2]
 )
 def test_add_contract_view_with_commercial_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_commercial_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service commercial peut ajouter un contrat.
@@ -421,7 +445,10 @@ def test_add_contract_view_with_commercial_profile_raises_exception(
     "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2]
 )
 def test_add_contract_view_with_gestion_profile(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service gestion peut ajouter un contrat.
@@ -435,7 +462,10 @@ def test_add_contract_view_with_gestion_profile(
     "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2]
 )
 def test_add_contract_view_with_support_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_support_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service support peut ajouter un contrat.
@@ -477,7 +507,10 @@ def test_add_event_view_with_commercial_profile_when_unassigned_contract_raises_
     "custom_dict", [event_attributes_dict_1, event_attributes_dict_2]
 )
 def test_add_event_view_with_gestion_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service gestion peut ajouter un évènement.
@@ -491,7 +524,10 @@ def test_add_event_view_with_gestion_profile_raises_exception(
     "custom_dict", [event_attributes_dict_1, event_attributes_dict_2]
 )
 def test_add_event_view_with_support_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_support_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service support peut ajouter un évènement.
@@ -505,7 +541,10 @@ def test_add_event_view_with_support_profile_raises_exception(
     "custom_dict", [role_attributes_dict_1, role_attributes_dict_2]
 )
 def test_add_role_view_with_gestion_profile(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service gestion peut ajouter un role.
@@ -519,7 +558,10 @@ def test_add_role_view_with_gestion_profile(
     "custom_dict", [dpmt_attributes_dict_1, dpmt_attributes_dict_2]
 )
 def test_add_department_view_with_gestion_profile(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service gestion peut ajouter un departement (service).
@@ -533,7 +575,10 @@ def test_add_department_view_with_gestion_profile(
     "custom_dict", [dpmt_attributes_dict_1, dpmt_attributes_dict_2]
 )
 def test_add_department_view_with_commercial_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_commercial_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service commercial peut ajouter un departement (service).
@@ -547,7 +592,10 @@ def test_add_department_view_with_commercial_profile_raises_exception(
     "custom_dict", [client_attributes_dict_1, client_attributes_dict_2]
 )
 def test_add_client_view_with_commercial_profile(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_commercial_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service commercial peut ajouter un client.
@@ -561,7 +609,10 @@ def test_add_client_view_with_commercial_profile(
     "custom_dict", [client_attributes_dict_1, client_attributes_dict_2]
 )
 def test_add_client_view_with_gestion_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service gestion peut ajouter un client.
@@ -575,7 +626,10 @@ def test_add_client_view_with_gestion_profile_raises_exception(
     "custom_dict", [client_attributes_dict_1, client_attributes_dict_2]
 )
 def test_add_client_view_with_support_profile_raises_exception(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_support_collaborator, custom_dict
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_support_collaborator,
+    custom_dict,
 ):
     """
     Vérifier si un membre du service support peut ajouter un client.

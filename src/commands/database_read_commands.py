@@ -90,13 +90,12 @@ def get_clients(client_id, args):
         printer.print_message("info", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.info(message)
-        sys.exit(0)
     except Exception as error:
         print(f"READCOMMANDS CLIENT CATCH ???????error=={error}")
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -133,9 +132,9 @@ def get_collaborators(collaborator_id, args):
         console_client.get_collaborators(user_query_filters_args)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -178,9 +177,9 @@ def get_companies(company_id, args):
         console_client.get_companies(user_query_filters_args)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -220,9 +219,9 @@ def get_contracts(contract_id, args):
         console_client.get_contracts(user_query_filters_args)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -255,9 +254,9 @@ def get_departments(department_id, args):
         console_client.get_departments(user_query_filters_args)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -268,11 +267,11 @@ def get_departments(department_id, args):
     type=str,
 )
 def get_events(event_id, args):
-#     oc12_events "location_id=llb44430"
-# MANQUE 1 EVENT ??!!!
-#
-# oc12_events "client_id=mkc111"
-# renvoit 1 seul résultat
+    #     oc12_events "location_id=llb44430"
+    # MANQUE 1 EVENT ??!!!
+    #
+    # oc12_events "client_id=mkc111"
+    # renvoit 1 seul résultat
     """
     [bold cyan]Description:[/bold cyan]
 
@@ -284,12 +283,12 @@ def get_events(event_id, args):
     [bright_white]event_start_date[/bright_white]: on filtre par date de début.
     [bright_white]event_end_date[/bright_white]: on filtre par date de fin.
     [bright_white]event_id[/bright_white]: on filtre par evenementt id (le custom id).
-    [bright_white]location_id[/bright_white]: on filtre par localité id (le custom id). 
+    [bright_white]location_id[/bright_white]: on filtre par localité id (le custom id).
     [bright_white]attendees[/bright_white]: on filtre par nombre de personnes attendues.
     [bright_white]client_id[/bright_white]: on filtre par client id (le custom id).
     [bright_white]contract_id[/bright_white]: on filtre par contrat id (le custom id).
-    [bright_white]collaborator_id[/bright_white]: on filtre par id (le registration_number)pour recherche équipier Support.
-    [bright_white]commercial_id[/bright_white]: on filtre par id (le registration_number) pour recherche équipier Commercial.
+    [bright_white]collaborator_id[/bright_white]: on filtre par id pour recherche équipier Support.
+    [bright_white]commercial_id[/bright_white]: on filtre par id pour recherche équipier Commercial.
 
     [bold cyan]Usage examples:[/bold cyan]
     oc12_events "creation_date>15-07-2023"[/white]
@@ -309,9 +308,9 @@ def get_events(event_id, args):
         console_client.get_events(user_query_filters_args)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -358,9 +357,9 @@ def get_locations(location_id, args):
         console_client.get_locations(user_query_filters_args)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)
 
 
 @click.command
@@ -393,6 +392,6 @@ def get_roles(role_id, args):
         console_client.get_roles(user_query_filters_args)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
-        printer.print_message("error",message)
+        printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-        	LOGGER.error(message)
+            LOGGER.error(message)

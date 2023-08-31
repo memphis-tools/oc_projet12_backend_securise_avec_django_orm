@@ -1,8 +1,9 @@
 """
+Description:
 test des validateurs qui controlent les ajouts de données
 """
-import os
 import pytest
+
 try:
     from src.validators import add_data_validators
 except ModuleNotFoundError:

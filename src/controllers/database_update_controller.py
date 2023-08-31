@@ -157,7 +157,9 @@ class DatabaseUpdateController:
         # un collaborateur du service gestion peut modifier tout contrat
         # un commercial ne peut modifier que les contrats auxquels il est rattaché
         if user_service.lower() == "oc12_commercial":
-            if int(current_user_collaborator_id) != int(contract.client.commercial_contact):
+            if int(current_user_collaborator_id) != int(
+                contract.client.commercial_contact
+            ):
                 raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
 
         session.commit()
