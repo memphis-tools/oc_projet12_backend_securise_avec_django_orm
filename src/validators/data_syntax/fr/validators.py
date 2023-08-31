@@ -18,7 +18,7 @@ def is_adresse_valid(adresse):
     Description: Controler l'adresse saisis.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"[\w - ']{,150}$")
+    pattern = re.compile(r"[\w \- ' , \.]{,150}$")
     return re.match(pattern, adresse).group()
 
 
@@ -39,6 +39,7 @@ def is_civility_valid(civility):
     civilities = ["MR", "MME", "MLE", "AUTRE"]
     if civility not in civilities:
         raise AttributeError()
+    return civility
 
 
 def is_client_id_valid(client_id):
@@ -46,7 +47,7 @@ def is_client_id_valid(client_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,120})$")
+    pattern = re.compile(r"([\w \- ' \_]{,120})$")
     return re.match(pattern, client_id).group()
 
 
@@ -64,7 +65,7 @@ def is_company_id_valid(company_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,120})$")
+    pattern = re.compile(r"([\w \- \_ \.]{,120})$")
     return re.match(pattern, company_id).group()
 
 
@@ -73,7 +74,7 @@ def is_company_name_valid(company_name):
     Description: Controler le nom d'entreprise saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ']{,130})$")
+    pattern = re.compile(r"([\w \- \_ ']{,130})$")
     return re.match(pattern, company_name).group()
 
 
@@ -96,6 +97,9 @@ def is_company_subregistration_number_valid(company_subregistration_number):
 
 
 def is_complement_word_foreseen(complement_words):
+    """
+    Description: Controler la présence d'au moins un mot clef dans le complément d'adresse.
+    """
     valid_complement_list = infos_data_controller.get_infos_data("types_voies")
     for word in complement_words:
         if word in valid_complement_list:
@@ -106,11 +110,11 @@ def is_complement_word_foreseen(complement_words):
 def is_complement_adresse_valid(complement_adresse):
     """
     Description: Controler le complément adresse saisis.
-    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    Fonction renvoie False si pattern ne correspond pas.
     """
     if complement_adresse == '""' or complement_adresse == "''":
         return complement_adresse
-    pattern = re.compile(r"[\w' -]{,75}$")
+    pattern = re.compile(r"([\w' \- \_ \.]{,75})$")
     complement_words = complement_adresse.split(" ")
     if not is_complement_word_foreseen(complement_words):
         return False
@@ -122,7 +126,7 @@ def is_contract_id_valid(contract_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ']{,120})$")
+    pattern = re.compile(r"([\w \_ \- \.']{,120})$")
     return re.match(pattern, contract_id).group()
 
 
@@ -140,7 +144,7 @@ def is_commercial_contact_valid(commercial_contact_id):
     Description: Controler le commercial qu'on souhaite modifier pour un client.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ']{,120})$")
+    pattern = re.compile(r"([\w \- \_ \.']{,120})$")
     return re.match(pattern, commercial_contact_id).group()
 
 
@@ -149,7 +153,7 @@ def is_department_id_valid(department_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ']{,120})$")
+    pattern = re.compile(r"([\w \- \_ \.']{,120})$")
     return re.match(pattern, department_id).group()
 
 
@@ -158,7 +162,7 @@ def is_department_valid(department):
     Description: Controler le department saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w -']{,120})$")
+    pattern = re.compile(r"([\w \- \_ \.']{,120})$")
     return re.match(pattern, department).group()
 
 
@@ -195,7 +199,7 @@ def is_event_id_valid(event_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ]{,120})$")
+    pattern = re.compile(r"([\w \_ \- \.]{,120})$")
     return re.match(pattern, event_id).group()
 
 
@@ -295,6 +299,7 @@ def is_remain_amount_to_pay_valid(remain_amount_to_pay, full_amount_to_pay):
             raise exceptions.ContractAmountToPayException()
     except ValueError:
         raise AttributeError()
+    return remain_amount_to_pay
 
 
 def is_role_id_valid(role_id):
