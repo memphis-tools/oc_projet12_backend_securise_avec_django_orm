@@ -384,7 +384,7 @@ def dummy_client_partial_data(request):
     event_partial_dict = {
         "client_id": "bduck",
         "telephone": "0011223344",
-        "first_name": "Baba"
+        "first_name": "Baba",
     }
     return event_partial_dict
 

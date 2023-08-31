@@ -50,7 +50,12 @@ class ConsoleClientForUpdate:
         settings.APP_FIGLET_TITLE
 
     @utils.authentication_permission_decorator
-    def update_client(self, custom_partial_dict, db_name=f"{settings.DATABASE_NAME}", user_query_filters_args=""):
+    def update_client(
+        self,
+        custom_partial_dict,
+        db_name=f"{settings.DATABASE_NAME}",
+        user_query_filters_args="",
+    ):
         # rechercher le id de l'utilisateur courant
         # obtenir le token décodé (et valide)
         # demander mot de passe à utilisateur en cours
@@ -67,27 +72,33 @@ class ConsoleClientForUpdate:
         user_service = str(decoded_token["department"]).upper()
         registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        current_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
         try:
-            if (
-                "client" not in allowed_crud_tables or user_service.lower() != "oc12_commercial"
-            ):
+            client_grant_valid = bool("client" not in allowed_crud_tables)
+            if client_grant_valid or user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
 
-            if ("commercial_contact" in custom_partial_dict.keys() and user_service.lower() == "oc12_commercial"):
+            keys_valid = bool("commercial_contact" in custom_partial_dict.keys())
+            if keys_valid and user_service.lower() == "oc12_commercial":
                 raise exceptions.CommercialCanNotUpdateClientCommercialContactException()
 
             client_id = custom_partial_dict["client_id"]
             if len(user_query_filters_args) == 0:
-                self.update_app_view.get_clients_view().update_client(user_collaborator_id, user_service, custom_partial_dict)
+                self.update_app_view.get_clients_view().update_client(
+                    current_id, user_service, custom_partial_dict
+                )
             else:
-                self.update_app_view.get_clients_view().update_client_filtered(self, user_query_filters_args)
+                self.update_app_view.get_clients_view().update_client_filtered(
+                    self, user_query_filters_args
+                )
             message = f"Update client {client_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(client={
-                    'custom_partial_dict': custom_partial_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    client={
+                        "custom_partial_dict": custom_partial_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -97,27 +108,31 @@ class ConsoleClientForUpdate:
         except exceptions.CustomIdMatchNothingException:
             raise exceptions.CustomIdMatchNothingException()
         except exceptions.CommercialCanNotUpdateClientCommercialContactException:
-            message = self.app_dict.get_appli_dictionnary()["COMMERCIAL_COLLABORATOR_CAN_NOT_UPDATE_CLIENT_COMMERCIAL_CONTACT"]
-            printer.print_message("error",message)
+            message = self.app_dict.get_appli_dictionnary()[
+                "COMMERCIAL_COLLABORATOR_CAN_NOT_UPDATE_CLIENT_COMMERCIAL_CONTACT"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(user={
-                    'custom_partial_dict': custom_partial_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    user={
+                        "custom_partial_dict": custom_partial_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             sys.exit(0)
         except TypeError:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -136,16 +151,22 @@ class ConsoleClientForUpdate:
 
             matricule = custom_partial_dict["registration_number"]
             if len(user_query_filters_args) == 0:
-                self.update_app_view.get_collaborators_view().update_collaborator(custom_partial_dict)
+                self.update_app_view.get_collaborators_view().update_collaborator(
+                    custom_partial_dict
+                )
             else:
-                self.update_app_view.get_collaborators_view().update_collaborator_filtered(self, user_query_filters_args)
+                self.update_app_view.get_collaborators_view().update_collaborator_filtered(
+                    self, user_query_filters_args
+                )
 
             message = f"Update collaborator {matricule} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(collaborator={
-                    'custom_partial_dict': custom_partial_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    collaborator={
+                        "custom_partial_dict": custom_partial_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
 
@@ -157,13 +178,13 @@ class ConsoleClientForUpdate:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -199,19 +220,23 @@ class ConsoleClientForUpdate:
             message = self.app_dict.get_appli_dictionnary()["OLD_PASSWORD_NOT_MATCH"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectMinSpecialCharsException:
-            message = self.app_dict.get_appli_dictionnary()["NEW_PASSWORD_NOT_MATCH_SPECIAL_CHARS"]
+            message = self.app_dict.get_appli_dictionnary()[
+                "NEW_PASSWORD_NOT_MATCH_SPECIAL_CHARS"
+            ]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except exceptions.NewPasswordDoesRespectForbiddenSpecialCharsException:
-            message = self.app_dict.get_appli_dictionnary()["NEW_PASSWORD_NOT_MATCH_FORBIDEN_CHARS"]
+            message = self.app_dict.get_appli_dictionnary()[
+                "NEW_PASSWORD_NOT_MATCH_FORBIDEN_CHARS"
+            ]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         return (
             self.update_app_view.get_collaborators_view().update_collaborator_password(
@@ -235,15 +260,21 @@ class ConsoleClientForUpdate:
 
             company_id = custom_partial_dict["company_id"]
             if len(user_query_filters_args) == 0:
-                self.update_app_view.get_companies_view().update_company(custom_partial_dict)
+                self.update_app_view.get_companies_view().update_company(
+                    custom_partial_dict
+                )
             else:
-                self.update_app_view.get_companies_view().update_company_filtered(self, user_query_filters_args)
+                self.update_app_view.get_companies_view().update_company_filtered(
+                    self, user_query_filters_args
+                )
             message = f"Update company {company_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(company={
-                    'custom_partial_dict': custom_partial_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    company={
+                        "custom_partial_dict": custom_partial_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -254,13 +285,13 @@ class ConsoleClientForUpdate:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -273,7 +304,7 @@ class ConsoleClientForUpdate:
         registration_number = str(decoded_token["registration_number"])
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract_id = ""
-        user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        user_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
         try:
             if "contract" not in allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
@@ -281,20 +312,24 @@ class ConsoleClientForUpdate:
             contract_id = custom_partial_dict["contract_id"]
             if len(user_query_filters_args) == 0:
                 self.update_app_view.get_contracts_view().update_contract(
-                    user_collaborator_id, user_service, custom_partial_dict
+                    user_id, user_service, custom_partial_dict
                 )
             else:
-                self.update_app_view.get_contracts_view().update_contract_filtered(self, user_query_filters_args)
+                self.update_app_view.get_contracts_view().update_contract_filtered(
+                    self, user_query_filters_args
+                )
 
             if "status" in custom_partial_dict.keys():
                 message = f"Update contract {contract_id} for signature by {registration_number}"
             else:
                 message = f"Update contract {contract_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(contract={
-                    'custom_partial_dict': custom_partial_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    contract={
+                        "custom_partial_dict": custom_partial_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -307,13 +342,13 @@ class ConsoleClientForUpdate:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -332,15 +367,21 @@ class ConsoleClientForUpdate:
 
             department_id = custom_partial_dict["department_id"]
             if len(user_query_filters_args) == 0:
-                self.update_app_view.get_departments_view().update_department(custom_partial_dict)
+                self.update_app_view.get_departments_view().update_department(
+                    custom_partial_dict
+                )
             else:
-                self.update_app_view.get_departments_view().update_department_filtered(self, user_query_filters_args)
+                self.update_app_view.get_departments_view().update_department_filtered(
+                    self, user_query_filters_args
+                )
             message = f"Update department {department_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(department={
-                    'custom_partial_dict': custom_partial_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    department={
+                        "custom_partial_dict": custom_partial_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -351,13 +392,13 @@ class ConsoleClientForUpdate:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -371,41 +412,45 @@ class ConsoleClientForUpdate:
         username = str(decoded_token["username"]).lower()
         allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event_id = ""
-        user_collaborator_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        user_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
         try:
             # un membre du service commercial n'a accès qu'en lecture seule
-            if (
-                "event" not in allowed_crud_tables or user_service.lower() == "oc12_commercial"
-            ):
+            event_grant_valid = bool("event" not in allowed_crud_tables)
+            if event_grant_valid or user_service.lower() == "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
 
             event_id = custom_partial_dict["event_id"]
             if len(user_query_filters_args) == 0:
                 if "collaborator_id" in custom_partial_dict:
-                    if custom_partial_dict["collaborator_id"] != None:
+                    if custom_partial_dict["collaborator_id"] is not None:
                         # un membre du service Gestion doit seulement pouvoir assigner un membre du service Support.
                         # Ainsi il ne doit pas être possible d'assigner un membre du service commercial etc.
-                        assigned_user_department_id = utils.get_department_name_from_collaborator_id(
-                            self.app_view.session,
-                            custom_partial_dict["collaborator_id"]
+                        assigned_user_department_id = (
+                            utils.get_department_name_from_collaborator_id(
+                                self.app_view.session,
+                                custom_partial_dict["collaborator_id"],
+                            )
                         )
                         department_name = utils.get_department_name_from_id(
-                            self.app_view.session,
-                            assigned_user_department_id
+                            self.app_view.session, assigned_user_department_id
                         )
                         if department_name != "oc12_support":
                             raise exceptions.OnlySuportMemberCanBeAssignedToEventSupportException()
                 self.update_app_view.get_events_view().update_event(
-                    user_collaborator_id, user_service, custom_partial_dict
+                    user_id, user_service, custom_partial_dict
                 )
             else:
-                self.update_app_view.get_events_view().update_event_filtered(self, user_query_filters_args)
+                self.update_app_view.get_events_view().update_event_filtered(
+                    self, user_query_filters_args
+                )
             message = f"Update event {event_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(event={
-                    'custom_partial_dict': custom_partial_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    event={
+                        "custom_partial_dict": custom_partial_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -427,13 +472,13 @@ class ConsoleClientForUpdate:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -455,7 +500,11 @@ class ConsoleClientForUpdate:
                     custom_partial_dict
                 )
             else:
-                return self.update_app_view.get_locations_view().update_location_filtered(self, user_query_filters_args)
+                return (
+                    self.update_app_view.get_locations_view().update_location_filtered(
+                        self, user_query_filters_args
+                    )
+                )
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.CustomIdMatchNothingException:
@@ -464,13 +513,13 @@ class ConsoleClientForUpdate:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
 
     @utils.authentication_permission_decorator
@@ -489,17 +538,19 @@ class ConsoleClientForUpdate:
 
             role_id = custom_partial_dict["role_id"]
             if len(user_query_filters_args) == 0:
-                self.update_app_view.get_roles_view().update_role(
-                    custom_partial_dict
-                )
+                self.update_app_view.get_roles_view().update_role(custom_partial_dict)
             else:
-                self.update_app_view.get_roles_view().update_role_filtered(self, user_query_filters_args)
+                self.update_app_view.get_roles_view().update_role_filtered(
+                    self, user_query_filters_args
+                )
             message = f"Update role {role_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                with logtail.context(role={
-                    'custom_partial_dict': custom_partial_dict,
-                    'current_collaborator': registration_number,
-                }):
+                with logtail.context(
+                    role={
+                        "custom_partial_dict": custom_partial_dict,
+                        "current_collaborator": registration_number,
+                    }
+                ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
@@ -510,11 +561,11 @@ class ConsoleClientForUpdate:
             message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
             sys.exit(0)

@@ -40,7 +40,9 @@ def test_submit_a_location_get_form(set_a_test_env):
 
 
 def test_submit_a_location_create_form(set_a_test_env):
-    result = forms.submit_a_location_create_form(location_id="ZA123", custom_dict={"location_id":"ZA123"})
+    result = forms.submit_a_location_create_form(
+        location_id="ZA123", custom_dict={"location_id": "ZA123"}
+    )
     assert isinstance(result, dict)
     assert "creation_date" in result.keys()
 
@@ -52,7 +54,9 @@ def test_submit_a_company_get_form(set_a_test_env):
 
 
 def test_submit_a_company_create_form(set_a_test_env):
-    result = forms.submit_a_company_create_form(company_location_id="XXZ123", custom_dict={"company_id":"XXZ123"})
+    result = forms.submit_a_company_create_form(
+        company_location_id="XXZ123", custom_dict={"company_id": "XXZ123"}
+    )
     assert isinstance(result, dict)
     assert "creation_date" in result.keys()
 
@@ -64,7 +68,7 @@ def test_submit_a_client_get_form(set_a_test_env):
 
 
 def test_submit_a_client_create_form(set_a_test_env):
-    result = forms.submit_a_client_create_form(custom_dict={"client_id":"XXZ123"})
+    result = forms.submit_a_client_create_form(custom_dict={"client_id": "XXZ123"})
     assert isinstance(result, dict)
     assert "creation_date" in result.keys()
 
@@ -76,7 +80,9 @@ def test_submit_a_collaborator_get_form(set_a_test_env):
 
 
 def test_submit_a_collaborator_create_form(set_a_test_env):
-    result = forms.submit_a_collaborator_create_form(custom_dict={"client_id":"XXZ123"})
+    result = forms.submit_a_collaborator_create_form(
+        custom_dict={"client_id": "XXZ123"}
+    )
     assert isinstance(result, dict)
     assert "creation_date" in result.keys()
 
@@ -88,7 +94,9 @@ def test_submit_a_collaborator_role_get_form(set_a_test_env):
 
 
 def test_submit_a_collaborator_role_create_form(set_a_test_env):
-    result = forms.submit_a_collaborator_role_create_form(custom_dict={"role_id":"emp"})
+    result = forms.submit_a_collaborator_role_create_form(
+        custom_dict={"role_id": "emp"}
+    )
     assert isinstance(result, dict)
     assert "creation_date" in result.keys()
 
@@ -100,7 +108,9 @@ def test_submit_a_collaborator_department_get_form(set_a_test_env):
 
 
 def test_submit_a_collaborator_department_create_form(set_a_test_env):
-    result = forms.submit_a_collaborator_department_create_form(custom_dict={"department_id":"ccial"})
+    result = forms.submit_a_collaborator_department_create_form(
+        custom_dict={"department_id": "ccial"}
+    )
     assert isinstance(result, dict)
     assert "creation_date" in result.keys()
 
@@ -112,7 +122,7 @@ def test_submit_a_contract_get_form(set_a_test_env):
 
 
 def test_submit_a_contract_create_form(set_a_test_env):
-    result = forms.submit_a_contract_create_form(custom_dict={"contract_id":"XXZ123"})
+    result = forms.submit_a_contract_create_form(custom_dict={"contract_id": "XXZ123"})
     assert isinstance(result, dict)
     assert "creation_date" in result.keys()
 
@@ -124,12 +134,14 @@ def test_submit_a_event_get_form(set_a_test_env):
 
 
 def test_submit_a_event_create_form(set_a_test_env):
-    result = forms.submit_a_contract_create_form(custom_dict={"event_id":"XXZ123"})
+    result = forms.submit_a_contract_create_form(custom_dict={"event_id": "XXZ123"})
     assert isinstance(result, dict)
     assert "creation_date" in result.keys()
 
 
 def test_submit_a_collaborator_new_password_get_form(set_a_test_env):
-    result = forms.submit_a_collaborator_new_password_get_form(old_password="@pplepie94", new_password="@pplepie95")
+    result = forms.submit_a_collaborator_new_password_get_form(
+        old_password="@pplepie94", new_password="@pplepie95"
+    )
     assert isinstance(result, tuple)
     assert result == ("@pplepie94", "@pplepie95")

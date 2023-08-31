@@ -34,7 +34,9 @@ def generate_companies_sample():
         try:
             app_init_console.generate_companies_file()
         except Exception:
-            message = APP_DICT.get_appli_dictionnary()["API_QUERY_ACCESS_OR_QUERY_FAILED"]
-            printer.print_message("error",message)
+            message = APP_DICT.get_appli_dictionnary()[
+                "API_QUERY_ACCESS_OR_QUERY_FAILED"
+            ]
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)

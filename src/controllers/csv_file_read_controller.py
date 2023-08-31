@@ -7,6 +7,7 @@ from rich.progress import Progress
 import csv
 from unidecode import unidecode
 from datetime import datetime
+
 try:
     from src.controllers import database_initializer_controller
     from src.models import models
@@ -124,7 +125,9 @@ class CsvFilesInitController:
                         temp_insee_dict[v] = region_name
                 elif k == "code_postal":
                     new_location_dict[k] = int(v)
-                    new_location_dict["population"] = get_population_from_insee_open_api(v)
+                    new_location_dict[
+                        "population"
+                    ] = get_population_from_insee_open_api(v)
                 elif k == "commune":
                     new_location_dict["ville"] = v
                 elif k == "cedex":
@@ -177,7 +180,9 @@ class CsvFilesInitController:
 
             with Progress() as progress:
                 nb_companies = len(api_data_dict.keys())
-                task = progress.add_task("[white]External_API Processing Companies data", total=nb_companies)
+                task = progress.add_task(
+                    "[white]External_API Processing Companies data", total=nb_companies
+                )
                 while not progress.finished:
                     for api_data in api_data_dict.values():
                         progress.update(task, advance=1)

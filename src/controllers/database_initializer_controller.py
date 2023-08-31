@@ -70,9 +70,9 @@ class DatabaseInitializerController:
             )
         except psycopg.OperationalError as error:
             message = APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
         session_maker = sessionmaker(engine)
         session = session_maker()
         return (engine, session)
@@ -105,9 +105,9 @@ class DatabaseInitializerController:
             )
         except psycopg.OperationalError as error:
             message = APP_DICT.get_appli_dictionnary()["EXCEPTION_DATABASE_CONNECTION"]
-            printer.print_message("error",message)
+            printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            	LOGGER.error(message)
+                LOGGER.error(message)
 
         session_maker = sessionmaker(engine)
         session = session_maker()
@@ -151,7 +151,10 @@ class DatabaseInitializerController:
         exemple: le service oc12_gestion a des droits sur les 2 bdd. C'est un référencement à purger pour supprimer.
         """
         conn = utils.get_a_database_connection(
-            f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name="projet12"
+            f"{settings.ADMIN_LOGIN}",
+            f"{settings.ADMIN_PASSWORD}",
+            app_init=True,
+            db_name="projet12",
         )
         cursor = conn.cursor()
         for role in ["aa123456789", "oc12_commercial", "oc12_gestion", "oc12_support"]:
@@ -171,7 +174,10 @@ class DatabaseInitializerController:
             base = models.get_base()
             base.metadata.drop_all(engine)
             conn = utils.get_a_database_connection(
-                f"{settings.ADMIN_LOGIN}", f"{settings.ADMIN_PASSWORD}", app_init=True, db_name=db_name
+                f"{settings.ADMIN_LOGIN}",
+                f"{settings.ADMIN_PASSWORD}",
+                app_init=True,
+                db_name=db_name,
             )
             cursor = conn.cursor()
             tables_list = [
@@ -189,9 +195,8 @@ class DatabaseInitializerController:
                     cursor.execute(sql)
                 except Exception:
                     continue
-            if (
-                db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}"
-            ):
+            test_db_name = db_name == f"{settings.TEST_DATABASE_NAME}"
+            if db_name == test_db_name or db_name == f"{settings.DEV_DATABASE_NAME}":
                 # on va conserver le collaborateur aa123456789 pour le module de test test_jwt_authenticator
                 for role in [
                     "ab123456789",
@@ -228,9 +233,8 @@ class DatabaseInitializerController:
         Ca permet de conserver l'éxécution des tests du module test_jwt_authenticator.py avant ceux des vues.
         """
         for db_name in settings.DATABASE_TO_CREATE:
-            if (
-                db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}"
-            ):
+            test_db_name = db_name == f"{settings.TEST_DATABASE_NAME}"
+            if db_name == test_db_name or db_name == f"{settings.DEV_DATABASE_NAME}":
                 cursor = conn.cursor()
                 dummy_registration_number = "aa123456789"
                 sql = f"""
@@ -263,9 +267,8 @@ class DatabaseInitializerController:
 
         cursor = conn.cursor()
         for db_name in settings.DATABASE_TO_CREATE:
-            if (
-                db_name == f"{settings.TEST_DATABASE_NAME}" or db_name == f"{settings.DEV_DATABASE_NAME}"
-            ):
+            test_db_name = f"{settings.TEST_DATABASE_NAME}"
+            if db_name == test_db_name or db_name == f"{settings.DEV_DATABASE_NAME}":
                 dummy_registration_number = "aa123456789"
 
             sql = f"""ALTER DATABASE {db_name} OWNER TO {settings.ADMIN_LOGIN}"""
@@ -326,7 +329,7 @@ class DatabaseInitializerController:
 
         sql = """GRANT INSERT, UPDATE ON client TO oc12_commercial"""
         cursor.execute(sql)
-        sql = f"""GRANT USAGE ON SEQUENCE client_id_seq TO oc12_commercial"""
+        sql = """GRANT USAGE ON SEQUENCE client_id_seq TO oc12_commercial"""
         cursor.execute(sql)
         sql = """GRANT UPDATE ON contract TO oc12_commercial"""
         cursor.execute(sql)
@@ -347,7 +350,7 @@ class DatabaseInitializerController:
             cursor.execute(sql)
         sql = """GRANT DELETE ON client TO oc12_gestion"""
         cursor.execute(sql)
-        sql = f"""GRANT USAGE ON SEQUENCE client_id_seq TO oc12_gestion"""
+        sql = """GRANT USAGE ON SEQUENCE client_id_seq TO oc12_gestion"""
         cursor.execute(sql)
 
         allowed_services = ["oc12_support"]
@@ -472,9 +475,7 @@ class DatabaseInitializerController:
         ]:
             try:
                 if user[1] == "oc12_gestion":
-                    sql = (
-                        f"""CREATE ROLE {user[0]} CREATEROLE LOGIN PASSWORD '{password}'"""
-                    )
+                    sql = f"""CREATE ROLE {user[0]} CREATEROLE LOGIN PASSWORD '{password}'"""
                     cursor.execute(sql)
                 else:
                     sql = f"""CREATE ROLE {user[0]} LOGIN PASSWORD '{password}'"""
@@ -487,7 +488,6 @@ class DatabaseInitializerController:
         conn.commit()
         conn.close()
         return True
-
 
     def database_postinstall_alter_tables(self, db_name="projet12"):
         """

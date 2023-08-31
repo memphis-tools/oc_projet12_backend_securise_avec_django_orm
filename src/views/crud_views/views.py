@@ -17,7 +17,6 @@ try:
     from src.views.locations_view import LocationsView
     from src.views.roles_view import RolesView
     from src.settings import settings
-    from src.utils import utils
 except ModuleNotFoundError:
     from controllers.database_initializer_controller import (
         DatabaseInitializerController,
@@ -33,7 +32,6 @@ except ModuleNotFoundError:
     from views.locations_view import LocationsView
     from views.roles_view import RolesView
     from settings import settings
-    from utils import utils
 
 
 class AppViews:
@@ -47,7 +45,6 @@ class AppViews:
         Description:
         Vue dédiée à instancier la base de données et retourner un controleur.
         """
-        # db_name = utils.set_database_to_get_based_on_user_path(db_name=db_name)
         self.db_controller = DatabaseReadController()
         self.db_initializer = DatabaseInitializerController(db_name=db_name)
         self.jwt_view = JwtView(self)

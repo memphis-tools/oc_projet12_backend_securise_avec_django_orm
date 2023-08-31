@@ -56,8 +56,12 @@ class InitAppliConsole:
         Les données du fichier vont être assemblées de sorte à créér au tant de Localité que d'entreprises.
         On ne crée pas de doublons si une Localité existe déjà.
         """
-        csv_file_jsonified = self.app_init_view.read_a_csv_file_and_return_data_as_json(csv_filename)
-        self.app_init_view.append_external_datas_to_dev_and_test_databases(csv_file_jsonified)
+        csv_file_jsonified = self.app_init_view.read_a_csv_file_and_return_data_as_json(
+            csv_filename
+        )
+        self.app_init_view.append_external_datas_to_dev_and_test_databases(
+            csv_file_jsonified
+        )
         return True
 
     def import_data_from_externals_api(self):
@@ -79,7 +83,9 @@ class InitAppliConsole:
                 csv_filename=settings.COMPANIES_EXPORT_FILE_PATH
             )
         except exceptions.ApiQueryFailedException:
-            message = self.app_dict.get_appli_dictionnary()["API_QUERY_ACCESS_OR_QUERY_FAILED"]
+            message = self.app_dict.get_appli_dictionnary()[
+                "API_QUERY_ACCESS_OR_QUERY_FAILED"
+            ]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
@@ -114,9 +120,8 @@ class InitAppliConsole:
             for csv_header in header:
                 csv_headers_nb_chars += 1
         try:
-            csv_file_has_only_headers = bool(
-                os.path.getsize(filename) == csv_headers_nb_chars + csv_headers_nb_commas
-            )
+            files_size = csv_headers_nb_chars + csv_headers_nb_commas
+            csv_file_has_only_headers = bool(os.path.getsize(filename) == files_size)
             if not csv_file_exists or (
                 csv_file_exists and (csv_file_is_empty or csv_file_has_only_headers)
             ):

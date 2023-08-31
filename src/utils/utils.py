@@ -127,6 +127,7 @@ def authentication_permission_decorator(func):
     Il permet de vérifier que l'utilisateur s'est authentifié.
     C'est une permission générale, indispensable pour l'usage de l'application.
     """
+
     @wraps(func)
     def check_user_token(*args, **kwargs):
         try:
@@ -228,7 +229,8 @@ def make_a_user_query_as_a_list(splited_args):
         elif ">" in arg and "=" in arg:
             operator_index = arg.index(">=")
             arg_to_list.append(arg[0:operator_index])
-            arg_to_list.append(arg[operator_index + 2: len(arg) + 1])
+            offset = f"{operator_index} + 2: len({arg}) + 1"
+            arg_to_list.append(arg[offset])
             arg_to_list.append(">=")
         elif ">" in arg:
             arg_to_list = re.split(">", f"{arg}")
@@ -246,7 +248,9 @@ def make_a_user_query_as_a_list(splited_args):
     return user_query_as_a_list
 
 
-def set_a_many_collaborators_id_expression_for_event(nb_clients, filtered_db_model, item_operator, id, client_ids):
+def set_a_many_collaborators_id_expression_for_event(
+    nb_clients, filtered_db_model, item_operator, id, client_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -263,19 +267,17 @@ def set_a_many_collaborators_id_expression_for_event(nb_clients, filtered_db_mod
     i = 0
     for id in client_ids:
         i += 1
-        if i == nb_clients-1:
+        if i == nb_clients - 1:
             # on ferme l'expression avec une parenthèse
-            many_query += (
-                f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}')"
-            )
+            many_query += f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}')"
         else:
-            many_query += (
-                f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}'"
     return many_query
 
 
-def set_a_many_contracts_id_expression_for_event(nb_contracts, filtered_db_model, item_operator, id, contract_ids):
+def set_a_many_contracts_id_expression_for_event(
+    nb_contracts, filtered_db_model, item_operator, id, contract_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -291,19 +293,19 @@ def set_a_many_contracts_id_expression_for_event(nb_contracts, filtered_db_model
     i = 0
     for id in contract_ids:
         i += 1
-        if i == nb_contracts-1:
+        if i == nb_contracts - 1:
             # on ferme l'expression avec une parenthèse
             many_query += (
                 f" OR {filtered_db_model}.contract_id{item_operator}'{id[0]}')"
             )
         else:
-            many_query += (
-                f" OR {filtered_db_model}.contract_id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.contract_id{item_operator}'{id[0]}'"
     return many_query
 
 
-def set_a_many_collaborators_id_expression_for_contract(nb_clients, filtered_db_model, item_operator, id, client_ids):
+def set_a_many_collaborators_id_expression_for_contract(
+    nb_clients, filtered_db_model, item_operator, id, client_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -318,25 +320,17 @@ def set_a_many_collaborators_id_expression_for_contract(nb_clients, filtered_db_
     i = 0
     for id in client_ids:
         i += 1
-        if i == nb_clients-1:
+        if i == nb_clients - 1:
             # on ferme l'expression avec une parenthèse
-            many_query += (
-                f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}')"
-            )
+            many_query += f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}')"
         else:
-            many_query += (
-                f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.client_id{item_operator}'{id[0]}'"
     return many_query
 
 
 def set_a_many_collaborators_id_expression_for_department(
-        nb_collaborators,
-        filtered_db_model,
-        item_operator,
-        id,
-        collaborator_ids
-    ):
+    nb_collaborators, filtered_db_model, item_operator, id, collaborator_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -350,25 +344,17 @@ def set_a_many_collaborators_id_expression_for_department(
     i = 0
     for id in collaborator_ids:
         i += 1
-        if i == nb_collaborators-1:
+        if i == nb_collaborators - 1:
             # on ferme l'expression avec une parenthèse
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
         else:
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
     return many_query
 
 
 def set_a_many_events_id_expression_for_client(
-        nb_events,
-        filtered_db_model,
-        item_operator,
-        id,
-        event_ids
-    ):
+    nb_events, filtered_db_model, item_operator, id, event_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -382,25 +368,17 @@ def set_a_many_events_id_expression_for_client(
     i = 0
     for id in event_ids:
         i += 1
-        if i == nb_events-1:
+        if i == nb_events - 1:
             # on ferme l'expression avec une parenthèse
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
         else:
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
     return many_query
 
 
 def set_a_many_collaborators_id_expression_for_role(
-        nb_collaborators,
-        filtered_db_model,
-        item_operator,
-        id,
-        collaborator_ids
-    ):
+    nb_collaborators, filtered_db_model, item_operator, id, collaborator_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -414,19 +392,17 @@ def set_a_many_collaborators_id_expression_for_role(
     i = 0
     for id in collaborator_ids:
         i += 1
-        if i == nb_collaborators-1:
+        if i == nb_collaborators - 1:
             # on ferme l'expression avec une parenthèse
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
         else:
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
     return many_query
 
 
-def set_a_many_companies_id_expression_for_location(nb_companies, filtered_db_model, item_operator, id, company_ids):
+def set_a_many_companies_id_expression_for_location(
+    nb_companies, filtered_db_model, item_operator, id, company_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -441,19 +417,17 @@ def set_a_many_companies_id_expression_for_location(nb_companies, filtered_db_mo
     i = 0
     for id in company_ids:
         i += 1
-        if i == nb_companies-1:
+        if i == nb_companies - 1:
             # on ferme l'expression avec une parenthèse
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
         else:
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
     return many_query
 
 
-def set_a_many_events_id_expression_for_location(nb_events, filtered_db_model, item_operator, id, events_ids):
+def set_a_many_events_id_expression_for_location(
+    nb_events, filtered_db_model, item_operator, id, events_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -468,19 +442,17 @@ def set_a_many_events_id_expression_for_location(nb_events, filtered_db_model, i
     i = 0
     for id in events_ids:
         i += 1
-        if i == nb_events-1:
+        if i == nb_events - 1:
             # on ferme l'expression avec une parenthèse
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
         else:
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
     return many_query
 
 
-def set_a_many_clients_id_expression_for_company(nb_clients, filtered_db_model, item_operator, id, client_ids):
+def set_a_many_clients_id_expression_for_company(
+    nb_clients, filtered_db_model, item_operator, id, client_ids
+):
     """
     Description:
     Appéelée par rebuild_filter_query.
@@ -492,28 +464,191 @@ def set_a_many_clients_id_expression_for_company(nb_clients, filtered_db_model, 
     i = 0
     for id in client_ids:
         i += 1
-        if i == nb_clients-1:
+        if i == nb_clients - 1:
             # on ferme l'expression avec une parenthèse
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}')"
         else:
-            many_query += (
-                f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
-            )
+            many_query += f" OR {filtered_db_model}.id{item_operator}'{id[0]}'"
     return many_query
 
 
-def set_a_many_clients_id_expression_for_commercial_contact(nb_clients, filtered_db_model, item_operator, id, client_ids):
+def split_args_for_rebuild_filter_query(user_query_filters_args):
     """
     Description:
-    Appéelée par rebuild_filter_query.
-    (...)
+    Fonction utilisée par rebuild_filter_query.
     """
-    pass
+    # on déclare cette variable dans le seul but d'alléger la syntaxe (flake8)
+    no_complement_asked = bool("complement_adresse" not in user_query_filters_args)
+
+    # on éclate dans une liste chaque "triplet" (l'argument, l'opérateur, la valeur)
+    # cas particuliers, l'emploie du client, exemple 'Ingénieur cloud computing'.
+    if "employee_role" in user_query_filters_args:
+        # on vérifie que le employee_role est bien le dernier élément de la requete
+        pattern = re.compile(r"employee_role='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
+        try:
+            something_after_employee_role = re.search(
+                pattern, user_query_filters_args
+            ).group()
+            raise exceptions.QueryStructureException()
+        except exceptions.QueryStructureException:
+            raise exceptions.QueryStructureException()
+        except Exception:
+            # requête bien structurée
+            pass
+        pattern = re.compile(r"employee_role='([a-zA-Z0-9éèà =]*)'")
+        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
+        user_query_filters_args = user_query_filters_args.replace(
+            f"{subarg_to_parse}", ""
+        )
+        splited_args = user_query_filters_args.split(" ")
+        splited_args.pop()
+        subarg_to_parse = subarg_to_parse.replace("'", "")
+        splited_args.append(subarg_to_parse)
+    elif "username" in user_query_filters_args:
+        # on vérifie que le username est bien le dernier élément de la requete
+        pattern = re.compile(r"username='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
+        try:
+            something_after_username = re.search(
+                pattern, user_query_filters_args
+            ).group()
+            raise exceptions.QueryStructureException()
+        except exceptions.QueryStructureException:
+            raise exceptions.QueryStructureException()
+        except Exception:
+            # requête bien structurée
+            pass
+        pattern = re.compile(r"username='([a-zA-Z0-9éèà =]*)'")
+        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
+        user_query_filters_args = user_query_filters_args.replace(
+            f"{subarg_to_parse}", ""
+        )
+        splited_args = user_query_filters_args.split(" ")
+        splited_args.pop()
+        subarg_to_parse = subarg_to_parse.replace("'", "")
+        splited_args.append(subarg_to_parse)
+    elif "company_name" in user_query_filters_args:
+        # on vérifie que le username est bien le dernier élément de la requete
+        pattern = re.compile(r"company_name='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
+        try:
+            something_after_company_name = re.search(
+                pattern, user_query_filters_args
+            ).group()
+            raise exceptions.QueryStructureException()
+        except exceptions.QueryStructureException:
+            raise exceptions.QueryStructureException()
+        except Exception:
+            # requête bien structurée
+            pass
+        pattern = re.compile(r"company_name='([a-zA-Z0-9éèà =]*)'")
+        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
+        user_query_filters_args = user_query_filters_args.replace(
+            f"{subarg_to_parse}", ""
+        )
+        splited_args = user_query_filters_args.split(" ")
+        splited_args.pop()
+        subarg_to_parse = subarg_to_parse.replace("'", "")
+        splited_args.append(subarg_to_parse)
+    elif "adresse" in user_query_filters_args and no_complement_asked:
+        # on vérifie que le username est bien le dernier élément de la requete
+        pattern = re.compile(r"adresse='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
+        try:
+            something_after_company_name = re.search(
+                pattern, user_query_filters_args
+            ).group()
+            raise exceptions.QueryStructureException()
+        except exceptions.QueryStructureException:
+            raise exceptions.QueryStructureException()
+        except Exception:
+            # requête bien structurée
+            pass
+        pattern = re.compile(r"adresse='([a-zA-Z0-9éèà =]*)'")
+        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
+        user_query_filters_args = user_query_filters_args.replace(
+            f"{subarg_to_parse}", ""
+        )
+        splited_args = user_query_filters_args.split(" ")
+        splited_args.pop()
+        subarg_to_parse = subarg_to_parse.replace("'", "")
+        splited_args.append(subarg_to_parse)
+    elif "complement_adresse" in user_query_filters_args:
+        # on vérifie que le username est bien le dernier élément de la requete
+        pattern = re.compile(
+            r"complement_adresse='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)"
+        )
+        try:
+            something_after_company_name = re.search(
+                pattern, user_query_filters_args
+            ).group()
+            raise exceptions.QueryStructureException()
+        except exceptions.QueryStructureException:
+            raise exceptions.QueryStructureException()
+        except Exception:
+            # requête bien structurée
+            pass
+        pattern = re.compile(r"complement_adresse='([a-zA-Z0-9éèà =]*)'")
+        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
+        user_query_filters_args = user_query_filters_args.replace(
+            f"{subarg_to_parse}", ""
+        )
+        splited_args = user_query_filters_args.split(" ")
+        splited_args.pop()
+        subarg_to_parse = subarg_to_parse.replace("'", "")
+        splited_args.append(subarg_to_parse)
+    elif "ville" in user_query_filters_args:
+        # on vérifie que le username est bien le dernier élément de la requete
+        pattern = re.compile(r"ville='([a-zA-Z0-9éèà = -]*)' ([a-zA-Z0-9éèà =]*)")
+        try:
+            something_after_company_name = re.search(
+                pattern, user_query_filters_args
+            ).group()
+            raise exceptions.QueryStructureException()
+        except exceptions.QueryStructureException:
+            raise exceptions.QueryStructureException()
+        except Exception:
+            # requête bien structurée
+            pass
+        pattern = re.compile(r"ville='([a-zA-Z0-9éèà = -]*)'")
+        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
+        user_query_filters_args = user_query_filters_args.replace(
+            f"{subarg_to_parse}", ""
+        )
+        splited_args = user_query_filters_args.split(" ")
+        splited_args.pop()
+        subarg_to_parse = subarg_to_parse.replace("'", "")
+        splited_args.append(subarg_to_parse)
+    elif "region" in user_query_filters_args:
+        # on vérifie que le username est bien le dernier élément de la requete
+        pattern = re.compile(r"region='([a-zA-Z0-9éèà = -]*)' ([a-zA-Z0-9éèà =]*)")
+        try:
+            something_after_company_name = re.search(
+                pattern, user_query_filters_args
+            ).group()
+            raise exceptions.QueryStructureException()
+        except exceptions.QueryStructureException:
+            raise exceptions.QueryStructureException()
+        except Exception:
+            # requête bien structurée
+            pass
+        pattern = re.compile(r"region='([a-zA-Z0-9éèà = -]*)'")
+        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
+        user_query_filters_args = user_query_filters_args.replace(
+            f"{subarg_to_parse}", ""
+        )
+        splited_args = user_query_filters_args.split(" ")
+        splited_args.pop()
+        subarg_to_parse = subarg_to_parse.replace("'", "")
+        splited_args.append(subarg_to_parse)
+    else:
+        splited_args = user_query_filters_args.split(" ")
+
+    return splited_args
 
 
-def rebuild_filter_query(user_query_filters_args, filtered_db_model, session="", ):
+def rebuild_filter_query(
+    user_query_filters_args,
+    filtered_db_model,
+    session="",
+):
     """
     Description:
     Fonction utilisée lorsque l'utilisateur demande une vue filtrée.
@@ -537,136 +672,7 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model, session="",
         # pas d'espace autour des opérateurs, on ne fait rien
         pass
 
-    # on éclate dans une liste chaque "triplet" (l'argument, l'opérateur, la valeur)
-    # cas particuliers, l'emploie du client, exemple 'Ingénieur cloud computing'.
-    if "employee_role" in user_query_filters_args:
-        # on vérifie que le employee_role est bien le dernier élément de la requete
-        pattern = re.compile(r"employee_role='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
-        try:
-            something_after_employee_role = re.search(pattern, user_query_filters_args).group()
-            raise exceptions.QueryStructureException()
-        except exceptions.QueryStructureException:
-            raise exceptions.QueryStructureException()
-        except Exception:
-            # requête bien structurée
-            pass
-        pattern = re.compile(r"employee_role='([a-zA-Z0-9éèà =]*)'")
-        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
-        user_query_filters_args = user_query_filters_args.replace(f"{subarg_to_parse}", "")
-        splited_args = user_query_filters_args.split(" ")
-        splited_args.pop()
-        subarg_to_parse = subarg_to_parse.replace("'", "")
-        splited_args.append(subarg_to_parse)
-    elif "username" in user_query_filters_args:
-        # on vérifie que le username est bien le dernier élément de la requete
-        pattern = re.compile(r"username='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
-        try:
-            something_after_username = re.search(pattern, user_query_filters_args).group()
-            raise exceptions.QueryStructureException()
-        except exceptions.QueryStructureException:
-            raise exceptions.QueryStructureException()
-        except Exception:
-            # requête bien structurée
-            pass
-        pattern = re.compile(r"username='([a-zA-Z0-9éèà =]*)'")
-        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
-        user_query_filters_args = user_query_filters_args.replace(f"{subarg_to_parse}", "")
-        splited_args = user_query_filters_args.split(" ")
-        splited_args.pop()
-        subarg_to_parse = subarg_to_parse.replace("'", "")
-        splited_args.append(subarg_to_parse)
-    elif "company_name" in user_query_filters_args:
-        # on vérifie que le username est bien le dernier élément de la requete
-        pattern = re.compile(r"company_name='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
-        try:
-            something_after_company_name = re.search(pattern, user_query_filters_args).group()
-            raise exceptions.QueryStructureException()
-        except exceptions.QueryStructureException:
-            raise exceptions.QueryStructureException()
-        except Exception:
-            # requête bien structurée
-            pass
-        pattern = re.compile(r"company_name='([a-zA-Z0-9éèà =]*)'")
-        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
-        user_query_filters_args = user_query_filters_args.replace(f"{subarg_to_parse}", "")
-        splited_args = user_query_filters_args.split(" ")
-        splited_args.pop()
-        subarg_to_parse = subarg_to_parse.replace("'", "")
-        splited_args.append(subarg_to_parse)
-    elif "adresse" in user_query_filters_args and "complement_adresse" not in user_query_filters_args:
-        # on vérifie que le username est bien le dernier élément de la requete
-        pattern = re.compile(r"adresse='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
-        try:
-            something_after_company_name = re.search(pattern, user_query_filters_args).group()
-            raise exceptions.QueryStructureException()
-        except exceptions.QueryStructureException:
-            raise exceptions.QueryStructureException()
-        except Exception:
-            # requête bien structurée
-            pass
-        pattern = re.compile(r"adresse='([a-zA-Z0-9éèà =]*)'")
-        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
-        user_query_filters_args = user_query_filters_args.replace(f"{subarg_to_parse}", "")
-        splited_args = user_query_filters_args.split(" ")
-        splited_args.pop()
-        subarg_to_parse = subarg_to_parse.replace("'", "")
-        splited_args.append(subarg_to_parse)
-    elif "complement_adresse" in user_query_filters_args:
-        # on vérifie que le username est bien le dernier élément de la requete
-        pattern = re.compile(r"complement_adresse='([a-zA-Z0-9éèà =]*)' ([a-zA-Z0-9éèà =]*)")
-        try:
-            something_after_company_name = re.search(pattern, user_query_filters_args).group()
-            raise exceptions.QueryStructureException()
-        except exceptions.QueryStructureException:
-            raise exceptions.QueryStructureException()
-        except Exception:
-            # requête bien structurée
-            pass
-        pattern = re.compile(r"complement_adresse='([a-zA-Z0-9éèà =]*)'")
-        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
-        user_query_filters_args = user_query_filters_args.replace(f"{subarg_to_parse}", "")
-        splited_args = user_query_filters_args.split(" ")
-        splited_args.pop()
-        subarg_to_parse = subarg_to_parse.replace("'", "")
-        splited_args.append(subarg_to_parse)
-    elif "ville" in user_query_filters_args:
-        # on vérifie que le username est bien le dernier élément de la requete
-        pattern = re.compile(r"ville='([a-zA-Z0-9éèà = -]*)' ([a-zA-Z0-9éèà =]*)")
-        try:
-            something_after_company_name = re.search(pattern, user_query_filters_args).group()
-            raise exceptions.QueryStructureException()
-        except exceptions.QueryStructureException:
-            raise exceptions.QueryStructureException()
-        except Exception:
-            # requête bien structurée
-            pass
-        pattern = re.compile(r"ville='([a-zA-Z0-9éèà = -]*)'")
-        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
-        user_query_filters_args = user_query_filters_args.replace(f"{subarg_to_parse}", "")
-        splited_args = user_query_filters_args.split(" ")
-        splited_args.pop()
-        subarg_to_parse = subarg_to_parse.replace("'", "")
-        splited_args.append(subarg_to_parse)
-    elif "region" in user_query_filters_args:
-        # on vérifie que le username est bien le dernier élément de la requete
-        pattern = re.compile(r"region='([a-zA-Z0-9éèà = -]*)' ([a-zA-Z0-9éèà =]*)")
-        try:
-            something_after_company_name = re.search(pattern, user_query_filters_args).group()
-            raise exceptions.QueryStructureException()
-        except exceptions.QueryStructureException:
-            raise exceptions.QueryStructureException()
-        except Exception:
-            # requête bien structurée
-            pass
-        pattern = re.compile(r"region='([a-zA-Z0-9éèà = -]*)'")
-        subarg_to_parse = re.search(pattern, user_query_filters_args).group()
-        user_query_filters_args = user_query_filters_args.replace(f"{subarg_to_parse}", "")
-        splited_args = user_query_filters_args.split(" ")
-        splited_args.pop()
-        subarg_to_parse = subarg_to_parse.replace("'", "")
-        splited_args.append(subarg_to_parse)
-    else:
-        splited_args = user_query_filters_args.split(" ")
+    splited_args = split_args_for_rebuild_filter_query(user_query_filters_args)
 
     # on va déconstruire les arguments donnés par l'utilisateur dans une liste de tuple
     # elle aura une forme de type: [('status', 'signed', '='), ('AND',), ('remain_amount_to_pay', '0', '>=')]
@@ -686,42 +692,57 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model, session="",
                     )
                 else:
                     if "Contract" in filtered_db_model:
-                        collaborator_id = get_user_id_from_registration_number(session, item_value)
-                        client_ids = get_all_client_ids_for_a_collaborator_id(session, collaborator_id)
+                        collaborator_id = get_user_id_from_registration_number(
+                            session, item_value
+                        )
+                        client_ids = get_all_client_ids_for_a_collaborator_id(
+                            session, collaborator_id
+                        )
                         nb_clients = len(client_ids)
                         if nb_clients == 1:
+                            id = client_ids[0][0]
                             filter_to_apply_rebuilt_query += (
-                                f"({filtered_db_model}.client_id{item_operator}'{client_ids[0][0]}')"
+                                f"({filtered_db_model}.client_id{item_operator}'{id}')"
                             )
                         else:
-                            filter_to_apply_rebuilt_query += set_a_many_collaborators_id_expression_for_contract(
-                                nb_clients,
-                                filtered_db_model,
-                                item_operator,
-                                id,
-                                client_ids
+                            filter_to_apply_rebuilt_query += (
+                                set_a_many_collaborators_id_expression_for_contract(
+                                    nb_clients,
+                                    filtered_db_model,
+                                    item_operator,
+                                    id,
+                                    client_ids,
+                                )
                             )
                     else:
-                        collaborator_id = get_user_id_from_registration_number(session, item_value)
+                        collaborator_id = get_user_id_from_registration_number(
+                            session, item_value
+                        )
+                        id = collaborator_id
                         filter_to_apply_rebuilt_query += (
-                            f"({filtered_db_model}.{item_key}{item_operator}'{collaborator_id}')"
+                            f"({filtered_db_model}.{item_key}{item_operator}'{id}')"
                         )
             elif item_key == "client_id":
                 if "Event" in filtered_db_model:
                     client_id = get_client_id_from_client_custom_id(session, item_value)
-                    contract_ids = get_all_contract_ids_for_a_client_id(session, client_id)
+                    contract_ids = get_all_contract_ids_for_a_client_id(
+                        session, client_id
+                    )
                     nb_contracts = len(contract_ids)
                     if nb_contracts == 1:
+                        id = contract_ids[0][0]
                         filter_to_apply_rebuilt_query += (
-                            f"({filtered_db_model}.id{item_operator}'{contract_ids[0][0]}')"
+                            f"({filtered_db_model}.id{item_operator}'{id}')"
                         )
                     else:
-                        filter_to_apply_rebuilt_query += set_a_many_contracts_id_expression_for_event(
-                            nb_contracts,
-                            filtered_db_model,
-                            item_operator,
-                            id,
-                            contract_ids
+                        filter_to_apply_rebuilt_query += (
+                            set_a_many_contracts_id_expression_for_event(
+                                nb_contracts,
+                                filtered_db_model,
+                                item_operator,
+                                id,
+                                contract_ids,
+                            )
                         )
                 else:
                     client_id = get_client_id_from_client_custom_id(session, item_value)
@@ -738,69 +759,94 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model, session="",
                 )
             elif item_key == "company_id":
                 if filtered_db_model == "Client":
-                    company_id = get_company_id_from_company_custom_id(session, item_value)
-                    client_ids = get_all_client_ids_for_a_company_id(session, company_id)
+                    company_id = get_company_id_from_company_custom_id(
+                        session, item_value
+                    )
+                    client_ids = get_all_client_ids_for_a_company_id(
+                        session, company_id
+                    )
                     nb_clients = len(client_ids)
                     if nb_clients == 1:
+                        id = client_ids[0][0]
                         filter_to_apply_rebuilt_query += (
-                            f"({filtered_db_model}.id{item_operator}'{client_ids[0][0]}')"
+                            f"({filtered_db_model}.id{item_operator}'{id}')"
                         )
                     else:
-                        filter_to_apply_rebuilt_query += set_a_many_clients_id_expression_for_company(
-                            nb_clients,
-                            filtered_db_model,
-                            item_operator,
-                            id,
-                            client_ids
+                        filter_to_apply_rebuilt_query += (
+                            set_a_many_clients_id_expression_for_company(
+                                nb_clients,
+                                filtered_db_model,
+                                item_operator,
+                                id,
+                                client_ids,
+                            )
                         )
                 else:
-                    company_id = get_company_id_from_company_custom_id(session, item_value)
+                    company_id = get_company_id_from_company_custom_id(
+                        session, item_value
+                    )
                     filter_to_apply_rebuilt_query += (
                         f"({filtered_db_model}.id{item_operator}'{company_id}')"
                     )
             elif item_key == "contract_id":
-                contract_id = get_contract_id_from_contract_custom_id(session, item_value)
+                contract_id = get_contract_id_from_contract_custom_id(
+                    session, item_value
+                )
                 filter_to_apply_rebuilt_query += (
                     f"({filtered_db_model}.id{item_operator}'{contract_id}')"
                 )
             elif item_key == "department_id":
                 if filtered_db_model == "Collaborator":
-                    department_id = get_department_id_from_department_custom_id(session, item_value)
-                    collaborator_ids = get_all_collaborator_ids_for_a_department_id(session, department_id)
+                    department_id = get_department_id_from_department_custom_id(
+                        session, item_value
+                    )
+                    collaborator_ids = get_all_collaborator_ids_for_a_department_id(
+                        session, department_id
+                    )
                     nb_collaborators = len(collaborator_ids)
                     if nb_collaborators == 1:
+                        id = collaborator_ids[0][0]
                         filter_to_apply_rebuilt_query += (
-                            f"({filtered_db_model}.id{item_operator}'{collaborator_ids[0][0]}')"
+                            f"({filtered_db_model}.id{item_operator}'{id}')"
                         )
                     else:
-                        filter_to_apply_rebuilt_query += set_a_many_collaborators_id_expression_for_department(
-                            nb_collaborators,
-                            filtered_db_model,
-                            item_operator,
-                            id,
-                            collaborator_ids
+                        filter_to_apply_rebuilt_query += (
+                            set_a_many_collaborators_id_expression_for_department(
+                                nb_collaborators,
+                                filtered_db_model,
+                                item_operator,
+                                id,
+                                collaborator_ids,
+                            )
                         )
                 else:
-                    department_id = get_department_id_from_custom_id(session, item_value)
+                    department_id = get_department_id_from_custom_id(
+                        session, item_value
+                    )
                     filter_to_apply_rebuilt_query += (
                         f"({filtered_db_model}.id{item_operator}'{department_id}')"
                     )
             elif item_key == "role_id":
                 if filtered_db_model == "Collaborator":
                     role_id = get_role_id_from_role_custom_id(session, item_value)
-                    collaborator_ids = get_all_collaborator_ids_for_a_role_id(session, role_id)
+                    collaborator_ids = get_all_collaborator_ids_for_a_role_id(
+                        session, role_id
+                    )
                     nb_collaborators = len(collaborator_ids)
                     if nb_collaborators == 1:
+                        id = collaborator_ids[0][0]
                         filter_to_apply_rebuilt_query += (
-                            f"({filtered_db_model}.id{item_operator}'{collaborator_ids[0][0]}')"
+                            f"({filtered_db_model}.id{item_operator}'{id}')"
                         )
                     else:
-                        filter_to_apply_rebuilt_query += set_a_many_collaborators_id_expression_for_role(
-                            nb_collaborators,
-                            filtered_db_model,
-                            item_operator,
-                            id,
-                            collaborator_ids
+                        filter_to_apply_rebuilt_query += (
+                            set_a_many_collaborators_id_expression_for_role(
+                                nb_collaborators,
+                                filtered_db_model,
+                                item_operator,
+                                id,
+                                collaborator_ids,
+                            )
                         )
                 else:
                     role_id = get_role_id_from_role_custom_id(session, item_value)
@@ -809,57 +855,74 @@ def rebuild_filter_query(user_query_filters_args, filtered_db_model, session="",
                     )
             elif item_key == "location_id":
                 if filtered_db_model == "Location":
-                    location_id = get_location_id_from_location_custom_id(session, item_value)
+                    location_id = get_location_id_from_location_custom_id(
+                        session, item_value
+                    )
                     filter_to_apply_rebuilt_query += (
                         f"({filtered_db_model}.id{item_operator}'{location_id[0]}')"
                     )
                 else:
-                    location_id = get_location_id_from_location_custom_id(session, item_value)
+                    location_id = get_location_id_from_location_custom_id(
+                        session, item_value
+                    )
                     if filtered_db_model == "Company":
-                        company_ids = get_all_company_ids_for_a_location_id(session, location_id)
+                        company_ids = get_all_company_ids_for_a_location_id(
+                            session, location_id
+                        )
                         nb_companies = len(company_ids)
                         if nb_companies == 1:
+                            id = company_ids[0][0]
                             filter_to_apply_rebuilt_query += (
-                                f"({filtered_db_model}.id{item_operator}'{company_ids[0][0]}')"
+                                f"({filtered_db_model}.id{item_operator}'{id}')"
                             )
                         else:
-                            filter_to_apply_rebuilt_query += set_a_many_companies_id_expression_for_location(
-                                nb_companies,
-                                filtered_db_model,
-                                item_operator,
-                                id,
-                                company_ids
+                            filter_to_apply_rebuilt_query += (
+                                set_a_many_companies_id_expression_for_location(
+                                    nb_companies,
+                                    filtered_db_model,
+                                    item_operator,
+                                    id,
+                                    company_ids,
+                                )
                             )
                     elif filtered_db_model == "Event":
-                        event_ids = get_all_event_ids_for_a_location_id(session, location_id)
+                        event_ids = get_all_event_ids_for_a_location_id(
+                            session, location_id
+                        )
                         nb_events = len(event_ids)
                         if nb_events == 1:
+                            id = event_ids[0][0]
                             filter_to_apply_rebuilt_query += (
-                                f"({filtered_db_model}.id{item_operator}'{event_ids[0][0]}')"
+                                f"({filtered_db_model}.id{item_operator}'{id}')"
                             )
                         else:
-                            filter_to_apply_rebuilt_query += set_a_many_events_id_expression_for_location(
-                                nb_events,
-                                filtered_db_model,
-                                item_operator,
-                                id,
-                                event_ids
+                            filter_to_apply_rebuilt_query += (
+                                set_a_many_events_id_expression_for_location(
+                                    nb_events,
+                                    filtered_db_model,
+                                    item_operator,
+                                    id,
+                                    event_ids,
+                                )
                             )
             elif item_key == "commercial_id":
-                collaborator_id = get_user_id_from_registration_number(session, item_value)
-                client_ids = get_all_client_ids_for_a_collaborator_id(session, collaborator_id)
+                collaborator_id = get_user_id_from_registration_number(
+                    session, item_value
+                )
+                client_ids = get_all_client_ids_for_a_collaborator_id(
+                    session, collaborator_id
+                )
                 nb_clients = len(client_ids)
                 if nb_clients == 1:
+                    id = client_ids[0]
                     filter_to_apply_rebuilt_query += (
-                        f"({filtered_db_model}.client_id{item_operator}'{client_ids[0]}')"
+                        f"({filtered_db_model}.client_id{item_operator}'{id}')"
                     )
                 else:
-                    filter_to_apply_rebuilt_query += set_a_many_collaborators_id_expression_for_event(
-                        nb_clients,
-                        filtered_db_model,
-                        item_operator,
-                        id,
-                        client_ids
+                    filter_to_apply_rebuilt_query += (
+                        set_a_many_collaborators_id_expression_for_event(
+                            nb_clients, filtered_db_model, item_operator, id, client_ids
+                        )
                     )
             else:
                 # filtered_db_model: Contract, Collaborator_Role, Client etc
@@ -936,7 +999,7 @@ def get_user_id_from_registration_number(session, registration_number):
     - registration_number: chaine libre de caractères, le matricule de l'employé
     """
     sql = text(
-    f"""SELECT id FROM collaborator WHERE registration_number='{registration_number}'"""
+        f"""SELECT id FROM collaborator WHERE registration_number='{registration_number}'"""
     )
     result = session.execute(sql).first()
     id = str(result[0]).lower()
@@ -981,7 +1044,9 @@ def get_all_client_ids_for_a_collaborator_id(session, collaborator_id):
     Paramètres:
     - collaborator_id: entier, l'id clef primaire
     """
-    sql = text(f"""SELECT id FROM client WHERE commercial_contact='{collaborator_id}'""")
+    sql = text(
+        f"""SELECT id FROM client WHERE commercial_contact='{collaborator_id}'"""
+    )
     result = session.execute(sql).all()
     return result
 
@@ -1036,7 +1101,9 @@ def get_all_company_ids_for_a_date_debut_activite(session, date_debut_activite):
     Paramètres:
     - location_id: entier, l'id clef primaire
     """
-    sql = text(f"""SELECT id FROM company WHERE date_debut_activite='{location_id}'""")
+    sql = text(
+        f"""SELECT id FROM company WHERE date_debut_activite='{date_debut_activite}'"""
+    )
     result = session.execute(sql).all()
     return result
 
@@ -1153,9 +1220,7 @@ def get_location_id_from_location_custom_id(session, location_id):
     Paramètres:
     - location_id: chaine libre de caractères, le custom id de la localité
     """
-    sql = text(
-        f"""SELECT id FROM location WHERE location_id='{location_id}'"""
-    )
+    sql = text(f"""SELECT id FROM location WHERE location_id='{location_id}'""")
     result = session.execute(sql).first()
     try:
         id = str(result[0]).lower()

@@ -4,8 +4,8 @@ Test de la vue "delete_views.py", on test la suppression de données métier ave
 Pas de bases de données de test, içi on supprime les données créées via "tests/views/test_create_views.py".
 On supprime les données en recherchant un "custom id" (une chaine libre), pas l'id entier auto incrémenté de la table.
 """
-import os
 import pytest
+
 try:
     from src.clients.delete_console import ConsoleClientForDelete
     from src.exceptions import exceptions
@@ -318,7 +318,10 @@ def test_delete_collaborator_view_with_support_profile_raises_exception(
     ],
 )
 def test_delete_collaborator_view_with_gestion_profile(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator, matricule
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    matricule,
 ):
     try:
         result = ConsoleClientForDelete(

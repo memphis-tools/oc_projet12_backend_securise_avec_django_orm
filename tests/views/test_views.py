@@ -28,13 +28,17 @@ except ModuleNotFoundError:
     ],
 )
 def test_get_views(
-    get_runner, set_a_test_env, command, get_valid_decoded_token_for_a_gestion_collaborator
+    get_runner,
+    set_a_test_env,
+    command,
+    get_valid_decoded_token_for_a_gestion_collaborator,
 ):
     """
     Description:
     Toutes les données métier doivent être accessibles en lecture seule par tout collaborateur de l'entreprise.
     Içi on vérifie que les 'vues' seront accessibles.
     """
+    UNUSED_APP_DICT = database_read_commands.APP_DICT
     result = get_runner.invoke(eval(f"database_read_commands.{command}"))
     assert result.exit_code == 0
 

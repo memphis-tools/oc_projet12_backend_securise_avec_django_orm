@@ -171,7 +171,9 @@ def test_update_client_view_with_valid_company_with_commercial_profile_unassgine
 
 
 def test_update_client_view_with_unvalid_company(
-    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator_id_2
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_commercial_collaborator_id_2,
 ):
     args_to_convert = client_partial_dict_3
     custom_id = args_to_convert.pop("client_id")
@@ -249,7 +251,9 @@ def test_update_contract_view_with_gestion_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
     db_name = f"{settings.TEST_DATABASE_NAME}"
-    result = ConsoleClientForUpdate(db_name=db_name).update_contract(contract_partial_dict3)
+    result = ConsoleClientForUpdate(db_name=db_name).update_contract(
+        contract_partial_dict3
+    )
     assert isinstance(result, str)
     assert "Update" in result
 
@@ -265,7 +269,8 @@ def test_update_contract_view_with_support_profile_raises_exception(
 
 
 def test_update_event_view_with_commercial_profile_raises_exception(
-    get_runner, set_a_test_env,
+    get_runner,
+    set_a_test_env,
     get_valid_decoded_token_for_a_commercial_collaborator,
     dummy_event_partial_data_1,
 ):
@@ -278,7 +283,8 @@ def test_update_event_view_with_commercial_profile_raises_exception(
 
 
 def test_update_event_view_with_gestion_profile(
-    get_runner, set_a_test_env,
+    get_runner,
+    set_a_test_env,
     get_valid_decoded_token_for_a_gestion_collaborator,
     dummy_event_partial_data_0,
 ):
@@ -291,7 +297,8 @@ def test_update_event_view_with_gestion_profile(
 
 
 def test_update_event_view_with_support_profile_when_collaborator_is_assigned(
-    get_runner, set_a_test_env,
+    get_runner,
+    set_a_test_env,
     get_valid_decoded_token_for_a_support_collaborator_with_id_5,
     dummy_event_partial_data_2,
 ):
@@ -307,7 +314,8 @@ def test_update_event_view_with_support_profile_when_collaborator_is_assigned(
 
 
 def test_update_event_view_with_support_profile_when_collaborator_is_not_assigned_raises_exception(
-    get_runner, set_a_test_env,
+    get_runner,
+    set_a_test_env,
     get_valid_decoded_token_for_a_support_collaborator_with_id_7,
     dummy_event_partial_data_3,
 ):

@@ -52,26 +52,34 @@ class ClientsView:
                         "info", self.app_dict.get_appli_dictionnary()["NO_MORE_CLIENT"]
                     )
                 else:
-                    message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+                    message = self.app_dict.get_appli_dictionnary()[
+                        "DATABASE_QUERY_NO_MATCHES"
+                    ]
                     printer.print_message("info", message)
                     if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                    	LOGGER.info(message)
+                        LOGGER.info(message)
             except exceptions.QueryStructureException:
-                message = APP_DICT.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
+                message = self.app_dict.get_appli_dictionnary()[
+                    "QUERY_STRUCTURE_FAILURE"
+                ]
                 printer.print_message("info", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                     LOGGER.info(message)
                 raise exceptions.QueryStructureException()
             except TypeError:
-                message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+                message = self.app_dict.get_appli_dictionnary()[
+                    "DATABASE_QUERY_NO_MATCHES"
+                ]
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                	LOGGER.error(message)
+                    LOGGER.error(message)
             except Exception:
-                message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+                message = self.app_dict.get_appli_dictionnary()[
+                    "DATABASE_QUERY_FAILURE"
+                ]
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                	LOGGER.error(message)
+                    LOGGER.error(message)
                 raise Exception()
         else:
             db_model_queryset = self.db_controller.get_clients(self.session)
@@ -82,10 +90,12 @@ class ClientsView:
                     "info", self.app_dict.get_appli_dictionnary()["NO_MORE_CLIENT"]
                 )
             else:
-                message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+                message = self.app_dict.get_appli_dictionnary()[
+                    "DATABASE_QUERY_NO_MATCHES"
+                ]
                 printer.print_message("info", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                	LOGGER.info(message)
+                    LOGGER.info(message)
         return self.db_controller.get_clients(self.session)
 
     def get_client(self, client_id):

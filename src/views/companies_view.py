@@ -50,20 +50,26 @@ class CompaniesView:
                         "info", self.app_dict.get_appli_dictionnary()["NO_MORE_COMPANY"]
                     )
                 else:
-                    message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+                    message = self.app_dict.get_appli_dictionnary()[
+                        "DATABASE_QUERY_NO_MATCHES"
+                    ]
                     printer.print_message("info", message)
                     if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                    	LOGGER.info(message)
+                        LOGGER.info(message)
             except TypeError:
-                message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+                message = self.app_dict.get_appli_dictionnary()[
+                    "DATABASE_QUERY_NO_MATCHES"
+                ]
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                	LOGGER.error(message)
+                    LOGGER.error(message)
             except Exception:
-                message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
+                message = self.app_dict.get_appli_dictionnary()[
+                    "DATABASE_QUERY_FAILURE"
+                ]
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                	LOGGER.error(message)
+                    LOGGER.error(message)
         else:
             db_model_queryset = self.db_controller.get_companies(self.session)
             if len(db_model_queryset) > 0:
@@ -75,10 +81,12 @@ class CompaniesView:
                     "info", self.app_dict.get_appli_dictionnary()["NO_MORE_COMPANY"]
                 )
             else:
-                message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
+                message = self.app_dict.get_appli_dictionnary()[
+                    "DATABASE_QUERY_NO_MATCHES"
+                ]
                 printer.print_message("info", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                	LOGGER.info(message)
+                    LOGGER.info(message)
         return self.db_controller.get_companies(self.session)
 
     def get_company(self, company_id):
