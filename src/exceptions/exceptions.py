@@ -31,6 +31,14 @@ class ContractAmountToPayException(Exception):
     pass
 
 
+class ContractUnsignedException(Exception):
+    pass
+
+
+class ContractCanceledException(Exception):
+    pass
+
+
 class CustomIdEmptyException(Exception):
     pass
 
