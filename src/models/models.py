@@ -185,7 +185,7 @@ class Company(Base):
     company_id = Column(
         String(120),
         nullable=False,
-        unique=True,
+        unique=False,
     )
     company_name = Column(String(130), nullable=False)
     company_registration_number = Column(String(100), nullable=False)
@@ -201,10 +201,10 @@ class Company(Base):
 
     def __str__(self):
         descriptors = "["
-        descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
+        descriptors += f'(creation_date|{self.creation_date})'
         descriptors += f",(activite_principale|{self.activite_principale})"
         descriptors += (
-            f',(date_debut_activite|{self.creation_date.strftime("%d-%m-%Y")})'
+            f',(date_debut_activite|{self.creation_date})'
         )
         descriptors += f",(tranche_effectif_salarie|{self.tranche_effectif_salarie})"
         descriptors += f",(company_id|{self.company_id})"
@@ -225,9 +225,9 @@ class Company(Base):
     def get_dict(self):
         company_dict = {
             "id": self.id,
-            "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
+            "creation_date": self.creation_date,
             "activite_principale": self.activite_principale,
-            "date_debut_activite": self.date_debut_activite.strftime("%d-%m-%Y %H:%M"),
+            "date_debut_activite": self.date_debut_activite,
             "tranche_effectif_salarie": self.tranche_effectif_salarie,
             "company_id": self.company_id,
             "company_name": self.company_name,
