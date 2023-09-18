@@ -5,6 +5,7 @@ Client en mode console, dédié aux mises à jour (ajout, modification, suppress
 import sys
 from datetime import datetime
 import logtail
+from rich.prompt import Prompt
 
 try:
     from src.languages import language_bridge
@@ -232,14 +233,15 @@ class ConsoleClientForCreate:
             return False
         return True
 
-    def ask_for_a_location_id(self):
+    def ask_for_a_location_id(self, location_id=""):
         """
         Description:
         Proposer à l'utilisateur de saisir un 'custom id' relatif au modèle.
         Si un résultat correspond à la requête, son 'id' (primary key) est renvoyé.
         Si aucun résultat, on lève une exception CustomIdEmptyException.
         """
-        location_id = forms.submit_a_location_get_form()
+        if location_id == "":
+            location_id = forms.submit_a_location_get_form()
         try:
             if location_id == "":
                 raise exceptions.CustomIdEmptyException()
@@ -262,7 +264,8 @@ class ConsoleClientForCreate:
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
-            return location_id
+        except exceptions.LocationCustomIdAlReadyExists:
+            return location_lookup.id
 
     def ask_for_a_role_id(self):
         """
@@ -331,10 +334,9 @@ class ConsoleClientForCreate:
             else:
                 company_id = self.ask_for_a_company_id()
                 if not company_id:
-                    # on entame le dialogue pour enregistrer localité, entreprise.
-                    location_id = self.add_location()
-                    company_id = self.add_company(company_location_id=location_id)
-
+                    # on entame le dialogue pour enregistrer entreprise du client.
+                    company_id = self.add_company()
+                    company_id = self.ask_for_a_company_id()
                 client_attributes_dict = forms.submit_a_client_create_form()
                 client_attributes_dict["company_id"] = company_id
                 client_attributes_dict["commercial_contact"] = user_id
@@ -530,15 +532,20 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                company_location_id = self.ask_for_a_location_id()
+                location_id = Prompt.ask("id localité: ")
+                company_location_id = self.ask_for_a_location_id(location_id)
                 if not company_location_id:
-                    company_location_id = self.add_location()
-                company_attributes_dict = forms.submit_a_company_create_form(
-                    company_location_id=company_location_id
+                    company_location_id = self.add_location(location_id=location_id)
+
+                location_id = utils.get_location_id_from_location_custom_id(
+                    self.app_view.session, location_id
                 )
-                company = models.Company(**company_attributes_dict)
-                company.creation_date = datetime.now()
-            company_id = self.create_app_view.get_companies_view().add_company(company)
+                company_attributes_dict = forms.submit_a_company_create_form(
+                    company_location_id=location_id
+                )
+            company_id = self.create_app_view.get_companies_view().add_company(
+                models.Company(**company_attributes_dict)
+            )
             message = f"Creation company {company_id} by {registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -836,6 +843,10 @@ class ConsoleClientForCreate:
                 commercial_id_attached_to_contract = contract.client.commercial_contact
                 if commercial_id_attached_to_contract != int(user_id):
                     raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
+                if contract.status == "unsigned":
+                    raise exceptions.ContractUnsignedException()
+                if contract.status == "canceled":
+                    raise exceptions.ContractCanceledException()
                 if data_is_dict and dict_is_valid:
                     event = models.Event(**event_attributes_dict)
                 else:
@@ -845,15 +856,29 @@ class ConsoleClientForCreate:
                 contract = self.app_view.get_contracts_view().get_contract(
                     contract_id=contract_id_asked
                 )
+                if contract.status == "unsigned":
+                    raise exceptions.ContractUnsignedException()
+                if contract.status == "canceled":
+                    raise exceptions.ContractCanceledException()
                 commercial_id_attached_to_contract = contract.client.commercial_contact
                 if not contract:
                     raise exceptions.ContractNotFoundWithContractId()
                 if commercial_id_attached_to_contract != int(user_id):
                     raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
 
+                location_id = Prompt.ask("id localité: ")
+                company_location_id = self.ask_for_a_location_id(location_id)
+                if not company_location_id:
+                    company_location_id = self.add_location(location_id=location_id)
+
+                location_id = utils.get_location_id_from_location_custom_id(
+                    self.app_view.session, location_id
+                )
+
                 event_attributes_dict = forms.submit_a_event_create_form()
-                event_attributes_dict["collaborator_id"] = user_id
                 event_attributes_dict["contract_id"] = contract.id
+                event_attributes_dict["location_id"] = location_id
+                event_attributes_dict["client_id"] = contract.client_id
                 event = models.Event(**event_attributes_dict)
                 event.creation_date = datetime.now()
             event_id = self.create_app_view.get_events_view().add_event(user_id, event)
@@ -867,6 +892,20 @@ class ConsoleClientForCreate:
                 ):
                     LOGGER.info(message)
             return message
+        except exceptions.ContractCanceledException:
+            message = self.app_dict.get_appli_dictionnary()[
+                "CONTRACT_CANCELED"
+            ]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
+        except exceptions.ContractUnsignedException:
+            message = self.app_dict.get_appli_dictionnary()[
+                "CONTRACT_UNSIGNED"
+            ]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -919,7 +958,7 @@ class ConsoleClientForCreate:
             sys.exit(0)
 
     @utils.authentication_permission_decorator
-    def add_location(self, location_attributes_dict=""):
+    def add_location(self, location_attributes_dict="", location_id=""):
         """
         Description:
         Dédiée à enregistrer une localité.
@@ -949,7 +988,8 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                location_id = self.ask_for_a_location_id()
+                if location_id == "":
+                    location_id = self.ask_for_a_location_id()
                 location_attributes_dict = forms.submit_a_location_create_form(
                     location_id
                 )

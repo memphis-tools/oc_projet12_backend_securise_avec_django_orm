@@ -161,7 +161,6 @@ class DatabaseCreateController:
             session.commit()
             return event.event_id
         except Exception as error:
-            print(f"GOD DAMN IT {error}")
             message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:

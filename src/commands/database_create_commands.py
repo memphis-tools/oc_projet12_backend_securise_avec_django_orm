@@ -146,6 +146,10 @@ def add_event():
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
+    except exceptions.CustomIdMatchNothingException:
+        pass
+    except exceptions.CommercialCollaboratorIsNotAssignedToContract:
+        pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
