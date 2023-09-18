@@ -78,6 +78,15 @@ def is_company_name_valid(company_name):
     return re.match(pattern, company_name).group()
 
 
+def is_activite_principale_valid(code_activite):
+    """
+    Description: Controler le code activité de l'entreprise saisi (nombre caractères max repris du modèle).
+    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    """
+    pattern = re.compile(r"([\w \- \_ \. ']{,15})$")
+    return re.match(pattern, code_activite).group()
+
+
 def is_company_registration_number_valid(company_registration_number):
     """
     Description: Controler le SIREN saisi.
