@@ -153,14 +153,14 @@ def test_event_creation_manipulation(
     clients = ConsoleClientForRead(db_name).get_clients(("client_id=bduck",))
     client_for_event = ""
     for client in clients:
-        if client.client_id == "bduck":
+        if client.client_id == "DBLATT85":
             client_for_event = client
             break
     event_dict["client_id"] = client_for_event.id
     contracts = ConsoleClientForRead(db_name).get_contracts()
     contract_for_event = ""
     for contract in contracts:
-        if contract.contract_id == "av123":
+        if contract.contract_id == "ax312":
             contract_for_event = contract
             break
     event_dict["contract_id"] = contract_for_event.id
