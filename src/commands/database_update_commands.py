@@ -11,12 +11,14 @@ try:
     from src.clients.update_console import ConsoleClientForUpdate
     from src.exceptions import exceptions
     from src.settings import settings, logtail_handler
+    from src.validators.data_syntax.fr import validators
 except ModuleNotFoundError:
     from printers import printer
     from languages import language_bridge
     from clients.update_console import ConsoleClientForUpdate
     from exceptions import exceptions
     from settings import settings, logtail_handler
+    from validators.data_syntax.fr import validators
 
 
 APP_DICT = language_bridge.LanguageBridge()
