@@ -1,6 +1,11 @@
-![Screenshot](python-sqlalchemy.svg)
+![Screenshot](https://img.shields.io/badge/python-v3.10-blue?logo=python&logoColor=yellow)
+![Screenshot](https://img.shields.io/badge/postgresql-v15-blue?logo=postgresql&logoColor=yellow)
+![Screenshot](https://img.shields.io/badge/sqlalchemy--blue)
+![Screenshot](https://img.shields.io/badge/rich--blue)
+![Screenshot](https://img.shields.io/badge/betterstack--blue)
+
 # [OpenClassRoom](https://openclassrooms.com/) - Parcours développeur Python
-![Screenshot](oc_parcours_dev_python.png)
+![Screenshot](illustrations/oc_parcours_dev_python.png)
 ## Projet 12 - Créer un backend sécurisé en utilisant Django ORM
 
 ### Project description
@@ -12,7 +17,7 @@
 
 
 ### Requirements
-    Python >= 3.9
+    Python >= 3.10
     Supply a database scheme.
     Use an ORM (SQLALCHEMY).
     Any of these SGBD: SQLite, MySQL, PostgreSQL.
@@ -215,3 +220,6 @@ Notice that **log collect is activated by default**. You can deactivate it throu
       `poetry run flake8 --format html --htmldir flake8_report`
 
 ---
+
+### Simple usecases illustrated
+[OC12 WIKI](https://github.com/memphis-tools/oc_projet12_backend_securise_avec_django_orm/wiki/OpenClassRoom-Project-12-%E2%80%90-Parcours-utilisateur-pour-soutenance)
