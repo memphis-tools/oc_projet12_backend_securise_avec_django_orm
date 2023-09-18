@@ -153,6 +153,7 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                 if key == "code_postal":
                     pays = ""
                     ville, region, population = search_and_submit_a_town_name(item)
+
                     if ville and ville is not None:
                         custom_dict["code_postal"] = item
                         custom_dict["ville"] = ville
@@ -202,6 +203,7 @@ def submit_a_location_create_form(location_id, custom_dict={}):
             "ville": "ville",
             "region": "region",
             "pays": "pays",
+            "population": "valeur numérique"
         }
         printer.print_message(
             "info", APP_DICT.get_appli_dictionnary()["CREATE_A_LOCATION"]
@@ -265,6 +267,7 @@ def submit_a_company_create_form(company_location_id, custom_dict={}):
             sys.exit(0)
     custom_dict["location_id"] = company_location_id
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["date_debut_activite"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     return custom_dict
 
 

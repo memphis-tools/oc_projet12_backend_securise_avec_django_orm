@@ -16,6 +16,8 @@
   "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT":"Vous n'êtes pas le commercial du contrat; mise à jour non autorisée.",
   "COMPANY_RATTACHED_TO_CLIENT":"Entreprise rattachée à client existant.",
   "CONTRACT_RATTACHED_TO_EVENT":"Contrat rattaché à 1 évènement existant.",
+  "CONTRACT_CANCELED":"Contrat annulé",
+  "CONTRACT_UNSIGNED":"Contrat non signé",
   "CREATE_A_CLIENT":"Créer client.",
   "CREATE_A_COMPANY":"Créer entreprise.",
   "CREATE_A_CONTRACT":"Créer contrat.",
