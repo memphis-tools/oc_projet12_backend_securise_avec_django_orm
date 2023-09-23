@@ -88,7 +88,9 @@ class DatabaseDeleteController:
             return removed_id
         except sqlalchemy.exc.IntegrityError as error:
             if "psycopg.errors.ForeignKeyViolation" in str(error):
-                raise exceptions.ForeignKeyDependyException(error.orig)
+                session.rollback()
+                event = session.query(models.Event).filter_by(contract_id=contract_id).first()
+                raise exceptions.ForeignKeyDependyException(event.title)
 
     def delete_department(self, session, department_id):
         """
