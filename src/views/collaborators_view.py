@@ -9,12 +9,14 @@ try:
     from src.utils import utils
     from src.validators import update_data_validators
     from src.settings import settings, logtail_handler
+    from src.exceptions import exceptions
 except ModuleNotFoundError:
     from languages import language_bridge
     from printers import printer
     from utils import utils
     from validators import update_data_validators
     from settings import settings, logtail_handler
+    from exceptions import exceptions
 
 
 LOGGER = logtail_handler.logger
@@ -74,6 +76,7 @@ class CollaboratorsView:
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                     LOGGER.error(message)
+                raise exceptions.QueryFailureException()
         else:
             db_model_queryset = self.db_controller.get_collaborators(self.session)
             if len(db_model_queryset) > 0:

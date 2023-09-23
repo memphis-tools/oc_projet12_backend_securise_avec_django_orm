@@ -95,6 +95,14 @@ class EventsView:
 
         return self.db_controller.get_events(self.session)
 
+    def get_attached_event_to_contract(self, contract_id):
+        """
+        Description: Vue dédiée à obtenir l'évènement dont le contract_id est indiqué en entrée.
+        Parameters:
+        - contract_id: une chaine libre qui identifie un contrat.
+        """
+        return self.db_controller.get_attached_event(self.session, contract_id)
+
     def get_event(self, event_id):
         """
         Description: Vue dédiée à obtenir l'évènement dont l'id est indiqué en entrée.

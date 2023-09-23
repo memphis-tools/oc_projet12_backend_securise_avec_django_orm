@@ -80,7 +80,7 @@ class ClientsView:
                 printer.print_message("error", message)
                 if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                     LOGGER.error(message)
-                raise Exception()
+                raise exceptions.QueryFailureException()
         else:
             db_model_queryset = self.db_controller.get_clients(self.session)
             if len(db_model_queryset) > 0:
