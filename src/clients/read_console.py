@@ -29,9 +29,13 @@ class ConsoleClientForRead:
         """
         db_name = utils.set_database_to_get_based_on_user_path(db_name=db_name)
         self.app_dict = language_bridge.LanguageBridge()
-        utils.display_banner()
         self.app_view = AppViews(db_name=db_name)
         self.jwt_view = JwtView(self.app_view)
+        self.decoded_token = self.jwt_view.get_decoded_token()
+        self.user_service = str(self.decoded_token["department"]).upper()
+        self.registration_number = str(self.decoded_token["registration_number"])
+        self.allowed_crud_tables = eval(f"settings.{self.user_service}_CRUD_TABLES")
+        utils.display_banner(registration_number=self.registration_number )
 
     @utils.authentication_permission_decorator
     def get_clients(self, user_query_filters_args=""):
