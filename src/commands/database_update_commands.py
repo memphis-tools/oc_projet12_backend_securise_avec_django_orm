@@ -34,6 +34,7 @@ def check_if_partial_dict_valid(partial_dict):
     for key, value in partial_dict.items():
         try:
             if value is not None:
+                validators
                 eval(f"validators.is_{key}_valid")(value)
         except Exception:
             message = APP_DICT.get_appli_dictionnary()["VALUE_UNEXPECTED"]
