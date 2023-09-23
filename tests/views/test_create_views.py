@@ -186,6 +186,15 @@ contract_attributes_dict_2 = {
     "creation_date": f"{datetime.now()}",
 }
 
+contract_attributes_dict_3 = {
+    "contract_id": "ZZ777",
+    "full_amount_to_pay": "2255.99",
+    "remain_amount_to_pay": "2255.99",
+    "status": "unsigned",
+    "client_id": "1",
+    "creation_date": f"{datetime.now()}",
+}
+
 event_attributes_dict_1 = {
     "event_id": "EV971",
     "title": "What a Swing",
@@ -442,7 +451,7 @@ def test_add_contract_view_with_commercial_profile_raises_exception(
 
 
 @pytest.mark.parametrize(
-    "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2]
+    "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2, contract_attributes_dict_3]
 )
 def test_add_contract_view_with_gestion_profile(
     get_runner,
