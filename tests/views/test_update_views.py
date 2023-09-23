@@ -90,6 +90,17 @@ contract_partial_dict5 = {
     "remain_amount_to_pay": "55.23",
 }
 
+contract_partial_dict6 = {
+    "contract_id": "ZZ777",
+    "remain_amount_to_pay": "599.99",
+    "status": "signed",
+}
+
+contract_partial_dict7 = {
+    "contract_id": "ZZ777",
+    "remain_amount_to_pay": "199.99",
+}
+
 location_partial_dict = {
     "location_id": "p22240",
     "complement_adresse": "allée de la patissière",
@@ -218,6 +229,21 @@ def test_update_company_view_with_support_profile_raises_exception(
         )
 
 
+def test_update_contract_status_when_event_attached_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
+):
+    """
+    Description:
+    Un commercial ne peut modifier un contrat que s'il est le commercial assigné.
+    Exception 'exceptions.CommercialCollaboratorIsNotAssignedToContract' levée autrement.
+    """
+    with pytest.raises(exceptions.EventAttachedContractStatusCanNotBeUpdateException):
+        db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForUpdate(db_name=db_name).update_contract(
+            contract_partial_dict1
+        )
+
+
 def test_update_contract_view_with_commercial_profile_unassigned_to_contract_raises_exception(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
@@ -229,7 +255,7 @@ def test_update_contract_view_with_commercial_profile_unassigned_to_contract_rai
     with pytest.raises(exceptions.CommercialCollaboratorIsNotAssignedToContract):
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_contract(
-            contract_partial_dict1
+            contract_partial_dict6
         )
 
 
@@ -252,7 +278,7 @@ def test_update_contract_view_with_gestion_profile(
 ):
     db_name = f"{settings.TEST_DATABASE_NAME}"
     result = ConsoleClientForUpdate(db_name=db_name).update_contract(
-        contract_partial_dict3
+        contract_partial_dict7
     )
     assert isinstance(result, str)
     assert "Update" in result

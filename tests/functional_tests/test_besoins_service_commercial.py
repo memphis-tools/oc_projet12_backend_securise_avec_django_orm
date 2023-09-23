@@ -2,15 +2,18 @@
 Description:
 Tests fonctionnels pour les besoins spécifiques de l'équipe Commercial
 """
+import pytest
 try:
     from src.clients.create_console import ConsoleClientForCreate
     from src.clients.read_console import ConsoleClientForRead
     from src.clients.update_console import ConsoleClientForUpdate
+    from src.exceptions import exceptions
     from src.settings import settings
 except ModuleNotFoundError:
     from clients.create_console import ConsoleClientForCreate
     from clients.read_console import ConsoleClientForRead
     from clients.update_console import ConsoleClientForUpdate
+    from exceptions import exceptions
     from settings import settings
 
 
@@ -71,7 +74,7 @@ def test_client_update_manipulation(
     assert client_updated.first_name == dummy_client_partial_data["first_name"]
 
 
-def test_contract_update_manipulation(
+def test_contract_update_manipulation_raises_exception(
     set_a_test_env,
     get_runner,
     get_valid_decoded_token_for_a_commercial_collaborator,
@@ -79,15 +82,33 @@ def test_contract_update_manipulation(
 ):
     """
     Description:
+    Si un évènement a été crée, il n'est pas possible de modifer le statut du contrat,
+    sauf si évènement supprimé.
+    """
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    with pytest.raises(exceptions.EventAttachedContractStatusCanNotBeUpdateException):
+        ConsoleClientForUpdate(db_name).update_contract(
+            dummy_contract_partial_data_2
+        )
+
+
+def test_contract_update_manipulation(
+    set_a_test_env,
+    get_runner,
+    get_valid_decoded_token_for_a_commercial_collaborator,
+    dummy_contract_partial_data_4,
+):
+    """
+    Description:
     Un membre du service Commercial doit pouvoir mettre à jour les contrats des clients dont il est responsable.
     """
-    id_updated_contract = dummy_contract_partial_data_2["contract_id"]
+    id_updated_contract = dummy_contract_partial_data_4["contract_id"]
     db_name = f"{settings.TEST_DATABASE_NAME}"
     result = ConsoleClientForRead(db_name).get_contracts()
     assert isinstance(result, list)
 
     result = ConsoleClientForUpdate(db_name).update_contract(
-        dummy_contract_partial_data_2
+        dummy_contract_partial_data_4
     )
     assert isinstance(result, str)
 
@@ -100,9 +121,8 @@ def test_contract_update_manipulation(
             contract_updated = contract
             break
     assert float(contract_updated.remain_amount_to_pay) == float(
-        dummy_contract_partial_data_2["remain_amount_to_pay"]
+        dummy_contract_partial_data_4["remain_amount_to_pay"]
     )
-    assert contract_updated.status == dummy_contract_partial_data_2["status"]
 
 
 def test_contract_display_manipulation(

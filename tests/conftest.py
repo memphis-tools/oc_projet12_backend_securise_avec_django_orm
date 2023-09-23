@@ -321,6 +321,15 @@ def dummy_contract_partial_data_3(request):
 
 
 @pytest.fixture(scope="session", autouse=True)
+def dummy_contract_partial_data_4(request):
+    contract = {
+        "contract_id": "av123",
+        "remain_amount_to_pay": "155.6",
+    }
+    return contract
+
+
+@pytest.fixture(scope="session", autouse=True)
 def dummy_event_data(request):
     event = {
         "creation_date": "2023-07-14 09:05:10",

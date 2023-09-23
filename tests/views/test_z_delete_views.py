@@ -116,7 +116,7 @@ def test_delete_contract_view_with_support_profile_raises_exception(
 def test_delete_contract_view_with_gestion_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    dummy_contracts_list = ["C9Z1", "D9Z1"]
+    dummy_contracts_list = ["C9Z1", "D9Z1", "ZZ777"]
     for contract in dummy_contracts_list:
         result = ConsoleClientForDelete(
             db_name=f"{settings.TEST_DATABASE_NAME}"
