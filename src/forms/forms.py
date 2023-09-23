@@ -145,6 +145,9 @@ def fullfill_form(custom_dict, expected_attributes_dict):
     """
     while not len(custom_dict) == len(expected_attributes_dict):
         for key, value in expected_attributes_dict.items():
+            if key == "remain_amount_to_pay":
+                if custom_dict["status"] == "unsigned":
+                    custom_dict["remain_amount_to_pay"] = custom_dict["full_amount_to_pay"]
             if key not in custom_dict.keys():
                 item = Prompt.ask(f"{value}: ")
                 # 2 cas spécifiques avec popup prévue
@@ -160,6 +163,7 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                         custom_dict["region"] = region
                         custom_dict["pays"] = f"{settings.DEFAULT_COUNTRY}"
                         custom_dict["population"] = population
+
                 else:
                     # vérifier si quelque chose a été saisi
                     if item.strip() != "":
@@ -490,17 +494,16 @@ def submit_a_contract_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_contract_create_form(custom_dict={}):
+def submit_a_contract_create_form(contract_id="", custom_dict={}):
     """
     Description: Fonction dédiée à créer un contrat entre un commercial de l'entreprise et un client.
     Noter que 2 clefs étrangères 'client id' et 'collaborator id' sont attendues.
     """
     if custom_dict == {}:
         expected_attributes_dict = {
-            "contract_id": "id",
+            "status": "statut ('signed', 'unsigned', 'canceled')",
             "full_amount_to_pay": "total à payer",
             "remain_amount_to_pay": "total restant à payer",
-            "status": "statut ('signed', 'unsigned', 'canceled')",
         }
         printer.print_message(
             "info", APP_DICT.get_appli_dictionnary()["CREATE_A_CONTRACT"]
@@ -515,6 +518,7 @@ def submit_a_contract_create_form(custom_dict={}):
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["contract_id"] = contract_id
     return custom_dict
 
 
@@ -548,7 +552,7 @@ def submit_a_event_create_form(custom_dict={}):
             "attendees": "public max attendu",
             "notes": "description",
             "event_start_date": "date début (format: 2023-04-12 15:00:00)",
-            "event_end_date": "date début (format: 2023-04-15 22:00:00)",
+            "event_end_date": "date fin (format: 2023-04-15 22:00:00)",
         }
         printer.print_message(
             "info", APP_DICT.get_appli_dictionnary()["CREATE_A_EVENT"]
