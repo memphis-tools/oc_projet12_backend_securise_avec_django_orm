@@ -928,7 +928,7 @@ def rebuild_filter_query(
     return filter_to_apply_rebuilt_query
 
 
-def display_banner(app_init=False):
+def display_banner(app_init=False, registration_number=""):
     """
     Description:
     Afficher la bannière.
@@ -938,6 +938,7 @@ def display_banner(app_init=False):
     else:
         running_env = f"{recall_which_running_env_in_use()} ENVIRONMENT"
     text = f"{settings.APP_FIGLET_TITLE} - {running_env} "
+    cprint(colored(f"current user: {registration_number}", "green"))
     cprint(colored(pyfiglet.figlet_format(text, font="digital", width=100), "cyan"))
 
 
@@ -1020,6 +1021,19 @@ def get_commercial_id_from_client_id(session, client_id):
     - client_id: entier, l'id clef primaire
     """
     sql = text(f"""SELECT commercial_contact FROM client WHERE id='{client_id}'""")
+    result = session.execute(sql).first()
+    id = str(result[0]).lower()
+    return id
+
+
+def get_event_id_from_client_custom_id(session, event_id):
+    """
+    Description:
+    Récupérer l'id de de l'event ayant le custom id du modèle, en argument.
+    Paramètres:
+    - event_id: chaine libre de caractères, le custom id de l'event
+    """
+    sql = text(f"""SELECT id FROM event WHERE event_id='{event_id}'""")
     result = session.execute(sql).first()
     id = str(result[0]).lower()
     return id
