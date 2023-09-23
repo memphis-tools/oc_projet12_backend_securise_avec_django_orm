@@ -51,7 +51,7 @@ class ConsoleClientForUpdate:
         self.user_service = str(self.decoded_token["department"]).upper()
         self.registration_number = str(self.decoded_token["registration_number"])
         self.allowed_crud_tables = eval(f"settings.{self.user_service}_CRUD_TABLES")
-        utils.display_banner(registration_number=self.registration_number )
+        utils.display_banner(registration_number=self.registration_number)
 
     @utils.authentication_permission_decorator
     def update_client(
@@ -79,7 +79,7 @@ class ConsoleClientForUpdate:
                 raise exceptions.InsufficientPrivilegeException()
 
             keys_valid = bool("commercial_contact" in custom_partial_dict.keys())
-            if keys_valid and user_service.lower() == "oc12_commercial":
+            if keys_valid and self.user_service.lower() == "oc12_commercial":
                 raise exceptions.CommercialCanNotUpdateClientCommercialContactException()
 
             client_id = custom_partial_dict["client_id"]

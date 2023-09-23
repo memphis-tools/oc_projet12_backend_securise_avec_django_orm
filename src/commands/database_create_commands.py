@@ -2,7 +2,6 @@
 Description: Toutes les commandes qui permettent les ajouts
 """
 import click
-from rich import print
 
 try:
     from src.printers import printer

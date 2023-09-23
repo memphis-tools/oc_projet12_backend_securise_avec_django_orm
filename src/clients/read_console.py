@@ -35,7 +35,7 @@ class ConsoleClientForRead:
         self.user_service = str(self.decoded_token["department"]).upper()
         self.registration_number = str(self.decoded_token["registration_number"])
         self.allowed_crud_tables = eval(f"settings.{self.user_service}_CRUD_TABLES")
-        utils.display_banner(registration_number=self.registration_number )
+        utils.display_banner(registration_number=self.registration_number)
 
     @utils.authentication_permission_decorator
     def get_clients(self, user_query_filters_args=""):
