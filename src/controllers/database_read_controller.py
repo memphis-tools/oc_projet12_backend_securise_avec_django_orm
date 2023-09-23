@@ -191,7 +191,6 @@ class DatabaseReadController:
                 .filter_by(contract_id=contract_id)
                 .first()
             )
-
             return db_collaborators_contract
         except Exception:
             message = APP_DICT.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
@@ -241,6 +240,19 @@ class DatabaseReadController:
         ).all()
 
         return db_collaborators_department
+
+    def get_attached_event(self, session, contract_id):
+        """
+        Description:
+        Méthode dédiée à chercher un évènement rattaché à un contrat.
+        Paramètres:
+        - session: une session active
+        - contract_id: chaine libre de caractères, le custom_id du contrat
+        """
+        db_attached_event = (
+            session.query(models.Event).filter_by(contract_id=int(contract_id)).first()
+        )
+        return db_attached_event
 
     def get_event(self, session, event_id):
         """
