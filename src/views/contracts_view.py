@@ -4,11 +4,13 @@ vue contrats
 from rich.console import Console
 
 try:
+    from src.exceptions import exceptions
     from src.languages import language_bridge
     from src.printers import printer
     from src.utils import utils
     from src.settings import settings, logtail_handler
 except ModuleNotFoundError:
+    from exceptions import exceptions
     from languages import language_bridge
     from printers import printer
     from utils import utils
@@ -103,7 +105,7 @@ class ContractsView:
         """
         return self.db_controller.delete_contract(self.session, contract_id)
 
-    def update_contract(self, current_user_collaborator_id, user_service, custom_dict):
+    def update_contract(self, app_view, current_user_collaborator_id, user_service, custom_dict):
         """
         Description: vue dédiée à mettre à jour un contrat.
         Parameters:
@@ -111,12 +113,28 @@ class ContractsView:
         - user_service: chaine de caractère, le nom du service de l'utilisateur courant (exemple: oc12_commercial)
         - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
+        event = self.get_attached_event(app_view, custom_dict["contract_id"])
+        if "status" in custom_dict.keys() and event:
+            raise exceptions.EventAttachedContractStatusCanNotBeUpdateException(event.title)
         return self.db_controller.update_contract(
             self.session, current_user_collaborator_id, user_service, custom_dict
         )
 
     def update_contract_filtered(self, user_query_filters_args):
+        print("TWO SEARCH SIR")
+        event = self.get_attached_event(user_query_filters_args[0])
+        print("TWO SEARCH SIR event:{event}")
         if len(user_query_filters_args) > 0:
             db_model_queryset = self.db_controller.get_filtered_models(
                 self.session, user_query_filters_args[0], "Contract"
             )
+
+    def get_attached_event(self, app_view, contract_custom_id):
+        """
+        Description: dédié à chercher un évènement rattaché au contrat.
+        Parameters:
+        - contract_custom_id: custom_id d'un contrat
+        """
+        contract_id = utils.get_contract_id_from_contract_custom_id(self.session, contract_custom_id)
+        event_attached = app_view.get_events_view().get_attached_event_to_contract(contract_id)
+        return event_attached
