@@ -30,7 +30,7 @@ def add_client():
     """
     try:
         console_client = ConsoleClientForCreate()
-        print(console_client.add_client())
+        click.secho(console_client.add_client(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
         printer.print_message("error", message)
@@ -51,7 +51,7 @@ def add_collaborator():
     """
     try:
         console_client = ConsoleClientForCreate()
-        print(console_client.add_collaborator())
+        click.secho(console_client.add_collaborator(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
         printer.print_message("error", message)
@@ -77,7 +77,7 @@ def add_company():
     """
     try:
         console_client = ConsoleClientForCreate()
-        print(console_client.add_company())
+        click.secho(console_client.add_company(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
         printer.print_message("error", message)
@@ -98,12 +98,14 @@ def add_contract():
     """
     try:
         console_client = ConsoleClientForCreate()
-        print(console_client.add_contract())
+        click.secho(console_client.add_contract(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
+    except exceptions.ContractAlreadyExistException:
+        pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -119,7 +121,7 @@ def add_department():
     """
     try:
         console_client = ConsoleClientForCreate()
-        print(console_client.add_department())
+        click.secho(console_client.add_department(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
         printer.print_message("error", message)
@@ -140,7 +142,7 @@ def add_event():
     """
     try:
         console_client = ConsoleClientForCreate()
-        print(console_client.add_event())
+        click.secho(console_client.add_event(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
         printer.print_message("error", message)
@@ -165,7 +167,7 @@ def add_location():
     """
     try:
         console_client = ConsoleClientForCreate()
-        print(console_client.add_location())
+        click.secho(console_client.add_location(), bg="blue", fg="white")
     except exceptions.LocationCustomIdAlReadyExists:
         pass
     except exceptions.InsufficientPrivilegeException:
@@ -188,7 +190,7 @@ def add_role():
     """
     try:
         console_client = ConsoleClientForCreate()
-        print(console_client.add_role())
+        click.secho(console_client.add_role(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
         printer.print_message("error", message)
