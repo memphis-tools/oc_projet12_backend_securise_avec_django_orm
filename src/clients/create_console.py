@@ -51,13 +51,17 @@ class ConsoleClientForCreate:
         """
         db_name = utils.set_database_to_get_based_on_user_path(db_name=db_name)
         self.app_dict = language_bridge.LanguageBridge()
-        utils.display_banner()
         self.app_view = AppViews(db_name=db_name)
         self.create_app_view = CreateAppViews(db_name=db_name)
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
         settings.APP_FIGLET_TITLE
+        self.decoded_token = self.jwt_view.get_decoded_token()
+        self.user_service = str(self.decoded_token["department"]).upper()
+        self.registration_number = str(self.decoded_token["registration_number"])
+        self.allowed_crud_tables = eval(f"settings.{self.user_service}_CRUD_TABLES")
+        utils.display_banner(registration_number=self.registration_number )
 
     def ask_for_a_client_id(self):
         """
@@ -307,17 +311,13 @@ class ConsoleClientForCreate:
         Dédiée à créer un client de l'entreprise.
         """
         client_id = ""
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         user_id = utils.get_user_id_from_registration_number(
-            self.app_view.session, registration_number
+            self.app_view.session, self.registration_number
         )
         message = ""
         try:
-            grant_valid = bool("client" not in allowed_crud_tables)
-            if grant_valid or user_service.lower() != "oc12_commercial":
+            grant_valid = bool("client" not in self.allowed_crud_tables)
+            if grant_valid or self.user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if client_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(client_attributes_dict)
@@ -343,12 +343,12 @@ class ConsoleClientForCreate:
                 client_id = self.create_app_view.get_clients_view().add_client(
                     models.Client(**client_attributes_dict)
                 )
-            message = f"Creation client {client_id} by {registration_number}"
+            message = f"Creation client {client_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     client={
                         "client_id": client_attributes_dict["client_id"],
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -404,15 +404,11 @@ class ConsoleClientForCreate:
         Description:
         Dédiée à enregistrer un nouvel utilisateur /collaborateur de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         collaborator = ""
         message = ""
         try:
-            grant_valid = bool("collaborator" not in allowed_crud_tables)
-            if grant_valid or user_service.lower() != "oc12_gestion":
+            grant_valid = bool("collaborator" not in self.allowed_crud_tables)
+            if grant_valid or self.user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if collaborator_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(
@@ -445,12 +441,12 @@ class ConsoleClientForCreate:
                     collaborator
                 )
             )
-            message = f"Creation collaborator {collaborator.registration_number} by {registration_number}"
+            message = f"Creation collaborator {collaborator.registration_number} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     collaborator={
                         "registration_number": collaborator.registration_number,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -492,7 +488,7 @@ class ConsoleClientForCreate:
                 with logtail.context(
                     collaborator={
                         "collaborator_attributes_dict": collaborator_attributes_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -512,15 +508,11 @@ class ConsoleClientForCreate:
         Description:
         Dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         company = ""
         message = ""
         try:
-            grant_valid = bool("company" not in allowed_crud_tables)
-            if grant_valid or user_service.lower() != "oc12_commercial":
+            grant_valid = bool("company" not in self.allowed_crud_tables)
+            if grant_valid or self.user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if company_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(company_attributes_dict)
@@ -546,12 +538,12 @@ class ConsoleClientForCreate:
             company_id = self.create_app_view.get_companies_view().add_company(
                 models.Company(**company_attributes_dict)
             )
-            message = f"Creation company {company_id} by {registration_number}"
+            message = f"Creation company {company_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     company={
                         "company_id": company_attributes_dict["company_id"],
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -593,7 +585,7 @@ class ConsoleClientForCreate:
                 with logtail.context(
                     company={
                         "company_attributes_dict": company_attributes_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
@@ -611,20 +603,16 @@ class ConsoleClientForCreate:
     def add_contract(self, contract_attributes_dict=""):
         """
         Description:
-        Dédiée à enregistrer un contrat pour l'entreprise.
+        Dédiée à enregistrer un contrat pour le client..
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
         user_id = utils.get_user_id_from_registration_number(
-            self.app_view.session, registration_number
+            self.app_view.session, self.registration_number
         )
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract = ""
         message = ""
         try:
-            grant_valid = bool("contract" not in allowed_crud_tables)
-            if grant_valid or user_service.lower() != "oc12_gestion":
+            grant_valid = bool("contract" not in self.allowed_crud_tables)
+            if grant_valid or self.user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if contract_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(
@@ -641,23 +629,35 @@ class ConsoleClientForCreate:
                 client_id = self.ask_for_a_client_id()
                 if not client_id:
                     raise exceptions.ClientNotFoundWithClientId()
-                contract_attributes_dict = forms.submit_a_contract_create_form()
+                asked_contract_id = Prompt.ask("Contract id: ")
+                if not asked_contract_id:
+                    raise exceptions.ContractNotFoundWithContractId()
+                existing_contract = self.app_view.get_contracts_view().get_contract(asked_contract_id)
+                if existing_contract is not None:
+                    raise exceptions.ContractAlreadyExistException()
+                contract_attributes_dict = forms.submit_a_contract_create_form(contract_id=asked_contract_id)
                 contract_attributes_dict["client_id"] = client_id
                 contract = models.Contract(**contract_attributes_dict)
                 contract.creation_date = datetime.now()
             contract_id = self.create_app_view.get_contracts_view().add_contract(
                 contract
             )
-            message = f"Creation contract {contract_id} by {registration_number}"
+            message = f"Creation contract {contract_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     contract={
                         "contract_id": contract_attributes_dict["contract_id"],
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
             return message
+        except exceptions.ContractAlreadyExistException:
+            message = self.app_dict.get_appli_dictionnary()["CONTRACT_ID_ALREADY_EXIST"]
+            printer.print_message("error", message)
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
+            raise exceptions.ContractAlreadyExistException()
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
             sys.exit(0)
@@ -695,7 +695,7 @@ class ConsoleClientForCreate:
                 with logtail.context(
                     contract={
                         "contract_attributes_dict": contract_attributes_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
@@ -715,15 +715,11 @@ class ConsoleClientForCreate:
         Description:
         Dédiée à enregistrer un nouveau départements /services de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         department = ""
         message = ""
         try:
-            grant_valid = bool("collaborator_department" not in allowed_crud_tables)
-            if grant_valid or user_service.lower() != "oc12_gestion":
+            grant_valid = bool("collaborator_department" not in self.allowed_crud_tables)
+            if grant_valid or self.user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if department_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(
@@ -749,12 +745,12 @@ class ConsoleClientForCreate:
             department_id = self.create_app_view.get_departments_view().add_department(
                 department
             )
-            message = f"Creation department {department_id} by {registration_number}"
+            message = f"Creation department {department_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     department={
                         "department_id": department_attributes_dict["department_id"],
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -796,7 +792,7 @@ class ConsoleClientForCreate:
                 with logtail.context(
                     department={
                         "department_attributes_dict": department_attributes_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
@@ -816,18 +812,14 @@ class ConsoleClientForCreate:
         Description:
         Dédiée à enregistrer un évènement de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        registration_number = str(decoded_token["registration_number"])
-        user_service = str(decoded_token["department"]).upper()
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event = ""
         user_id = utils.get_user_id_from_registration_number(
-            self.app_view.session, registration_number
+            self.app_view.session, self.registration_number
         )
         message = ""
         try:
-            grant_valid = bool("event" not in allowed_crud_tables)
-            if grant_valid or user_service.lower() != "oc12_commercial":
+            grant_valid = bool("event" not in self.allowed_crud_tables)
+            if grant_valid or self.user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if event_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(event_attributes_dict)
@@ -882,12 +874,12 @@ class ConsoleClientForCreate:
                 event = models.Event(**event_attributes_dict)
                 event.creation_date = datetime.now()
             event_id = self.create_app_view.get_events_view().add_event(user_id, event)
-            message = f"Creation event {event_id} by {registration_number}"
+            message = f"Creation event {event_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     event={
                         "event_id": event_attributes_dict["event_id"],
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -943,7 +935,7 @@ class ConsoleClientForCreate:
                 with logtail.context(
                     event={
                         "event_attributes_dict": event_attributes_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
@@ -963,15 +955,11 @@ class ConsoleClientForCreate:
         Description:
         Dédiée à enregistrer une localité.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location = ""
         message = ""
         try:
-            grant_valid = bool("location" not in allowed_crud_tables)
-            if grant_valid or user_service.lower() != "oc12_commercial":
+            grant_valid = bool("location" not in self.allowed_crud_tables)
+            if grant_valid or self.user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
             if location_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(
@@ -998,12 +986,12 @@ class ConsoleClientForCreate:
             location_id = self.create_app_view.get_locations_view().add_location(
                 location
             )
-            message = f"Creation location {location_id} by {registration_number}"
+            message = f"Creation location {location_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     location={
                         "location_id": location_attributes_dict["location_id"],
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -1045,7 +1033,7 @@ class ConsoleClientForCreate:
                 with logtail.context(
                     location={
                         "location_attributes_dict": location_attributes_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
@@ -1065,15 +1053,11 @@ class ConsoleClientForCreate:
         Description:
         Dédiée à enregistrer un nouveau rôle pour les collaborateurs de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         role = ""
         message = ""
         try:
-            grant_valid = bool("collaborator_role" not in allowed_crud_tables)
-            if grant_valid or user_service.lower() != "oc12_gestion":
+            grant_valid = bool("collaborator_role" not in self.allowed_crud_tables)
+            if grant_valid or self.user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if role_attributes_dict != "":
                 data_is_dict = add_data_validators.data_is_dict(role_attributes_dict)
@@ -1089,12 +1073,12 @@ class ConsoleClientForCreate:
                 role = models.Collaborator_Role(**role_attributes_dict)
                 role.creation_date = datetime.now()
             role_id = self.create_app_view.get_roles_view().add_role(role)
-            message = f"Creation role {role_id} by {registration_number}"
+            message = f"Creation role {role_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     role={
                         "role_id": role_attributes_dict["role_id"],
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -1136,7 +1120,7 @@ class ConsoleClientForCreate:
                 with logtail.context(
                     location={
                         "role_attributes_dict": role_attributes_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
