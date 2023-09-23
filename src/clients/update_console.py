@@ -41,13 +41,17 @@ class ConsoleClientForUpdate:
         """
         db_name = utils.set_database_to_get_based_on_user_path(db_name=db_name)
         self.app_dict = language_bridge.LanguageBridge()
-        utils.display_banner()
         self.app_view = AppViews(db_name=db_name)
         self.update_app_view = UpdateAppViews(db_name=db_name)
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
         settings.APP_FIGLET_TITLE
+        self.decoded_token = self.jwt_view.get_decoded_token()
+        self.user_service = str(self.decoded_token["department"]).upper()
+        self.registration_number = str(self.decoded_token["registration_number"])
+        self.allowed_crud_tables = eval(f"settings.{self.user_service}_CRUD_TABLES")
+        utils.display_banner(registration_number=self.registration_number )
 
     @utils.authentication_permission_decorator
     def update_client(
@@ -68,14 +72,10 @@ class ConsoleClientForUpdate:
             " {'client_id': 'DBLATT85', 'commercial_contact': 'ab123456789'} "
         """
         client_id = ""
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
-        current_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        current_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, self.registration_number)}"
         try:
-            client_grant_valid = bool("client" not in allowed_crud_tables)
-            if client_grant_valid or user_service.lower() != "oc12_commercial":
+            client_grant_valid = bool("client" not in self.allowed_crud_tables)
+            if client_grant_valid or self.user_service.lower() != "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
 
             keys_valid = bool("commercial_contact" in custom_partial_dict.keys())
@@ -85,18 +85,18 @@ class ConsoleClientForUpdate:
             client_id = custom_partial_dict["client_id"]
             if len(user_query_filters_args) == 0:
                 self.update_app_view.get_clients_view().update_client(
-                    current_id, user_service, custom_partial_dict
+                    current_id, self.user_service, custom_partial_dict
                 )
             else:
                 self.update_app_view.get_clients_view().update_client_filtered(
                     self, user_query_filters_args
                 )
-            message = f"Update client {client_id} by {registration_number}"
+            message = f"Update client {client_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     client={
                         "custom_partial_dict": custom_partial_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -116,7 +116,7 @@ class ConsoleClientForUpdate:
                 with logtail.context(
                     user={
                         "custom_partial_dict": custom_partial_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -140,13 +140,9 @@ class ConsoleClientForUpdate:
         """
         Description: vue dédiée à mettre à jour un utilisateur /collaborateur de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         collaborator_id = ""
         try:
-            if "collaborator" not in allowed_crud_tables:
+            if "collaborator" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
             matricule = custom_partial_dict["registration_number"]
@@ -159,12 +155,12 @@ class ConsoleClientForUpdate:
                     self, user_query_filters_args
                 )
 
-            message = f"Update collaborator {matricule} by {registration_number}"
+            message = f"Update collaborator {matricule} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     collaborator={
                         "custom_partial_dict": custom_partial_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -198,8 +194,7 @@ class ConsoleClientForUpdate:
                 old_password,
                 new_password,
             ) = forms.submit_a_collaborator_new_password_get_form()
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_registration_number = str(decoded_token["registration_number"])
+        user_registration_number = str(self.decoded_token["registration_number"])
         if old_password == "" or new_password == "":
             printer.print_message(
                 "error", self.app_dict.get_appli_dictionnary()["MISSING_PASSWORD"]
@@ -249,13 +244,9 @@ class ConsoleClientForUpdate:
         """
         Description: vue dédiée à mettre à jour une entreprise sans client, mais avec une localité nécessaire.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         company_id = ""
         try:
-            if "company" not in allowed_crud_tables:
+            if "company" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
             company_id = custom_partial_dict["company_id"]
@@ -267,12 +258,12 @@ class ConsoleClientForUpdate:
                 self.update_app_view.get_companies_view().update_company_filtered(
                     self, user_query_filters_args
                 )
-            message = f"Update company {company_id} by {registration_number}"
+            message = f"Update company {company_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     company={
                         "custom_partial_dict": custom_partial_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -299,20 +290,16 @@ class ConsoleClientForUpdate:
         """
         Description: vue dédiée à mettre à jour un contrat pour l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract_id = ""
-        user_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        user_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, self.registration_number)}"
         try:
-            if "contract" not in allowed_crud_tables:
+            if "contract" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
             contract_id = custom_partial_dict["contract_id"]
             if len(user_query_filters_args) == 0:
                 self.update_app_view.get_contracts_view().update_contract(
-                    user_id, user_service, custom_partial_dict
+                    self.app_view, user_id, self.user_service, custom_partial_dict
                 )
             else:
                 self.update_app_view.get_contracts_view().update_contract_filtered(
@@ -320,14 +307,14 @@ class ConsoleClientForUpdate:
                 )
 
             if "status" in custom_partial_dict.keys():
-                message = f"Update contract {contract_id} for signature by {registration_number}"
+                message = f"Update contract {contract_id} for signature by {self.registration_number}"
             else:
-                message = f"Update contract {contract_id} by {registration_number}"
+                message = f"Update contract {contract_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     contract={
                         "custom_partial_dict": custom_partial_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -344,7 +331,14 @@ class ConsoleClientForUpdate:
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             sys.exit(0)
-        except Exception:
+        except exceptions.EventAttachedContractStatusCanNotBeUpdateException as event_title:
+            message = self.app_dict.get_appli_dictionnary()["CONTRACT_STATUS_EVENT_HAS_TO_BE_DELETE"]
+            printer.print_message("error", f"{message} {event_title}")
+            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+                LOGGER.error(message)
+            raise exceptions.EventAttachedContractStatusCanNotBeUpdateException()
+        except Exception as err:
+            print(f"DEBUG err:{err}")
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -356,13 +350,9 @@ class ConsoleClientForUpdate:
         """
         Description: vue dédiée à mettre à jour un département /service de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         department_id = ""
         try:
-            if "collaborator_department" not in allowed_crud_tables:
+            if "collaborator_department" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
             department_id = custom_partial_dict["department_id"]
@@ -374,12 +364,12 @@ class ConsoleClientForUpdate:
                 self.update_app_view.get_departments_view().update_department_filtered(
                     self, user_query_filters_args
                 )
-            message = f"Update department {department_id} by {registration_number}"
+            message = f"Update department {department_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     department={
                         "custom_partial_dict": custom_partial_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -406,17 +396,13 @@ class ConsoleClientForUpdate:
         """
         Description: vue dédiée à mettre à jour un évènement de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"]).lower()
-        username = str(decoded_token["username"]).lower()
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
+        user_service = str(self.decoded_token["department"]).upper()
         event_id = ""
-        user_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, registration_number)}"
+        user_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, self.registration_number)}"
         try:
             # un membre du service commercial n'a accès qu'en lecture seule
-            event_grant_valid = bool("event" not in allowed_crud_tables)
-            if event_grant_valid or user_service.lower() == "oc12_commercial":
+            event_grant_valid = bool("event" not in self.allowed_crud_tables)
+            if event_grant_valid or self.user_service.lower() == "oc12_commercial":
                 raise exceptions.InsufficientPrivilegeException()
 
             event_id = custom_partial_dict["event_id"]
@@ -437,18 +423,18 @@ class ConsoleClientForUpdate:
                         if department_name != "oc12_support":
                             raise exceptions.OnlySuportMemberCanBeAssignedToEventSupportException()
                 self.update_app_view.get_events_view().update_event(
-                    user_id, user_service, custom_partial_dict
+                    user_id, self.user_service, custom_partial_dict
                 )
             else:
                 self.update_app_view.get_events_view().update_event_filtered(
                     self, user_query_filters_args
                 )
-            message = f"Update event {event_id} by {registration_number}"
+            message = f"Update event {event_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     event={
                         "custom_partial_dict": custom_partial_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -486,13 +472,9 @@ class ConsoleClientForUpdate:
         """
         Description: vue dédiée à mettre à jour une localité.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location_id = ""
         try:
-            if "location" not in allowed_crud_tables:
+            if "location" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
             if len(user_query_filters_args) == 0:
@@ -527,13 +509,9 @@ class ConsoleClientForUpdate:
         """
         Description: vue dédiée à mettre à jour un rôle pour les collaborateurs de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         role_id = ""
         try:
-            if "collaborator_role" not in allowed_crud_tables:
+            if "collaborator_role" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
             role_id = custom_partial_dict["role_id"]
@@ -543,12 +521,12 @@ class ConsoleClientForUpdate:
                 self.update_app_view.get_roles_view().update_role_filtered(
                     self, user_query_filters_args
                 )
-            message = f"Update role {role_id} by {registration_number}"
+            message = f"Update role {role_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     role={
                         "custom_partial_dict": custom_partial_dict,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
