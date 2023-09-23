@@ -42,13 +42,17 @@ class ConsoleClientForDelete:
         """
         db_name = utils.set_database_to_get_based_on_user_path(db_name=db_name)
         self.app_dict = language_bridge.LanguageBridge()
-        utils.display_banner()
         self.app_view = AppViews(db_name=db_name)
         self.delete_app_view = DeleteAppViews(db_name=db_name)
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
         settings.APP_FIGLET_TITLE
+        self.decoded_token = self.jwt_view.get_decoded_token()
+        self.user_service = str(self.decoded_token["department"]).upper()
+        self.registration_number = str(self.decoded_token["registration_number"])
+        self.allowed_crud_tables = eval(f"settings.{self.user_service}_CRUD_TABLES")
+        utils.display_banner(registration_number=self.registration_number )
 
     def ask_for_a_client_id(self, custom_id=""):
         """
@@ -113,10 +117,6 @@ class ConsoleClientForDelete:
             )
             return contract_lookup.get_dict()
         except Exception:
-            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             return False
 
     def ask_for_a_collaborator_id(self, custom_id=""):
@@ -328,13 +328,9 @@ class ConsoleClientForDelete:
         Dédiée à supprimer un client de l'entreprise.
         """
         client_id = ""
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         try:
-            client_grant_valid = bool("client" not in allowed_crud_tables)
-            if client_grant_valid or user_service.lower() != "oc12_gestion":
+            client_grant_valid = bool("client" not in self.allowed_crud_tables)
+            if client_grant_valid or self.user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if client_custom_id != "":
                 client_id = self.ask_for_a_client_id(client_custom_id)["id"]
@@ -342,12 +338,12 @@ class ConsoleClientForDelete:
                 client_id = self.ask_for_a_client_id()["id"]
 
             client_id = self.delete_app_view.get_clients_view().delete_client(client_id)
-            message = f"Suppression client {client_id} by {registration_number}"
+            message = f"Suppression client {client_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     client={
                         "client_id": client_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -369,7 +365,7 @@ class ConsoleClientForDelete:
                 with logtail.context(
                     client={
                         "client_id": client_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -387,13 +383,9 @@ class ConsoleClientForDelete:
         Description:
         Dédiée à supprimer un nouvel utilisateur /collaborateur de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         collaborator_id = ""
         try:
-            if "collaborator" not in allowed_crud_tables:
+            if "collaborator" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if collaborator_custom_id != "":
                 collaborator_id = self.ask_for_a_collaborator_id(collaborator_custom_id)
@@ -405,13 +397,13 @@ class ConsoleClientForDelete:
                 )
             )
             message = (
-                f"Suppression collaborator {collaborator_id} by {registration_number}"
+                f"Suppression collaborator {collaborator_id} by {self.registration_number}"
             )
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     collaborator={
                         "collaborator_id": collaborator_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -427,7 +419,7 @@ class ConsoleClientForDelete:
                 with logtail.context(
                     collaborator={
                         "collaborator_id": collaborator_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -451,13 +443,9 @@ class ConsoleClientForDelete:
         Description:
         Dédiée à supprimer une entreprise sans client, mais avec une localité nécessaire.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         company_id = ""
         try:
-            if "company" not in allowed_crud_tables:
+            if "company" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if company_custom_id != "":
                 company_id = self.ask_for_a_company_id(company_custom_id)["id"]
@@ -467,12 +455,12 @@ class ConsoleClientForDelete:
             company_id = self.delete_app_view.get_companies_view().delete_company(
                 company_id
             )
-            message = f"Suppression company {company_id} by {registration_number}"
+            message = f"Suppression company {company_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     company={
                         "company_id": company_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -488,7 +476,7 @@ class ConsoleClientForDelete:
                 with logtail.context(
                     company={
                         "company_id": company_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -506,13 +494,9 @@ class ConsoleClientForDelete:
         Description:
         Dédiée à supprimer un contrat pour l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         contract_id = ""
         try:
-            if "contract" not in allowed_crud_tables or user_service != "OC12_GESTION":
+            if "contract" not in self.allowed_crud_tables or self.user_service != "OC12_GESTION":
                 raise exceptions.InsufficientPrivilegeException()
             if contract_custom_id != "":
                 contract_id = self.ask_for_a_contract_id(contract_custom_id)["id"]
@@ -521,38 +505,35 @@ class ConsoleClientForDelete:
             contract_id = self.delete_app_view.get_contracts_view().delete_contract(
                 contract_id
             )
-            message = f"Suppression contract {contract_id} by {registration_number}"
+            message = f"Suppression contract {contract_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     contract={
                         "contract_id": contract_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
             return message
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
-        except exceptions.ForeignKeyDependyException:
+        except exceptions.ForeignKeyDependyException as attached_event_title:
             message = self.app_dict.get_appli_dictionnary()[
                 "CONTRACT_RATTACHED_TO_EVENT"
             ]
-            printer.print_message("error", message)
+            printer.print_message("error", f"{message} {attached_event_title}")
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     contract={
                         "contract_id": contract_id,
-                        "current_collaborator": registration_number,
+                        "event_title": f"{attached_event_title}",
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
             raise exceptions.ForeignKeyDependyException("")
         except TypeError:
-            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
-            sys.exit(0)
+            raise exceptions.CustomIdMatchNothingException()
         except Exception:
             message = self.app_dict.get_appli_dictionnary()["APPLICATION_ERROR"]
             printer.print_message("error", message)
@@ -566,13 +547,9 @@ class ConsoleClientForDelete:
         Description:
         Dédiée à supprimer un nouveau départements /services de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         department_id = ""
         try:
-            if "collaborator_department" not in allowed_crud_tables:
+            if "collaborator_department" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if department_custom_id != "":
                 department_id = utils.get_department_id_from_department_custom_id(
@@ -586,12 +563,12 @@ class ConsoleClientForDelete:
                     department_id
                 )
             )
-            message = f"Suppression department {department_id} by {registration_number}"
+            message = f"Suppression department {department_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     department={
                         "department_id": department_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -607,7 +584,7 @@ class ConsoleClientForDelete:
                 with logtail.context(
                     department={
                         "department_id": department_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -631,13 +608,9 @@ class ConsoleClientForDelete:
         Description:
         Dédiée à supprimer un évènement de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         event_id = ""
         try:
-            if "event" not in allowed_crud_tables or user_service != "OC12_GESTION":
+            if "event" not in self.allowed_crud_tables or self.user_service != "OC12_GESTION":
                 raise exceptions.InsufficientPrivilegeException()
             if event_custom_id != "":
                 event_id = self.ask_for_a_event_id(event_custom_id)["id"]
@@ -645,12 +618,12 @@ class ConsoleClientForDelete:
                 event_id = self.ask_for_a_event_id()["id"]
 
             event_id = self.delete_app_view.get_events_view().delete_event(event_id)
-            message = f"Suppression event {event_id} by {registration_number}"
+            message = f"Suppression event {event_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     event={
                         "event_id": event_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -676,13 +649,9 @@ class ConsoleClientForDelete:
         Description:
         Dédiée à supprimer une localité.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         location_id = ""
         try:
-            if "location" not in allowed_crud_tables:
+            if "location" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if location_custom_id != "":
                 location_id = self.ask_for_a_location_id(location_custom_id)["id"]
@@ -692,12 +661,12 @@ class ConsoleClientForDelete:
             location_id = self.delete_app_view.get_locations_view().delete_location(
                 location_id
             )
-            message = f"Suppression location {location_id} by {registration_number}"
+            message = f"Suppression location {location_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     location={
                         "location_id": location_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -713,7 +682,7 @@ class ConsoleClientForDelete:
                 with logtail.context(
                     location={
                         "location_id": location_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
@@ -737,13 +706,9 @@ class ConsoleClientForDelete:
         Description:
         Dédiée à supprimer un nouveau rôle pour les collaborateurs de l'entreprise.
         """
-        decoded_token = self.jwt_view.get_decoded_token()
-        user_service = str(decoded_token["department"]).upper()
-        registration_number = str(decoded_token["registration_number"])
-        allowed_crud_tables = eval(f"settings.{user_service}_CRUD_TABLES")
         role_id = ""
         try:
-            if "collaborator_role" not in allowed_crud_tables:
+            if "collaborator_role" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
             if role_custom_id != "":
                 role_id = self.ask_for_a_role_id(role_custom_id)["id"]
@@ -751,12 +716,12 @@ class ConsoleClientForDelete:
                 role_id = self.ask_for_a_role_id()["id"]
 
             role_id = self.delete_app_view.get_roles_view().delete_role(role_id)
-            message = f"Suppression role {role_id} by {registration_number}"
+            message = f"Suppression role {role_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     role={
                         "role_id": role_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.info(message)
@@ -772,7 +737,7 @@ class ConsoleClientForDelete:
                 with logtail.context(
                     role={
                         "role_id": role_id,
-                        "current_collaborator": registration_number,
+                        "current_collaborator": self.registration_number,
                     }
                 ):
                     LOGGER.error(message)
