@@ -129,12 +129,6 @@ class CollaboratorsView:
         """
         return self.db_controller.update_collaborator(self.session, custom_dict)
 
-    def update_collaborator_filtered(self, user_query_filters_args):
-        if len(user_query_filters_args) > 0:
-            db_model_queryset = self.db_controller.get_filtered_models(
-                self.session, user_query_filters_args[0], "Collaborator"
-            )
-
     def update_collaborator_password(
         self, user_registration_number, old_password, new_password
     ):

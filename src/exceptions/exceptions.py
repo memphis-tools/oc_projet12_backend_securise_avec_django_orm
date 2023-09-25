@@ -169,3 +169,7 @@ class QueryStructureException(Exception):
 
 class SuppliedDataNotMatchModel(Exception):
     pass
+
+
+class EventAttachedContractStatusCanNotBeUpdateException(Exception):
+    pass

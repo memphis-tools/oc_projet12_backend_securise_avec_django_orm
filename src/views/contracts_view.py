@@ -120,15 +120,6 @@ class ContractsView:
             self.session, current_user_collaborator_id, user_service, custom_dict
         )
 
-    def update_contract_filtered(self, user_query_filters_args):
-        print("TWO SEARCH SIR")
-        event = self.get_attached_event(user_query_filters_args[0])
-        print("TWO SEARCH SIR event:{event}")
-        if len(user_query_filters_args) > 0:
-            db_model_queryset = self.db_controller.get_filtered_models(
-                self.session, user_query_filters_args[0], "Contract"
-            )
-
     def get_attached_event(self, app_view, contract_custom_id):
         """
         Description: dédié à chercher un évènement rattaché au contrat.
