@@ -938,7 +938,8 @@ def display_banner(app_init=False, registration_number=""):
     else:
         running_env = f"{recall_which_running_env_in_use()} ENVIRONMENT"
     text = f"{settings.APP_FIGLET_TITLE} - {running_env} "
-    cprint(colored(f"current user: {registration_number}", "green"))
+    if registration_number != "":
+        cprint(colored(f"current user: {registration_number}", "green"))
     cprint(colored(pyfiglet.figlet_format(text, font="digital", width=100), "cyan"))
 
 
