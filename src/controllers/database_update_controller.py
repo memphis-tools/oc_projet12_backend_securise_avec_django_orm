@@ -41,7 +41,7 @@ class DatabaseUpdateController:
             raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
         client.last_update_date = utils.get_today_date()
         session.commit()
-        return client.get_dict()
+        return client.client_id
 
     def update_collaborator(self, session, collaborator_dict):
         """
@@ -88,7 +88,7 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return collaborator.get_dict()
+        return collaborator.registration_number
 
     def update_collaborator_password(
         self, conn, user_registration_number, new_password
@@ -132,7 +132,7 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return company.get_dict()
+        return company.company_id
 
     def update_contract(
         self, session, current_user_collaborator_id, user_service, contract_dict
@@ -163,7 +163,7 @@ class DatabaseUpdateController:
                 raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
 
         session.commit()
-        return contract.get_dict()
+        return contract.contract_id
 
     def update_department(self, session, department_dict):
         """
@@ -192,7 +192,7 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return department.get_dict()
+        return department.department_id
 
     def update_event(
         self, session, current_user_collaborator_id, user_service, event_dict
@@ -220,7 +220,7 @@ class DatabaseUpdateController:
             if int(current_user_collaborator_id) != event_dict["collaborator_id"]:
                 raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
         session.commit()
-        return event.get_dict()
+        return event.event_id
 
     def update_location(self, session, location_dict):
         """
@@ -243,7 +243,7 @@ class DatabaseUpdateController:
             session.flush()
             session.rollback()
         session.commit()
-        return location.get_dict()
+        return location.location_id
 
     def update_role(self, session, role_dict):
         """
@@ -269,4 +269,4 @@ class DatabaseUpdateController:
             session.rollback()
         session.commit()
 
-        return role.get_dict()
+        return role.role_id

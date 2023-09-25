@@ -140,9 +140,3 @@ class EventsView:
         return self.db_controller.update_event(
             self.session, current_user_collaborator_id, user_service, custom_dict
         )
-
-    def update_event_filtered(self, user_query_filters_args):
-        if len(user_query_filters_args) > 0:
-            db_model_queryset = self.db_controller.get_filtered_models(
-                self.session, user_query_filters_args[0], "Event"
-            )
