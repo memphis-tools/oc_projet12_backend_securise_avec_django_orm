@@ -92,6 +92,8 @@ def get_clients(client_id, args):
         printer.print_message("info", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.info(message)
+    except exceptions.CustomIdMatchNothingException:
+        pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -132,6 +134,8 @@ def get_collaborators(collaborator_id, args):
         console_client = ConsoleClientForRead()
         console_client.get_collaborators(user_query_filters_args)
     except exceptions.QueryFailureException:
+        pass
+    except exceptions.CustomIdMatchNothingException:
         pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
@@ -180,6 +184,8 @@ def get_companies(company_id, args):
         console_client.get_companies(user_query_filters_args)
     except exceptions.QueryFailureException:
         pass
+    except exceptions.CustomIdMatchNothingException:
+        pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -224,6 +230,8 @@ def get_contracts(contract_id, args):
         console_client.get_contracts(user_query_filters_args)
     except exceptions.QueryFailureException:
         pass
+    except exceptions.CustomIdMatchNothingException:
+        pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -260,6 +268,8 @@ def get_departments(department_id, args):
         console_client = ConsoleClientForRead()
         console_client.get_departments(user_query_filters_args)
     except exceptions.QueryFailureException:
+        pass
+    except exceptions.CustomIdMatchNothingException:
         pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
@@ -317,6 +327,8 @@ def get_events(event_id, args):
         console_client.get_events(user_query_filters_args)
     except exceptions.QueryFailureException:
         pass
+    except exceptions.CustomIdMatchNothingException:
+        pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -368,6 +380,8 @@ def get_locations(location_id, args):
         console_client.get_locations(user_query_filters_args)
     except exceptions.QueryFailureException:
         pass
+    except exceptions.CustomIdMatchNothingException:
+        pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -404,6 +418,8 @@ def get_roles(role_id, args):
         console_client = ConsoleClientForRead()
         console_client.get_roles(user_query_filters_args)
     except exceptions.QueryFailureException:
+        pass
+    except exceptions.CustomIdMatchNothingException:
         pass
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
