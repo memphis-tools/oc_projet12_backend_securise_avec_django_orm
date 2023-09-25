@@ -6,7 +6,7 @@ import sys
 from datetime import datetime
 import logtail
 from rich.prompt import Prompt
-
+import sqlalchemy
 try:
     from src.languages import language_bridge
     from src.printers import printer
@@ -324,6 +324,12 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_client_data_is_valid(
                     client_attributes_dict
                 )
+                existing_client = self.app_view.get_clients_view().get_client(
+                    client_attributes_dict["client_id"]
+                )
+                if existing_client is not None:
+                    raise exceptions.ClientAlreadyExistException()
+
                 client_attributes_dict["commercial_contact"] = user_id
                 if data_is_dict and dict_is_valid:
                     client_id = self.create_app_view.get_clients_view().add_client(
@@ -397,6 +403,12 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_collaborator_data_is_valid(
                     collaborator_attributes_dict
                 )
+                existing_registration_number = self.app_view.get_collaborators_view().get_collaborator(
+                    collaborator_attributes_dict["registration_number"]
+                )
+                if existing_registration_number is not None:
+                    raise exceptions.RegistrationNumberAlreadyExistException()
+
                 if data_is_dict and dict_is_valid:
                     collaborator = models.Collaborator(**collaborator_attributes_dict)
                 else:
@@ -442,7 +454,7 @@ class ConsoleClientForCreate:
                 ):
                     LOGGER.info(message)
             return message
-        except exceptions.RegistrationNumberAlreadyExistException:
+        except sqlalchemy.exc.ProgrammingError:
             raise exceptions.RegistrationNumberAlreadyExistException()
         except exceptions.RegistrationNumberEmptyException:
             raise exceptions.RegistrationNumberEmptyException()
@@ -483,6 +495,12 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_company_data_is_valid(
                     company_attributes_dict
                 )
+                existing_company = self.app_view.get_companies_view().get_company(
+                    company_attributes_dict["company_id"]
+                )
+                if existing_company is not None:
+                    raise exceptions.CompanyAlreadyExistException()
+
                 if data_is_dict and dict_is_valid:
                     company = models.Company(**company_attributes_dict)
                 else:
@@ -567,6 +585,11 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_contract_data_is_valid(
                     contract_attributes_dict
                 )
+                existing_contract = self.app_view.get_contracts_view().get_contract(
+                    contract_attributes_dict["contract_id"]
+                )
+                if existing_contract is not None:
+                    raise exceptions.ContractAlreadyExistException()
                 if data_is_dict and dict_is_valid:
                     contract = models.Contract(**contract_attributes_dict)
                 else:
@@ -656,6 +679,11 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_department_data_is_valid(
                     department_attributes_dict
                 )
+                existing_department = self.app_view.get_departments_view().get_department(
+                    department_attributes_dict["department_id"]
+                )
+                if existing_department is not None:
+                    raise exceptions.DepartmentAlreadyExistException()
                 if data_is_dict and dict_is_valid:
                     department = models.Collaborator_Department(
                         **department_attributes_dict
@@ -743,6 +771,11 @@ class ConsoleClientForCreate:
                     contract_id=custom_id
                 )
                 commercial_id_attached_to_contract = contract.client.commercial_contact
+                existing_event = self.app_view.get_events_view().get_event(
+                    event_attributes_dict["event_id"]
+                )
+                if existing_event is not None:
+                    raise exceptions.EventAlreadyExistException()
                 if commercial_id_attached_to_contract != int(user_id):
                     raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
                 if contract.status == "unsigned":
@@ -885,6 +918,11 @@ class ConsoleClientForCreate:
                 complement_adresse_valid = validators.is_complement_adresse_valid(
                     location_attributes_dict["complement_adresse"]
                 )
+                existing_location = self.app_view.get_locations_view().get_location(
+                    location_attributes_dict["location_id"]
+                )
+                if existing_location is not None:
+                    raise exceptions.LocationAlreadyExistException()
                 if data_is_dict and dict_is_valid and complement_adresse_valid:
                     location = models.Location(**location_attributes_dict)
                 else:
@@ -972,6 +1010,11 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_role_data_is_valid(
                     role_attributes_dict
                 )
+                existing_role = self.app_view.get_roles_view().get_role(
+                    role_attributes_dict["role_id"]
+                )
+                if existing_role is not None:
+                    raise exceptions.RoleAlreadyExistException()
                 if data_is_dict and dict_is_valid:
                     role = models.Collaborator_Role(**role_attributes_dict)
                 else:
