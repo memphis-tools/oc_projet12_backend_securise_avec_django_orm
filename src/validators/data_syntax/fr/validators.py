@@ -210,7 +210,7 @@ def is_email_valid(email):
     Description: Controler l'email saisi.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"(\w{1,})(\.*)(\w{1,})@(\w{1,})\.(\w{2,4}$)")
+    pattern = re.compile(r"(\w){2,}[(\.){*](\w){2,}@([\w \-]){2,}[(\.){+](\w){2,}")
     return re.match(pattern, email).group()
 
 
