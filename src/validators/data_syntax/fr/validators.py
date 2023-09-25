@@ -22,6 +22,36 @@ def is_adresse_valid(adresse):
     return re.match(pattern, adresse).group()
 
 
+def is_region_valid(region):
+    """
+    Description: Controler la région saisie, à minima, dans le cas d'une saisie manuelle.
+    La région est nomarlement ramenée automatiquement par appel API externe.
+    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    """
+    pattern = re.compile(r"[\w \- ' , \.]{,150}$")
+    return re.match(pattern, region).group()
+
+
+def is_population_valid(population):
+    """
+    Description: Controler la population saisie, à minima, dans le cas d'une saisie manuelle.
+    La population est nomarlement ramenée automatiquement par appel API externe.
+    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    """
+    pattern = re.compile(r"\d+")
+    return re.match(pattern, population).group()
+
+
+def is_cedex_valid(cedex):
+    """
+    Description: Controler le cedex saisie, à minima, dans le cas d'une saisie manuelle.
+    Le cedex est nomarlement ramenée automatiquement par appel API externe.
+    Fonction renvoie une exception AttributeError si pattern ne correspond pas.
+    """
+    pattern = re.compile(r"\d+")
+    return re.match(pattern, cedex).group()
+
+
 def is_attendees_valid(attendees):
     """
     Description: Controler le nombre saisi.

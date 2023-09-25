@@ -9,6 +9,7 @@ import sys
 from datetime import datetime
 import maskpass
 from rich.prompt import Prompt
+import click
 
 try:
     from src.controllers import infos_data_controller
@@ -153,17 +154,19 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                 # 2 cas spécifiques avec popup prévue
                 if key in ["complement_adresse", "employee_role"]:
                     item = display_help(key, item, value)
-                if key == "code_postal":
+                if key == "code_postal" and "ville" not in custom_dict.keys():
                     pays = ""
                     ville, region, population = search_and_submit_a_town_name(item)
-
                     if ville and ville is not None:
                         custom_dict["code_postal"] = item
                         custom_dict["ville"] = ville
+                        custom_dict["cedex"] = 0
                         custom_dict["region"] = region
                         custom_dict["pays"] = f"{settings.DEFAULT_COUNTRY}"
                         custom_dict["population"] = population
-
+                    elif "ville" not in custom_dict.keys():
+                        custom_dict["code_postal"] = item
+                        click.secho("Manual input necessary.", bg="blue", fg="white")
                 else:
                     # vérifier si quelque chose a été saisi
                     if item.strip() != "":
@@ -194,35 +197,36 @@ def submit_a_location_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_location_create_form(location_id, custom_dict={}):
+def submit_a_location_create_form(location_id="", custom_dict={}):
     """
     Description: Fonction dédiée à créer une localité. A la fois pour une entreprise ou un évènement.
     """
     if custom_dict == {}:
         expected_attributes_dict = {
-            "location_id": "id (chaine libre)",
             "adresse": "adresse",
             "complement_adresse": "complement_adresse",
             "code_postal": "code_postal",
+            "cedex": "cedex",
             "ville": "ville",
             "region": "region",
             "pays": "pays",
-            "population": "valeur numérique"
+            "population": "population"
         }
         printer.print_message(
             "info", APP_DICT.get_appli_dictionnary()["CREATE_A_LOCATION"]
         )
         try:
-            if location_id:
-                custom_dict["location_id"] = location_id
             while not len(custom_dict) == len(expected_attributes_dict):
                 fullfill_form(custom_dict, expected_attributes_dict)
+            if location_id:
+                custom_dict["location_id"] = location_id
         except KeyboardInterrupt:
             printer.print_message(
                 "info", APP_DICT.get_appli_dictionnary()["CREATION_ABORTED"]
             )
             sys.exit(0)
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["location_id"] = location_id
     return custom_dict
 
 
@@ -245,14 +249,13 @@ def submit_a_company_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_company_create_form(company_location_id, custom_dict={}):
+def submit_a_company_create_form(company_location_id="", company_id="", custom_dict={}):
     """
     Description: Fonction dédiée à créer une entreprise.
     Noter qu'un attribut location_id est attendu pour respecter le modèle.
     """
     if custom_dict == {}:
         expected_attributes_dict = {
-            "company_id": "id entreprise (chaine libre)",
             "company_registration_number": "siren",
             "company_subregistration_number": "nic",
             "company_name": "nom entreprise",
@@ -272,6 +275,7 @@ def submit_a_company_create_form(company_location_id, custom_dict={}):
     custom_dict["location_id"] = company_location_id
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     custom_dict["date_debut_activite"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["company_id"] = company_id
     return custom_dict
 
 
@@ -294,14 +298,13 @@ def submit_a_client_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_client_create_form(custom_dict={}):
+def submit_a_client_create_form(client_id="", custom_dict={}):
     """
     Description: Fonction dédiée à créer une entreprise.
     Noter qu'un attribut company_id est attendu pour respecter le modèle.
     """
     if custom_dict == {}:
         expected_attributes_dict = {
-            "client_id": "id (chaine libre)",
             "civility": "civilité",
             "first_name": "prénom",
             "last_name": "nom",
@@ -322,6 +325,7 @@ def submit_a_client_create_form(custom_dict={}):
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["client_id"] = client_id
     return custom_dict
 
 
@@ -343,14 +347,13 @@ def submit_a_collaborator_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_collaborator_create_form(custom_dict={}):
+def submit_a_collaborator_create_form(registration_number="", custom_dict={}):
     """
     Description: Fonction dédiée à créer un collaborateur /utilisateur, de l'entreprise.
     Noter que 2 clefs étrangères 'department id' et 'role id' sont attendues.
     """
     if custom_dict == {}:
         expected_attributes_dict = {
-            "registration_number": "matricule employé",
             "username": "nom utilisateur",
             "department_id": "service ccial, gest ou supp (OC12_COMMERCIAL, OC12_GESTION, OC12_SUPPORT)",
             "role_id": "role man ou emp (MANAGER, EMPLOYEE)",
@@ -368,6 +371,7 @@ def submit_a_collaborator_create_form(custom_dict={}):
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["registration_number"] = registration_number
     return custom_dict
 
 
@@ -389,13 +393,12 @@ def submit_a_collaborator_role_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_collaborator_role_create_form(custom_dict={}):
+def submit_a_collaborator_role_create_form(role_id="", custom_dict={}):
     """
     Description: Fonction dédiée à créer un nouveau rôle pour un collaborateur de l'entreprise.
     """
     if custom_dict == {}:
         expected_attributes_dict = {
-            "role_id": "role (chaine libre)",
             "name": "name (MANAGER, EMPLOYEE, etc)",
         }
         printer.print_message(
@@ -411,6 +414,7 @@ def submit_a_collaborator_role_create_form(custom_dict={}):
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["role_id"] = role_id
     return custom_dict
 
 
@@ -432,13 +436,12 @@ def submit_a_collaborator_department_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_collaborator_department_create_form(custom_dict={}):
+def submit_a_collaborator_department_create_form(department_id="", custom_dict={}):
     """
     Description: Fonction dédiée à créer un nouveau service /département de l'entreprise.
     """
     if custom_dict == {}:
         expected_attributes_dict = {
-            "department_id": "id service (chaine de caractères libre)",
             "name": "service (examples: OC12_COMMERCIAL, OC12_GESTION, ...)",
         }
         printer.print_message(
@@ -454,6 +457,7 @@ def submit_a_collaborator_department_create_form(custom_dict={}):
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["department_id"] = department_id
     return custom_dict
 
 
@@ -540,14 +544,13 @@ def submit_a_event_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_event_create_form(custom_dict={}):
+def submit_a_event_create_form(event_id="", custom_dict={}):
     """
     Description: Fonction dédiée à créer un contrat entre un commercial de l'entreprise et un client.
     Noter que 4 clefs étrangères 'contract id', 'client id', 'collaborator id', et 'location id' sont attendues.
     """
     if custom_dict == {}:
         expected_attributes_dict = {
-            "event_id": "id",
             "title": "titre",
             "attendees": "public max attendu",
             "notes": "description",
@@ -567,6 +570,7 @@ def submit_a_event_create_form(custom_dict={}):
             sys.exit(0)
     if "creation_date" not in custom_dict.keys():
         custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict["event_id"] = event_id
     return custom_dict
 
 
