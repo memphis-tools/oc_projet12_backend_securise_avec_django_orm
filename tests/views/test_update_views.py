@@ -150,7 +150,7 @@ def test_update_client_view_with_valid_company_with_commercial_profile_assgined(
     result = console_client.update_app_view.get_clients_view().update_client(
         2, "oc12_commecial", args_to_convert
     )
-    assert f"{custom_id}" == result["client_id"]
+    assert f"{custom_id}" == result
 
 
 def test_update_client_view_with_valid_company_with_commercial_profile_unassgined_raises_exception(
