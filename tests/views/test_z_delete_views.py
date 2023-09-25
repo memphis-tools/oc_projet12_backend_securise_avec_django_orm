@@ -57,15 +57,12 @@ def test_delete_client_view_with_commercial_profile_raises_exception(
 def test_delete_company_view_with_commercial_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    try:
-        dummy_companies_list = ["db45785", "abm99998"]
-        for company in dummy_companies_list:
-            result = ConsoleClientForDelete(
-                db_name=f"{settings.TEST_DATABASE_NAME}"
-            ).delete_company(company)
-            assert isinstance(result, str)
-    except Exception as error:
-        print(error)
+    dummy_companies_list = ["db45785", "abm99998"]
+    for company in dummy_companies_list:
+        result = ConsoleClientForDelete(
+            db_name=f"{settings.TEST_DATABASE_NAME}"
+        ).delete_company(company)
+        assert isinstance(result, str)
 
 
 def test_delete_company_view_with_commercial_profile_when_company_referenced_by_client_raises_exception(
@@ -154,15 +151,12 @@ def test_delete_event_view_with_support_profile_raises_exception(
 def test_delete_event_view_with_gestion_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        dummy_events_list = ["EV971", "fvc4440"]
-        for event in dummy_events_list:
-            result = ConsoleClientForDelete(
-                db_name=f"{settings.TEST_DATABASE_NAME}"
-            ).delete_event(event)
-            assert isinstance(result, str)
-    except Exception as error:
-        print(error)
+    dummy_events_list = ["EV971", "fvc4440"]
+    for event in dummy_events_list:
+        result = ConsoleClientForDelete(
+            db_name=f"{settings.TEST_DATABASE_NAME}"
+        ).delete_event(event)
+        assert isinstance(result, str)
 
 
 def test_delete_location_view_with_gestion_profile_raises_exception(
@@ -195,29 +189,23 @@ def test_delete_location_view_with_commercial_profile_when_location_referenced_b
 def test_delete_location_view_with_commercial_profile_when_location_not_referenced_by_company(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    try:
-        dummy_locations_list = ["CAL13555"]
-        for location in dummy_locations_list:
-            result = ConsoleClientForDelete(
-                db_name=f"{settings.TEST_DATABASE_NAME}"
-            ).delete_location(location)
-            assert isinstance(result, str)
-    except Exception as error:
-        print(error)
+    dummy_locations_list = ["CAL13555"]
+    for location in dummy_locations_list:
+        result = ConsoleClientForDelete(
+            db_name=f"{settings.TEST_DATABASE_NAME}"
+        ).delete_location(location)
+        assert isinstance(result, str)
 
 
 def test_delete_role_view_with_gestion_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        dummy_roles_list = ["driv", "sec"]
-        for role in dummy_roles_list:
-            result = ConsoleClientForDelete(
-                db_name=f"{settings.TEST_DATABASE_NAME}"
-            ).delete_role(role)
-            assert isinstance(result, str)
-    except Exception as error:
-        print(error)
+    dummy_roles_list = ["driv", "sec"]
+    for role in dummy_roles_list:
+        result = ConsoleClientForDelete(
+            db_name=f"{settings.TEST_DATABASE_NAME}"
+        ).delete_role(role)
+        assert isinstance(result, str)
 
 
 def test_delete_role_view_with_gestion_profile_when_role_referenced_in_collaborator_raises_exception(
@@ -250,15 +238,12 @@ def test_delete_role_view_with_support_profile_raises_exception(
 def test_delete_department_view_with_gestion_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_gestion_collaborator
 ):
-    try:
-        dummy_departments_list = ["logist", "design"]
-        for department in dummy_departments_list:
-            result = ConsoleClientForDelete(
-                db_name=f"{settings.TEST_DATABASE_NAME}"
-            ).delete_department(department)
-            assert isinstance(result, str)
-    except Exception as error:
-        print(error)
+    dummy_departments_list = ["logist", "design"]
+    for department in dummy_departments_list:
+        result = ConsoleClientForDelete(
+            db_name=f"{settings.TEST_DATABASE_NAME}"
+        ).delete_department(department)
+        assert isinstance(result, str)
 
 
 def test_delete_department_view_with_gestion_profile_when_department_referenced_in_collaborator_raises_exception(

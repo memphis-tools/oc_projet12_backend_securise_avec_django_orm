@@ -281,7 +281,7 @@ def dummy_contract_data(request):
 def dummy_contract_data_2(request):
     contract = {
         "creation_date": "2023-05-10 15:04:20",
-        "contract_id": "C9Z1",
+        "contract_id": "WW9Z1",
         "full_amount_to_pay": "299.99",
         "remain_amount_to_pay": "299.99",
         "status": "unsigned",
@@ -293,7 +293,7 @@ def dummy_contract_data_2(request):
 @pytest.fixture(scope="session", autouse=True)
 def dummy_contract_partial_data(request):
     contract = {
-        "contract_id": "C9Z1",
+        "contract_id": "WW9Z1",
         "remain_amount_to_pay": "554.29",
         "status": "signed",
     }
