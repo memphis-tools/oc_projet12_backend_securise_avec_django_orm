@@ -112,7 +112,7 @@
   "SETTINGS_INTERNET_CONNECTION_DOWN_NO_FILES_TO_PARSE":"Connection à internet désengagée. Pas de fichiers .csv statiques à exploiter.",
   "SGBD_SERVICE_NAME":"Postgresql",
   "SGBD_SERVICE_RUNNING":"Service Postgresql est actif.",
-  "SGBD_SERVICE_ERROR":"Service Postgresql ne semble pas actif.",
+  "SGBD_SERVICE_ERROR":"Service Postgresql n'est pas activé.",
   "SGBD_USER_POSTGRES_EXISTS":"Utilisateur postgres existe.",
   "SUPPLIED_DATA_DO_NOT_MATCH_MODEL":"Vos données ne respecte pas le format attendu.",
   "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT":"Vous n'êtes pas le collaborateur support associé à l'évènement.",
