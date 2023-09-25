@@ -43,6 +43,10 @@ class CustomIdEmptyException(Exception):
     pass
 
 
+class RegistrationNumberEmptyException(Exception):
+    pass
+
+
 class CustomIdMatchNothingException(Exception):
     pass
 
@@ -63,6 +67,38 @@ class CollaboratorAlreadyExistException(Exception):
     pass
 
 
+class RegistrationNumberAlreadyExistException(Exception):
+    pass
+
+
+class ContractAlreadyExistException(Exception):
+    pass
+
+
+class CompanyAlreadyExistException(Exception):
+    pass
+
+
+class RoleAlreadyExistException(Exception):
+    pass
+
+
+class DepartmentAlreadyExistException(Exception):
+    pass
+
+
+class EventAlreadyExistException(Exception):
+    pass
+
+
+class ClientAlreadyExistException(Exception):
+    pass
+
+
+class LocationAlreadyExistException(Exception):
+    pass
+
+
 class CommercialCollaboratorIsNotAssignedToClient(Exception):
     pass
 
@@ -76,6 +112,26 @@ class ClientNotFoundWithClientId(Exception):
 
 
 class ContractNotFoundWithContractId(Exception):
+    pass
+
+
+class CompanyNotFoundWithCompanyId(Exception):
+    pass
+
+
+class EventNotFoundWithEventId(Exception):
+    pass
+
+
+class RoleNotFoundWithRoleId(Exception):
+    pass
+
+
+class DepartmentNotFoundWithDepartmentId(Exception):
+    pass
+
+
+class LocationNotFoundWithLocationId(Exception):
     pass
 
 

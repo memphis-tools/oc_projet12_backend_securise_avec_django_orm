@@ -35,6 +35,21 @@ def add_client():
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
+    except exceptions.CustomIdEmptyException:
+        message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_CAN_NOT_BE_EMPTY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ClientAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["CLIENT_ID_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ApplicationErrorException:
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_ERROR"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -61,6 +76,21 @@ def add_collaborator():
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
+    except exceptions.RegistrationNumberEmptyException:
+        message = APP_DICT.get_appli_dictionnary()["REGISTRATION_NUMBER_CAN_NOT_BE_EMPTY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.RegistrationNumberAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["REGISTRATION_NUMBER_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ApplicationErrorException:
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_ERROR"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception as error:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -79,6 +109,21 @@ def add_company():
         click.secho(console_client.add_company(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.CustomIdEmptyException:
+        message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_CAN_NOT_BE_EMPTY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.CompanyAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["COMPANY_ID_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ApplicationErrorException:
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_ERROR"]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
@@ -104,7 +149,25 @@ def add_contract():
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
     except exceptions.ContractAlreadyExistException:
-        pass
+        message = APP_DICT.get_appli_dictionnary()["CONTRACT_ID_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.CustomIdEmptyException:
+        message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_CAN_NOT_BE_EMPTY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ContractAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["CONTRACT_ID_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ApplicationErrorException:
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_ERROR"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -123,6 +186,21 @@ def add_department():
         click.secho(console_client.add_department(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.CustomIdEmptyException:
+        message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_CAN_NOT_BE_EMPTY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.DepartmentAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["DEPARTMENT_ID_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ApplicationErrorException:
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_ERROR"]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
@@ -151,6 +229,21 @@ def add_event():
         pass
     except exceptions.CommercialCollaboratorIsNotAssignedToContract:
         pass
+    except exceptions.EventAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["EVENT_ID_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.CustomIdEmptyException:
+        message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_CAN_NOT_BE_EMPTY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ApplicationErrorException:
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_ERROR"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -174,6 +267,21 @@ def add_location():
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
+    except exceptions.CustomIdEmptyException:
+        message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_CAN_NOT_BE_EMPTY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.LocationAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["LOCATION_ID_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ApplicationErrorException:
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_ERROR"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except Exception:
         message = APP_DICT.get_appli_dictionnary()["MISSING_TOKEN_ERROR"]
         printer.print_message("error", message)
@@ -192,6 +300,21 @@ def add_role():
         click.secho(console_client.add_role(), bg="blue", fg="white")
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.CustomIdEmptyException:
+        message = APP_DICT.get_appli_dictionnary()["CUSTOM_ID_CAN_NOT_BE_EMPTY"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.RoleAlreadyExistException:
+        message = APP_DICT.get_appli_dictionnary()["ROLE_ID_ALREADY_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+    except exceptions.ApplicationErrorException:
+        message = APP_DICT.get_appli_dictionnary()["APPLICATION_ERROR"]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
