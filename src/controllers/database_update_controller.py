@@ -105,7 +105,7 @@ class DatabaseUpdateController:
         try:
             sql = f"""ALTER USER {user_registration_number} WITH PASSWORD '{new_password}'"""
             cursor.execute(sql)
-        except Exception as error:
+        except Exception:
             conn.rollback()
         conn.commit()
         conn.close()
@@ -120,7 +120,6 @@ class DatabaseUpdateController:
         company = session.query(models.Company).filter_by(company_id=company_id).first()
         if company is None:
             raise exceptions.CustomIdMatchNothingException()
-        companies = session.query(models.Company).all()
         keys_to_explore = models.Company.metadata.tables["company"].columns.keys()
 
         try:

@@ -44,19 +44,19 @@ def new_collaborator_password_is_valid(new_password):
     - new_password: chaine de caractères, nouveau mot de passe de l'employé /du collaborateur
     """
 
-    b1 = bool(len(new_password) >= settings.DEFAULT_NEW_PASSWORD_MIN_LENGTH)
-    b2 = bool(len(new_password) < settings.DEFAULT_NEW_PASSWORD_MAX_LENGTH)
+    min_length_ok = bool(len(new_password) >= settings.DEFAULT_NEW_PASSWORD_MIN_LENGTH)
+    max_length_ok = bool(len(new_password) < settings.DEFAULT_NEW_PASSWORD_MAX_LENGTH)
 
     min_digits = settings.DEFAULT_NEW_PASSWORD_MIN_DIGITS
     pattern = re.compile(rf".*(\d{{{min_digits}}}).*")
-    b3 = bool(re.match(pattern, new_password))
+    min_digits_ok = bool(re.match(pattern, new_password))
 
     min_specialchars = settings.DEFAULT_NEW_PASSWORD_MIN_SPECIAL_CHAR
     specialchars = "".join(settings.ALLOWED_SPECIALCHARS_IN_PASSWORD)
     pattern = re.compile(rf".*([{specialchars}]{{{min_specialchars}}}).*")
     try:
         check_password = re.match(pattern, new_password)
-        b4 = bool(check_password.group())
+        special_chars_ok = bool(check_password.group())
     except Exception:
         raise exceptions.NewPasswordDoesRespectMinSpecialCharsException()
 
@@ -64,9 +64,12 @@ def new_collaborator_password_is_valid(new_password):
     pattern = re.compile(rf".*([{forbidden_specialchars}]{1,}).*")
     try:
         check_password = re.match(pattern, new_password)
-        b5 = isinstance(type(check_password), type(None))
+        forbidden_chars_ok = isinstance(type(check_password), type(None))
     except Exception as error:
         raise exceptions.NewPasswordDoesRespectForbiddenSpecialCharsException()
 
-    if all([b1, b2, b3, b4]) and not b5:
+    all_thresholds_ok = bool(
+        all([min_length_ok, max_length_ok, min_digits_ok, special_chars_ok])
+    )
+    if all_thresholds_ok and not forbidden_chars_ok:
         return True

@@ -2,7 +2,7 @@
 vue collaborateurs
 """
 from rich.console import Console
-import logtail
+
 try:
     from src.languages import language_bridge
     from src.printers import printer

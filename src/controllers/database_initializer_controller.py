@@ -89,11 +89,7 @@ class DatabaseInitializerController:
         Connexion à la base de données et renvoie une fabrique session qui sera utilisée par la vue AppViews.
         """
         try:
-            if decoded_token == "":
-                # l'utilisateur demande un token, c'est sa "connexion" initiale à l'application
-                user_login = user_login
-                user_pwd = user_pwd
-            else:
+            if decoded_token != "":
                 # l'utilisateur vient de demander un token, l'a obtenu et requete la bdd, on exploite le token décodé
                 user_login = str(decoded_token["department"]).lower()
                 dprt = str(decoded_token["department"]).upper()

@@ -111,6 +111,7 @@ location_partial_dict_2 = {
     "complement_adresse": "allée du bon pas",
 }
 
+
 def test_update_client_view(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):

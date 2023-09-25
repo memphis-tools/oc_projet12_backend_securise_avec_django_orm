@@ -83,7 +83,7 @@ class InitAppliConsole:
                 csv_filename=settings.COMPANIES_EXPORT_FILE_PATH
             )
         except exceptions.ApiQueryFailedException:
-            message = self.app_dict.get_appli_dictionnary()[
+            message = APP_DICT.get_appli_dictionnary()[
                 "API_QUERY_ACCESS_OR_QUERY_FAILED"
             ]
             printer.print_message("error", message)
@@ -117,7 +117,7 @@ class InitAppliConsole:
         csv_headers_nb_commas = 0
         for header in csv_headers_list:
             csv_headers_nb_commas += 1
-            for csv_header in header:
+            for _ in header:
                 csv_headers_nb_chars += 1
         try:
             files_size = csv_headers_nb_chars + csv_headers_nb_commas
@@ -129,7 +129,7 @@ class InitAppliConsole:
             return True
         except exceptions.MissingApiStaticFileException:
             settings_key = "SETTINGS_INTERNET_CONNECTION_DOWN_NO_FILES_TO_PARSE"
-            message = self.app_dict.get_appli_dictionnary()[f"{settings_key}"]
+            message = APP_DICT.get_appli_dictionnary()[f"{settings_key}"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)

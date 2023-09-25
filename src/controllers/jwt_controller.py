@@ -59,10 +59,9 @@ class JwtController:
             decoded_token = self.jwt_authenticator.get_decoded_token()
             if not self.is_token_revoked(decoded_token):
                 return True
-            else:
-                return False
         except Exception:
             raise jwt.exceptions.InvalidSignatureError
+        return False
 
     def get_decoded_token(self):
         """

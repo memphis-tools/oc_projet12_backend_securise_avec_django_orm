@@ -2,11 +2,11 @@
 Description:
 Client en mode console, dédié aux mises à jour (ajout, modification, suppression).
 """
-import sys
 from datetime import datetime
 import logtail
 from rich.prompt import Prompt
 import sqlalchemy
+
 try:
     from src.languages import language_bridge
     from src.printers import printer
@@ -56,7 +56,6 @@ class ConsoleClientForCreate:
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
-        settings.APP_FIGLET_TITLE
         self.decoded_token = self.jwt_view.get_decoded_token()
         self.user_service = str(self.decoded_token["department"]).upper()
         self.registration_number = str(self.decoded_token["registration_number"])
@@ -90,7 +89,6 @@ class ConsoleClientForCreate:
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
-            sys.exit(0)
 
     def ask_for_a_contract_id(self):
         """
@@ -347,7 +345,9 @@ class ConsoleClientForCreate:
                 asked_client_id = Prompt.ask("Client id: ")
                 if not asked_client_id:
                     raise exceptions.CustomIdEmptyException()
-                existing_client = self.app_view.get_clients_view().get_client(asked_client_id)
+                existing_client = self.app_view.get_clients_view().get_client(
+                    asked_client_id
+                )
                 if existing_client is not None:
                     raise exceptions.ClientAlreadyExistException()
 
@@ -403,8 +403,10 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_collaborator_data_is_valid(
                     collaborator_attributes_dict
                 )
-                existing_registration_number = self.app_view.get_collaborators_view().get_collaborator(
-                    collaborator_attributes_dict["registration_number"]
+                existing_registration_number = (
+                    self.app_view.get_collaborators_view().get_collaborator(
+                        collaborator_attributes_dict["registration_number"]
+                    )
                 )
                 if existing_registration_number is not None:
                     raise exceptions.RegistrationNumberAlreadyExistException()
@@ -417,8 +419,10 @@ class ConsoleClientForCreate:
                 asked_registration_number = Prompt.ask("Registration number: ")
                 if not asked_registration_number:
                     raise exceptions.CustomIdEmptyException()
-                existing_registration_number = self.app_view.get_collaborators_view().get_collaborator(
-                    asked_registration_number
+                existing_registration_number = (
+                    self.app_view.get_collaborators_view().get_collaborator(
+                        asked_registration_number
+                    )
                 )
                 if existing_registration_number is not None:
                     raise exceptions.RegistrationNumberAlreadyExistException()
@@ -477,14 +481,12 @@ class ConsoleClientForCreate:
         except Exception:
             raise exceptions.ApplicationErrorException()
 
-
     @utils.authentication_permission_decorator
     def add_company(self, company_attributes_dict=""):
         """
         Description:
         Dédiée à enregistrer une entreprise sans client, mais avec une localité nécessaire.
         """
-        company = ""
         message = ""
         try:
             grant_valid = bool("company" not in self.allowed_crud_tables)
@@ -502,7 +504,7 @@ class ConsoleClientForCreate:
                     raise exceptions.CompanyAlreadyExistException()
 
                 if data_is_dict and dict_is_valid:
-                    company = models.Company(**company_attributes_dict)
+                    models.Company(**company_attributes_dict)
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
@@ -518,13 +520,14 @@ class ConsoleClientForCreate:
                 asked_company_id = Prompt.ask("Company id: ")
                 if not asked_company_id:
                     raise exceptions.CustomIdEmptyException()
-                existing_company = self.app_view.get_companies_view().get_company(asked_company_id)
+                existing_company = self.app_view.get_companies_view().get_company(
+                    asked_company_id
+                )
                 if existing_company is not None:
                     raise exceptions.CompanyAlreadyExistException()
 
                 company_attributes_dict = forms.submit_a_company_create_form(
-                    company_location_id=location_id,
-                    company_id=asked_company_id
+                    company_location_id=location_id, company_id=asked_company_id
                 )
             company_id = self.create_app_view.get_companies_view().add_company(
                 models.Company(**company_attributes_dict)
@@ -562,16 +565,12 @@ class ConsoleClientForCreate:
         except Exception:
             raise exceptions.ApplicationErrorException()
 
-
     @utils.authentication_permission_decorator
     def add_contract(self, contract_attributes_dict=""):
         """
         Description:
         Dédiée à enregistrer un contrat pour le client.
         """
-        user_id = utils.get_user_id_from_registration_number(
-            self.app_view.session, self.registration_number
-        )
         contract = ""
         message = ""
         try:
@@ -601,10 +600,14 @@ class ConsoleClientForCreate:
                 asked_contract_id = Prompt.ask("Contract id: ")
                 if not asked_contract_id:
                     raise exceptions.ContractNotFoundWithContractId()
-                existing_contract = self.app_view.get_contracts_view().get_contract(asked_contract_id)
+                existing_contract = self.app_view.get_contracts_view().get_contract(
+                    asked_contract_id
+                )
                 if existing_contract is not None:
                     raise exceptions.ContractAlreadyExistException()
-                contract_attributes_dict = forms.submit_a_contract_create_form(contract_id=asked_contract_id)
+                contract_attributes_dict = forms.submit_a_contract_create_form(
+                    contract_id=asked_contract_id
+                )
                 contract_attributes_dict["client_id"] = client_id
                 contract = models.Contract(**contract_attributes_dict)
                 contract.creation_date = datetime.now()
@@ -627,21 +630,6 @@ class ConsoleClientForCreate:
             raise exceptions.ContractAlreadyExistException()
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
-        except exceptions.ContractNotFoundWithContractId:
-            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
-            raise exceptions.ContractNotFoundWithContractId()
-        except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()[
-                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
-            ]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
-            raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
-            sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
             message = self.app_dict.get_appli_dictionnary()[
                 "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
@@ -659,7 +647,6 @@ class ConsoleClientForCreate:
         except Exception:
             raise exceptions.ApplicationErrorException()
 
-
     @utils.authentication_permission_decorator
     def add_department(self, department_attributes_dict=""):
         """
@@ -669,7 +656,9 @@ class ConsoleClientForCreate:
         department = ""
         message = ""
         try:
-            grant_valid = bool("collaborator_department" not in self.allowed_crud_tables)
+            grant_valid = bool(
+                "collaborator_department" not in self.allowed_crud_tables
+            )
             if grant_valid or self.user_service.lower() != "oc12_gestion":
                 raise exceptions.InsufficientPrivilegeException()
             if department_attributes_dict != "":
@@ -679,8 +668,10 @@ class ConsoleClientForCreate:
                 dict_is_valid = add_data_validators.add_department_data_is_valid(
                     department_attributes_dict
                 )
-                existing_department = self.app_view.get_departments_view().get_department(
-                    department_attributes_dict["department_id"]
+                existing_department = (
+                    self.app_view.get_departments_view().get_department(
+                        department_attributes_dict["department_id"]
+                    )
                 )
                 if existing_department is not None:
                     raise exceptions.DepartmentAlreadyExistException()
@@ -694,12 +685,18 @@ class ConsoleClientForCreate:
                 asked_department_id = Prompt.ask("Department id: ")
                 if not asked_department_id:
                     raise exceptions.CustomIdEmptyException()
-                existing_department = self.app_view.get_departments_view().get_department(asked_department_id)
+                existing_department = (
+                    self.app_view.get_departments_view().get_department(
+                        asked_department_id
+                    )
+                )
                 if existing_department is not None:
                     raise exceptions.DepartmentAlreadyExistException()
 
                 department_attributes_dict = (
-                    forms.submit_a_collaborator_department_create_form(department_id=asked_department_id)
+                    forms.submit_a_collaborator_department_create_form(
+                        department_id=asked_department_id
+                    )
                 )
                 department = models.Collaborator_Department(
                     **department_attributes_dict
@@ -708,7 +705,9 @@ class ConsoleClientForCreate:
             department_id = self.create_app_view.get_departments_view().add_department(
                 department
             )
-            message = f"Creation department {department_id} by {self.registration_number}"
+            message = (
+                f"Creation department {department_id} by {self.registration_number}"
+            )
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     department={
@@ -742,7 +741,6 @@ class ConsoleClientForCreate:
             raise exceptions.SuppliedDataNotMatchModel()
         except Exception:
             raise exceptions.ApplicationErrorException()
-
 
     @utils.authentication_permission_decorator
     def add_event(self, event_attributes_dict=""):
@@ -795,9 +793,9 @@ class ConsoleClientForCreate:
                     raise exceptions.ContractUnsignedException()
                 if contract.status == "canceled":
                     raise exceptions.ContractCanceledException()
-                commercial_id_attached_to_contract = contract.client.commercial_contact
                 if not contract:
                     raise exceptions.ContractNotFoundWithContractId()
+                commercial_id_attached_to_contract = contract.client.commercial_contact
                 if commercial_id_attached_to_contract != int(user_id):
                     raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
 
@@ -813,11 +811,15 @@ class ConsoleClientForCreate:
                 asked_event_id = Prompt.ask("Event id: ")
                 if not asked_event_id:
                     raise exceptions.CustomIdEmptyException()
-                existing_event = self.app_view.get_events_view().get_event(asked_event_id)
+                existing_event = self.app_view.get_events_view().get_event(
+                    asked_event_id
+                )
                 if existing_event is not None:
                     raise exceptions.EventAlreadyExistException()
 
-                event_attributes_dict = forms.submit_a_event_create_form(event_id=asked_event_id)
+                event_attributes_dict = forms.submit_a_event_create_form(
+                    event_id=asked_event_id
+                )
                 event_attributes_dict["contract_id"] = contract.id
                 event_attributes_dict["location_id"] = location_id
                 event_attributes_dict["client_id"] = contract.client_id
@@ -839,26 +841,18 @@ class ConsoleClientForCreate:
         except exceptions.CustomIdEmptyException:
             raise exceptions.CustomIdEmptyException()
         except exceptions.ContractCanceledException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "CONTRACT_CANCELED"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["CONTRACT_CANCELED"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
         except exceptions.ContractUnsignedException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "CONTRACT_UNSIGNED"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["CONTRACT_UNSIGNED"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
         except exceptions.ContractNotFoundWithContractId:
-            message = self.app_dict.get_appli_dictionnary()["CUSTOM_ID_MATCHES_NOTHING"]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
             raise exceptions.ContractNotFoundWithContractId()
         except exceptions.CommercialCollaboratorIsNotAssignedToContract:
             message = self.app_dict.get_appli_dictionnary()[
@@ -868,7 +862,6 @@ class ConsoleClientForCreate:
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
-            sys.exit(0)
         except exceptions.SupportCollaboratorIsNotAssignedToEvent:
             message = self.app_dict.get_appli_dictionnary()[
                 "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
@@ -877,7 +870,6 @@ class ConsoleClientForCreate:
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
-            sys.exit(0)
         except exceptions.SuppliedDataNotMatchModel:
             message = self.app_dict.get_appli_dictionnary()[
                 "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
@@ -894,7 +886,6 @@ class ConsoleClientForCreate:
             raise exceptions.SuppliedDataNotMatchModel()
         except Exception:
             raise exceptions.ApplicationErrorException()
-
 
     @utils.authentication_permission_decorator
     def add_location(self, location_attributes_dict="", location_id=""):
@@ -931,7 +922,9 @@ class ConsoleClientForCreate:
                 asked_location_id = Prompt.ask("Location id: ")
                 if not asked_location_id:
                     raise exceptions.CustomIdEmptyException()
-                existing_location = self.app_view.get_locations_view().get_location(asked_location_id)
+                existing_location = self.app_view.get_locations_view().get_location(
+                    asked_location_id
+                )
                 if existing_location is not None:
                     raise exceptions.LocationAlreadyExistException()
 
@@ -959,22 +952,6 @@ class ConsoleClientForCreate:
             raise exceptions.CustomIdEmptyException()
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
-        except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()[
-                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
-            ]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
-            raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
-        except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()[
-                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
-            ]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
-            raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
         except exceptions.SuppliedDataNotMatchModel:
             message = self.app_dict.get_appli_dictionnary()[
                 "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
@@ -991,7 +968,6 @@ class ConsoleClientForCreate:
             raise exceptions.SuppliedDataNotMatchModel()
         except Exception:
             raise exceptions.ApplicationErrorException()
-
 
     @utils.authentication_permission_decorator
     def add_role(self, role_attributes_dict=""):
@@ -1027,7 +1003,9 @@ class ConsoleClientForCreate:
                 if existing_role is not None:
                     raise exceptions.RoleAlreadyExistException()
 
-                role_attributes_dict = forms.submit_a_collaborator_role_create_form(role_id=asked_role_id)
+                role_attributes_dict = forms.submit_a_collaborator_role_create_form(
+                    role_id=asked_role_id
+                )
                 role = models.Collaborator_Role(**role_attributes_dict)
                 role.creation_date = datetime.now()
             role_id = self.create_app_view.get_roles_view().add_role(role)
@@ -1047,22 +1025,6 @@ class ConsoleClientForCreate:
             raise exceptions.CustomIdEmptyException()
         except exceptions.InsufficientPrivilegeException:
             raise exceptions.InsufficientPrivilegeException()
-        except exceptions.CommercialCollaboratorIsNotAssignedToContract:
-            message = self.app_dict.get_appli_dictionnary()[
-                "COMMERCIAL_COLLABORATOR_IS_NOT_ASSIGNED_TO_CONTRACT"
-            ]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
-            raise exceptions.CommercialCollaboratorIsNotAssignedToContract()
-        except exceptions.SupportCollaboratorIsNotAssignedToEvent:
-            message = self.app_dict.get_appli_dictionnary()[
-                "SUPPORT_COLLABORATOR_IS_NOT_ASSIGNED_TO_EVENT"
-            ]
-            printer.print_message("error", message)
-            if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-                LOGGER.error(message)
-            raise exceptions.SupportCollaboratorIsNotAssignedToEvent()
         except exceptions.SuppliedDataNotMatchModel:
             message = self.app_dict.get_appli_dictionnary()[
                 "SUPPLIED_DATA_DO_NOT_MATCH_MODEL"
