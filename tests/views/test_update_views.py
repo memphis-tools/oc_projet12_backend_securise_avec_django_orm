@@ -101,11 +101,15 @@ contract_partial_dict7 = {
     "remain_amount_to_pay": "199.99",
 }
 
-location_partial_dict = {
+location_partial_dict_1 = {
     "location_id": "p22240",
     "complement_adresse": "allée de la patissière",
 }
 
+location_partial_dict_2 = {
+    "location_id": "p22240",
+    "complement_adresse": "allée du bon pas",
+}
 
 def test_update_client_view(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
@@ -377,14 +381,12 @@ def test_update_event_view_with_support_profile_when_collaborator_is_not_assigne
 def test_update_location_view_with_commercial_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
-    try:
-        db_name = f"{settings.TEST_DATABASE_NAME}"
-        result = ConsoleClientForUpdate(db_name=db_name).update_location(
-            location_partial_dict
-        )
-        assert isinstance(result, dict)
-    except Exception as error:
-        print(error)
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    location_id = location_partial_dict_2["location_id"]
+    result = ConsoleClientForUpdate(db_name=db_name).update_location(
+        location_partial_dict_2
+    )
+    assert result == f"Update location {location_id} by aa123456789"
 
 
 def test_update_location_view_with_gestion_profile_raises_exception(
@@ -393,7 +395,7 @@ def test_update_location_view_with_gestion_profile_raises_exception(
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_location(
-            location_partial_dict
+            location_partial_dict_1
         )
 
 
@@ -403,7 +405,7 @@ def test_update_location_view_with_support_profile_raises_exception(
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
         result = ConsoleClientForUpdate(db_name=db_name).update_location(
-            location_partial_dict
+            location_partial_dict_1
         )
 
 

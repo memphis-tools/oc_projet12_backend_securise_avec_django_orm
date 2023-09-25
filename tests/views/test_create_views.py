@@ -317,6 +317,32 @@ def test_add_collaborator_view_with_gestion_profile(
     assert isinstance(result, str)
 
 
+@pytest.mark.parametrize(
+    "custom_dict",
+    [
+        commercial_collaborator_attributes_dict_1,
+        commercial_collaborator_attributes_dict_2,
+        gestion_collaborator_attributes_dict_1,
+        gestion_collaborator_attributes_dict_2,
+        support_collaborator_attributes_dict_1,
+        support_collaborator_attributes_dict_2,
+    ],
+)
+def test_add_existing_collaborator_view_with_gestion_profile_raises_exception(
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict,
+):
+    """
+    Vérifier si une exception est levée lorsqu'on veut créer un collaborateur déjà crée.
+    On vérifie le registration_number, le matricule.
+    """
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    with pytest.raises(exceptions.ApplicationErrorException):
+        result = ConsoleClientForCreate(db_name).add_collaborator(custom_dict)
+
+
 def test_add_valid_location_view_with_commercial_profile(
     get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
 ):
@@ -326,6 +352,18 @@ def test_add_valid_location_view_with_commercial_profile(
     db_name = f"{settings.TEST_DATABASE_NAME}"
     result = ConsoleClientForCreate(db_name).add_location(location_attributes_dict_4)
     assert isinstance(result, str)
+
+
+def test_add_existing_valid_location_view_with_commercial_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
+):
+    """
+    Vérifier si une exception est levée lorsqu'on veut créer une localité déjà crée.
+    On vérifie le custom_id
+    """
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    with pytest.raises(exceptions.LocationAlreadyExistException):
+        result = ConsoleClientForCreate(db_name).add_location(location_attributes_dict_4)
 
 
 def test_add_unvalid_location_view_with_commercial_profile_raises_exception(
@@ -384,6 +422,18 @@ def test_add_company_id_1_view_with_commercial_profile_with_valid_company(
     db_name = f"{settings.TEST_DATABASE_NAME}"
     result = ConsoleClientForCreate(db_name).add_company(company_attributes_dict_1)
     assert isinstance(result, str)
+
+
+def test_add_existing_company_view_with_commercial_profile_raises_exception(
+    get_runner, set_a_test_env, get_valid_decoded_token_for_a_commercial_collaborator
+):
+    """
+    Vérifier si une exception est levée lorsqu'on veut créer une entreprise déjà crée.
+    On vérifie le custom_id
+    """
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    with pytest.raises(exceptions.CompanyAlreadyExistException):
+        result = ConsoleClientForCreate(db_name).add_company(company_attributes_dict_1)
 
 
 def test_add_company_id_3_view_with_commercial_profile_with_valid_company(
@@ -481,6 +531,24 @@ def test_add_contract_view_with_support_profile_raises_exception(
     """
     with pytest.raises(exceptions.InsufficientPrivilegeException):
         db_name = f"{settings.TEST_DATABASE_NAME}"
+        result = ConsoleClientForCreate(db_name).add_contract(custom_dict)
+
+
+@pytest.mark.parametrize(
+    "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2, contract_attributes_dict_3]
+)
+def test_add_existing_contract_view_with_gestion_profile_raises_exception(
+    get_runner,
+    set_a_test_env,
+    get_valid_decoded_token_for_a_gestion_collaborator,
+    custom_dict
+):
+    """
+    Vérifier si une exception est levée lorsqu'on veut créer un contrat déjà crée.
+    On vérifie le custom_id
+    """
+    db_name = f"{settings.TEST_DATABASE_NAME}"
+    with pytest.raises(exceptions.ContractAlreadyExistException):
         result = ConsoleClientForCreate(db_name).add_contract(custom_dict)
 
 
