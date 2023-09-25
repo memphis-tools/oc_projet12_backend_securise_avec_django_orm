@@ -186,7 +186,7 @@ Notice that **log collect is activated by default**. You can deactivate it throu
 
       Notice application has been run on a Linux operating system. Some commands will relied on it.
 
-      First in a Linux running context, deactivate any input into history: `set -o history` (this will apply for the terminal session duration). This is optional.
+      First in a Linux running context, deactivate any input into history: `set +o history` (this will apply for the terminal session duration). This is optional.
 
       Then you will need a token access. Valid duration period is set through the settings.py file.
 
