@@ -2,19 +2,19 @@
 vue contrats
 """
 from rich.console import Console
-import logtail
+
 try:
     from src.exceptions import exceptions
     from src.languages import language_bridge
     from src.printers import printer
     from src.utils import utils
-    from src.settings import settings, logtail_handler
+    from src.settings import logtail_handler
 except ModuleNotFoundError:
     from exceptions import exceptions
     from languages import language_bridge
     from printers import printer
     from utils import utils
-    from settings import settings, logtail_handler
+    from settings import logtail_handler
 
 
 LOGGER = logtail_handler.logger
@@ -95,7 +95,9 @@ class ContractsView:
         """
         return self.db_controller.delete_contract(self.session, contract_id)
 
-    def update_contract(self, app_view, current_user_collaborator_id, user_service, custom_dict):
+    def update_contract(
+        self, app_view, current_user_collaborator_id, user_service, custom_dict
+    ):
         """
         Description: vue dédiée à mettre à jour un contrat.
         Parameters:
@@ -105,7 +107,9 @@ class ContractsView:
         """
         event = self.get_attached_event(app_view, custom_dict["contract_id"])
         if "status" in custom_dict.keys() and event:
-            raise exceptions.EventAttachedContractStatusCanNotBeUpdateException(event.title)
+            raise exceptions.EventAttachedContractStatusCanNotBeUpdateException(
+                event.title
+            )
         return self.db_controller.update_contract(
             self.session, current_user_collaborator_id, user_service, custom_dict
         )
@@ -116,6 +120,10 @@ class ContractsView:
         Parameters:
         - contract_custom_id: custom_id d'un contrat
         """
-        contract_id = utils.get_contract_id_from_contract_custom_id(self.session, contract_custom_id)
-        event_attached = app_view.get_events_view().get_attached_event_to_contract(contract_id)
+        contract_id = utils.get_contract_id_from_contract_custom_id(
+            self.session, contract_custom_id
+        )
+        event_attached = app_view.get_events_view().get_attached_event_to_contract(
+            contract_id
+        )
         return event_attached

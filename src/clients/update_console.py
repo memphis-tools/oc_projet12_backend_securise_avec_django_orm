@@ -2,7 +2,6 @@
 Description:
 Client en mode console, dédié aux mises à jour.
 """
-import sys
 import logtail
 
 try:
@@ -46,7 +45,6 @@ class ConsoleClientForUpdate:
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
-        settings.APP_FIGLET_TITLE
         self.decoded_token = self.jwt_view.get_decoded_token()
         self.user_service = str(self.decoded_token["department"]).upper()
         self.registration_number = str(self.decoded_token["registration_number"])
@@ -136,8 +134,10 @@ class ConsoleClientForUpdate:
             if "collaborator" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
-            matricule = self.update_app_view.get_collaborators_view().update_collaborator(
-                custom_partial_dict
+            matricule = (
+                self.update_app_view.get_collaborators_view().update_collaborator(
+                    custom_partial_dict
+                )
             )
             message = f"Update collaborator {matricule} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -295,8 +295,12 @@ class ConsoleClientForUpdate:
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
-        except exceptions.EventAttachedContractStatusCanNotBeUpdateException as event_title:
-            message = self.app_dict.get_appli_dictionnary()["CONTRACT_STATUS_EVENT_HAS_TO_BE_DELETE"]
+        except (
+            exceptions.EventAttachedContractStatusCanNotBeUpdateException
+        ) as event_title:
+            message = self.app_dict.get_appli_dictionnary()[
+                "CONTRACT_STATUS_EVENT_HAS_TO_BE_DELETE"
+            ]
             printer.print_message("error", f"{message} {event_title}")
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
@@ -317,8 +321,10 @@ class ConsoleClientForUpdate:
             if "collaborator_department" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
-            department_id = self.update_app_view.get_departments_view().update_department(
-                custom_partial_dict
+            department_id = (
+                self.update_app_view.get_departments_view().update_department(
+                    custom_partial_dict
+                )
             )
             message = f"Update department {department_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
@@ -462,7 +468,9 @@ class ConsoleClientForUpdate:
             if "collaborator_role" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
 
-            role_id = self.update_app_view.get_roles_view().update_role(custom_partial_dict)
+            role_id = self.update_app_view.get_roles_view().update_role(
+                custom_partial_dict
+            )
             message = f"Update role {role_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(

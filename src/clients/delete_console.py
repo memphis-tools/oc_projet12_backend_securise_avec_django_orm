@@ -47,7 +47,6 @@ class ConsoleClientForDelete:
         self.jwt_view = JwtView(self.app_view)
         # le module est appelé dynamiquement et n'est pas vu par flake8.
         # déclaration faite pour éviter une erreur dans le rapport flake8.
-        settings.APP_FIGLET_TITLE
         self.decoded_token = self.jwt_view.get_decoded_token()
         self.user_service = str(self.decoded_token["department"]).upper()
         self.registration_number = str(self.decoded_token["registration_number"])
@@ -396,9 +395,7 @@ class ConsoleClientForDelete:
                     collaborator_id
                 )
             )
-            message = (
-                f"Suppression collaborator {collaborator_id} by {self.registration_number}"
-            )
+            message = f"Suppression collaborator {collaborator_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     collaborator={
@@ -496,7 +493,8 @@ class ConsoleClientForDelete:
         """
         contract_id = ""
         try:
-            if "contract" not in self.allowed_crud_tables or self.user_service != "OC12_GESTION":
+            service_granted = bool(self.user_service != "OC12_GESTION")
+            if "contract" not in self.allowed_crud_tables or service_granted:
                 raise exceptions.InsufficientPrivilegeException()
             if contract_custom_id != "":
                 contract_id = self.ask_for_a_contract_id(contract_custom_id)["id"]
@@ -505,7 +503,9 @@ class ConsoleClientForDelete:
             contract_id = self.delete_app_view.get_contracts_view().delete_contract(
                 contract_id
             )
-            message = f"Suppression contract {contract_id} by {self.registration_number}"
+            message = (
+                f"Suppression contract {contract_id} by {self.registration_number}"
+            )
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     contract={
@@ -563,7 +563,9 @@ class ConsoleClientForDelete:
                     department_id
                 )
             )
-            message = f"Suppression department {department_id} by {self.registration_number}"
+            message = (
+                f"Suppression department {department_id} by {self.registration_number}"
+            )
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     department={
@@ -610,7 +612,8 @@ class ConsoleClientForDelete:
         """
         event_id = ""
         try:
-            if "event" not in self.allowed_crud_tables or self.user_service != "OC12_GESTION":
+            service_granted = self.user_service != "OC12_GESTION"
+            if "event" not in self.allowed_crud_tables or service_granted:
                 raise exceptions.InsufficientPrivilegeException()
             if event_custom_id != "":
                 event_id = self.ask_for_a_event_id(event_custom_id)["id"]
@@ -661,7 +664,9 @@ class ConsoleClientForDelete:
             location_id = self.delete_app_view.get_locations_view().delete_location(
                 location_id
             )
-            message = f"Suppression location {location_id} by {self.registration_number}"
+            message = (
+                f"Suppression location {location_id} by {self.registration_number}"
+            )
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     location={

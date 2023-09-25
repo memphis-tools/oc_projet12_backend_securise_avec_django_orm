@@ -148,7 +148,9 @@ def fullfill_form(custom_dict, expected_attributes_dict):
         for key, value in expected_attributes_dict.items():
             if key == "remain_amount_to_pay":
                 if custom_dict["status"] == "unsigned":
-                    custom_dict["remain_amount_to_pay"] = custom_dict["full_amount_to_pay"]
+                    custom_dict["remain_amount_to_pay"] = custom_dict[
+                        "full_amount_to_pay"
+                    ]
             if key not in custom_dict.keys():
                 item = Prompt.ask(f"{value}: ")
                 # 2 cas spécifiques avec popup prévue
@@ -210,7 +212,7 @@ def submit_a_location_create_form(location_id="", custom_dict={}):
             "ville": "ville",
             "region": "region",
             "pays": "pays",
-            "population": "population"
+            "population": "population",
         }
         printer.print_message(
             "info", APP_DICT.get_appli_dictionnary()["CREATE_A_LOCATION"]
@@ -274,7 +276,9 @@ def submit_a_company_create_form(company_location_id="", company_id="", custom_d
             sys.exit(0)
     custom_dict["location_id"] = company_location_id
     custom_dict["creation_date"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
-    custom_dict["date_debut_activite"] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
+    custom_dict[
+        "date_debut_activite"
+    ] = f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'
     custom_dict["company_id"] = company_id
     return custom_dict
 

@@ -3,6 +3,7 @@ Description:
 Tests fonctionnels pour les besoins spécifiques de l'équipe Commercial
 """
 import pytest
+
 try:
     from src.clients.create_console import ConsoleClientForCreate
     from src.clients.read_console import ConsoleClientForRead
@@ -87,9 +88,7 @@ def test_contract_update_manipulation_raises_exception(
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
     with pytest.raises(exceptions.EventAttachedContractStatusCanNotBeUpdateException):
-        ConsoleClientForUpdate(db_name).update_contract(
-            dummy_contract_partial_data_2
-        )
+        ConsoleClientForUpdate(db_name).update_contract(dummy_contract_partial_data_2)
 
 
 def test_contract_update_manipulation(

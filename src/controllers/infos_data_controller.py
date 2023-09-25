@@ -1,3 +1,7 @@
+"""
+Description:
+Fonctions dédiés aux menus d'aide pour saisie
+"""
 import csv
 from tkinter import Tk, Text, INSERT, Button, S
 

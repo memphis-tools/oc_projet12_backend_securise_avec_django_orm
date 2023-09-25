@@ -2,19 +2,19 @@
 vue clients
 """
 from rich.console import Console
-import logtail
+
 try:
     from src.languages import language_bridge
     from src.printers import printer
     from src.exceptions import exceptions
     from src.utils import utils
-    from src.settings import settings, logtail_handler
+    from src.settings import logtail_handler
 except ModuleNotFoundError:
     from languages import language_bridge
     from printers import printer
     from exceptions import exceptions
     from utils import utils
-    from settings import settings, logtail_handler
+    from settings import logtail_handler
 
 
 LOGGER = logtail_handler.logger

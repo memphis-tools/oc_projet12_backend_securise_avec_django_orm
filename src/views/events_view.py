@@ -3,19 +3,19 @@ Description:
 vue évènements
 """
 from rich.console import Console
-import logtail
+
 try:
     from src.languages import language_bridge
     from src.exceptions import exceptions
     from src.printers import printer
     from src.utils import utils
-    from src.settings import settings, logtail_handler
+    from src.settings import logtail_handler
 except ModuleNotFoundError:
     from languages import language_bridge
     from exceptions import exceptions
     from printers import printer
     from utils import utils
-    from settings import settings, logtail_handler
+    from settings import logtail_handler
 
 
 LOGGER = logtail_handler.logger

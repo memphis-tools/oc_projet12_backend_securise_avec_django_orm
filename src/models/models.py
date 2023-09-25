@@ -66,6 +66,10 @@ class Collaborator_Department(Base):
         return self.__str__()
 
     def get_dict(self):
+        """
+        Description:
+        Sert à récupérer les attributs de l'instance, avec un dictionnaire.
+        """
         department_dict = {
             "id": self.id,
             "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
@@ -107,6 +111,10 @@ class Collaborator_Role(Base):
         return self.__str__()
 
     def get_dict(self):
+        """
+        Description:
+        Sert à récupérer les attributs de l'instance, avec un dictionnaire.
+        """
         role_dict = {
             "id": self.id,
             "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
@@ -155,6 +163,10 @@ class Collaborator(Base):
         return self.__str__()
 
     def get_dict(self):
+        """
+        Description:
+        Sert à récupérer les attributs de l'instance, avec un dictionnaire.
+        """
         collaborator_dict = {
             "id": self.id,
             "creation_date": self.creation_date,
@@ -201,11 +213,9 @@ class Company(Base):
 
     def __str__(self):
         descriptors = "["
-        descriptors += f'(creation_date|{self.creation_date})'
+        descriptors += f"(creation_date|{self.creation_date})"
         descriptors += f",(activite_principale|{self.activite_principale})"
-        descriptors += (
-            f',(date_debut_activite|{self.creation_date})'
-        )
+        descriptors += f",(date_debut_activite|{self.creation_date})"
         descriptors += f",(tranche_effectif_salarie|{self.tranche_effectif_salarie})"
         descriptors += f",(company_id|{self.company_id})"
         descriptors += f",(company_name|{self.company_name})"
@@ -223,6 +233,10 @@ class Company(Base):
         return self.__str__()
 
     def get_dict(self):
+        """
+        Description:
+        Sert à récupérer les attributs de l'instance, avec un dictionnaire.
+        """
         company_dict = {
             "id": self.id,
             "creation_date": self.creation_date,
@@ -306,6 +320,10 @@ class Client(Base):
         return self.__str__()
 
     def get_dict(self):
+        """
+        Description:
+        Sert à récupérer les attributs de l'instance, avec un dictionnaire.
+        """
         client_dict = {
             "id": self.id,
             "creation_date": self.creation_date.strftime("%d-%m-%Y"),
@@ -373,6 +391,10 @@ class Contract(Base):
         return self.__str__()
 
     def get_dict(self):
+        """
+        Description:
+        Sert à récupérer les attributs de l'instance, avec un dictionnaire.
+        """
         contract_dict = {
             "id": self.id,
             "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),
@@ -454,6 +476,10 @@ class Event(Base):
         return self.__str__()
 
     def get_dict(self):
+        """
+        Description:
+        Sert à récupérer les attributs de l'instance, avec un dictionnaire.
+        """
         event_dict = {
             "id": self.id,
             "creation_date": self.creation_date,
@@ -528,6 +554,10 @@ class Location(Base, ModelMixin):
         return self.__str__()
 
     def get_dict(self):
+        """
+        Description:
+        Sert à récupérer les attributs de l'instance, avec un dictionnaire.
+        """
         location_dict = {
             "id": self.id,
             "creation_date": self.creation_date.strftime("%d-%m-%Y %H:%M"),

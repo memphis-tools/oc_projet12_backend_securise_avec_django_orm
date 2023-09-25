@@ -363,7 +363,9 @@ def test_add_existing_valid_location_view_with_commercial_profile_raises_excepti
     """
     db_name = f"{settings.TEST_DATABASE_NAME}"
     with pytest.raises(exceptions.LocationAlreadyExistException):
-        result = ConsoleClientForCreate(db_name).add_location(location_attributes_dict_4)
+        result = ConsoleClientForCreate(db_name).add_location(
+            location_attributes_dict_4
+        )
 
 
 def test_add_unvalid_location_view_with_commercial_profile_raises_exception(
@@ -501,7 +503,12 @@ def test_add_contract_view_with_commercial_profile_raises_exception(
 
 
 @pytest.mark.parametrize(
-    "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2, contract_attributes_dict_3]
+    "custom_dict",
+    [
+        contract_attributes_dict_1,
+        contract_attributes_dict_2,
+        contract_attributes_dict_3,
+    ],
 )
 def test_add_contract_view_with_gestion_profile(
     get_runner,
@@ -535,13 +542,18 @@ def test_add_contract_view_with_support_profile_raises_exception(
 
 
 @pytest.mark.parametrize(
-    "custom_dict", [contract_attributes_dict_1, contract_attributes_dict_2, contract_attributes_dict_3]
+    "custom_dict",
+    [
+        contract_attributes_dict_1,
+        contract_attributes_dict_2,
+        contract_attributes_dict_3,
+    ],
 )
 def test_add_existing_contract_view_with_gestion_profile_raises_exception(
     get_runner,
     set_a_test_env,
     get_valid_decoded_token_for_a_gestion_collaborator,
-    custom_dict
+    custom_dict,
 ):
     """
     Vérifier si une exception est levée lorsqu'on veut créer un contrat déjà crée.

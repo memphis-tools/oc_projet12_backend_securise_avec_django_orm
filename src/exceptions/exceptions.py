@@ -1,175 +1,247 @@
+"""
+Description:
+Toutes les exceptions personnalisées.
+"""
+
+
 class ApiQueryFailedException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ApplicationErrorException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ApplicationCanNotBeInitializeFromOperatingSystemException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class AuthenticationCredentialsFailed(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ForeignKeyDependyException(Exception):
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
+
     def __init__(self, message):
         super().__init__(message)
 
 
 class InsufficientPrivilegeException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class CommercialCanNotUpdateClientCommercialContactException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ContractAmountToPayException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ContractUnsignedException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ContractCanceledException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class CustomIdEmptyException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class RegistrationNumberEmptyException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class CustomIdMatchNothingException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class LocationCustomIdAlReadyExists(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class MissingApiStaticFileException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class MissingUpdateParamException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class CollaboratorAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class RegistrationNumberAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ContractAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class CompanyAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class RoleAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class DepartmentAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class EventAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ClientAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class LocationAlreadyExistException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class CommercialCollaboratorIsNotAssignedToClient(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class CommercialCollaboratorIsNotAssignedToContract(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ClientNotFoundWithClientId(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class ContractNotFoundWithContractId(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class CompanyNotFoundWithCompanyId(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class EventNotFoundWithEventId(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class RoleNotFoundWithRoleId(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class DepartmentNotFoundWithDepartmentId(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class LocationNotFoundWithLocationId(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class SupportCollaboratorIsNotAssignedToEvent(Exception):
-    pass
-
-
-class NewPasswordIsNotValidException(Exception):
-    pass
-
-
-class NewPasswordDoesRespectMinSpecialCharsException(Exception):
-    pass
-
-
-class NewPasswordDoesRespectForbiddenSpecialCharsException(Exception):
-    pass
-
-
-class OldPasswordNotValidException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class OnlySuportMemberCanBeAssignedToEventSupportException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class QueryFailureException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class QueryStructureException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class SuppliedDataNotMatchModel(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
 
 
 class EventAttachedContractStatusCanNotBeUpdateException(Exception):
-    pass
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """

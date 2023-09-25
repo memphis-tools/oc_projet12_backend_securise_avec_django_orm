@@ -3,11 +3,11 @@ Description:
 Client en mode console, pour la lecture de données.
 """
 import logtail
+
 try:
     from src.languages import language_bridge
     from src.views.crud_views.views import AppViews
     from src.views.jwt_view import JwtView
-    from src.settings import settings
     from src.utils import utils
     from src.exceptions import exceptions
     from src.printers import printer
@@ -16,7 +16,6 @@ except ModuleNotFoundError:
     from languages import language_bridge
     from views.crud_views.views import AppViews
     from views.jwt_view import JwtView
-    from settings import settings
     from utils import utils
     from exceptions import exceptions
     from printers import printer
@@ -56,9 +55,7 @@ class ConsoleClientForRead:
         try:
             return self.app_view.get_clients_view().get_clients(user_query_filters_args)
         except exceptions.QueryFailureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -70,16 +67,12 @@ class ConsoleClientForRead:
                     LOGGER.info(message)
             raise exceptions.QueryFailureException()
         except exceptions.CustomIdMatchNothingException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_NO_MATCHES"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
         except exceptions.QueryStructureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "QUERY_STRUCTURE_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
             printer.print_message("info", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)
@@ -96,9 +89,7 @@ class ConsoleClientForRead:
                 user_query_filters_args
             )
         except exceptions.QueryFailureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -110,17 +101,13 @@ class ConsoleClientForRead:
                     LOGGER.info(message)
             raise exceptions.QueryFailureException()
         except exceptions.CustomIdMatchNothingException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_NO_MATCHES"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CustomIdMatchNothingException()
         except exceptions.QueryStructureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "QUERY_STRUCTURE_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
             printer.print_message("info", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)
@@ -133,11 +120,11 @@ class ConsoleClientForRead:
         Dédiée à obtenir les entreprises clientes.
         """
         try:
-            return self.app_view.get_companies_view().get_companies(user_query_filters_args)
+            return self.app_view.get_companies_view().get_companies(
+                user_query_filters_args
+            )
         except exceptions.QueryFailureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -149,17 +136,13 @@ class ConsoleClientForRead:
                     LOGGER.info(message)
             raise exceptions.QueryFailureException()
         except exceptions.CustomIdMatchNothingException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_NO_MATCHES"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CustomIdMatchNothingException()
         except exceptions.QueryStructureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "QUERY_STRUCTURE_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
             printer.print_message("info", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)
@@ -172,11 +155,11 @@ class ConsoleClientForRead:
         Dédiée à obtenir les contrats de l'entreprise.
         """
         try:
-            return self.app_view.get_contracts_view().get_contracts(user_query_filters_args)
+            return self.app_view.get_contracts_view().get_contracts(
+                user_query_filters_args
+            )
         except exceptions.QueryFailureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -188,17 +171,13 @@ class ConsoleClientForRead:
                     LOGGER.info(message)
             raise exceptions.QueryFailureException()
         except exceptions.CustomIdMatchNothingException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_NO_MATCHES"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CustomIdMatchNothingException()
         except exceptions.QueryStructureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "QUERY_STRUCTURE_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
             printer.print_message("info", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)
@@ -215,9 +194,7 @@ class ConsoleClientForRead:
                 user_query_filters_args
             )
         except exceptions.QueryFailureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -229,17 +206,13 @@ class ConsoleClientForRead:
                     LOGGER.info(message)
                 raise exceptions.QueryFailureException()
         except exceptions.CustomIdMatchNothingException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_NO_MATCHES"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CustomIdMatchNothingException()
         except exceptions.QueryStructureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "QUERY_STRUCTURE_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
             printer.print_message("info", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)
@@ -254,9 +227,7 @@ class ConsoleClientForRead:
         try:
             return self.app_view.get_events_view().get_events(user_query_filters_args)
         except exceptions.QueryFailureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -268,17 +239,13 @@ class ConsoleClientForRead:
                     LOGGER.info(message)
             raise exceptions.QueryFailureException()
         except exceptions.CustomIdMatchNothingException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_NO_MATCHES"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CustomIdMatchNothingException()
         except exceptions.QueryStructureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "QUERY_STRUCTURE_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
             printer.print_message("info", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)
@@ -291,11 +258,11 @@ class ConsoleClientForRead:
         Dédiée à obtenir les localisations des évènements de l'entreprise.
         """
         try:
-            return self.app_view.get_locations_view().get_locations(user_query_filters_args)
+            return self.app_view.get_locations_view().get_locations(
+                user_query_filters_args
+            )
         except exceptions.QueryFailureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -307,17 +274,13 @@ class ConsoleClientForRead:
                     LOGGER.info(message)
             raise exceptions.QueryFailureException()
         except exceptions.CustomIdMatchNothingException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_NO_MATCHES"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CustomIdMatchNothingException()
         except exceptions.QueryStructureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "QUERY_STRUCTURE_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
             printer.print_message("info", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)
@@ -332,9 +295,7 @@ class ConsoleClientForRead:
         try:
             return self.app_view.get_roles_view().get_roles(user_query_filters_args)
         except exceptions.QueryFailureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_FAILURE"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
@@ -346,17 +307,13 @@ class ConsoleClientForRead:
                     LOGGER.info(message)
             raise exceptions.QueryFailureException()
         except exceptions.CustomIdMatchNothingException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "DATABASE_QUERY_NO_MATCHES"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["DATABASE_QUERY_NO_MATCHES"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
             raise exceptions.CustomIdMatchNothingException()
         except exceptions.QueryStructureException:
-            message = self.app_dict.get_appli_dictionnary()[
-                "QUERY_STRUCTURE_FAILURE"
-            ]
+            message = self.app_dict.get_appli_dictionnary()["QUERY_STRUCTURE_FAILURE"]
             printer.print_message("info", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.info(message)

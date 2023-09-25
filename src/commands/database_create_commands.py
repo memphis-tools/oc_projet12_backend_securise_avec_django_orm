@@ -77,7 +77,9 @@ def add_collaborator():
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
     except exceptions.RegistrationNumberEmptyException:
-        message = APP_DICT.get_appli_dictionnary()["REGISTRATION_NUMBER_CAN_NOT_BE_EMPTY"]
+        message = APP_DICT.get_appli_dictionnary()[
+            "REGISTRATION_NUMBER_CAN_NOT_BE_EMPTY"
+        ]
         printer.print_message("error", message)
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
