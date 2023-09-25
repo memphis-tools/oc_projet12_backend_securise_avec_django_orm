@@ -276,6 +276,15 @@ def init_application():
         pass
     app_dict = language_bridge.LanguageBridge()
 
+    try:
+        subprocess.run(["systemctl status postgresql.service"],shell=True,check=True,capture_output=True)
+    except subprocess.CalledProcessError:
+        message = APP_DICT.get_appli_dictionnary()["SGBD_SERVICE_ERROR"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
+        sys.exit(0)
+
     for db_name in settings.DATABASE_TO_CREATE:
         client_view_console = init_console.InitAppliConsole()
 
