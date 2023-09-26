@@ -161,8 +161,8 @@ def set_a_click_table_from_data(title: str, objects_queryset):
         La méthode est une pseudo représentation d'une liste avec des pseudo ensembles (attribut|valeur)
         Le queryset est donc une liste avec autant de listes incluses que de résultat trouvé
         exemple:
-        [['(creation_date|12-08-2023),(contract_id|kc555),('client_id', 'Kevin Casey'),], [...]']
-        C'est une pseudo représentation de ce qu'on souhaite.
+        [['(creation_date|12-08-2023)µ(contract_id|kc555)µ('client_id', 'Kevin Casey')µ], [...]']
+        C'est une pseudo représentation de ce qu'on souhaite. Noter usage du séparateur 'µ'.
         On va transformer chaque résultat en une liste de tuple:
         [[('creation_date', '12-08-2023'),('contract_id', 'kc555'),('client_id', 'Kevin Casey')], [...]]
     """
@@ -174,7 +174,7 @@ def set_a_click_table_from_data(title: str, objects_queryset):
         # la string est le retour de la méthode __str__ du modèle.
         for temp_attribute in str(result_object).split("µ"):
             # on parcourt chaque élement qui est de type str: '(creation_date|12-08-2023)'
-            # on fait un slice pour retirer les parenthèses, on modifie "|" par une ",",
+            # on fait un slice pour retirer les parenthèses, on modifie "|" par "µ",
             # on retire espace vide en début de string
             temp_attribute = temp_attribute[1:-1].replace("|", "µ").lstrip()
             # on obtient un elément de type str: creation_date,12-08-2023
