@@ -73,13 +73,16 @@ class ConsoleClientForUpdate:
         current_id = f"{utils.get_user_id_from_registration_number(self.app_view.session, self.registration_number)}"
         try:
             client_grant_valid = bool("client" not in self.allowed_crud_tables)
-            if client_grant_valid or self.user_service.lower() != "oc12_commercial":
+            service_granted = bool("oc12_commercial" in self.user_service.lower() or "oc12_gestion" in self.user_service.lower())
+            if client_grant_valid or not service_granted:
                 raise exceptions.InsufficientPrivilegeException()
-
             keys_valid = bool("commercial_contact" in custom_partial_dict.keys())
             if keys_valid and self.user_service.lower() == "oc12_commercial":
                 raise exceptions.CommercialCanNotUpdateClientCommercialContactException()
 
+            if "commercial_contact" in custom_partial_dict.keys():
+                if custom_partial_dict["commercial_contact"] == 'None':
+                    custom_partial_dict["commercial_contact"] = None
             client_id = self.update_app_view.get_clients_view().update_client(
                 current_id, self.user_service, custom_partial_dict
             )
@@ -266,11 +269,9 @@ class ConsoleClientForUpdate:
         try:
             if "contract" not in self.allowed_crud_tables:
                 raise exceptions.InsufficientPrivilegeException()
-
             contract_id = self.update_app_view.get_contracts_view().update_contract(
                 self.app_view, user_id, self.user_service, custom_partial_dict
             )
-
             if "status" in custom_partial_dict.keys():
                 message = f"Update contract {contract_id} for signature by {self.registration_number}"
             else:

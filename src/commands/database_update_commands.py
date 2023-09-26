@@ -31,17 +31,24 @@ def display_option(options):
 
 
 def check_if_partial_dict_valid(partial_dict):
-    for key, value in partial_dict.items():
+    for arg_key, arg_value in partial_dict.items():
         try:
-            if value is not None:
+            if arg_value is not None:
                 validators
-                eval(f"validators.is_{key}_valid")(value)
+                if arg_key == "full_amount_to_pay":
+                    remain_due = partial_dict["remain_amount_to_pay"]
+                    eval(f"validators.is_{arg_key}_valid")(arg_value, remain_due)
+                elif arg_key == "remain_amount_to_pay":
+                    total_due = partial_dict["full_amount_to_pay"]
+                    eval(f"validators.is_{arg_key}_valid")(arg_value, remain_due)
+                else:
+                    eval(f"validators.is_{arg_key}_valid")(arg_value)
         except Exception:
             message = APP_DICT.get_appli_dictionnary()["VALUE_UNEXPECTED"]
             printer.print_message("error", message)
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 LOGGER.error(message)
-            break
+            raise exceptions.QueryStructureException()
     return True
 
 
@@ -369,34 +376,47 @@ def update_contract(contract_id, args):
         contract_dict["contract_id"] = f"{contract_id}"
         for arg in args:
             try:
-                k, v = arg.split("=")
+                arg_key, arg_value = arg.split("=")
             except Exception:
                 # exception avec le seul 'et' par exemple
                 pass
 
-            if k == "client_id":
-                expected_client = console.app_view.get_clients_view().get_client(v)
+            if arg_key == "client_id":
+                expected_client = console.app_view.get_clients_view().get_client(arg_value)
                 expected_client_id = expected_client.get_dict()["id"]
-                contract_dict[k] = str(expected_client_id)
-            elif k == "collaborator_id":
+                contract_dict[arg_key] = str(expected_client_id)
+            elif arg_key == "collaborator_id":
                 expected_collaborator = (
-                    console.app_view.get_collaborators_view().get_collaborator(v)
+                    console.app_view.get_collaborators_view().get_collaborator(arg_value)
                 )
-                expected_collaborator_id = expected_collaborator.get_dict()["id"]
-                contract_dict[k] = str(expected_collaborator_id)
-            elif k == "remain_amount_to_pay":
+                if expected_collaborator == None:
+                    raise exceptions.RegistrationNumberDoesNotExistException()
+                if arg_value == "None":
+                    contract_dict[arg_key] = None
+                else:
+                    expected_collaborator_id = expected_collaborator.get_dict()["id"]
+                    contract_dict[arg_key] = str(expected_collaborator_id)
+            elif arg_key == "remain_amount_to_pay":
                 contract = console.app_view.get_contracts_view().get_contract(
                     contract_id
                 )
                 contract_dict["full_amount_to_pay"] = contract.full_amount_to_pay
+                contract_dict["remain_amount_to_pay"] = arg_value
             else:
-                contract_dict[k] = str(v)
+                contract_dict[arg_key] = str(arg_value)
         if len(contract_dict) == 1:
             raise exceptions.MissingUpdateParamException()
         check_if_partial_dict_valid(contract_dict)
         console_client_return = console.update_contract(contract_dict)
         click.secho(console_client_return, bg="blue", fg="white")
+    except exceptions.RegistrationNumberDoesNotExistException:
+        message = APP_DICT.get_appli_dictionnary()["REGISTRATION_NUMBER_DOES_NOT_EXIST"]
+        printer.print_message("error", message)
+        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
+            LOGGER.error(message)
     except exceptions.EventAttachedContractStatusCanNotBeUpdateException:
+        pass
+    except exceptions.QueryStructureException:
         pass
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
