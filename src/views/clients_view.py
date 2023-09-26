@@ -101,6 +101,10 @@ class ClientsView:
          - user_service: chaine de caractère, le nom du service de l'utilisateur courant (exemple: oc12_commercial)
          - custom_dict: un dictionnaire avec l'id et des données optionnelles.
         """
+        if "commercial_contact" in custom_dict.keys():
+            if custom_dict["commercial_contact"] != None:
+                collaborator_id = utils.get_user_id_from_registration_number(self.session, custom_dict["commercial_contact"])
+                custom_dict["commercial_contact"] = collaborator_id
         return self.db_controller.update_client(
             self.session, current_user_collaborator_id, user_service, custom_dict
         )
