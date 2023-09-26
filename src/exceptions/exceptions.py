@@ -115,6 +115,12 @@ class RegistrationNumberAlreadyExistException(Exception):
     """
 
 
+class RegistrationNumberDoesNotExistException(Exception):
+    """
+    Description: exception personnalisée pour gérer finement l'application.
+    """
+
+
 class ContractAlreadyExistException(Exception):
     """
     Description: exception personnalisée pour gérer finement l'application.

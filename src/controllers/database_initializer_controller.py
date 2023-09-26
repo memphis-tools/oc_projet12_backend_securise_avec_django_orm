@@ -339,6 +339,7 @@ class DatabaseInitializerController:
             "collaborator_role",
             "contract",
             "event",
+            "client",
         ]
         for table in oc12_gestion_allowed_tables:
             sql = f"""GRANT INSERT, DELETE, UPDATE ON {table} TO oc12_gestion"""

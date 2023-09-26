@@ -111,7 +111,7 @@ def display_any_error_message(key):
     return False
 
 
-def validate_key(custom_dict, key, item):
+def validate_key(custom_dict, key, item, mode=""):
     """
     Description:
     Appelée par fonction fullfill_form.
@@ -121,6 +121,8 @@ def validate_key(custom_dict, key, item):
         # si quelque chose a été saisi on vérifie si ça respecte la /les valeur(s) attendue(s).
         if key == "remain_amount_to_pay":
             eval(f"validators.is_{key}_valid")(item, custom_dict["full_amount_to_pay"])
+        elif key == "full_amount_to_pay" and mode == "creation":
+            eval(f"validators.is_{key}_valid")(item, item)
         else:
             eval(f"validators.is_{key}_valid")(item)
         custom_dict[key] = item
@@ -137,7 +139,7 @@ def validate_key(custom_dict, key, item):
     return custom_dict
 
 
-def fullfill_form(custom_dict, expected_attributes_dict):
+def fullfill_form(custom_dict, expected_attributes_dict, mode=""):
     """
     Description:
     Faire remplir interractivement un formulaire par l'utilisateur.
@@ -151,6 +153,7 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                     custom_dict["remain_amount_to_pay"] = custom_dict[
                         "full_amount_to_pay"
                     ]
+
             if key not in custom_dict.keys():
                 item = Prompt.ask(f"{value}: ")
                 # 2 cas spécifiques avec popup prévue
@@ -172,7 +175,7 @@ def fullfill_form(custom_dict, expected_attributes_dict):
                 else:
                     # vérifier si quelque chose a été saisi
                     if item.strip() != "":
-                        custom_dict = validate_key(custom_dict, key, item)
+                        custom_dict = validate_key(custom_dict, key, item, mode)
                         break
                     else:
                         display_any_error_message(key)
@@ -502,7 +505,7 @@ def submit_a_contract_get_form(custom_id=""):
     return custom_id
 
 
-def submit_a_contract_create_form(contract_id="", custom_dict={}):
+def submit_a_contract_create_form(contract_id="", mode="creation", custom_dict={}):
     """
     Description: Fonction dédiée à créer un contrat entre un commercial de l'entreprise et un client.
     Noter que 2 clefs étrangères 'client id' et 'collaborator id' sont attendues.
@@ -518,7 +521,7 @@ def submit_a_contract_create_form(contract_id="", custom_dict={}):
         )
         try:
             while not len(custom_dict) == len(expected_attributes_dict):
-                fullfill_form(custom_dict, expected_attributes_dict)
+                fullfill_form(custom_dict, expected_attributes_dict, mode="creation")
         except KeyboardInterrupt:
             printer.print_message(
                 "info", APP_DICT.get_appli_dictionnary()["CREATION_ABORTED"]
