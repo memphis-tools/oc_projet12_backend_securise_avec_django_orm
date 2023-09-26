@@ -285,7 +285,7 @@ def is_location_id_valid(location_id):
     Description: Controler le custom id saisi (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w -']{,120})$")
+    pattern = re.compile(r"([\w \- \_']{,120})$")
     return re.match(pattern, location_id).group()
 
 
@@ -294,7 +294,7 @@ def is_notes_valid(notes):
     Description: Controler les notes saisis (nombre caractères max repris du modèle).
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ' \. \"]{,2500})$")
+    pattern = re.compile(r"([\w \' \? \! \. \% \, \; \: \$ \- \_ \@ \" \/]{,2500})$")
     return re.match(pattern, notes).group()
 
 
@@ -391,7 +391,7 @@ def is_title_valid(title):
     Description: Controler le titre saisi.
     Fonction renvoie une exception AttributeError si pattern ne correspond pas.
     """
-    pattern = re.compile(r"([\w ' ]{,125})$")
+    pattern = re.compile(r"([\w \' \. \% \, \; \: \" \@ \$ \_ \- \? \! ]{,125})$")
     return re.match(pattern, title).group()
 
 

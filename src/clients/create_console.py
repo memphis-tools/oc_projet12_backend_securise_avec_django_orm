@@ -614,11 +614,15 @@ class ConsoleClientForCreate:
             contract_id = self.create_app_view.get_contracts_view().add_contract(
                 contract
             )
-            message = f"Creation contract {contract_id} by {self.registration_number}"
+            if contract.status == "signed":
+                message = f"Creation contract {contract_id} with signature by {self.registration_number}"
+            else:
+                message = f"Creation contract {contract_id} by {self.registration_number}"
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     contract={
                         "contract_id": contract_attributes_dict["contract_id"],
+                        "custom_partial_dict": contract_attributes_dict,
                         "current_collaborator": self.registration_number,
                     }
                 ):
