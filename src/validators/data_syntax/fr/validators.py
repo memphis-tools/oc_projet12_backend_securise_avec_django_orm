@@ -260,15 +260,18 @@ def is_first_name_valid(first_name):
     return re.match(pattern, first_name).group()
 
 
-def is_full_amount_to_pay_valid(full_amount_to_pay):
+def is_full_amount_to_pay_valid(full_amount_to_pay, remain_amount_to_pay=0):
     """
     Description: Controler le montant saisi.
     Fonction renvoie une exception AttributeError si montant invalide.
     """
     try:
-        float(full_amount_to_pay)
+        if remain_amount_to_pay != 0:
+            if float(remain_amount_to_pay) > float(full_amount_to_pay):
+                raise exceptions.ContractAmountToPayException()
     except ValueError:
         raise AttributeError()
+    return full_amount_to_pay
 
 
 def is_last_name_valid(first_name):
@@ -320,10 +323,10 @@ def is_collaborator_id_valid(id):
     """
     Description: Controler l'id du collaborateur. C'est utilisé notamment en cas de mise à jour d'un évènement.
     Pour éviter d'introduire des exceptions ailleurs dans le code, ce validateur est crée.
-    Cependant il ne fait que vérifier que l'id (réel, la primary key) du collaborateur, est un entier.
+    Il ne fait que vérifier que l'id (réel, la primary key) du collaborateur, est un entier ou est égal à "None".
     Et c'est ce qu'elle est pas défintion dans le modèle.
     """
-    pattern = re.compile(r"\d")
+    pattern = re.compile(r"([\d None null \' \" \_ \- \.]{,12})$")
     return re.match(pattern, id).group()
 
 
@@ -333,7 +336,6 @@ def is_remain_amount_to_pay_valid(remain_amount_to_pay, full_amount_to_pay):
     Fonction renvoie une exception AttributeError si montant invalide.
     """
     try:
-        float(remain_amount_to_pay)
         if float(remain_amount_to_pay) > float(full_amount_to_pay):
             raise exceptions.ContractAmountToPayException()
     except ValueError:
