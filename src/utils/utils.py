@@ -170,16 +170,16 @@ def set_a_click_table_from_data(title: str, objects_queryset):
     for result_object in objects_queryset:
         splited_data_list = []
         # result_object: nous permet d'atteindre la string dans la liste
-        # str(result_object).split(","):
         # la string est vue comme de type "Métier" (exemple Contrat), on force le cast en str
-        for temp_attribute in str(result_object).split(","):
+        # la string est le retour de la méthode __str__ du modèle.
+        for temp_attribute in str(result_object).split("µ"):
             # on parcourt chaque élement qui est de type str: '(creation_date|12-08-2023)'
             # on fait un slice pour retirer les parenthèses, on modifie "|" par une ",",
             # on retire espace vide en début de string
-            temp_attribute = temp_attribute[1:-1].replace("|", ",").lstrip()
+            temp_attribute = temp_attribute[1:-1].replace("|", "µ").lstrip()
             # on obtient un elément de type str: creation_date,12-08-2023
             # on l'éclate en une liste qu'on cast en tuple
-            tuple_attribute = tuple(temp_attribute.split(","))
+            tuple_attribute = tuple(temp_attribute.split("µ"))
             # on ajoute à la liste splited_data_list un tuple: ('creation_date', '12-08-2023')
             splited_data_list.append(tuple_attribute)
         rebuilt_queryset.append(splited_data_list)
