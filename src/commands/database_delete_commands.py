@@ -100,12 +100,7 @@ def delete_collaborator(collaborator_id):
         if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
             LOGGER.error(message)
     except exceptions.ForeignKeyDependyException:
-        message = APP_DICT.get_appli_dictionnary()[
-            "FOREIGNKEY_CONTRACT_CAN_NOT_BE_DROP"
-        ]
-        printer.print_message("error", message)
-        if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
-            LOGGER.error(message)
+        pass
     except exceptions.InsufficientPrivilegeException:
         message = APP_DICT.get_appli_dictionnary()["INSUFFICIENT_PRIVILEGES_EXCEPTION"]
         printer.print_message("error", message)

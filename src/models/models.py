@@ -292,7 +292,7 @@ class Client(Base):
     company_id = Column(Integer, ForeignKey("company.id"))
     creation_date = Column(Date(), nullable=False, default=date.today())
     last_update_date = Column(Date(), nullable=False, default=datetime.now())
-    commercial_contact = Column(Integer, ForeignKey("collaborator.id"), nullable=False)
+    commercial_contact = Column(Integer, ForeignKey("collaborator.id"), nullable=True)
     # ajout "passive_deletes='all'" pour éviter qu'on puisse supprimer un client si référencée par un collaborateur
     collaborator = relationship(
         "Collaborator", back_populates="client", passive_deletes="all"
@@ -317,7 +317,11 @@ class Client(Base):
         descriptors += f"µ(email|{self.email})"
         descriptors += f"µ(telephone|{self.telephone})"
         descriptors += f"µ(company_id|{self.company.company_id})"
-        descriptors += f"µ(commercial_contact|{self.collaborator.registration_number})"
+        descriptors += (
+            f"µ(commercial_contact|{self.collaborator.registration_number})"
+            if self.commercial_contact is not None
+            else "µ(commercial_contact|None)"
+        )
         descriptors += "]"
         return descriptors
 
@@ -386,6 +390,8 @@ class Contract(Base):
         descriptors += f"µ(client_id|{self.client.client_id})"
         descriptors += (
             f"µ(collaborator_id|{self.client.collaborator.registration_number})"
+            if self.client.collaborator is not None
+            else "µ(commercial_id|None)"
         )
         descriptors += f"µ(status|{self.status})"
         descriptors += f"µ(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
