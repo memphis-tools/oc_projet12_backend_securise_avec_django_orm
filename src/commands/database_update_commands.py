@@ -578,6 +578,8 @@ def update_event(event_id, args):
         check_if_partial_dict_valid(event_dict)
         console_client_return = console.update_event(event_dict)
         click.secho(console_client_return, bg="blue", fg="white")
+    except exceptions.SupportCollaboratorIsNotAssignedToEvent:
+        pass
     except exceptions.MissingUpdateParamException:
         message = APP_DICT.get_appli_dictionnary()["MISSING_PARAMETER"]
         printer.print_message("error", message)
