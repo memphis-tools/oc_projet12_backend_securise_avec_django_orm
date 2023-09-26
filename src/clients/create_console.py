@@ -342,7 +342,7 @@ class ConsoleClientForCreate:
                     company_id = self.add_company()
                     company_id = self.ask_for_a_company_id()
 
-                asked_client_id = Prompt.ask("Client id: ")
+                asked_client_id = Prompt.ask("id client: ")
                 if not asked_client_id:
                     raise exceptions.CustomIdEmptyException()
                 existing_client = self.app_view.get_clients_view().get_client(
@@ -517,7 +517,7 @@ class ConsoleClientForCreate:
                     self.app_view.session, location_id
                 )
 
-                asked_company_id = Prompt.ask("Company id: ")
+                asked_company_id = Prompt.ask("id entreprise: ")
                 if not asked_company_id:
                     raise exceptions.CustomIdEmptyException()
                 existing_company = self.app_view.get_companies_view().get_company(
@@ -682,7 +682,7 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                asked_department_id = Prompt.ask("Department id: ")
+                asked_department_id = Prompt.ask("id department /service: ")
                 if not asked_department_id:
                     raise exceptions.CustomIdEmptyException()
                 existing_department = (
@@ -808,7 +808,7 @@ class ConsoleClientForCreate:
                     self.app_view.session, location_id
                 )
 
-                asked_event_id = Prompt.ask("Event id: ")
+                asked_event_id = Prompt.ask("id event: ")
                 if not asked_event_id:
                     raise exceptions.CustomIdEmptyException()
                 existing_event = self.app_view.get_events_view().get_event(
@@ -919,7 +919,7 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                asked_location_id = Prompt.ask("Location id: ")
+                asked_location_id = Prompt.ask("id localité: ")
                 if not asked_location_id:
                     raise exceptions.CustomIdEmptyException()
                 existing_location = self.app_view.get_locations_view().get_location(
@@ -996,7 +996,7 @@ class ConsoleClientForCreate:
                 else:
                     raise exceptions.SuppliedDataNotMatchModel()
             else:
-                asked_role_id = Prompt.ask("Role id: ")
+                asked_role_id = Prompt.ask("id role: ")
                 if not asked_role_id:
                     raise exceptions.CustomIdEmptyException()
                 existing_role = self.app_view.get_roles_view().get_role(asked_role_id)

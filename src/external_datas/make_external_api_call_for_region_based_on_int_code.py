@@ -1,3 +1,7 @@
+"""
+Description:
+On récupère le nom d'une région à partir de son code (un entier).
+"""
 import requests
 
 try:
@@ -11,6 +15,8 @@ def get_region_name_from_insee_open_api(region_id_code):
     Description:
     Vérifier si le paramètre settings.INTERNET_CONNECTION est True.
     Si vrai alors interroger l'open API du gouvernement Français.
+    Paramètres:
+    - region_id_code: entier, un code région
     """
     digit_region_id_code = int(region_id_code)
     url = settings.FR_COMPANIES_REGION_API_URL

@@ -18,6 +18,14 @@ EXPORT_FILE_PATH = settings.COMPANIES_EXPORT_FILE_PATH
 
 
 def generate_companies_file():
+    """
+    Description:
+    On crée un jeu de données d'entreprises (modèle Company).
+    Par défaut l'accès internet est activé (voir settings), on appelle des API externes.
+    A chaque (ré-)initialisation de l'application le fichier suivant sera crée :mis à jour:
+    'src/external_datas/csv/french_companies.csv'
+    Fonction renvoie True pour indiquer la bonne confection du fichier.
+    """
     with open(f"{EXPORT_FILE_PATH}", "w", newline="") as csvfile:
         spamwriter = csv.writer(csvfile, delimiter=",", quoting=csv.QUOTE_MINIMAL)
         spamwriter.writerow(settings.COMPANIES_CSV_HEADERS)

@@ -1,3 +1,8 @@
+"""
+Description:
+On récupère des informations supplémentaires d'une ville, telle que renseignées par l'INSEE:
+population, nom ville etc
+"""
 import requests
 import json
 
@@ -24,6 +29,8 @@ def get_population_from_insee_open_api(code_postal):
     Si vrai alors interroger l'open API du gouvernement Français.
     On récupère içi la seule population. Cette fonction est appelée seulement lors
     de l'initialisation de l'application, pour l'import en masse.
+    Paramètres:
+    - code_postal: entier sur 5 chiffres, un code postal Français.
     """
     digit_code_postal = int(code_postal)
 
@@ -50,6 +57,8 @@ def get_town_name_region_name_and_population_from_insee_open_api(code_postal):
     Description:
     Vérifier si le paramètre settings.INTERNET_CONNECTION est True.
     Si vrai alors interroger l'open API du gouvernement Français.
+    Paramètres:
+    - code_postal: entier sur 5 chiffres, un code postal Français.
     """
     digit_code_postal = int(code_postal)
 
