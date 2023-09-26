@@ -1,6 +1,6 @@
 """
 Description:
-Une fonction pour peupler la base de données avec des données de DEV
+Une fonction pour peupler la base de données avec des données de DEV.
 """
 from datetime import datetime
 
@@ -15,7 +15,7 @@ except ModuleNotFoundError:
 def dummy_database_creation(db_name="projet12"):
     """
     Description:
-    Dédiée à peupler la base de données avec des données fictives
+    Dédiée à peupler une base de données avec des données fictives.
     """
     conn = utils.get_a_database_connection(
         f"{settings.ADMIN_LOGIN}",
