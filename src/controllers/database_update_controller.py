@@ -36,9 +36,9 @@ class DatabaseUpdateController:
         except KeyError:
             session.flush()
             session.rollback()
-
-        if int(current_user_collaborator_id) != int(client.commercial_contact):
-            raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
+        if user_service != "OC12_GESTION":
+            if int(current_user_collaborator_id) != int(client.commercial_contact):
+                raise exceptions.CommercialCollaboratorIsNotAssignedToClient()
         client.last_update_date = utils.get_today_date()
         session.commit()
         return client.client_id
@@ -147,6 +147,12 @@ class DatabaseUpdateController:
         if contract is None:
             raise exceptions.CustomIdMatchNothingException()
         keys_to_explore = models.Contract.metadata.tables["contract"].columns.keys()
+        
+        if "collaborator_id" in contract_dict.keys():
+            if contract_dict["collaborator_id"] == None:
+                contract.client.commercial_contact = None
+            else:
+                contract.client.commercial_contact = contract_dict["collaborator_id"]
         try:
             for key in keys_to_explore:
                 if key in contract_dict.keys():
