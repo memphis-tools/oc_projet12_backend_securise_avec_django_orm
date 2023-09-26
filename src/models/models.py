@@ -43,6 +43,7 @@ class Collaborator_Department(Base):
     Nom de la classe doit correspondre au nom de __tablename__.
     Lien avec la requete SQL construite à partir des arguments (lors d'une vue filtrée).
     Voir filtered_db_model dans utils.rebuild_filter_query.
+    Noter l'usage du caractère 'µ' comme séparateur. Il doit être interdit à la saisie.
     """
 
     __tablename__ = "collaborator_department"
@@ -57,8 +58,8 @@ class Collaborator_Department(Base):
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f",(department_id|{self.department_id})"
-        descriptors += f",(name|{self.name})"
+        descriptors += f"µ(department_id|{self.department_id})"
+        descriptors += f"µ(name|{self.name})"
         descriptors += "]"
         return descriptors
 
@@ -88,6 +89,7 @@ class Collaborator_Department(Base):
 class Collaborator_Role(Base):
     """
     Description: table dédiée à référencer les rôles des utilisateurs /collaborateurs de l'application.
+    Noter l'usage du caractère 'µ' comme séparateur. Il doit être interdit à la saisie.
     """
 
     __tablename__ = "collaborator_role"
@@ -102,8 +104,8 @@ class Collaborator_Role(Base):
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f",(role_id|{self.role_id})"
-        descriptors += f",(name|{self.name})"
+        descriptors += f"µ(role_id|{self.role_id})"
+        descriptors += f"µ(name|{self.name})"
         descriptors += "]"
         return descriptors
 
@@ -133,6 +135,7 @@ class Collaborator_Role(Base):
 class Collaborator(Base):
     """
     Description: table dédiée à désigner /caractériser un utilisateur /collaborateur.
+    Noter l'usage du caractère 'µ' comme séparateur. Il doit être interdit à la saisie.
     """
 
     __tablename__ = "collaborator"
@@ -152,10 +155,10 @@ class Collaborator(Base):
     def __str__(self):
         descriptors = "["
         descriptors += f"(creation_date|{self.creation_date})"
-        descriptors += f",(registration_number|{self.registration_number})"
-        descriptors += f",(username|{self.username})"
-        descriptors += f",(department_id|{self.department.department_id})"
-        descriptors += f",(role_id|{self.role.role_id})"
+        descriptors += f"µ(registration_number|{self.registration_number})"
+        descriptors += f"µ(username|{self.username})"
+        descriptors += f"µ(department_id|{self.department.department_id})"
+        descriptors += f"µ(role_id|{self.role.role_id})"
         descriptors += "]"
         return descriptors
 
@@ -190,6 +193,7 @@ class Collaborator(Base):
 class Company(Base):
     """
     Description: table dédiée à désigner /caractériser l'entreprise d'un client, obtenu par un commercial.
+    Noter l'usage du caractère 'µ' comme séparateur. Il doit être interdit à la saisie.
     """
 
     __tablename__ = "company"
@@ -214,18 +218,18 @@ class Company(Base):
     def __str__(self):
         descriptors = "["
         descriptors += f"(creation_date|{self.creation_date})"
-        descriptors += f",(activite_principale|{self.activite_principale})"
-        descriptors += f",(date_debut_activite|{self.creation_date})"
-        descriptors += f",(tranche_effectif_salarie|{self.tranche_effectif_salarie})"
-        descriptors += f",(company_id|{self.company_id})"
-        descriptors += f",(company_name|{self.company_name})"
+        descriptors += f"µ(activite_principale|{self.activite_principale})"
+        descriptors += f"µ(date_debut_activite|{self.creation_date})"
+        descriptors += f"µ(tranche_effectif_salarie|{self.tranche_effectif_salarie})"
+        descriptors += f"µ(company_id|{self.company_id})"
+        descriptors += f"µ(company_name|{self.company_name})"
         descriptors += (
-            f",(company_registration_number|{self.company_registration_number})"
+            f"µ(company_registration_number|{self.company_registration_number})"
         )
         descriptors += (
-            f",(company_subregistration_number|{self.company_subregistration_number})"
+            f"µ(company_subregistration_number|{self.company_subregistration_number})"
         )
-        descriptors += f",(location_id|{self.location.location_id})"
+        descriptors += f"µ(location_id|{self.location.location_id})"
         descriptors += "]"
         return descriptors
 
@@ -267,6 +271,7 @@ class Company(Base):
 class Client(Base):
     """
     Description: table dédiée à désigner /caractériser un client, obtenu par un commercial.
+    Noter l'usage du caractère 'µ' comme séparateur. Il doit être interdit à la saisie.
     """
 
     __tablename__ = "client"
@@ -302,17 +307,17 @@ class Client(Base):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
         descriptors += (
-            f',(last_update_date|{self.last_update_date.strftime("%d-%m-%Y")})'
+            f'µ(last_update_date|{self.last_update_date.strftime("%d-%m-%Y")})'
         )
-        descriptors += f",(client_id|{self.client_id})"
-        descriptors += f",(civility|{self.civility})"
-        descriptors += f",(first_name|{self.first_name})"
-        descriptors += f",(last_name|{self.last_name})"
-        descriptors += f",(employee_role|{self.employee_role})"
-        descriptors += f",(email|{self.email})"
-        descriptors += f",(telephone|{self.telephone})"
-        descriptors += f",(company_id|{self.company.company_id})"
-        descriptors += f",(commercial_contact|{self.collaborator.registration_number})"
+        descriptors += f"µ(client_id|{self.client_id})"
+        descriptors += f"µ(civility|{self.civility})"
+        descriptors += f"µ(first_name|{self.first_name})"
+        descriptors += f"µ(last_name|{self.last_name})"
+        descriptors += f"µ(employee_role|{self.employee_role})"
+        descriptors += f"µ(email|{self.email})"
+        descriptors += f"µ(telephone|{self.telephone})"
+        descriptors += f"µ(company_id|{self.company.company_id})"
+        descriptors += f"µ(commercial_contact|{self.collaborator.registration_number})"
         descriptors += "]"
         return descriptors
 
@@ -358,6 +363,7 @@ class Contract(Base):
     """
     Description:
     Table dédiée à désigner /caractériser un contrat, négocié par un commercial, entre un client et un évènement.
+    Noter l'usage du caractère 'µ' comme séparateur. Il doit être interdit à la saisie.
     """
 
     __tablename__ = "contract"
@@ -376,14 +382,14 @@ class Contract(Base):
         descriptors = ""
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f",(contract_id|{self.contract_id})"
-        descriptors += f",(client_id|{self.client.client_id})"
+        descriptors += f"µ(contract_id|{self.contract_id})"
+        descriptors += f"µ(client_id|{self.client.client_id})"
         descriptors += (
-            f",(collaborator_id|{self.client.collaborator.registration_number})"
+            f"µ(collaborator_id|{self.client.collaborator.registration_number})"
         )
-        descriptors += f",(status|{self.status})"
-        descriptors += f",(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
-        descriptors += f",(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
+        descriptors += f"µ(status|{self.status})"
+        descriptors += f"µ(full_amount_to_pay|{self.full_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
+        descriptors += f"µ(remain_amount_to_pay|{self.remain_amount_to_pay}{settings.DEFAULT_CURRENCY[1]})"
         descriptors += "]"
         return descriptors
 
@@ -423,6 +429,7 @@ class Contract(Base):
 class Event(Base):
     """
     Description: table dédiée à désigner /caractériser un évènement.
+    Noter l'usage du caractère 'µ' comme séparateur. Il doit être interdit à la saisie.
     """
 
     __tablename__ = "event"
@@ -448,27 +455,27 @@ class Event(Base):
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f",(event_id|{self.event_id})"
-        descriptors += f",(title|{self.title})"
-        descriptors += f",(contract_id|{self.contract.contract_id})"
-        descriptors += f",(client_id|{self.client.client_id})"
+        descriptors += f"µ(event_id|{self.event_id})"
+        descriptors += f"µ(title|{self.title})"
+        descriptors += f"µ(contract_id|{self.contract.contract_id})"
+        descriptors += f"µ(client_id|{self.client.client_id})"
         descriptors += (
-            f",(commercial_id|{self.client.collaborator.registration_number})"
+            f"µ(commercial_id|{self.client.collaborator.registration_number})"
             if self.client.collaborator is not None
-            else ",(commercial_id|None)"
+            else "µ(commercial_id|None)"
         )
         descriptors += (
-            f",(collaborator_id|{self.collaborator.registration_number})"
+            f"µ(collaborator_id|{self.collaborator.registration_number})"
             if self.collaborator_id is not None
-            else ",(collaborator_id|None)"
+            else "µ(collaborator_id|None)"
         )
         descriptors += (
-            f',(event_start_date|{self.event_start_date.strftime("%d-%m-%Y")})'
+            f'µ(event_start_date|{self.event_start_date.strftime("%d-%m-%Y")})'
         )
-        descriptors += f',(event_end_date|{self.event_end_date.strftime("%d-%m-%Y")})'
-        descriptors += f",(location_id|{self.location.location_id})"
-        descriptors += f",(attendees|{self.attendees})"
-        descriptors += f",(notes|{self.notes})"
+        descriptors += f'µ(event_end_date|{self.event_end_date.strftime("%d-%m-%Y")})'
+        descriptors += f"µ(location_id|{self.location.location_id})"
+        descriptors += f"µ(attendees|{self.attendees})"
+        descriptors += f"µ(notes|{self.notes})"
         descriptors += "]"
         return descriptors
 
@@ -517,6 +524,7 @@ class Location(Base, ModelMixin):
     Description:
     Table dédiée à désigner /caractériser une localisation.
     Les modèles Company et Event ont besoin d'une localité existante.
+    Noter l'usage du caractère 'µ' comme séparateur. Il doit être interdit à la saisie.
     """
 
     __tablename__ = "location"
@@ -538,15 +546,15 @@ class Location(Base, ModelMixin):
     def __str__(self):
         descriptors = "["
         descriptors += f'(creation_date|{self.creation_date.strftime("%d-%m-%Y")})'
-        descriptors += f",(location_id|{self.location_id})"
-        descriptors += f",(population|{self.population})"
-        descriptors += f",(adresse|{self.adresse})"
-        descriptors += f",(complement_adresse|{self.complement_adresse})"
-        descriptors += f",(cedex|{self.cedex})"
-        descriptors += f",(code_postal|{self.code_postal})"
-        descriptors += f",(ville|{self.ville})"
-        descriptors += f",(region|{self.region})"
-        descriptors += f",(pays|{self.pays})"
+        descriptors += f"µ(location_id|{self.location_id})"
+        descriptors += f"µ(population|{self.population})"
+        descriptors += f"µ(adresse|{self.adresse})"
+        descriptors += f"µ(complement_adresse|{self.complement_adresse})"
+        descriptors += f"µ(cedex|{self.cedex})"
+        descriptors += f"µ(code_postal|{self.code_postal})"
+        descriptors += f"µ(ville|{self.ville})"
+        descriptors += f"µ(region|{self.region})"
+        descriptors += f"µ(pays|{self.pays})"
         descriptors += "]"
         return descriptors
 
