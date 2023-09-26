@@ -617,7 +617,9 @@ class ConsoleClientForCreate:
             if contract.status == "signed":
                 message = f"Creation contract {contract_id} with signature by {self.registration_number}"
             else:
-                message = f"Creation contract {contract_id} by {self.registration_number}"
+                message = (
+                    f"Creation contract {contract_id} by {self.registration_number}"
+                )
             if settings.INTERNET_CONNECTION and settings.LOG_COLLECT_ACTIVATED:
                 with logtail.context(
                     contract={
